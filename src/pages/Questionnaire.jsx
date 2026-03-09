@@ -13,6 +13,10 @@ export default function Questionnaire() {
   const prevQuestion         = useStore(s => s.prevQuestion);
   const finishQuestionnaire  = useStore(s => s.finishQuestionnaire);
   const navigate             = useStore(s => s.navigate);
+  const improveMode          = useStore(s => s.improveMode);
+  const stopImproveMode      = useStore(s => s.stopImproveMode);
+  const nextImproveQuestion  = useStore(s => s.nextImproveQuestion);
+  const totalAnswered        = Object.keys(answers).length;
   const t = createTranslator(language);
 
   if (!questionsQueue || questionsQueue.length === 0) {
@@ -40,7 +44,9 @@ export default function Questionnaire() {
   };
 
   const handleNext = () => {
-    if (isLast) {
+    if (improveMode) {
+      nextImproveQuestion();
+    } else if (isLast) {
       finishQuestionnaire();
     } else {
       nextQuestion();
@@ -60,18 +66,27 @@ export default function Questionnaire() {
       {/* Top progress bar */}
       <div className="bg-white border-b border-gray-100 px-4 py-3 sticky top-14 z-30">
         <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-gray-500">
-              {t('q_progress', { current: currentIndex + 1, total })}
-            </span>
-            <span className="text-xs text-gray-400">{Math.round(progress)}%</span>
-          </div>
-          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-300"
-              style={{ width: `${Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)}%` }}
-            />
-          </div>
+          {improveMode ? (
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-blue-600">{t('improve_title')}</span>
+              <span className="text-xs text-gray-400">{t('improve_progress', { n: totalAnswered })}</span>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-gray-500">
+                  {t('q_progress', { current: currentIndex + 1, total })}
+                </span>
+                <span className="text-xs text-gray-400">{Math.round(progress)}%</span>
+              </div>
+              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)}%` }}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -90,41 +105,67 @@ export default function Questionnaire() {
       {/* Bottom nav — sticky */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-30">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
-          {/* Back */}
-          <button
-            onClick={prevQuestion}
-            disabled={currentIndex === 0}
-            className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
-              currentIndex === 0
-                ? 'border-gray-200 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            ← {t('q_prev')}
-          </button>
+          {improveMode ? (
+            <>
+              {/* Stop */}
+              <button
+                onClick={stopImproveMode}
+                className="px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                {t('improve_stop')}
+              </button>
+              {/* Next question */}
+              <button
+                onClick={handleNext}
+                disabled={!hasAnswer}
+                className={`ml-auto px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
+                  hasAnswer
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                {t('improve_next')} →
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Back */}
+              <button
+                onClick={prevQuestion}
+                disabled={currentIndex === 0}
+                className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
+                  currentIndex === 0
+                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                ← {t('q_prev')}
+              </button>
 
-          {/* Skip */}
-          <button
-            onClick={handleSkip}
-            className="text-sm text-gray-400 hover:text-gray-600 font-medium px-2"
-          >
-            {t('q_skip')}
-          </button>
+              {/* Skip */}
+              <button
+                onClick={handleSkip}
+                className="text-sm text-gray-400 hover:text-gray-600 font-medium px-2"
+              >
+                {t('q_skip')}
+              </button>
 
-          {/* Next / Finish */}
-          <button
-            onClick={handleNext}
-            disabled={!hasAnswer}
-            className={`ml-auto px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-              hasAnswer
-                ? isLast
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
-          >
-            {isLast ? t('q_finish') : `${t('q_next')} →`}
-          </button>
+              {/* Next / Finish */}
+              <button
+                onClick={handleNext}
+                disabled={!hasAnswer}
+                className={`ml-auto px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
+                  hasAnswer
+                    ? isLast
+                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                {isLast ? t('q_finish') : `${t('q_next')} →`}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

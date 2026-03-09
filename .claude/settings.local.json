@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(xcode-select --install)",
-      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" status)"
+      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" status)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install && npm run build 2>&1)",
+      "Bash(sudo chown -R 502:20 \"/Users/arnaudlery/.npm\" && cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install && npm run build 2>&1)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install --cache /tmp/npm-cache && npm run build 2>&1)",
+      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" add . && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" commit -m \"Add confidence system + improve profile mode + progressive storage\" && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" push)"
     ]
   }
 }

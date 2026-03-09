@@ -16,7 +16,10 @@ export default function Profile() {
   const exportProfile   = useStore(s => s.exportProfile);
   const importProfile   = useStore(s => s.importProfile);
   const resetProfile    = useStore(s => s.resetProfile);
-  const startRefinement = useStore(s => s.startRefinement);
+  const startRefinement    = useStore(s => s.startRefinement);
+  const startImproveMode   = useStore(s => s.startImproveMode);
+  const pendingMigration   = useStore(s => s.pendingMigration);
+  const setPendingMigration = useStore(s => s.setPendingMigration);
   const t = createTranslator(language);
   const fileRef = useRef(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -46,10 +49,18 @@ export default function Profile() {
     );
   }
 
-  const { themes, axes, confidence, answeredCount, totalQuestions } = profile;
+  const { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions } = profile;
   const confMeta = getConfidenceMeta(confidence, language);
   const answeredTotal = Object.keys(answers).length;
   const unansweredCount = totalQuestions - answeredTotal;
+
+  // Confidence bar color
+  const confBarColor =
+    confidenceScore >= 80 ? '#059669' :  // emerald-600
+    confidenceScore >= 60 ? '#16a34a' :  // green-600
+    confidenceScore >= 40 ? '#2563eb' :  // blue-600
+    confidenceScore >= 20 ? '#d97706' :  // amber-600
+    '#ef4444';                           // red-500
 
   const handleImport = (e) => {
     const file = e.target.files?.[0];
@@ -155,13 +166,63 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Confidence badge */}
-      <div className={`flex items-center gap-3 p-4 rounded-xl border mb-6 ${confMeta.bg} ${confMeta.border}`}>
-        <div className={`font-semibold text-sm ${confMeta.color}`}>{confMeta.label}</div>
-        <div className="text-sm text-gray-600 flex-1">{confMeta.message}</div>
-        <div className="text-xs text-gray-400 whitespace-nowrap">
-          {t('profile_answered', { n: answeredTotal })} {t('profile_of_total', { total: totalQuestions })}
+      {/* Migration banner */}
+      {pendingMigration && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-blue-900">{t('migrate_title')}</p>
+            <p className="text-xs text-blue-700 mt-0.5">{t('migrate_subtitle')}</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <button
+              onClick={async () => {
+                setSaveStatus('saving');
+                const ok = await saveToCloud(answers, profile.themes);
+                setSaveStatus(ok ? 'saved' : 'error');
+                setTimeout(() => setSaveStatus(null), 3000);
+                setPendingMigration(false);
+              }}
+              className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors"
+            >
+              {t('migrate_yes')}
+            </button>
+            <button
+              onClick={() => setPendingMigration(false)}
+              className="text-xs font-medium text-blue-600 hover:text-blue-800 px-3 py-1.5"
+            >
+              {t('migrate_no')}
+            </button>
+          </div>
         </div>
+      )}
+
+      {/* Confidence bar */}
+      <div className={`p-4 rounded-xl border mb-6 ${confMeta.bg} ${confMeta.border}`}>
+        <div className="flex items-center justify-between mb-2">
+          <span className={`text-sm font-semibold ${confMeta.color}`}>{t('confidence_label')}</span>
+          <span className={`text-sm font-bold ${confMeta.color}`}>{confidenceScore ?? 0}%</span>
+        </div>
+        <div className="h-2.5 bg-white bg-opacity-60 rounded-full overflow-hidden mb-2">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${confidenceScore ?? 0}%`, backgroundColor: confBarColor }}
+          />
+        </div>
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-xs text-gray-600 flex-1">{confMeta.message}</p>
+          <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">
+            {t('profile_answered', { n: answeredTotal })} {t('profile_of_total', { total: totalQuestions })}
+          </span>
+        </div>
+        {(confidenceScore ?? 0) < 40 && (
+          <button
+            onClick={startImproveMode}
+            className="mt-3 text-xs font-semibold bg-white border border-current px-3 py-1.5 rounded-lg hover:bg-opacity-80 transition-colors"
+            style={{ color: confBarColor, borderColor: confBarColor }}
+          >
+            {t('confidence_improve_cta')} →
+          </button>
+        )}
       </div>
 
       {/* Main grid */}

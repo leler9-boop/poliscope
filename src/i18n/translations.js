@@ -92,6 +92,23 @@ export const translations = {
     figures_top_match: `Your closest match`,
     figures_sorted: `Sorted by alignment with your profile`,
 
+    // ── Confidence bar ──
+    confidence_label: `Profile Accuracy`,
+    confidence_improve_cta: `Improve my profile`,
+
+    // ── Improve mode ──
+    improve_title: `Refine your political profile`,
+    improve_subtitle: `Answer as many questions as you want. Your profile updates after each answer.`,
+    improve_next: `Next question`,
+    improve_stop: `Stop and return to profile`,
+    improve_progress: `{n} answers total`,
+
+    // ── Migration banner ──
+    migrate_title: `We found answers from your anonymous session.`,
+    migrate_subtitle: `Do you want to save them to your account?`,
+    migrate_yes: `Save to my account`,
+    migrate_no: `No thanks`,
+
     // ── Misc ──
     back: `Back`,
     loading: `Loading…`,
@@ -192,6 +209,23 @@ export const translations = {
     figures_disclaimer: `⚠️ Ces profils sont des simplifications analytiques à des fins éducatives. Les figures historiques avaient des opinions qui ont évolué au fil du temps et existaient dans des contextes très différents. Cette fonctionnalité est uniquement destinée à l'exploration intellectuelle.`,
     figures_top_match: `Votre meilleure correspondance`,
     figures_sorted: `Classé par compatibilité avec votre profil`,
+
+    // ── Confidence bar ──
+    confidence_label: `Précision du profil`,
+    confidence_improve_cta: `Améliorer mon profil`,
+
+    // ── Improve mode ──
+    improve_title: `Affinez votre profil politique`,
+    improve_subtitle: `Répondez à autant de questions que vous voulez. Votre profil se met à jour après chaque réponse.`,
+    improve_next: `Question suivante`,
+    improve_stop: `Arrêter et revenir au profil`,
+    improve_progress: `{n} réponses au total`,
+
+    // ── Migration banner ──
+    migrate_title: `Nous avons trouvé des réponses de votre session anonyme.`,
+    migrate_subtitle: `Voulez-vous les sauvegarder dans votre compte ?`,
+    migrate_yes: `Sauvegarder dans mon compte`,
+    migrate_no: `Non merci`,
 
     // ── Misc ──
     back: `Retour`,

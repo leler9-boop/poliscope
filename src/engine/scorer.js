@@ -45,13 +45,15 @@ export function calculateProfile(answers) {
   // Confidence based on number of answered questions
   const answeredCount = Object.keys(answers).length;
   const totalQuestions = allQuestions.length;
-  const coverage = answeredCount / totalQuestions;
+  const confidenceScore = Math.min(100, Math.round(answeredCount / 2));
   let confidence;
-  if (coverage < 0.2)      confidence = 'low';
-  else if (coverage < 0.55) confidence = 'medium';
-  else                      confidence = 'high';
+  if (answeredCount < 10)       confidence = 'very_low';
+  else if (answeredCount < 30)  confidence = 'low';
+  else if (answeredCount < 80)  confidence = 'medium';
+  else if (answeredCount < 200) confidence = 'high';
+  else                          confidence = 'very_high';
 
-  return { themes, axes, confidence, answeredCount, totalQuestions };
+  return { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions };
 }
 
 /**
@@ -95,11 +97,17 @@ function calculateAxes(themes) {
  */
 export function getConfidenceMeta(confidence, lang = 'en') {
   const meta = {
+    very_low: {
+      en: { label: 'Very low confidence', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200',
+            message: 'Your profile is still very approximate. Answer more questions to start building an accurate picture.' },
+      fr: { label: 'Très faible fiabilité', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200',
+            message: 'Votre profil est encore très approximatif. Répondez à plus de questions pour commencer à construire une image précise.' },
+    },
     low: {
       en: { label: 'Low confidence', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
-            message: 'Your profile gives a rough orientation. Answer more questions for a more accurate picture.' },
+            message: 'Your profile is still approximate. Answer more questions to improve precision.' },
       fr: { label: 'Faible fiabilité', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
-            message: 'Votre profil donne une orientation générale. Répondez à plus de questions pour une image plus précise.' },
+            message: 'Votre profil est encore approximatif. Répondez à plus de questions pour améliorer la précision.' },
     },
     medium: {
       en: { label: 'Medium confidence', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200',
@@ -109,12 +117,18 @@ export function getConfidenceMeta(confidence, lang = 'en') {
     },
     high: {
       en: { label: 'High confidence', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Your profile is highly accurate based on a comprehensive set of answers.' },
+            message: 'Your profile is highly accurate and well-defined.' },
       fr: { label: 'Haute fiabilité', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Votre profil est très précis, basé sur un ensemble complet de réponses.' },
+            message: 'Votre profil est très précis et bien défini.' },
+    },
+    very_high: {
+      en: { label: 'Very high confidence', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Your profile is extremely accurate based on a comprehensive set of answers.' },
+      fr: { label: 'Très haute fiabilité', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Votre profil est extrêmement précis, basé sur un ensemble complet de réponses.' },
     },
   };
-  return meta[confidence]?.[lang] ?? meta.low[lang];
+  return meta[confidence]?.[lang] ?? meta.very_low[lang];
 }
 
 /**

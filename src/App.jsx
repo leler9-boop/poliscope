@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useStore } from './store/useStore.js';
 import { createTranslator } from './i18n/translations.js';
+import { useAuth } from './lib/auth.jsx';
 import Header from './components/Header.jsx';
 import Landing from './pages/Landing.jsx';
 import SelectTest from './pages/SelectTest.jsx';
@@ -14,7 +15,22 @@ import Auth from './pages/Auth.jsx';
 export default function App() {
   const currentPage = useStore(s => s.currentPage);
   const language    = useStore(s => s.language);
+  const answers     = useStore(s => s.answers);
+  const profile     = useStore(s => s.profile);
   const t = createTranslator(language);
+
+  const { saveProfile, isAuthenticated } = useAuth();
+  const saveTimer = useRef(null);
+
+  // Auto-save to Supabase 3s after any answer change (debounced)
+  useEffect(() => {
+    if (!isAuthenticated || !profile) return;
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveProfile(answers, profile.themes);
+    }, 3000);
+    return () => clearTimeout(saveTimer.current);
+  }, [answers]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const pages = {
     landing:        <Landing />,

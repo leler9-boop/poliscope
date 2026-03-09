@@ -5,6 +5,19 @@ import { calculateProfile } from '../engine/scorer.js';
 import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
 
+/**
+ * Pick the next question for improve mode.
+ * Prefers unanswered questions; avoids repeating the last 3 themes.
+ */
+function pickNextQuestion(answers, recentThemes = []) {
+  const unanswered = allQuestions.filter(q => answers[q.id] == null);
+  const pool = unanswered.length > 0 ? unanswered : allQuestions;
+  // Avoid repeating same theme as last 3 picks
+  const preferred = pool.filter(q => !recentThemes.slice(-3).includes(q.theme));
+  const source = preferred.length > 0 ? preferred : pool;
+  return source[Math.floor(Math.random() * source.length)];
+}
+
 const STORAGE_KEY = 'poliscope_state';
 
 function detectLanguage() {
@@ -29,6 +42,13 @@ export const useStore = create(
       priorityOrder: [...THEMES_ORDER],
       profile: null,
 
+      // ── Improve mode (session-only, not persisted) ──
+      improveMode: false,
+      recentThemes: [],
+
+      // ── Migration (session-only) ──
+      pendingMigration: false,
+
       // ── Actions ──
       setLanguage: (lang) => set({ language: lang }),
       navigate: (page) => set({ currentPage: page }),
@@ -48,11 +68,43 @@ export const useStore = create(
         const { answers } = get();
         const unanswered = allQuestions.filter(q => answers[q.id] == null).slice(0, extraCount);
         set({
+          improveMode: false,
           questionsQueue: unanswered,
           currentQuestionIndex: 0,
           currentPage: 'questionnaire',
         });
       },
+
+      startImproveMode: () => {
+        const { answers, recentThemes } = get();
+        const question = pickNextQuestion(answers, recentThemes);
+        set({
+          improveMode: true,
+          questionsQueue: [question],
+          currentQuestionIndex: 0,
+          currentPage: 'questionnaire',
+        });
+      },
+
+      stopImproveMode: () => {
+        set({ improveMode: false, currentPage: 'profile' });
+      },
+
+      nextImproveQuestion: () => {
+        const { answers, recentThemes, questionsQueue } = get();
+        const currentTheme = questionsQueue[0]?.theme;
+        const updatedRecent = currentTheme
+          ? [...recentThemes, currentTheme].slice(-6)
+          : recentThemes;
+        const question = pickNextQuestion(answers, updatedRecent);
+        set({
+          questionsQueue: [question],
+          currentQuestionIndex: 0,
+          recentThemes: updatedRecent,
+        });
+      },
+
+      setPendingMigration: (v) => set({ pendingMigration: v }),
 
       setPriorityOrder: (order) => set({ priorityOrder: order }),
 
@@ -93,6 +145,9 @@ export const useStore = create(
           testMode: null,
           questionsQueue: [],
           currentQuestionIndex: 0,
+          improveMode: false,
+          recentThemes: [],
+          pendingMigration: false,
           currentPage: 'landing',
         });
       },

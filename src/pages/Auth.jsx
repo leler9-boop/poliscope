@@ -7,8 +7,10 @@ import { createTranslator } from '../i18n/translations.js';
 
 export default function Auth() {
   const { signIn, signUp, isSupabaseEnabled } = useAuth();
-  const language = useStore(s => s.language);
-  const navigate = useStore(s => s.navigate);
+  const language            = useStore(s => s.language);
+  const navigate            = useStore(s => s.navigate);
+  const answers             = useStore(s => s.answers);
+  const setPendingMigration = useStore(s => s.setPendingMigration);
   const t = createTranslator(language);
 
   const [mode, setMode]         = useState('signin'); // 'signin' | 'signup'
@@ -60,6 +62,10 @@ export default function Auth() {
           ? 'Compte créé ! Vérifiez votre email pour confirmer.'
           : 'Account created! Check your email to confirm.');
       } else {
+        // If the user had anonymous answers, offer to migrate them
+        if (Object.keys(answers).length > 0) {
+          setPendingMigration(true);
+        }
         navigate('profile');
       }
     } catch (err) {
