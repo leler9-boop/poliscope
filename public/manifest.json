@@ -1,0 +1,27 @@
+{
+  "name": "Poliscope — Political Profile",
+  "short_name": "Poliscope",
+  "description": "Discover your political profile and see how you align with historical figures.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a5f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "politics", "social"],
+  "lang": "en",
+  "dir": "ltr"
+}

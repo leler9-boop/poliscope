@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcode-select --install)",
+      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" status)"
+    ]
+  }
+}
