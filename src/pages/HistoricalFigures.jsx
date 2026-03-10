@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
-import { rankByAlignment } from '../engine/matcher.js';
+import { rankByAlignment, generateWhyMatch } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
 import MatchCard from '../components/MatchCard.jsx';
 
@@ -19,14 +19,21 @@ export default function HistoricalFigures() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('figures_title')}</h1>
         <p className="text-gray-500 mt-1 text-sm">{t('figures_subtitle')}</p>
       </div>
 
       {/* Disclaimer */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-        <p className="text-sm text-amber-800 leading-relaxed">{t('figures_disclaimer')}</p>
+        <p className="text-sm font-medium text-amber-800 mb-1">
+          {language === 'fr' ? 'Note méthodologique' : 'Methodological note'}
+        </p>
+        <p className="text-xs text-amber-700 leading-relaxed">
+          {language === 'fr'
+            ? 'Cette comparaison est basée sur des interprétations d\'écrits historiques, de discours et de positions politiques. Les figures historiques ont vécu dans des contextes très différents et leurs vues ne correspondent pas parfaitement aux catégories politiques modernes. Les résultats sont indicatifs et éducatifs, non prescriptifs.'
+            : 'This comparison is based on interpretations of historical writings, speeches and political positions. Historical figures lived in very different contexts and their views may not perfectly correspond to modern political categories. Results are indicative and educational, not prescriptive.'}
+        </p>
       </div>
 
       {/* No profile */}
@@ -47,7 +54,7 @@ export default function HistoricalFigures() {
       {profile && rankedFigures && (
         <>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-            {t('figures_sorted')}
+            {t('figures_sorted')} — {rankedFigures.length} {language === 'fr' ? 'figures' : 'figures'}
           </p>
 
           {/* Top match */}
@@ -59,6 +66,7 @@ export default function HistoricalFigures() {
                 language={language}
                 isTopMatch={true}
                 showDetails={true}
+                whyMatch={generateWhyMatch(profile.themes, rankedFigures[0], language)}
               />
             </div>
           )}
@@ -72,6 +80,7 @@ export default function HistoricalFigures() {
                 rank={idx + 2}
                 language={language}
                 showDetails={true}
+                whyMatch={generateWhyMatch(profile.themes, figure, language)}
               />
             ))}
           </div>
@@ -81,7 +90,7 @@ export default function HistoricalFigures() {
             <h3 className="font-bold text-gray-900 mb-4 text-sm">
               {language === 'fr' ? 'Vue d\'ensemble des compatibilités' : 'Alignment overview'}
             </h3>
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {rankedFigures.map(figure => {
                 const barColor =
                   figure.alignment >= 75 ? '#16a34a' :
@@ -89,8 +98,8 @@ export default function HistoricalFigures() {
                   figure.alignment >= 35 ? '#d97706' : '#dc2626';
                 return (
                   <div key={figure.id} className="flex items-center gap-3">
-                    <span className="text-base flex-shrink-0 w-6 text-center">{figure.emoji}</span>
-                    <span className="text-xs text-gray-600 w-28 flex-shrink-0 truncate">{figure.name}</span>
+                    <span className="text-base flex-shrink-0 w-6 text-center">{figure.emoji ?? '👤'}</span>
+                    <span className="text-xs text-gray-600 w-32 flex-shrink-0 truncate">{figure.name}</span>
                     <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-700"
@@ -105,13 +114,6 @@ export default function HistoricalFigures() {
               })}
             </div>
           </div>
-
-          {/* Note */}
-          <p className="text-xs text-gray-400 text-center mt-6 leading-relaxed max-w-xl mx-auto">
-            {language === 'fr'
-              ? 'Les profils des figures historiques sont des simplifications analytiques à des fins éducatives uniquement. L\'histoire est complexe et nuancée — utilisez cet outil comme point de départ pour en apprendre davantage.'
-              : 'Historical figure profiles are analytical simplifications for educational purposes only. History is complex and nuanced — use this as a starting point for further learning.'}
-          </p>
         </>
       )}
     </div>

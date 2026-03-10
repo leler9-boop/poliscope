@@ -1747,6 +1747,863 @@ export const questions = [
     },
   },
 
+  // ── ECONOMY (extended) ────────────────────────────────────────────────────
+  {
+    id: `ECO_16`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `The government should redistribute wealth more aggressively to reduce economic inequality.`,
+      fr: `Le gouvernement devrait redistribuer les richesses plus agressivement pour réduire les inégalités économiques.`,
+    },
+    direction: -1,
+    info: {
+      en: `Wealth redistribution through progressive taxation and social transfers is central to social-democratic politics. Critics argue it reduces incentives and capital formation; proponents contend that extreme inequality harms social cohesion and growth.`,
+      fr: `La redistribution des richesses via la taxation progressive et les transferts sociaux est au cœur de la politique sociale-démocrate. Les critiques soutiennent qu'elle réduit les incitations; les partisans estiment que les inégalités extrêmes nuisent à la cohésion sociale.`,
+    },
+  },
+  {
+    id: `ECO_17`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `International free trade agreements generally benefit workers and consumers.`,
+      fr: `Les accords de libre-échange international profitent généralement aux travailleurs et aux consommateurs.`,
+    },
+    direction: 1,
+    info: {
+      en: `Mainstream economic theory supports free trade as increasing overall welfare through comparative advantage. Critics on both left and right argue that trade agreements suppress wages, offshore jobs, and bypass democratic oversight through investor-state dispute mechanisms.`,
+      fr: `La théorie économique dominante soutient le libre-échange comme augmentant le bien-être global. Les critiques de gauche comme de droite soutiennent que les accords commerciaux suppriment les salaires et contournent la démocratie.`,
+    },
+  },
+  {
+    id: `ECO_18`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `Large corporations exercise too much influence over government policy and should be more strictly regulated.`,
+      fr: `Les grandes entreprises exercent trop d'influence sur les politiques gouvernementales et devraient être plus strictement réglementées.`,
+    },
+    direction: -1,
+    info: {
+      en: `Corporate political influence through lobbying, revolving doors, and campaign finance is well-documented. The debate concerns whether regulation or market competition is the appropriate corrective, and whether state regulators can be kept independent from industry capture.`,
+      fr: `L'influence politique des entreprises via le lobbying est bien documentée. Le débat porte sur si la réglementation ou la concurrence du marché est la correction appropriée.`,
+    },
+  },
+  {
+    id: `ECO_19`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `A shorter working week (e.g. 4 days) should be mandated by law without loss of pay.`,
+      fr: `Une semaine de travail plus courte (ex. 4 jours) devrait être imposée par la loi sans perte de salaire.`,
+    },
+    direction: -1,
+    info: {
+      en: `Pilots in Iceland, Japan and the UK showed productivity maintained or improved with a four-day week. Employers and some economists worry about competitiveness and costs. Proponents argue it improves wellbeing, reduces unemployment, and increases domestic spending.`,
+      fr: `Des pilotes en Islande, au Japon et au Royaume-Uni ont montré une productivité maintenue ou améliorée avec une semaine de quatre jours. Les partisans soutiennent qu'elle améliore le bien-être et réduit le chômage.`,
+    },
+  },
+  {
+    id: `ECO_20`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `Central banks should be subject to greater democratic accountability and parliamentary oversight.`,
+      fr: `Les banques centrales devraient être soumises à une plus grande responsabilité démocratique et à une surveillance parlementaire accrue.`,
+    },
+    direction: -1,
+    info: {
+      en: `Central bank independence is considered best practice to insulate monetary policy from political pressure. Critics — from left and right — argue that unelected technocrats making consequential economic decisions creates a democratic deficit. Balancing independence and accountability is a key institutional design question.`,
+      fr: `L'indépendance des banques centrales est considérée comme la meilleure pratique pour isoler la politique monétaire des pressions politiques. Les critiques soutiennent que des technocrates non élus prenant des décisions économiques créent un déficit démocratique.`,
+    },
+  },
+  {
+    id: `ECO_21`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `Inheritance taxes should be significantly increased to limit the transfer of large fortunes across generations.`,
+      fr: `Les droits de succession devraient être significativement augmentés pour limiter le transfert de grandes fortunes entre générations.`,
+    },
+    direction: -1,
+    info: {
+      en: `High inheritance taxes are supported by economists like Thomas Piketty as tools against dynastic wealth concentration. Opponents argue they punish aspiration, force asset sales in family businesses, and amount to double taxation. Many countries combine exemptions for small inheritances with higher rates on large ones.`,
+      fr: `Les droits de succession élevés sont défendus par des économistes comme Thomas Piketty comme outils contre la concentration dynastique de la richesse. Les opposants soutiennent qu'ils pénalisent l'aspiration et constituent une double imposition.`,
+    },
+  },
+  {
+    id: `ECO_22`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `The state should own or control strategically important industries such as energy, railways, and telecommunications.`,
+      fr: `L'État devrait posséder ou contrôler les industries stratégiquement importantes telles que l'énergie, les chemins de fer et les télécommunications.`,
+    },
+    direction: -1,
+    info: {
+      en: `Strategic state ownership of natural monopolies (railways, utilities) is defended as ensuring affordable universal access and preventing rent extraction. Critics argue state enterprises are inefficient and politically captured. Many countries use regulated private companies as a middle ground.`,
+      fr: `La propriété étatique stratégique des monopoles naturels est défendue comme garantissant un accès universel abordable. Les critiques soutiennent que les entreprises d'État sont inefficaces et captées politiquement.`,
+    },
+  },
+  {
+    id: `ECO_23`,
+    theme: THEMES.ECONOMY,
+    priority: 3,
+    text: {
+      en: `Economic growth should take priority over reducing inequality when the two goals conflict.`,
+      fr: `La croissance économique devrait primer sur la réduction des inégalités lorsque ces deux objectifs s'opposent.`,
+    },
+    direction: 1,
+    info: {
+      en: `The relationship between growth and inequality is contested. "Trickle-down" theory holds that growth eventually benefits all; Keynesian and inequality researchers argue that extreme inequality reduces demand and aggregate growth. The IMF has found that inequality can itself be a drag on sustainable growth.`,
+      fr: `La relation entre croissance et inégalités est contestée. La théorie du "ruissellement" soutient que la croissance finit par profiter à tous; les chercheurs en inégalités soutiennent que les inégalités extrêmes réduisent la demande et la croissance.`,
+    },
+  },
+
+  // ── SOCIAL (extended) ─────────────────────────────────────────────────────
+  {
+    id: `SOC_16`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Religious symbols and dress should be permitted in all public spaces including government offices and schools.`,
+      fr: `Les symboles et vêtements religieux devraient être autorisés dans tous les espaces publics, y compris les bureaux gouvernementaux et les écoles.`,
+    },
+    direction: 1,
+    info: {
+      en: `France bans conspicuous religious symbols in public schools and for civil servants; the UK and US take a more permissive approach. The debate involves competing values: secularism and state neutrality on one hand, religious freedom and minority rights on the other.`,
+      fr: `La France interdit les signes religieux ostentatoires dans les écoles publiques et pour les fonctionnaires; le Royaume-Uni et les États-Unis adoptent une approche plus permissive. Le débat implique des valeurs concurrentes: laïcité et liberté religieuse.`,
+    },
+  },
+  {
+    id: `SOC_17`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Affirmative action policies that give preference to historically marginalised groups are justified to correct past injustices.`,
+      fr: `Les politiques de discrimination positive qui donnent la préférence aux groupes historiquement marginalisés sont justifiées pour corriger les injustices passées.`,
+    },
+    direction: 1,
+    info: {
+      en: `Affirmative action (positive discrimination) exists in many countries to address structural disadvantage. Proponents argue representation requires active measures; opponents contend it violates merit principles and may stigmatise beneficiaries. The US Supreme Court has significantly limited race-conscious admissions policies.`,
+      fr: `La discrimination positive existe dans de nombreux pays pour remédier aux désavantages structurels. Les partisans soutiennent que la représentation nécessite des mesures actives; les opposants soutiennent qu'elle viole les principes du mérite.`,
+    },
+  },
+  {
+    id: `SOC_18`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `The state should guarantee the right to assisted dying for terminally ill patients who wish it.`,
+      fr: `L'État devrait garantir le droit à l'euthanasie pour les patients en phase terminale qui le souhaitent.`,
+    },
+    direction: 1,
+    info: {
+      en: `Assisted dying is legal in the Netherlands, Belgium, Canada, and several US states. Proponents emphasise autonomy and dignity; opponents — often religious — cite sanctity of life and risks to vulnerable people. Palliative care advocates argue better end-of-life care is a more appropriate response to suffering.`,
+      fr: `L'aide médicale à mourir est légale aux Pays-Bas, en Belgique, au Canada et dans plusieurs États américains. Les partisans mettent en avant l'autonomie et la dignité; les opposants citent le caractère sacré de la vie.`,
+    },
+  },
+  {
+    id: `SOC_19`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Gender is determined by biology and cannot be changed.`,
+      fr: `Le genre est déterminé par la biologie et ne peut pas être changé.`,
+    },
+    direction: -1,
+    info: {
+      en: `The scientific consensus distinguishes biological sex (chromosomes, hormones, anatomy) from gender identity (one's internal sense of self). Medical organisations including the WHO and APA recognise that gender identity can differ from sex assigned at birth. Legal recognition of gender transitions varies widely across countries.`,
+      fr: `Le consensus scientifique distingue le sexe biologique de l'identité de genre. Les organisations médicales dont l'OMS reconnaissent que l'identité de genre peut différer du sexe assigné à la naissance.`,
+    },
+  },
+  {
+    id: `SOC_20`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Sex work between consenting adults should be fully decriminalised.`,
+      fr: `Le travail du sexe entre adultes consentants devrait être entièrement décriminalisé.`,
+    },
+    direction: 1,
+    info: {
+      en: `New Zealand has fully decriminalised sex work; the "Nordic model" criminalises buyers but not sellers; many countries criminalise both. Amnesty International supports full decriminalisation as safer for workers. Feminist perspectives are divided between harm reduction and abolitionist views.`,
+      fr: `La Nouvelle-Zélande a entièrement décriminalisé le travail du sexe. Le "modèle nordique" criminalise les acheteurs mais pas les vendeurs. Amnesty International soutient la décriminalisation totale comme plus sûre pour les travailleurs.`,
+    },
+  },
+  {
+    id: `SOC_21`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Drug possession for personal use should be decriminalised or treated as a public health issue rather than a criminal one.`,
+      fr: `La possession de drogues pour usage personnel devrait être dépénalisée ou traitée comme un problème de santé publique plutôt que comme une affaire criminelle.`,
+    },
+    direction: 1,
+    info: {
+      en: `Portugal decriminalised possession of all drugs in 2001 with positive public health outcomes. Switzerland and Canada have adopted harm reduction approaches. Critics worry about increased use and social signals. The "war on drugs" approach has been criticised for mass incarceration and racial disparities.`,
+      fr: `Le Portugal a dépénalisé la possession de toutes les drogues en 2001 avec des résultats positifs en matière de santé publique. Les critiques s'inquiètent d'une augmentation de l'usage.`,
+    },
+  },
+  {
+    id: `SOC_22`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Freedom of speech must be protected even when it causes offence to religious or minority communities.`,
+      fr: `La liberté d'expression doit être protégée même lorsqu'elle offense des communautés religieuses ou minoritaires.`,
+    },
+    direction: 1,
+    info: {
+      en: `Free speech debates involve balancing expression against harm. Most democracies prohibit incitement to violence but protect offensive speech short of that threshold. The US First Amendment is the world's most permissive free speech standard. European countries more often balance speech against dignity and social harm.`,
+      fr: `Les débats sur la liberté d'expression impliquent d'équilibrer l'expression et le préjudice. La plupart des démocraties interdisent l'incitation à la violence mais protègent les discours offensants.`,
+    },
+  },
+  {
+    id: `SOC_23`,
+    theme: THEMES.SOCIAL,
+    priority: 3,
+    text: {
+      en: `Public schools should provide comprehensive, evidence-based sex education to all students.`,
+      fr: `Les écoles publiques devraient dispenser une éducation sexuelle complète et fondée sur des preuves à tous les élèves.`,
+    },
+    direction: 1,
+    info: {
+      en: `Comprehensive sex education is associated with lower teen pregnancy rates and better sexual health outcomes. Abstinence-only programmes have not demonstrated effectiveness. Religious communities often object to content they consider incompatible with their values. This remains one of the more culturally contested education policy areas.`,
+      fr: `L'éducation sexuelle complète est associée à des taux de grossesse chez les adolescentes plus bas. Les programmes axés uniquement sur l'abstinence n'ont pas démontré leur efficacité.`,
+    },
+  },
+
+  // ── IMMIGRATION (extended) ────────────────────────────────────────────────
+  {
+    id: `IMM_16`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `Countries have a moral obligation to accept refugees fleeing war or persecution, regardless of their number.`,
+      fr: `Les pays ont une obligation morale d'accueillir les réfugiés fuyant la guerre ou la persécution, quel que soit leur nombre.`,
+    },
+    direction: -1,
+    info: {
+      en: `The 1951 Refugee Convention creates legal obligations toward asylum seekers. Debates arise around capacity, integration costs, and the distinction between refugees and economic migrants. Some argue obligations must be balanced against social sustainability; others argue they are non-negotiable human rights commitments.`,
+      fr: `La Convention de 1951 sur les réfugiés crée des obligations légales envers les demandeurs d'asile. Des débats surgissent autour de la capacité d'accueil, des coûts d'intégration et de la distinction entre réfugiés et migrants économiques.`,
+    },
+  },
+  {
+    id: `IMM_17`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `Immigration strengthens a country's economy and culture.`,
+      fr: `L'immigration renforce l'économie et la culture d'un pays.`,
+    },
+    direction: -1,
+    info: {
+      en: `Economic research generally finds that immigration raises overall GDP and fills labour shortages. Cultural impacts are more contested. Some studies find positive effects on innovation; others point to integration challenges in concentrated areas. Effects depend heavily on skills mix, integration policies, and housing supply.`,
+      fr: `Les recherches économiques constatent généralement que l'immigration augmente le PIB global et comble les pénuries de main-d'œuvre. Les effets culturels sont plus contestés.`,
+    },
+  },
+  {
+    id: `IMM_18`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `Undocumented immigrants who have lived and worked in a country for many years should be given a path to citizenship.`,
+      fr: `Les immigrants en situation irrégulière qui ont vécu et travaillé dans un pays pendant de nombreuses années devraient se voir offrir une voie vers la citoyenneté.`,
+    },
+    direction: -1,
+    info: {
+      en: `Regularisation programmes have been used in Spain, Italy, the US (DACA) and elsewhere. Proponents argue long-term residents are de facto members of society; opponents argue regularisation encourages future illegal immigration ("pull factors"). The practicalities of mass deportation are also contested.`,
+      fr: `Des programmes de régularisation ont été utilisés en Espagne, en Italie, aux États-Unis (DACA) et ailleurs. Les partisans soutiennent que les résidents de longue durée sont de facto membres de la société.`,
+    },
+  },
+  {
+    id: `IMM_19`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `A country's immigration policy should prioritise cultural compatibility with the host society.`,
+      fr: `La politique d'immigration d'un pays devrait accorder la priorité à la compatibilité culturelle avec la société d'accueil.`,
+    },
+    direction: 1,
+    info: {
+      en: `Cultural selection criteria are explicitly used by some countries (Australia's historical "White Australia" policy, later abandoned; some European parties' proposals). Human rights law generally prohibits ethnic or religious discrimination in asylum. The debate involves questions of national identity, integration capacity, and the definition of "cultural compatibility".`,
+      fr: `Certains pays appliquent des critères de sélection culturelle. Le droit international des droits de l'homme interdit généralement la discrimination ethnique ou religieuse dans l'asile.`,
+    },
+  },
+  {
+    id: `IMM_20`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `Immigrants should be required to learn the official language of their host country as a condition of residence.`,
+      fr: `Les immigrants devraient être tenus d'apprendre la langue officielle de leur pays d'accueil comme condition de résidence.`,
+    },
+    direction: 1,
+    info: {
+      en: `Many countries require language proficiency for citizenship (but not residency). Language is seen as central to integration and labour market access. Critics argue mandating it before residence is logistically impractical and penalises those who lack prior access to language education.`,
+      fr: `De nombreux pays exigent la maîtrise linguistique pour la citoyenneté. La langue est considérée comme centrale pour l'intégration. Les critiques soutiennent que l'imposer avant la résidence est peu pratique.`,
+    },
+  },
+  {
+    id: `IMM_21`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `The European Union should develop a common immigration and asylum policy binding on all member states.`,
+      fr: `L'Union européenne devrait développer une politique commune d'immigration et d'asile contraignante pour tous les États membres.`,
+    },
+    direction: -1,
+    info: `The Dublin Regulation has placed disproportionate burden on border states (Greece, Italy). Attempts at mandatory burden-sharing have collapsed due to opposition from Hungary, Poland and others. A common policy would require states to surrender significant sovereignty. A voluntary EU resettlement mechanism has seen limited participation.`,
+    info: {
+      en: `The Dublin Regulation has placed disproportionate burden on border states. Attempts at mandatory burden-sharing have collapsed due to opposition from Hungary and Poland. A common policy would require states to surrender significant sovereignty.`,
+      fr: `Le règlement Dublin a imposé un fardeau disproportionné aux États frontaliers. Les tentatives de partage obligatoire des charges ont échoué en raison de l'opposition de la Hongrie et de la Pologne.`,
+    },
+  },
+  {
+    id: `IMM_22`,
+    theme: THEMES.IMMIGRATION,
+    priority: 3,
+    text: {
+      en: `Strict border controls are an effective and necessary tool for managing immigration.`,
+      fr: `Les contrôles stricts aux frontières sont un outil efficace et nécessaire pour gérer l'immigration.`,
+    },
+    direction: 1,
+    info: {
+      en: `Physical border barriers (fences, walls) and increased surveillance are championed by many governments. Evidence on their effectiveness is mixed — they can redirect migration flows rather than reduce overall numbers. Critics also raise human rights concerns about "push-backs" and dangerous crossings.`,
+      fr: `Les barrières frontalières physiques et la surveillance accrue sont défendues par de nombreux gouvernements. Les données sur leur efficacité sont mitigées — elles peuvent rediriger les flux migratoires plutôt que les réduire.`,
+    },
+  },
+
+  // ── SECURITY (extended) ───────────────────────────────────────────────────
+  {
+    id: `SEC_16`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `Mass surveillance programmes are an acceptable tool for preventing terrorism even if they compromise privacy.`,
+      fr: `Les programmes de surveillance de masse sont un outil acceptable pour prévenir le terrorisme même s'ils compromettent la vie privée.`,
+    },
+    direction: 1,
+    info: {
+      en: `Edward Snowden's 2013 revelations exposed mass NSA surveillance. Intelligence agencies argue bulk data collection is essential for identifying terror networks. Civil liberties advocates and courts have found such programmes disproportionate under human rights law. Targeted surveillance with judicial oversight is the alternative model.`,
+      fr: `Les révélations d'Edward Snowden en 2013 ont exposé la surveillance de masse de la NSA. Les agences de renseignement soutiennent que la collecte de données en masse est essentielle. Les défenseurs des libertés civiles ont jugé ces programmes disproportionnés.`,
+    },
+  },
+  {
+    id: `SEC_17`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `The death penalty should be abolished in all circumstances.`,
+      fr: `La peine de mort devrait être abolie dans toutes les circonstances.`,
+    },
+    direction: -1,
+    info: {
+      en: `Over 100 countries have abolished the death penalty. The US, China, Iran and Saudi Arabia are among those that retain it. Abolitionists cite irreversibility (innocent people have been executed), racial and socioeconomic disparities in application, and human dignity. Retentionists argue it deters severe crime and reflects justice for extreme offences.`,
+      fr: `Plus de 100 pays ont aboli la peine de mort. Les abolitionnistes citent l'irréversibilité, les disparités raciales et socioéconomiques dans son application, et la dignité humaine.`,
+    },
+  },
+  {
+    id: `SEC_18`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `The right to bear arms should be protected and not significantly restricted by government.`,
+      fr: `Le droit de porter des armes devrait être protégé et non significativement restreint par le gouvernement.`,
+    },
+    direction: 1,
+    info: {
+      en: `The Second Amendment is unique among democracies in its broad constitutional protection of civilian gun ownership. Cross-country comparisons show strong correlations between gun ownership rates and gun deaths. The US debate involves constitutional interpretation, individual rights, self-defence, and the role of gun culture in national identity.`,
+      fr: `Le Second Amendement est unique parmi les démocraties dans sa large protection constitutionnelle de la possession d'armes civiles. Les comparaisons entre pays montrent de fortes corrélations entre les taux de possession d'armes et les décès par armes à feu.`,
+    },
+  },
+  {
+    id: `SEC_19`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `People convicted of terrorist offences should be subject to extended detention beyond normal criminal sentences.`,
+      fr: `Les personnes condamnées pour des infractions terroristes devraient être soumises à une détention prolongée au-delà des peines criminelles normales.`,
+    },
+    direction: 1,
+    info: {
+      en: `Post-release monitoring and preventive detention of terrorism offenders is used in France, Germany and the UK. Human rights bodies have challenged such measures as double punishment and as incompatible with rehabilitation principles. Governments argue the ongoing threat justifies exceptional measures.`,
+      fr: `La surveillance post-libération et la détention préventive des auteurs d'actes terroristes est utilisée en France, en Allemagne et au Royaume-Uni. Les organismes de défense des droits de l'homme ont contesté ces mesures.`,
+    },
+  },
+  {
+    id: `SEC_20`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `Police should be given broader stop-and-search powers even if this leads to racial profiling.`,
+      fr: `La police devrait disposer de pouvoirs de contrôle et de fouille plus larges, même si cela conduit à du profilage racial.`,
+    },
+    direction: 1,
+    info: {
+      en: `Racial profiling in stop-and-search is well-documented in the UK, US and France. Evidence on crime-reduction effectiveness is mixed. Courts and equality bodies have found blanket stop powers discriminatory. Targeted intelligence-led policing is presented as a more effective and rights-compatible alternative.`,
+      fr: `Le profilage racial dans les contrôles au faciès est bien documenté au Royaume-Uni, aux États-Unis et en France. Les données sur l'efficacité en matière de réduction de la criminalité sont mitigées.`,
+    },
+  },
+  {
+    id: `SEC_21`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `Whistleblowers who reveal illegal government surveillance or war crimes should be protected from prosecution.`,
+      fr: `Les lanceurs d'alerte qui révèlent une surveillance gouvernementale illégale ou des crimes de guerre devraient être protégés contre les poursuites judiciaires.`,
+    },
+    direction: -1,
+    info: {
+      en: `Whistleblowers like Snowden and Chelsea Manning face prosecution under espionage laws. Whistleblower protection laws in most countries exclude classified information. The debate involves national security interests, the public's right to know, and the legitimacy of government secrecy.`,
+      fr: `Des lanceurs d'alerte comme Snowden et Chelsea Manning font face à des poursuites en vertu des lois sur l'espionnage. Le débat implique des intérêts de sécurité nationale et le droit du public à savoir.`,
+    },
+  },
+  {
+    id: `SEC_22`,
+    theme: THEMES.SECURITY,
+    priority: 3,
+    text: {
+      en: `Strong national defence spending is necessary to ensure a country's security and geopolitical influence.`,
+      fr: `Des dépenses importantes en matière de défense nationale sont nécessaires pour assurer la sécurité d'un pays et son influence géopolitique.`,
+    },
+    direction: 1,
+    info: {
+      en: `NATO's 2% of GDP target for defence spending is met by few European members. Russia's invasion of Ukraine (2022) prompted defence spending increases across Europe. Critics argue military spending crowds out social investment; others contend that security is a prerequisite for prosperity.`,
+      fr: `L'objectif de l'OTAN de 2% du PIB pour les dépenses de défense est atteint par peu de membres européens. L'invasion de l'Ukraine par la Russie a entraîné des augmentations des dépenses de défense à travers l'Europe.`,
+    },
+  },
+
+  // ── ENVIRONMENT (extended) ────────────────────────────────────────────────
+  {
+    id: `ENV_16`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Environmental protection should take priority over economic growth when the two conflict.`,
+      fr: `La protection de l'environnement devrait primer sur la croissance économique lorsque les deux objectifs s'opposent.`,
+    },
+    direction: 1,
+    info: {
+      en: `The tension between environmental and economic goals is a central political fault line. Proponents of ecological limits argue growth on a finite planet is inherently unsustainable. Mainstream economists argue technological innovation and pricing carbon can decouple growth from environmental harm. "Green growth" vs. "degrowth" is an active debate.`,
+      fr: `La tension entre objectifs environnementaux et économiques est une ligne de fracture politique centrale. Les partisans des limites écologiques soutiennent que la croissance sur une planète finie est intrinsèquement insoutenable.`,
+    },
+  },
+  {
+    id: `ENV_17`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Nuclear energy should be part of a country's strategy to address climate change.`,
+      fr: `L'énergie nucléaire devrait faire partie de la stratégie d'un pays pour lutter contre le changement climatique.`,
+    },
+    direction: 1,
+    info: {
+      en: `Nuclear power produces very low CO2 emissions and provides reliable baseload power. Critics cite accident risks (Chernobyl, Fukushima), radioactive waste storage, high construction costs, and long build times. France generates about 70% of electricity from nuclear; Germany closed its last plants in 2023. The IPCC includes nuclear as a potential low-carbon option.`,
+      fr: `L'énergie nucléaire produit très peu d'émissions de CO2 et fournit une puissance de base fiable. Les critiques citent les risques d'accidents, le stockage des déchets radioactifs et les coûts élevés de construction.`,
+    },
+  },
+  {
+    id: `ENV_18`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `A carbon tax is the most effective tool for reducing greenhouse gas emissions.`,
+      fr: `Une taxe carbone est l'outil le plus efficace pour réduire les émissions de gaz à effet de serre.`,
+    },
+    direction: 1,
+    info: {
+      en: `Economists broadly support carbon pricing as efficient and technology-neutral. British Columbia and Sweden have implemented carbon taxes with positive results. The "yellow vest" protests in France showed that carbon taxes can be regressive if not paired with redistribution. Cap-and-trade systems (like the EU ETS) are an alternative market mechanism.`,
+      fr: `Les économistes soutiennent largement la tarification du carbone comme efficace et technologiquement neutre. Les manifestations des "gilets jaunes" en France ont montré que les taxes carbone peuvent être régressives sans redistribution.`,
+    },
+  },
+  {
+    id: `ENV_19`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Meat consumption should be significantly reduced through taxation or regulation to address climate change.`,
+      fr: `La consommation de viande devrait être significativement réduite par la taxation ou la réglementation pour lutter contre le changement climatique.`,
+    },
+    direction: 1,
+    info: {
+      en: `Livestock agriculture accounts for approximately 14.5% of global greenhouse gas emissions (FAO). A meat tax is supported by some environmentalists and health economists. Opposition comes from farming communities, cultural arguments, and concerns about food sovereignty. Behavioural change vs. regulatory intervention is the central debate.`,
+      fr: `L'agriculture d'élevage représente environ 14,5% des émissions mondiales de gaz à effet de serre. Une taxe sur la viande est soutenue par certains environnementalistes et économistes de la santé.`,
+    },
+  },
+  {
+    id: `ENV_20`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Rich countries have a moral obligation to pay climate reparations to developing countries most affected by climate change.`,
+      fr: `Les pays riches ont une obligation morale de verser des réparations climatiques aux pays en développement les plus touchés par le changement climatique.`,
+    },
+    direction: 1,
+    info: {
+      en: `The "loss and damage" fund agreed at COP27 acknowledges that historically high-emitting countries bear responsibility for climate impacts on vulnerable nations. Developed countries have largely failed to deliver the $100bn annual climate finance promised in 2009. This is one of the most contested areas of international climate negotiations.`,
+      fr: `Le fonds "pertes et préjudices" convenu à la COP27 reconnaît que les pays historiquement gros émetteurs sont responsables des impacts climatiques sur les nations vulnérables.`,
+    },
+  },
+  {
+    id: `ENV_21`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Protecting biodiversity should be treated as urgently as addressing climate change.`,
+      fr: `La protection de la biodiversité devrait être traitée avec la même urgence que la lutte contre le changement climatique.`,
+    },
+    direction: 1,
+    info: {
+      en: `The IPBES (the biodiversity equivalent of the IPCC) warns that one million species face extinction. Habitat loss, pesticides, and climate change are the main drivers. The Kunming-Montreal Global Biodiversity Framework (2022) set targets to protect 30% of land and sea by 2030. Biodiversity receives far less political attention and funding than climate change.`,
+      fr: `L'IPBES avertit qu'un million d'espèces risquent l'extinction. Le Cadre mondial pour la biodiversité de Kunming-Montréal (2022) a fixé des objectifs pour protéger 30% des terres et des mers d'ici 2030.`,
+    },
+  },
+  {
+    id: `ENV_22`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Private car ownership should be discouraged through taxation and urban planning in favour of public transport.`,
+      fr: `La possession d'une voiture particulière devrait être découragée par la fiscalité et l'urbanisme au profit des transports en commun.`,
+    },
+    direction: 1,
+    info: {
+      en: `Transport is a major emissions sector. Cities from Amsterdam to Bogotá have reduced car dependency through investment in public transit, cycling infrastructure, and congestion charges. Car culture remains deeply embedded in many societies, and rural residents often lack alternatives. Equity concerns arise around the cost of transition.`,
+      fr: `Les transports sont un secteur d'émissions majeur. Des villes d'Amsterdam à Bogotá ont réduit la dépendance à la voiture. La culture automobile reste profondément ancrée et les résidents ruraux manquent souvent d'alternatives.`,
+    },
+  },
+  {
+    id: `ENV_23`,
+    theme: THEMES.ENVIRONMENT,
+    priority: 3,
+    text: {
+      en: `Economic degrowth — deliberately reducing GDP — is necessary to achieve environmental sustainability.`,
+      fr: `La décroissance économique — réduire délibérément le PIB — est nécessaire pour atteindre la durabilité environnementale.`,
+    },
+    direction: 1,
+    info: {
+      en: `Degrowth theory argues that material throughput must decline in wealthy countries to stay within planetary boundaries. Mainstream economists dispute this, arguing green innovation and decoupling are sufficient. Degrowth advocates question whether capitalism is compatible with ecological limits.`,
+      fr: `La théorie de la décroissance soutient que le débit matériel doit diminuer dans les pays riches pour rester dans les limites planétaires. Les économistes dominants contestent cela, soutenant que l'innovation verte et le découplage sont suffisants.`,
+    },
+  },
+
+  // ── DEMOCRACY (extended) ─────────────────────────────────────────────────
+  {
+    id: `DEM_16`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Judges and courts should have the power to strike down laws passed by elected parliaments.`,
+      fr: `Les juges et les tribunaux devraient avoir le pouvoir d'annuler les lois adoptées par des parlements élus.`,
+    },
+    direction: 1,
+    info: {
+      en: `Judicial review of legislation is standard in most constitutional democracies (US Supreme Court, French Conseil Constitutionnel, German Bundesverfassungsgericht). Populists argue it gives unelected judges too much power; liberals argue it protects rights from majority tyranny. The scope of judicial review is a key separation-of-powers question.`,
+      fr: `Le contrôle judiciaire de la législation est standard dans la plupart des démocraties constitutionnelles. Les populistes soutiennent qu'il donne trop de pouvoir aux juges non élus; les libéraux soutiennent qu'il protège les droits contre la tyrannie de la majorité.`,
+    },
+  },
+  {
+    id: `DEM_17`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Voting should be mandatory for all eligible citizens.`,
+      fr: `Le vote devrait être obligatoire pour tous les citoyens éligibles.`,
+    },
+    direction: 1,
+    info: {
+      en: `About 30 countries have compulsory voting, including Australia and Belgium, with generally higher turnout and more representative electorate. Opponents argue it compels participation in something that should be voluntary, and may produce less thoughtful votes. "None of the above" options are sometimes offered as a compromise.`,
+      fr: `Environ 30 pays ont le vote obligatoire, dont l'Australie et la Belgique, avec généralement une participation plus élevée. Les opposants soutiennent que cela contraint à la participation dans quelque chose qui devrait être volontaire.`,
+    },
+  },
+  {
+    id: `DEM_18`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Citizens should be able to directly vote on major policy decisions through referendums.`,
+      fr: `Les citoyens devraient pouvoir voter directement sur les grandes décisions politiques par le biais de référendums.`,
+    },
+    direction: 1,
+    info: {
+      en: `Direct democracy via referendums is used frequently in Switzerland and California. Critics argue complex policies are reduced to binary yes/no choices, vulnerable to manipulation and emotionally charged campaigns (as Brexit demonstrated). Representative democracy proponents argue elected officials are better positioned to make nuanced policy judgements.`,
+      fr: `La démocratie directe via des référendums est fréquemment utilisée en Suisse et en Californie. Les critiques soutiennent que des politiques complexes sont réduites à des choix binaires, vulnérables à la manipulation (comme le Brexit l'a démontré).`,
+    },
+  },
+  {
+    id: `DEM_19`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Political parties should be publicly funded to reduce dependence on private donors and corporate interests.`,
+      fr: `Les partis politiques devraient être financés publiquement pour réduire la dépendance envers les donateurs privés et les intérêts des entreprises.`,
+    },
+    direction: 1,
+    info: {
+      en: `Most European democracies have significant public party funding alongside strict donation limits. The US system is dominated by private and corporate money, especially after Citizens United (2010). Public funding aims to level the field; critics argue it forces taxpayers to fund parties they oppose.`,
+      fr: `La plupart des démocraties européennes ont un financement public significatif des partis avec des limites strictes sur les dons. Le système américain est dominé par l'argent privé et des entreprises.`,
+    },
+  },
+  {
+    id: `DEM_20`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `The media has too much power to shape public opinion and should be more strictly regulated.`,
+      fr: `Les médias ont trop de pouvoir pour façonner l'opinion publique et devraient être plus strictement réglementés.`,
+    },
+    direction: -1,
+    info: {
+      en: `Media regulation involves balancing press freedom against accuracy, pluralism, and democratic health. Concerns about concentrated media ownership, disinformation, and social media algorithms are widespread. Heavy media regulation risks state capture of information; light regulation allows commercial and political distortion. Most democracies maintain some public broadcasting.`,
+      fr: `La réglementation des médias implique d'équilibrer la liberté de la presse avec la précision, le pluralisme et la santé démocratique. Les préoccupations concernant la propriété concentrée des médias et la désinformation sont répandues.`,
+    },
+  },
+  {
+    id: `DEM_21`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Elected governments should have the power to remove judges who make rulings that conflict with the will of the democratic majority.`,
+      fr: `Les gouvernements élus devraient avoir le pouvoir de révoquer les juges qui rendent des décisions contraires à la volonté de la majorité démocratique.`,
+    },
+    direction: -1,
+    info: {
+      en: `Judicial independence from elected governments is a pillar of liberal democracy and the rule of law. Hungary and Poland have undermined it under the guise of democratic reform. Courts that defer to electoral majorities cannot protect minority rights or enforce constitutional limits on power. Most democracies give judges long tenure to insulate them from political pressure.`,
+      fr: `L'indépendance judiciaire vis-à-vis des gouvernements élus est un pilier de la démocratie libérale et de l'État de droit. La Hongrie et la Pologne l'ont sapée sous prétexte de réforme démocratique.`,
+    },
+  },
+  {
+    id: `DEM_22`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `Social media platforms should be held legally responsible for the content they host and amplify.`,
+      fr: `Les plateformes de médias sociaux devraient être légalement responsables du contenu qu'elles hébergent et amplifient.`,
+    },
+    direction: 1,
+    info: {
+      en: `Section 230 of the US Communications Decency Act shields platforms from liability for user content. The EU's Digital Services Act (2022) imposes more obligations on large platforms. Holding platforms liable could incentivise over-removal of speech; current immunity incentivises engagement-maximising algorithms regardless of harm.`,
+      fr: `La Section 230 américaine protège les plateformes de la responsabilité pour le contenu des utilisateurs. La Loi sur les services numériques de l'UE (2022) impose plus d'obligations aux grandes plateformes.`,
+    },
+  },
+  {
+    id: `DEM_23`,
+    theme: THEMES.DEMOCRACY,
+    priority: 3,
+    text: {
+      en: `International institutions (UN, WTO, ICC) should have stronger powers to enforce their decisions on member states.`,
+      fr: `Les institutions internationales (ONU, OMC, CPI) devraient avoir des pouvoirs plus forts pour faire respecter leurs décisions par les États membres.`,
+    },
+    direction: 1,
+    info: {
+      en: `International law depends largely on voluntary compliance and lacks enforcement mechanisms comparable to domestic law. Strengthening supranational institutions involves surrendering national sovereignty. Multilateralists argue it is necessary for addressing global challenges; sovereignists argue it undermines democratic self-determination.`,
+      fr: `Le droit international dépend largement de la conformité volontaire. Renforcer les institutions supranationales implique de céder la souveraineté nationale. Les multilatéralistes soutiennent que c'est nécessaire pour relever les défis mondiaux.`,
+    },
+  },
+
+  // ── GLOBAL (extended) ─────────────────────────────────────────────────────
+  {
+    id: `GLO_16`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `Countries should prioritise national self-sufficiency in strategic goods like food, energy, and medicines.`,
+      fr: `Les pays devraient prioriser l'autosuffisance nationale dans les biens stratégiques comme la nourriture, l'énergie et les médicaments.`,
+    },
+    direction: 1,
+    info: {
+      en: `The Covid-19 pandemic and Ukraine war exposed vulnerabilities from global supply chains. "Reshoring" and strategic autonomy have become bipartisan concerns. Economists worry about efficiency losses from deglobalisation; security advocates argue resilience outweighs cost. "Friend-shoring" — moving supply chains to allied countries — is a middle approach.`,
+      fr: `La pandémie de Covid-19 et la guerre en Ukraine ont exposé les vulnérabilités des chaînes d'approvisionnement mondiales. Les économistes s'inquiètent des pertes d'efficacité de la déglobalisation.`,
+    },
+  },
+  {
+    id: `GLO_17`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `Countries should reduce their military alliances and pursue a policy of neutrality.`,
+      fr: `Les pays devraient réduire leurs alliances militaires et poursuivre une politique de neutralité.`,
+    },
+    direction: 1,
+    info: {
+      en: `NATO has expanded significantly since the Cold War. Russia's invasion of Ukraine prompted Finland and Sweden to join. Critics of military alliances argue they entrench bloc thinking and extend great power competition. Proponents argue collective defence deters aggression and reduces free-rider problems.`,
+      fr: `L'OTAN s'est considérablement élargie depuis la Guerre froide. L'invasion de l'Ukraine par la Russie a poussé la Finlande et la Suède à rejoindre l'Alliance. Les critiques des alliances militaires soutiennent qu'elles entretiennent la pensée de blocs.`,
+    },
+  },
+  {
+    id: `GLO_18`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `Countries should be willing to use military force to protect human rights in other nations.`,
+      fr: `Les pays devraient être prêts à utiliser la force militaire pour protéger les droits de l'homme dans d'autres nations.`,
+    },
+    direction: -1,
+    info: {
+      en: `The "Responsibility to Protect" (R2P) doctrine authorises international intervention to prevent genocide. But interventions in Iraq and Libya damaged its credibility. Non-interventionists emphasise sovereignty; interventionists emphasise universal human rights. The UN Security Council veto often blocks authorised action.`,
+      fr: `La doctrine de la "Responsabilité de protéger" (R2P) autorise l'intervention internationale pour prévenir le génocide. Mais les interventions en Irak et en Libye ont endommagé sa crédibilité.`,
+    },
+  },
+  {
+    id: `GLO_19`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `Rich countries should increase foreign aid to at least 0.7% of GNI as agreed at the UN.`,
+      fr: `Les pays riches devraient augmenter l'aide étrangère à au moins 0,7% du RNB comme convenu à l'ONU.`,
+    },
+    direction: -1,
+    info: {
+      en: `The 0.7% UN target for official development assistance has been met consistently by only five countries: Sweden, Norway, Luxembourg, Denmark and the UK (until 2021). Development aid is criticised as creating dependency and serving donor interests. Proponents argue it is a moral obligation given historical exploitation.`,
+      fr: `L'objectif de 0,7% de l'ONU n'a été atteint en permanence que par cinq pays. L'aide au développement est critiquée comme créant de la dépendance et servant les intérêts des donateurs.`,
+    },
+  },
+  {
+    id: `GLO_20`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `Countries should impose economic sanctions on states that violate human rights or international law.`,
+      fr: `Les pays devraient imposer des sanctions économiques aux États qui violent les droits de l'homme ou le droit international.`,
+    },
+    direction: -1,
+    info: {
+      en: `Economic sanctions are a tool of statecraft used against Russia, Iran, North Korea, and others. Evidence on their effectiveness is mixed — they rarely cause regime change and often harm civilian populations. "Smart sanctions" targeting elites are considered more effective than broad economic embargoes.`,
+      fr: `Les sanctions économiques sont un outil de la diplomatie utilisé contre la Russie, l'Iran, la Corée du Nord et d'autres. Les données sur leur efficacité sont mitigées — elles provoquent rarement un changement de régime et nuisent souvent aux populations civiles.`,
+    },
+  },
+  {
+    id: `GLO_21`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `European integration should be deepened with more powers transferred to EU institutions.`,
+      fr: `L'intégration européenne devrait être approfondie avec plus de pouvoirs transférés aux institutions de l'UE.`,
+    },
+    direction: -1,
+    info: {
+      en: `The EU debate involves balancing efficiency of supranational governance against democratic legitimacy and national sovereignty. Federalists argue deeper integration is necessary to address common challenges; Eurosceptics argue the EU lacks democratic accountability and has overstepped into areas best governed nationally.`,
+      fr: `Le débat sur l'UE implique d'équilibrer l'efficacité de la gouvernance supranationale et la légitimité démocratique. Les fédéralistes soutiennent qu'une intégration plus poussée est nécessaire; les eurosceptiques soutiennent que l'UE manque de responsabilité démocratique.`,
+    },
+  },
+  {
+    id: `GLO_22`,
+    theme: THEMES.GLOBAL,
+    priority: 3,
+    text: {
+      en: `National culture and traditions must be actively protected from the homogenising effects of globalisation.`,
+      fr: `La culture et les traditions nationales doivent être activement protégées des effets homogénéisants de la mondialisation.`,
+    },
+    direction: 1,
+    info: {
+      en: `Cultural protectionism is embedded in French policy (quotas on foreign films, language laws). UNESCO's Convention on Cultural Diversity supports states' right to protect cultural industries. Opponents argue cultural exchange and mixing is historically normal and enriching, and that protectionism serves nationalist agendas.`,
+      fr: `Le protectionnisme culturel est inscrit dans la politique française (quotas sur les films étrangers, lois linguistiques). La Convention de l'UNESCO sur la diversité culturelle soutient le droit des États à protéger leurs industries culturelles.`,
+    },
+  },
+
+  // ── PUBLIC SERVICES (extended) ────────────────────────────────────────────
+  {
+    id: `PUB_16`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `A universal basic income (UBI) should replace means-tested welfare programmes.`,
+      fr: `Un revenu universel de base (RUB) devrait remplacer les programmes d'aide sociale sous conditions de ressources.`,
+    },
+    direction: 1,
+    info: {
+      en: `UBI pilots in Finland, Kenya, Stockton (USA) and elsewhere show improved wellbeing without major work disincentives. Critics on the left worry UBI would be used to justify dismantling targeted welfare; those on the right object to cost and work disincentives. Automation arguments have renewed interest in UBI.`,
+      fr: `Des pilotes de RUB en Finlande, au Kenya et aux États-Unis montrent un bien-être amélioré sans désincitatifs majeurs au travail. Les critiques de gauche s'inquiètent que le RUB soit utilisé pour justifier le démantèlement de l'aide sociale ciblée.`,
+    },
+  },
+  {
+    id: `PUB_17`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `Private companies should not be allowed to profit from delivering essential public services such as prisons, water, or probation.`,
+      fr: `Les entreprises privées ne devraient pas être autorisées à tirer profit de la fourniture de services publics essentiels tels que les prisons, l'eau ou la probation.`,
+    },
+    direction: 1,
+    info: {
+      en: `Privatisation of prisons is common in the US and UK. Water privatisation in England has generated controversy over dividends and sewage discharges. Public service advocates argue profit incentives are incompatible with public interest obligations; proponents argue private management improves efficiency.`,
+      fr: `La privatisation des prisons est courante aux États-Unis et au Royaume-Uni. La privatisation de l'eau en Angleterre a suscité des controverses. Les défenseurs des services publics soutiennent que les incitations au profit sont incompatibles avec les obligations d'intérêt public.`,
+    },
+  },
+  {
+    id: `PUB_18`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `University education should be free for all students, funded through general taxation.`,
+      fr: `L'enseignement universitaire devrait être gratuit pour tous les étudiants, financé par l'impôt général.`,
+    },
+    direction: 1,
+    info: {
+      en: `Free university education exists in Germany, Norway and (until 2017) Scotland. England charges up to £9,250/year. The US has among the world's highest tuition fees. Arguments for free education cite equality of opportunity; arguments for tuition fees cite personal benefit, fiscal cost, and the regressive nature of subsidising those who will earn more.`,
+      fr: `L'enseignement universitaire gratuit existe en Allemagne et en Norvège. Les arguments en faveur de l'éducation gratuite citent l'égalité des chances; les arguments en faveur des frais de scolarité citent le bénéfice personnel et le coût fiscal.`,
+    },
+  },
+  {
+    id: `PUB_19`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `Pension entitlements should not be reduced even if public finances require difficult choices.`,
+      fr: `Les droits à la retraite ne devraient pas être réduits, même si les finances publiques nécessitent des choix difficiles.`,
+    },
+    direction: 1,
+    info: {
+      en: `Pension reform is one of the most politically explosive issues in ageing societies. France's 2023 pension age increase to 64 triggered mass protests. Fiscal pressures from ageing populations put pension sustainability at the centre of long-term budget debates. Intergenerational equity arguments point in different directions.`,
+      fr: `La réforme des retraites est l'un des sujets les plus explosifs politiquement dans les sociétés vieillissantes. Le relèvement de l'âge de la retraite en France à 64 ans en 2023 a déclenché des manifestations massives.`,
+    },
+  },
+  {
+    id: `PUB_20`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `The state should invest heavily in affordable housing to address the housing crisis.`,
+      fr: `L'État devrait investir massivement dans le logement abordable pour résoudre la crise du logement.`,
+    },
+    direction: 1,
+    info: {
+      en: `Housing affordability has deteriorated sharply in major cities globally. Public housing programmes were central in post-war European welfare states but were reduced from the 1980s. Vienna's social housing is often cited as a successful model. Critics argue supply deregulation (planning reform) is a more effective solution than public construction.`,
+      fr: `L'accessibilité au logement s'est fortement détériorée dans les grandes villes mondiales. Les programmes de logement social étaient centraux dans les États-providence européens d'après-guerre. Le logement social de Vienne est souvent cité comme un modèle réussi.`,
+    },
+  },
+  {
+    id: `PUB_21`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `Mental health services should receive the same funding priority as physical health services.`,
+      fr: `Les services de santé mentale devraient recevoir la même priorité de financement que les services de santé physique.`,
+    },
+    direction: 1,
+    info: {
+      en: `Mental illness accounts for a substantial share of disease burden but receives disproportionately less funding than physical health. "Parity of esteem" is policy in several countries but poorly implemented. Mental health investment shows strong economic returns through reduced disability, unemployment, and incarceration.`,
+      fr: `Les maladies mentales représentent une part substantielle du fardeau des maladies mais reçoivent proportionnellement moins de financement. La "parité d'estime" est la politique dans plusieurs pays mais mal mise en œuvre.`,
+    },
+  },
+  {
+    id: `PUB_22`,
+    theme: THEMES.PUBLIC_SERVICES,
+    priority: 3,
+    text: {
+      en: `Governments should provide free, high-quality childcare from birth to school age.`,
+      fr: `Les gouvernements devraient fournir une garde d'enfants gratuite et de haute qualité de la naissance jusqu'à l'âge scolaire.`,
+    },
+    direction: 1,
+    info: {
+      en: `Universal childcare enables maternal employment, reduces child poverty, and has long-term educational benefits. France's crèche system and Nordic universal childcare are often cited as models. In the US and UK, childcare costs are among the highest in the OECD as a share of family income, acting as a significant barrier to women's workforce participation.`,
+      fr: `La garde d'enfants universelle permet l'emploi maternel, réduit la pauvreté infantile et a des avantages éducatifs à long terme. Les coûts de garde d'enfants aux États-Unis et au Royaume-Uni sont parmi les plus élevés de l'OCDE en proportion du revenu familial.`,
+    },
+  },
+
 ];
 
 // Select questions for each test length

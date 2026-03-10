@@ -1,7 +1,7 @@
 // POLISCOPE — Matching Engine
 // Calculates alignment scores between a user profile and candidates/figures.
 
-import { THEMES_ORDER } from '../data/questions.js';
+import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';
 
 /**
  * Calculate alignment percentage between user profile and a target profile.
@@ -46,7 +46,10 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder) {
   });
 
   const meanDistance = weightedDistanceSum / totalWeight; // 0–1
-  const alignment = Math.round((1 - meanDistance) * 100);
+
+  // Non-linear amplification: compress close matches upward, expand distant ones downward.
+  // Power 1.5 produces a realistic spread: 85%+ for very similar, <30% for opposing.
+  const alignment = Math.round(Math.pow(1 - meanDistance, 1.5) * 100);
   return Math.max(0, Math.min(100, alignment));
 }
 
@@ -63,6 +66,27 @@ export function rankByAlignment(userProfile, targets, priorityOrder) {
     alignment: calculateAlignment(userProfile.themes, target.profile, priorityOrder),
   }));
   return results.sort((a, b) => b.alignment - a.alignment);
+}
+
+/**
+ * Generate a personalised "why you match" sentence for a given figure.
+ * Finds the 2 themes where user and figure are most aligned and names them.
+ */
+export function generateWhyMatch(userThemes, figure, lang = 'en') {
+  const themeDistances = THEMES_ORDER.map(theme => ({
+    theme,
+    distance: Math.abs((userThemes[theme] ?? 50) - (figure.profile[theme] ?? 50)),
+  }));
+
+  const top2 = themeDistances
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 2)
+    .map(t => (THEME_LABELS[lang]?.[t.theme] ?? t.theme).toLowerCase());
+
+  const themeStr = top2.join(lang === 'fr' ? ' et ' : ' and ');
+  return lang === 'fr'
+    ? `Votre profil se rapproche le plus de ${figure.name} sur les thèmes : ${themeStr}.`
+    : `Your profile aligns most closely with ${figure.name} on ${themeStr}.`;
 }
 
 /**

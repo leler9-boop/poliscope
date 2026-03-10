@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 
-export default function MatchCard({ target, rank, language = 'en', showDetails = true, isTopMatch = false }) {
-  const [expanded, setExpanded] = useState(false);
-  const { name, alignment, color, profile, description, disclaimer } = target;
+export default function MatchCard({
+  target,
+  rank,
+  language = 'en',
+  showDetails = true,
+  isTopMatch = false,
+  whyMatch = null,
+}) {
+  const [expanded, setExpanded] = useState(isTopMatch);
+  const { name, alignment, color, description, disclaimer, political_context } = target;
 
-  const barColor = alignmentBarColor(alignment);
+  const barColor  = alignmentBarColor(alignment);
   const textColor = alignmentColorClass(alignment);
-  const label = alignmentLabel(alignment, language);
+  const label     = alignmentLabel(alignment, language);
+
+  const bio     = description     ? (typeof description     === 'object' ? description[language]     : description)     : null;
+  const context = political_context ? (typeof political_context === 'object' ? political_context[language] : political_context) : null;
+  const disc    = disclaimer      ? (typeof disclaimer      === 'object' ? disclaimer[language]      : disclaimer)      : null;
 
   return (
     <div className={`bg-white rounded-xl border ${isTopMatch ? 'border-blue-200 shadow-md' : 'border-gray-100 shadow-sm'} overflow-hidden transition-shadow hover:shadow-md`}>
@@ -26,28 +37,27 @@ export default function MatchCard({ target, rank, language = 'en', showDetails =
             </div>
           )}
 
-          {/* Color dot + name */}
+          {/* Name + meta */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              {color && (
-                <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-              )}
+              {color && <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />}
               <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{name}</h3>
+              {target.flag && <span className="text-base leading-none">{target.flag}</span>}
             </div>
             {target.party && (
-              <p className="text-xs text-gray-400 mb-1 pl-5">
+              <p className="text-xs text-gray-400 mb-0.5">
                 {typeof target.party === 'object' ? target.party[language] : target.party}
               </p>
             )}
             {target.role && (
-              <p className="text-xs text-gray-400 mb-1">
+              <p className="text-xs text-gray-400">
                 {typeof target.role === 'object' ? target.role[language] : target.role}
                 {target.years && <span className="ml-1 text-gray-300">· {target.years}</span>}
               </p>
             )}
-            {target.result && (
-              <p className="text-xs text-gray-500 mt-0.5">
-                {typeof target.result === 'object' ? target.result[language] : target.result}
+            {context && (
+              <p className="text-xs text-blue-700 bg-blue-50 rounded px-2 py-0.5 mt-1.5 inline-block">
+                {context}
               </p>
             )}
           </div>
@@ -72,28 +82,29 @@ export default function MatchCard({ target, rank, language = 'en', showDetails =
           </div>
         </div>
 
-        {/* Expand for description */}
-        {showDetails && (description || disclaimer) && (
+        {/* Why match */}
+        {whyMatch && (
+          <p className="mt-2 text-xs text-gray-500 italic">{whyMatch}</p>
+        )}
+
+        {/* Toggle biography */}
+        {showDetails && (bio || disc) && (
           <button
             onClick={() => setExpanded(!expanded)}
             className="mt-3 text-xs text-blue-500 hover:text-blue-700 font-medium"
           >
             {expanded
-              ? (language === 'fr' ? '▲ Moins d\'infos' : '▲ Less info')
-              : (language === 'fr' ? '▼ En savoir plus' : '▼ Learn more')}
+              ? (language === 'fr' ? '▲ Masquer' : '▲ Hide')
+              : (language === 'fr' ? '▼ Biographie' : '▼ Biography')}
           </button>
         )}
 
         {expanded && (
           <div className="mt-3 space-y-2">
-            {description && (
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {typeof description === 'object' ? description[language] : description}
-              </p>
-            )}
-            {disclaimer && (
+            {bio && <p className="text-sm text-gray-600 leading-relaxed">{bio}</p>}
+            {disc && (
               <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded p-2">
-                {typeof disclaimer === 'object' ? disclaimer[language] : disclaimer}
+                {disc}
               </p>
             )}
           </div>
