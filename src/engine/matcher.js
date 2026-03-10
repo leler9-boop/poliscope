@@ -12,8 +12,8 @@ import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';
  * 3. Compute weighted mean distance
  * 4. Alignment = (1 - weighted_mean_distance) × 100
  *
- * This produces genuine spread: opposing candidates score 15–35%,
- * closely aligned ones score 70–95%.
+ * This produces a sharp spread: opposing candidates score 10–25%,
+ * closely aligned ones score 80–95%.
  *
  * @param {Object} userThemes   - { ECONOMY: 0–100, … }
  * @param {Object} targetProfile - same structure as userThemes
@@ -47,9 +47,22 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder) {
 
   const meanDistance = weightedDistanceSum / totalWeight; // 0–1
 
-  // Non-linear amplification: compress close matches upward, expand distant ones downward.
-  // Power 1.5 produces a realistic spread: 85%+ for very similar, <30% for opposing.
-  const alignment = Math.round(Math.pow(1 - meanDistance, 1.5) * 100);
+  // Extreme-disagreement penalty: themes where distance > 0.5 receive extra weight.
+  // This ensures a single strongly opposing theme pulls the score down noticeably.
+  let extremePenalty = 0;
+  THEMES_ORDER.forEach(theme => {
+    const d = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50)) / 100;
+    if (d > 0.5) extremePenalty += (d - 0.5) * 0.18;
+  });
+  const adjustedDistance = Math.min(1, meanDistance + extremePenalty);
+
+  // Power 2.2: produces a sharp spread.
+  // d=0.05 → 89%  (very similar)
+  // d=0.20 → 61%  (moderate overlap)
+  // d=0.35 → 43%  (clear disagreement)
+  // d=0.50 → 22%  (opposing)
+  // d=0.60 → 13%  (very opposing)
+  const alignment = Math.round(Math.pow(1 - adjustedDistance, 2.2) * 100);
   return Math.max(0, Math.min(100, alignment));
 }
 

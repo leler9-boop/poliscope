@@ -5,15 +5,29 @@ import { rankByAlignment, generateWhyMatch } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
 import MatchCard from '../components/MatchCard.jsx';
 
+function applyAdjustments(themes, adjustments) {
+  if (!adjustments || Object.keys(adjustments).length === 0) return themes;
+  const result = { ...themes };
+  Object.entries(adjustments).forEach(([k, v]) => {
+    if (result[k] != null) result[k] = Math.max(0, Math.min(100, result[k] + v));
+  });
+  return result;
+}
+
 export default function HistoricalFigures() {
-  const language      = useStore(s => s.language);
-  const profile       = useStore(s => s.profile);
-  const priorityOrder = useStore(s => s.priorityOrder);
-  const navigate      = useStore(s => s.navigate);
+  const language           = useStore(s => s.language);
+  const profile            = useStore(s => s.profile);
+  const priorityOrder      = useStore(s => s.priorityOrder);
+  const profileAdjustments = useStore(s => s.profileAdjustments);
+  const navigate           = useStore(s => s.navigate);
   const t = createTranslator(language);
 
-  const rankedFigures = profile
-    ? rankByAlignment(profile, historicalFigures, priorityOrder)
+  const adjustedProfile = profile
+    ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }
+    : null;
+
+  const rankedFigures = adjustedProfile
+    ? rankByAlignment(adjustedProfile, historicalFigures, priorityOrder)
     : null;
 
   return (
@@ -51,7 +65,7 @@ export default function HistoricalFigures() {
       )}
 
       {/* Ranked figures */}
-      {profile && rankedFigures && (
+      {adjustedProfile && rankedFigures && (
         <>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
             {t('figures_sorted')} — {rankedFigures.length} {language === 'fr' ? 'figures' : 'figures'}
@@ -66,7 +80,7 @@ export default function HistoricalFigures() {
                 language={language}
                 isTopMatch={true}
                 showDetails={true}
-                whyMatch={generateWhyMatch(profile.themes, rankedFigures[0], language)}
+                whyMatch={generateWhyMatch(adjustedProfile.themes, rankedFigures[0], language)}
               />
             </div>
           )}
@@ -80,7 +94,7 @@ export default function HistoricalFigures() {
                 rank={idx + 2}
                 language={language}
                 showDetails={true}
-                whyMatch={generateWhyMatch(profile.themes, figure, language)}
+                whyMatch={generateWhyMatch(adjustedProfile.themes, figure, language)}
               />
             ))}
           </div>

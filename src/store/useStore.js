@@ -53,6 +53,9 @@ export const useStore = create(
       // ── Migration (session-only) ──
       pendingMigration: false,
 
+      // ── Profile adjustments (manual refinement, does not touch original answers) ──
+      profileAdjustments: {}, // { [THEME]: deltaPoints }
+
       // ── Election module ──
       selectedElectionId: null,
       electionAnswers: {}, // { [electionId]: { [questionId]: value } }
@@ -119,6 +122,20 @@ export const useStore = create(
 
       setPendingMigration: (v) => set({ pendingMigration: v }),
 
+      applyRefinement: (themeDeltas) => {
+        // themeDeltas: { ECONOMY: -5, PUBLIC_SERVICES: +5, ... }
+        const current = get().profileAdjustments;
+        const next = { ...current };
+        Object.entries(themeDeltas).forEach(([theme, delta]) => {
+          const prev = next[theme] ?? 0;
+          // Cap total adjustment per theme at ±25
+          next[theme] = Math.max(-25, Math.min(25, prev + delta));
+        });
+        set({ profileAdjustments: next });
+      },
+
+      resetAdjustments: () => set({ profileAdjustments: {} }),
+
       selectElection: (id) => set({ selectedElectionId: id, currentPage: 'electionDetail' }),
 
       answerElectionQuestion: (electionId, questionId, value) => {
@@ -174,6 +191,7 @@ export const useStore = create(
         set({
           answers: {},
           profile: null,
+          profileAdjustments: {},
           testMode: null,
           questionsQueue: [],
           currentQuestionIndex: 0,
@@ -228,6 +246,7 @@ export const useStore = create(
         profile: state.profile,
         priorityOrder: state.priorityOrder,
         electionAnswers: state.electionAnswers,
+        profileAdjustments: state.profileAdjustments,
       }),
     }
   )

@@ -1,20 +1,35 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
 import { ideologicalCurrents } from '../data/ideologicalCurrents.js';
+import { generateProfileSummary } from '../engine/profileSummary.js';
+import { refinementThemes } from '../data/refinementThemes.js';
 import RadarChart from '../components/RadarChart.jsx';
 import AxisBar from '../components/AxisBar.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 
+/** Apply manual adjustments on top of computed theme scores. */
+function buildAdjustedThemes(themes, adjustments) {
+  if (!adjustments || Object.keys(adjustments).length === 0) return themes;
+  const result = { ...themes };
+  Object.entries(adjustments).forEach(([k, v]) => {
+    if (result[k] != null) result[k] = Math.max(0, Math.min(100, result[k] + v));
+  });
+  return result;
+}
+
 export default function Profile() {
-  const language        = useStore(s => s.language);
-  const profile         = useStore(s => s.profile);
-  const answers         = useStore(s => s.answers);
-  const priorityOrder   = useStore(s => s.priorityOrder);
+  const language           = useStore(s => s.language);
+  const profile            = useStore(s => s.profile);
+  const answers            = useStore(s => s.answers);
+  const priorityOrder      = useStore(s => s.priorityOrder);
+  const profileAdjustments = useStore(s => s.profileAdjustments);
+  const applyRefinement    = useStore(s => s.applyRefinement);
+  const resetAdjustments   = useStore(s => s.resetAdjustments);
   const navigate        = useStore(s => s.navigate);
   const exportProfile   = useStore(s => s.exportProfile);
   const importProfile   = useStore(s => s.importProfile);
@@ -29,6 +44,14 @@ export default function Profile() {
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
 
   const [showAllCurrents, setShowAllCurrents] = useState(false);
+
+  // Refinement UI state
+  const [refineOpen, setRefineOpen] = useState(false);
+  const [refineStep, setRefineStep] = useState(1); // 1 | 2 | 3
+  const [selectedRefinementTheme, setSelectedRefinementTheme] = useState(null);
+  const [selectedSubtheme, setSelectedSubtheme] = useState(null);
+  const [sliderValue, setSliderValue] = useState(0);
+
   const { user, saveAnswers, saveUserProfile } = useAuth();
 
   if (!profile) {
@@ -53,9 +76,23 @@ export default function Profile() {
     );
   }
 
-  const { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions } = profile;
+  const { themes: rawThemes, axes, confidence, confidenceScore, answeredCount, totalQuestions } = profile;
+  const themes = useMemo(
+    () => buildAdjustedThemes(rawThemes, profileAdjustments),
+    [rawThemes, profileAdjustments]
+  );
+  const adjustedProfile = useMemo(() => ({ ...profile, themes }), [profile, themes]);
   const confMeta = getConfidenceMeta(confidence, language);
-  const rankedCurrents = rankByAlignment(profile, ideologicalCurrents, priorityOrder);
+  const rankedCurrents = useMemo(
+    () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder),
+    [adjustedProfile, priorityOrder]
+  );
+  const profileSummary = useMemo(
+    () => generateProfileSummary(themes, rankedCurrents, language),
+    [themes, rankedCurrents, language]
+  );
+  const hasAdjustments = Object.keys(profileAdjustments).length > 0;
+  const adjustmentCount = Object.values(profileAdjustments).filter(v => v !== 0).length;
   const answeredTotal = Object.keys(answers).length;
   const unansweredCount = totalQuestions - answeredTotal;
 
@@ -230,6 +267,21 @@ export default function Profile() {
         )}
       </div>
 
+      {/* Profile summary */}
+      {profileSummary && (
+        <div className="bg-white border border-gray-100 rounded-xl p-5 mb-6">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+            {t('profile_summary_title')}
+          </p>
+          <p className="text-sm text-gray-700 leading-relaxed">{profileSummary}</p>
+          {hasAdjustments && (
+            <p className="mt-2 text-xs text-blue-600 font-medium">
+              ✎ {t('refine_active', { n: adjustmentCount })}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Main grid */}
       <div className="grid sm:grid-cols-2 gap-6 mb-6">
 
@@ -389,6 +441,154 @@ export default function Profile() {
                 </div>
               );
             })}
+          </div>
+        )}
+      </div>
+
+      {/* Profile Refinement */}
+      <div className="bg-white border border-gray-100 rounded-xl overflow-hidden mb-6">
+        <button
+          onClick={() => { setRefineOpen(!refineOpen); setRefineStep(1); setSelectedRefinementTheme(null); setSelectedSubtheme(null); setSliderValue(0); }}
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
+        >
+          <div>
+            <p className="font-semibold text-gray-800 text-sm">{t('refine_title')}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{t('refine_subtitle')}</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {hasAdjustments && (
+              <span className="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+                {t('refine_adjusted_badge')} · {adjustmentCount}
+              </span>
+            )}
+            <span className="text-gray-400 text-lg leading-none">{refineOpen ? '−' : '+'}</span>
+          </div>
+        </button>
+
+        {refineOpen && (
+          <div className="border-t border-gray-100 px-5 py-5">
+
+            {/* Step 1: Choose theme */}
+            {refineStep === 1 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                  {t('refine_step1')}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {refinementThemes.map(rt => (
+                    <button
+                      key={rt.id}
+                      onClick={() => { setSelectedRefinementTheme(rt); setRefineStep(2); }}
+                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+                    >
+                      <span className="text-xl">{rt.emoji}</span>
+                      <span className="text-xs font-semibold text-gray-800">{rt.label[language]}</span>
+                      <span className="text-gray-400 leading-snug" style={{ fontSize: '10px' }}>{rt.desc[language]}</span>
+                    </button>
+                  ))}
+                </div>
+                {hasAdjustments && (
+                  <button
+                    onClick={resetAdjustments}
+                    className="mt-4 text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+                  >
+                    ✕ {t('refine_reset')}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Step 2: Choose subtheme */}
+            {refineStep === 2 && selectedRefinementTheme && (
+              <div>
+                <button
+                  onClick={() => setRefineStep(1)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 mb-4 transition-colors"
+                >
+                  ← {t('refine_back')}
+                </button>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+                  {selectedRefinementTheme.emoji} {selectedRefinementTheme.label[language]}
+                </p>
+                <p className="text-xs text-gray-400 mb-4">{t('refine_step2')}</p>
+                <div className="space-y-2">
+                  {selectedRefinementTheme.subthemes.map(sub => (
+                    <button
+                      key={sub.id}
+                      onClick={() => { setSelectedSubtheme(sub); setSliderValue(0); setRefineStep(3); }}
+                      className="w-full flex items-start gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-400 hover:bg-gray-50 text-left transition-all"
+                    >
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{sub.label[language]}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{sub.desc[language]}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Slider */}
+            {refineStep === 3 && selectedSubtheme && (
+              <div>
+                <button
+                  onClick={() => setRefineStep(2)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 mb-4 transition-colors"
+                >
+                  ← {t('refine_back')}
+                </button>
+                <p className="text-sm font-semibold text-gray-800 mb-1">{selectedSubtheme.label[language]}</p>
+                <p className="text-xs text-gray-500 mb-5">{selectedSubtheme.desc[language]}</p>
+
+                {/* Slider */}
+                <div className="mb-5">
+                  <div className="flex justify-between text-xs text-gray-400 mb-2">
+                    <span>{selectedSubtheme.lessLabel[language]}</span>
+                    <span className="font-semibold text-gray-700">
+                      {sliderValue === 0 ? t('refine_neutral') :
+                       sliderValue > 0 ? `+${sliderValue}` : `${sliderValue}`}
+                    </span>
+                    <span>{selectedSubtheme.moreLabel[language]}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={-2}
+                    max={2}
+                    step={1}
+                    value={sliderValue}
+                    onChange={e => setSliderValue(Number(e.target.value))}
+                    className="w-full accent-gray-800 cursor-pointer"
+                  />
+                  <div className="flex justify-between mt-1">
+                    {[-2, -1, 0, 1, 2].map(v => (
+                      <span key={v} className={`text-center flex-1 text-xs transition-colors ${sliderValue === v ? 'text-gray-900 font-bold' : 'text-gray-300'}`}>
+                        {v === -2 ? '−−' : v === -1 ? '−' : v === 0 ? '○' : v === 1 ? '+' : '++'}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (sliderValue !== 0) {
+                      const delta = {};
+                      Object.entries(selectedSubtheme.adjustment).forEach(([k, v]) => {
+                        delta[k] = v * sliderValue;
+                      });
+                      applyRefinement(delta);
+                    }
+                    setRefineStep(1);
+                    setSelectedRefinementTheme(null);
+                    setSelectedSubtheme(null);
+                    setSliderValue(0);
+                  }}
+                  disabled={sliderValue === 0}
+                  className="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                >
+                  {t('refine_apply')}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -490,16 +490,30 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
+function applyAdjustments(themes, adjustments) {
+  if (!adjustments || Object.keys(adjustments).length === 0) return themes;
+  const result = { ...themes };
+  Object.entries(adjustments).forEach(([k, v]) => {
+    if (result[k] != null) result[k] = Math.max(0, Math.min(100, result[k] + v));
+  });
+  return result;
+}
+
 export default function ElectionDetail() {
-  const language          = useStore(s => s.language);
-  const profile           = useStore(s => s.profile);
-  const priorityOrder     = useStore(s => s.priorityOrder);
-  const navigate          = useStore(s => s.navigate);
+  const language           = useStore(s => s.language);
+  const profile            = useStore(s => s.profile);
+  const profileAdjustments = useStore(s => s.profileAdjustments);
+  const priorityOrder      = useStore(s => s.priorityOrder);
+  const navigate           = useStore(s => s.navigate);
   const selectedElectionId = useStore(s => s.selectedElectionId);
-  const electionAnswers   = useStore(s => s.electionAnswers);
+  const electionAnswers    = useStore(s => s.electionAnswers);
   const answerElectionQuestion = useStore(s => s.answerElectionQuestion);
   const clearElectionAnswers = useStore(s => s.clearElectionAnswers);
   const t = createTranslator(language);
+
+  const adjustedProfile = profile
+    ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }
+    : null;
 
   const [step, setStep] = useState('context'); // 'context' | 'questionnaire' | 'results'
 
@@ -510,7 +524,7 @@ export default function ElectionDetail() {
     return null;
   }
 
-  if (!profile && step === 'results') {
+  if (!adjustedProfile && step === 'results') {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <div className="text-5xl mb-4">{election.flag}</div>
@@ -565,12 +579,12 @@ export default function ElectionDetail() {
         />
       )}
 
-      {step === 'results' && profile && (
+      {step === 'results' && adjustedProfile && (
         <ResultsStep
           election={election}
           language={language}
           t={t}
-          globalProfile={profile}
+          globalProfile={adjustedProfile}
           electionAnswers={electionAnswers}
           priorityOrder={priorityOrder}
           onRetake={() => {

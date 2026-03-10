@@ -109,6 +109,24 @@ export const translations = {
     migrate_yes: `Save to my account`,
     migrate_no: `No thanks`,
 
+    // ── Profile summary ──
+    profile_summary_title: `Your Political Tendencies`,
+
+    // ── Profile refinement ──
+    refine_title: `Not quite right?`,
+    refine_subtitle: `Adjust your profile if the result doesn't feel accurate.`,
+    refine_step1: `Choose a theme to adjust`,
+    refine_step2: `Choose what to adjust`,
+    refine_step3: `Set your position`,
+    refine_apply: `Apply adjustment`,
+    refine_back: `Back`,
+    refine_reset: `Reset all adjustments`,
+    refine_adjusted_badge: `Adjusted`,
+    refine_less: `Much less`,
+    refine_more: `Much more`,
+    refine_neutral: `Neutral`,
+    refine_active: `{n} adjustment(s) active`,
+
     // ── Ideological Currents ──
     currents_title: `Your Ideological Currents`,
     currents_subtitle: `Political traditions that best match your profile.`,
@@ -257,6 +275,24 @@ export const translations = {
     migrate_subtitle: `Voulez-vous les sauvegarder dans votre compte ?`,
     migrate_yes: `Sauvegarder dans mon compte`,
     migrate_no: `Non merci`,
+
+    // ── Profile summary ──
+    profile_summary_title: `Vos tendances politiques`,
+
+    // ── Profile refinement ──
+    refine_title: `Pas tout à fait exact ?`,
+    refine_subtitle: `Ajustez votre profil si le résultat ne vous semble pas précis.`,
+    refine_step1: `Choisissez un thème à ajuster`,
+    refine_step2: `Choisissez ce à ajuster`,
+    refine_step3: `Définissez votre position`,
+    refine_apply: `Appliquer l'ajustement`,
+    refine_back: `Retour`,
+    refine_reset: `Réinitialiser les ajustements`,
+    refine_adjusted_badge: `Ajusté`,
+    refine_less: `Beaucoup moins`,
+    refine_more: `Beaucoup plus`,
+    refine_neutral: `Neutre`,
+    refine_active: `{n} ajustement(s) actif(s)`,
 
     // ── Ideological Currents ──
     currents_title: `Vos courants idéologiques`,
