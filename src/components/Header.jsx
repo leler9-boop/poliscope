@@ -2,7 +2,6 @@ import React from 'react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { useAuth } from '../lib/auth.jsx';
-import { isSupabaseEnabled } from '../lib/supabase.js';
 
 export default function Header() {
   const language    = useStore(s => s.language);
@@ -10,9 +9,12 @@ export default function Header() {
   const navigate    = useStore(s => s.navigate);
   const profile     = useStore(s => s.profile);
   const currentPage = useStore(s => s.currentPage);
+  const userId      = useStore(s => s.userId);
+  const userEmail   = useStore(s => s.userEmail);
   const t = createTranslator(language);
 
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
+  const isLoggedIn  = Boolean(userId);
 
   const navItems = [
     { key: 'home',      label: t('nav_home'),       page: 'landing' },
@@ -21,7 +23,7 @@ export default function Header() {
     { key: 'figures',   label: t('nav_figures'),    page: 'figures' },
   ];
 
-  // Don't show nav during questionnaire
+  // Hide nav links during questionnaire, but keep right-side controls visible
   const hideNav = currentPage === 'questionnaire';
 
   const handleSignOut = async () => {
@@ -79,33 +81,35 @@ export default function Header() {
               {t('lang_switch')}
             </button>
 
-            {/* Auth button — only when Supabase is configured */}
-            {isSupabaseEnabled && (
-              user ? (
-                <div className="flex items-center gap-2">
-                  <span className="hidden sm:block text-xs text-blue-300 max-w-[120px] truncate" title={user.email}>
-                    {user.email}
-                  </span>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-xs font-semibold bg-blue-800 hover:bg-red-700 px-3 py-1.5 rounded transition-colors text-blue-100"
-                    title={language === 'fr' ? 'Se déconnecter' : 'Sign out'}
-                  >
-                    {language === 'fr' ? 'Déco.' : 'Out'}
-                  </button>
-                </div>
-              ) : (
+            {/* Auth button — always visible */}
+            {isLoggedIn ? (
+              <div className="flex items-center gap-1">
                 <button
-                  onClick={() => navigate('auth')}
-                  className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${
-                    currentPage === 'auth'
-                      ? 'bg-blue-700 text-white'
-                      : 'bg-blue-800 hover:bg-blue-700 text-blue-100'
-                  }`}
+                  onClick={() => navigate('profile')}
+                  className="text-xs font-semibold bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded transition-colors text-blue-100 max-w-[140px] truncate"
+                  title={userEmail ?? ''}
                 >
-                  {language === 'fr' ? 'Connexion' : 'Sign in'}
+                  {userEmail ?? (language === 'fr' ? 'Mon profil' : 'My profile')}
                 </button>
-              )
+                <button
+                  onClick={handleSignOut}
+                  className="text-xs text-blue-400 hover:text-red-400 px-1.5 py-1.5 rounded transition-colors"
+                  title={language === 'fr' ? 'Se déconnecter' : 'Sign out'}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('auth')}
+                className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${
+                  currentPage === 'auth'
+                    ? 'bg-white text-blue-900'
+                    : 'bg-blue-500 hover:bg-blue-400 text-white'
+                }`}
+              >
+                {language === 'fr' ? 'Connexion' : 'Login'}
+              </button>
             )}
           </div>
         </div>
@@ -129,12 +133,12 @@ export default function Header() {
               </button>
             ))}
             {/* Mobile sign-in */}
-            {isSupabaseEnabled && !user && (
+            {!isLoggedIn && (
               <button
                 onClick={() => navigate('auth')}
-                className="px-3 py-1 rounded text-xs font-medium whitespace-nowrap text-blue-100 hover:bg-blue-800"
+                className="px-3 py-1 rounded text-xs font-medium whitespace-nowrap bg-blue-500 hover:bg-blue-400 text-white"
               >
-                {language === 'fr' ? 'Connexion' : 'Sign in'}
+                {language === 'fr' ? 'Connexion' : 'Login'}
               </button>
             )}
           </div>
