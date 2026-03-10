@@ -47,22 +47,23 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder) {
 
   const meanDistance = weightedDistanceSum / totalWeight; // 0–1
 
-  // Extreme-disagreement penalty: themes where distance > 0.5 receive extra weight.
-  // This ensures a single strongly opposing theme pulls the score down noticeably.
+  // Extreme-disagreement penalty: themes where distance > 0.38 receive extra weight.
+  // Threshold lowered from 0.5 → 0.38 and coefficient raised 0.18 → 0.25 for
+  // a more realistic, polarised score distribution.
   let extremePenalty = 0;
   THEMES_ORDER.forEach(theme => {
     const d = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50)) / 100;
-    if (d > 0.5) extremePenalty += (d - 0.5) * 0.18;
+    if (d > 0.38) extremePenalty += (d - 0.38) * 0.25;
   });
   const adjustedDistance = Math.min(1, meanDistance + extremePenalty);
 
-  // Power 2.2: produces a sharp spread.
-  // d=0.05 → 89%  (very similar)
-  // d=0.20 → 61%  (moderate overlap)
-  // d=0.35 → 43%  (clear disagreement)
-  // d=0.50 → 22%  (opposing)
-  // d=0.60 → 13%  (very opposing)
-  const alignment = Math.round(Math.pow(1 - adjustedDistance, 2.2) * 100);
+  // Power 2.8: produces a sharper, more realistic spread.
+  // d=0.05 → 86%  (very similar)
+  // d=0.15 → 64%  (moderate overlap)
+  // d=0.25 → 44%  (clear disagreement)
+  // d=0.35 → 28%  (weak alignment)
+  // d=0.50 → 14%  (opposing)
+  const alignment = Math.round(Math.pow(1 - adjustedDistance, 2.8) * 100);
   return Math.max(0, Math.min(100, alignment));
 }
 
@@ -106,9 +107,9 @@ export function generateWhyMatch(userThemes, figure, lang = 'en') {
  * Get a color class for an alignment score.
  */
 export function alignmentColorClass(score) {
-  if (score >= 75) return 'text-green-600';
-  if (score >= 55) return 'text-blue-600';
-  if (score >= 35) return 'text-amber-600';
+  if (score >= 70) return 'text-green-600';
+  if (score >= 50) return 'text-blue-600';
+  if (score >= 30) return 'text-amber-600';
   return 'text-red-600';
 }
 
@@ -116,9 +117,9 @@ export function alignmentColorClass(score) {
  * Get bar fill color for an alignment score.
  */
 export function alignmentBarColor(score) {
-  if (score >= 75) return '#16a34a'; // green-600
-  if (score >= 55) return '#2563eb'; // blue-600
-  if (score >= 35) return '#d97706'; // amber-600
+  if (score >= 70) return '#16a34a'; // green-600
+  if (score >= 50) return '#2563eb'; // blue-600
+  if (score >= 30) return '#d97706'; // amber-600
   return '#dc2626';                  // red-600
 }
 
@@ -143,9 +144,9 @@ export function alignmentLabel(score, lang = 'en') {
     },
   };
   const l = labels[lang] ?? labels.en;
-  if (score >= 75) return l.very_high;
-  if (score >= 55) return l.high;
-  if (score >= 40) return l.moderate;
-  if (score >= 25) return l.low;
+  if (score >= 70) return l.very_high;
+  if (score >= 50) return l.high;
+  if (score >= 35) return l.moderate;
+  if (score >= 20) return l.low;
   return l.very_low;
 }

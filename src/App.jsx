@@ -47,13 +47,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#f7f7f5] flex flex-col">
       <Header t={t} />
       <main className="flex-1 page-transition" key={currentPage}>
         {pages[currentPage] ?? <Landing />}
       </main>
-      <footer className="border-t border-gray-200 py-6 text-center text-xs text-gray-400 bg-white">
-        <p>Poliscope — {language === 'fr' ? 'Un outil analytique, pas une recommandation de vote.' : 'An analytical tool, not a voting recommendation.'}</p>
+      <footer className="border-t border-gray-200 py-8 text-center bg-white">
+        <p className="text-xs text-gray-400 tracking-wide">
+          Poliscope
+          <span className="mx-2 text-gray-300">·</span>
+          {language === 'fr' ? 'Outil analytique et éducatif. Pas une recommandation de vote.' : 'An analytical and educational tool. Not a voting recommendation.'}
+        </p>
       </footer>
     </div>
   );

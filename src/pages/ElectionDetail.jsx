@@ -19,7 +19,7 @@ function blendedAlignment(globalProfile, electionAnswers, candidate, questions, 
       return sum + Math.abs(electionAnswers[q.id] - q.positions[candidate.id]) / 4;
     }, 0) / answered.length;
 
-  const electionScore = Math.round(Math.pow(1 - meanDist, 1.5) * 100);
+  const electionScore = Math.round(Math.pow(1 - meanDist, 2.2) * 100);
   return Math.round(globalScore * 0.65 + electionScore * 0.35);
 }
 
@@ -43,17 +43,17 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-4 mb-10">
         <span className="text-4xl">{election.flag}</span>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{election.title[language]}</h1>
-          <span className="text-sm text-gray-400">{election.country} · {election.year}</span>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{election.title[language]}</h1>
+          <span className="text-sm text-gray-400 mt-0.5 block">{election.country} · {election.year}</span>
         </div>
       </div>
 
       {/* Context intro */}
-      <div className="mb-6">
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+      <div className="mb-8">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-5">
           {t('election_about')}
         </h2>
         <div className="space-y-4">
@@ -65,7 +65,7 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
 
       {/* Deeper context accordion */}
       {deeper.length > 0 && (
-        <div className="border border-gray-200 rounded-xl mb-6 overflow-hidden">
+        <div className="border border-gray-200 rounded-2xl mb-8 overflow-hidden">
           <button
             onClick={() => setDeeperOpen(!deeperOpen)}
             className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
@@ -275,10 +275,15 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
     : '';
   const note = t('election_results_note', { extra: noteExtra });
 
+  // Tier-split candidates by score
+  const strongMatches   = rankedCandidates.filter(c => c.alignment >= 60);
+  const moderateMatches = rankedCandidates.filter(c => c.alignment >= 35 && c.alignment < 60);
+  const weakMatches     = rankedCandidates.filter(c => c.alignment < 35);
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-2xl">{election.flag}</span>
           <h1 className="text-2xl font-bold text-gray-900">{t('election_results_title')}</h1>
@@ -286,46 +291,105 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         <p className="text-sm text-gray-500">{note}</p>
       </div>
 
-      {/* Trust message */}
-      <div className="flex items-center gap-2 text-xs text-gray-400 bg-gray-50 border border-gray-100 rounded-lg px-4 py-2.5 mb-6">
-        <span>🔒</span>
-        <span>{t('trust_educational')}</span>
+      {/* Calibration message */}
+      <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 mb-6">
+        <p className="text-xs text-blue-800 leading-relaxed">
+          {language === 'fr'
+            ? 'Votre profil politique général est ici ajusté avec les questions spécifiques à cette élection, car les enjeux varient d\'un pays et d\'une élection à l\'autre.'
+            : 'Your general political profile is adjusted here with election-specific questions, because the issues that matter vary from one country and election to another.'}
+        </p>
       </div>
 
-      {/* Top match */}
-      {rankedCandidates[0] && (
+      {/* Strong matches */}
+      {strongMatches.length > 0 && (
         <div className="mb-6">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-            {language === 'fr' ? '⭐ Votre meilleure correspondance' : '⭐ Your closest match'}
+            {language === 'fr' ? 'Correspondances fortes' : 'Strong matches'}
           </p>
-          <CandidateResultCard
-            candidate={rankedCandidates[0]}
-            rank={1}
-            language={language}
-            t={t}
-            isTop
-            electionAnswers={thisElectionAnswers}
-            questions={questions}
-            expanded
-          />
+          <div className="space-y-3">
+            {strongMatches.map((c, idx) => (
+              <CandidateResultCard
+                key={c.id}
+                candidate={c}
+                rank={rankedCandidates.indexOf(c) + 1}
+                language={language}
+                t={t}
+                isTop={idx === 0}
+                electionAnswers={thisElectionAnswers}
+                questions={questions}
+                expanded={idx === 0 || expandedId === c.id}
+                onToggle={idx !== 0 ? () => setExpandedId(expandedId === c.id ? null : c.id) : undefined}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Rest of candidates */}
-      {rankedCandidates.length > 1 && (
+      {/* Moderate matches */}
+      {moderateMatches.length > 0 && (
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+            {language === 'fr' ? 'Correspondances modérées' : 'Moderate matches'}
+          </p>
+          <div className="space-y-3">
+            {moderateMatches.map(c => (
+              <CandidateResultCard
+                key={c.id}
+                candidate={c}
+                rank={rankedCandidates.indexOf(c) + 1}
+                language={language}
+                t={t}
+                isTop={false}
+                electionAnswers={thisElectionAnswers}
+                questions={questions}
+                expanded={expandedId === c.id}
+                onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Weak matches */}
+      {weakMatches.length > 0 && (
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+            {language === 'fr' ? 'Faibles correspondances' : 'Weak matches'}
+          </p>
+          <div className="space-y-3">
+            {weakMatches.map(c => (
+              <CandidateResultCard
+                key={c.id}
+                candidate={c}
+                rank={rankedCandidates.indexOf(c) + 1}
+                language={language}
+                t={t}
+                isTop={false}
+                electionAnswers={thisElectionAnswers}
+                questions={questions}
+                expanded={expandedId === c.id}
+                onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Fallback: no tiers — just list all */}
+      {strongMatches.length === 0 && moderateMatches.length === 0 && weakMatches.length === 0 && (
         <div className="space-y-3 mb-6">
-          {rankedCandidates.slice(1).map((c, idx) => (
+          {rankedCandidates.map((c, idx) => (
             <CandidateResultCard
               key={c.id}
               candidate={c}
-              rank={idx + 2}
+              rank={idx + 1}
               language={language}
               t={t}
-              isTop={false}
+              isTop={idx === 0}
               electionAnswers={thisElectionAnswers}
               questions={questions}
-              expanded={expandedId === c.id}
-              onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
+              expanded={idx === 0 || expandedId === c.id}
+              onToggle={idx !== 0 ? () => setExpandedId(expandedId === c.id ? null : c.id) : undefined}
             />
           ))}
         </div>
@@ -360,6 +424,13 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         </div>
       </div>
 
+      {/* Trust note */}
+      <p className="text-xs text-gray-400 leading-relaxed mb-6">
+        {language === 'fr'
+          ? 'Ces scores sont des comparaisons analytiques basées sur les positions politiques, non des recommandations de vote.'
+          : 'These scores are analytical comparisons based on policy positions — not voting recommendations.'}
+      </p>
+
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
         {questions.length > 0 && (
@@ -392,10 +463,11 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
   const disagreements = breakdown.filter(d => d.distance >= 3).slice(0, 2);
 
   return (
-    <div className={`bg-white border rounded-xl overflow-hidden transition-shadow hover:shadow-sm ${
-      isTop ? 'border-gray-900 shadow-sm' : 'border-gray-100'
+    <div className={`bg-white border rounded-2xl overflow-hidden transition-all hover:shadow-sm ${
+      isTop ? 'border-gray-300 shadow-sm' : 'border-gray-200'
     }`}>
-      <div className="p-4 sm:p-5">
+      {isTop && <div className="h-0.5 bg-gray-900" />}
+      <div className="p-5 sm:p-6">
         <div className="flex items-start gap-3">
           {/* Rank */}
           <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 flex-shrink-0 mt-0.5">
@@ -428,11 +500,11 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
         </div>
 
         {/* Bar */}
-        <div className="mt-3 mb-1">
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full rounded-full" style={{ width: `${alignment}%`, backgroundColor: barColor }} />
+        <div className="mt-4 mb-1">
+          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full rounded-full match-bar-fill" style={{ width: `${alignment}%`, backgroundColor: barColor }} />
           </div>
-          <p className="text-xs text-gray-400 mt-1">{label}</p>
+          <p className="text-xs text-gray-400 mt-1.5">{label}</p>
         </div>
 
         {/* Election-specific breakdown */}

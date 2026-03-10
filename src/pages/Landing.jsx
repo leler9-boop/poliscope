@@ -9,86 +9,88 @@ export default function Landing() {
   const t = createTranslator(language);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
 
       {/* Hero */}
-      <div className="text-center mb-12 sm:mb-16">
-        <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-5">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-          <span className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
-            {language === 'fr' ? 'Profil politique multidimensionnel' : 'Multi-dimensional political profiling'}
-          </span>
-        </div>
+      <div className="max-w-3xl mx-auto text-center mb-16 sm:mb-20">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-5">
+          {language === 'fr' ? 'Profilage politique multidimensionnel' : 'Multi-dimensional political profiling'}
+        </p>
 
-        <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight mb-5">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
           {t('landing_hero_title')}
         </h1>
 
-        <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed mb-8">
+        <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
           {t('landing_hero_subtitle')}
         </p>
 
-        {/* CTA */}
-        <button
-          onClick={() => navigate('selectTest')}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-7 py-3.5 rounded-lg shadow-sm transition-colors text-base"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-          {t('landing_cta_primary')}
-        </button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            onClick={() => navigate('selectTest')}
+            className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-7 py-3.5 rounded-xl shadow-sm transition-colors text-sm"
+          >
+            {t('landing_cta_primary')}
+          </button>
 
-        {profile && (
-          <p className="mt-3 text-sm text-gray-400">
-            {language === 'fr' ? 'Vous avez déjà un profil.' : 'You already have a profile.'}{' '}
-            <button onClick={() => navigate('profile')} className="text-blue-500 hover:text-blue-700 font-medium">
+          {profile ? (
+            <button
+              onClick={() => navigate('profile')}
+              className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+            >
               {language === 'fr' ? 'Voir mon profil →' : 'View my profile →'}
             </button>
-          </p>
-        )}
+          ) : (
+            <button
+              onClick={() => navigate('elections')}
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 border border-gray-200 px-5 py-3.5 rounded-xl hover:border-gray-300 transition-colors"
+            >
+              {t('landing_cta_elections')}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Feature cards */}
-      <div className="grid sm:grid-cols-3 gap-5 mb-12">
+      <div className="grid sm:grid-cols-3 gap-4 mb-16">
         {[
           {
-            icon: '📊',
+            label: language === 'fr' ? 'Profil' : 'Profile',
             title: language === 'fr' ? 'Profil multidimensionnel' : 'Multi-dimensional profile',
             desc: language === 'fr'
-              ? '8 thèmes politiques, 4 axes idéologiques. Bien plus qu\'un simple spectre gauche-droite.'
+              ? '8 thèmes politiques, 4 axes idéologiques. Bien au-delà du spectre gauche–droite.'
               : '8 political themes, 4 ideological axes. Far beyond a simple left–right spectrum.',
           },
           {
-            icon: '🗳️',
+            label: language === 'fr' ? 'Élections' : 'Elections',
             title: language === 'fr' ? 'Compatibilité électorale' : 'Election matching',
             desc: language === 'fr'
               ? 'Comparez votre profil à de vraies élections et candidats avec des scores précis.'
               : 'Compare your profile to real elections and candidates with accurate alignment scores.',
             action: () => navigate('elections'),
-            actionLabel: language === 'fr' ? 'Voir les élections →' : 'Explore elections →',
+            actionLabel: language === 'fr' ? 'Explorer les élections →' : 'Explore elections →',
           },
           {
-            icon: '🏛️',
+            label: language === 'fr' ? 'Histoire' : 'History',
             title: language === 'fr' ? 'Figures historiques' : 'Historical figures',
             desc: language === 'fr'
-              ? 'Découvrez quels dirigeants historiques vous ressemblez le plus, de Roosevelt à Thatcher.'
+              ? 'Découvrez quels dirigeants historiques vous ressemblez, de Roosevelt à Thatcher.'
               : 'Discover which historical leaders you most resemble, from FDR to Thatcher.',
             action: () => navigate('figures'),
             actionLabel: language === 'fr' ? 'Explorer →' : 'Explore →',
           },
         ].map((card, i) => (
-          <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sm:p-6">
-            <div className="text-3xl mb-3">{card.icon}</div>
-            <h3 className="font-semibold text-gray-900 mb-2">{card.title}</h3>
+          <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 hover:border-gray-300 hover:shadow-sm transition-all">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">{card.label}</p>
+            <h3 className="font-semibold text-gray-900 text-base mb-2 leading-snug">{card.title}</h3>
             <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
             {card.action && !profile && (
-              <p className="mt-3 text-xs text-gray-400">{t('landing_no_profile_note')}</p>
+              <p className="mt-4 text-xs text-gray-400">{t('landing_no_profile_note')}</p>
             )}
             {card.action && profile && (
               <button
                 onClick={card.action}
-                className="mt-3 text-sm text-blue-500 hover:text-blue-700 font-medium"
+                className="mt-5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
                 {card.actionLabel}
               </button>
@@ -98,51 +100,57 @@ export default function Landing() {
       </div>
 
       {/* How it works */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-        <h2 className="font-bold text-gray-900 text-xl mb-5">
+      <div className="bg-white rounded-2xl border border-gray-200 p-7 sm:p-10 mb-14">
+        <h2 className="font-bold text-gray-900 text-lg mb-8 tracking-tight">
           {language === 'fr' ? 'Comment ça fonctionne' : 'How it works'}
         </h2>
-        <div className="grid sm:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-4 gap-6 sm:gap-8">
           {[
             {
-              step: '1',
+              step: '01',
               title: language === 'fr' ? 'Priorisez vos thèmes' : 'Prioritize your themes',
               desc: language === 'fr' ? 'Classez les enjeux qui comptent le plus pour vous.' : 'Rank the issues that matter most to you.',
             },
             {
-              step: '2',
+              step: '02',
               title: language === 'fr' ? 'Répondez aux questions' : 'Answer questions',
               desc: language === 'fr' ? 'Des questions structurées sur des enjeux politiques réels.' : 'Structured questions on real political issues.',
             },
             {
-              step: '3',
+              step: '03',
               title: language === 'fr' ? 'Découvrez votre profil' : 'Discover your profile',
               desc: language === 'fr' ? 'Un profil multidimensionnel sur 8 thèmes et 4 axes.' : 'A multi-dimensional profile across 8 themes and 4 axes.',
             },
             {
-              step: '4',
+              step: '04',
               title: language === 'fr' ? 'Comparez et explorez' : 'Compare & explore',
               desc: language === 'fr' ? 'Alignement avec les candidats, partis et figures historiques.' : 'Alignment with candidates, parties, and historical figures.',
             },
           ].map(({ step, title, desc }) => (
-            <div key={step} className="flex gap-3">
-              <div className="flex-shrink-0 w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                {step}
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm text-gray-800 mb-1">{title}</h4>
-                <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
-              </div>
+            <div key={step}>
+              <p className="text-xs font-bold text-gray-300 tracking-widest mb-3">{step}</p>
+              <h4 className="font-semibold text-sm text-gray-900 mb-2 leading-snug">{title}</h4>
+              <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Methodology note */}
-      <p className="text-center text-xs text-gray-400 mt-8 max-w-xl mx-auto leading-relaxed">
+      {/* Trust row */}
+      <div className="flex flex-wrap gap-x-8 gap-y-2 justify-center mb-10">
+        {[t('trust_data'), t('trust_no_sell'), t('trust_anonymous')].map((msg, i) => (
+          <span key={i} className="text-xs text-gray-400 flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
+            {msg}
+          </span>
+        ))}
+      </div>
+
+      {/* Disclaimer */}
+      <p className="text-center text-xs text-gray-400 max-w-xl mx-auto leading-relaxed">
         {language === 'fr'
-          ? 'Poliscope est un outil analytique et éducatif. Il ne constitue pas une recommandation de vote. Les profils des candidats et des figures historiques sont des simplifications analytiques.'
-          : 'Poliscope is an analytical and educational tool. It does not constitute a voting recommendation. Candidate and historical figure profiles are analytical simplifications.'}
+          ? 'Poliscope est un outil analytique et éducatif. Il ne constitue pas une recommandation de vote. Les profils des candidats et des figures historiques sont des approximations analytiques.'
+          : 'Poliscope is an analytical and educational tool. It does not constitute a voting recommendation. Candidate and historical figure profiles are analytical approximations.'}
       </p>
     </div>
   );

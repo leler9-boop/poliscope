@@ -31,22 +31,19 @@ export default function HistoricalFigures() {
     : null;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('figures_title')}</h1>
-        <p className="text-gray-500 mt-1 text-sm">{t('figures_subtitle')}</p>
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">{t('figures_title')}</h1>
+        <p className="text-gray-500 mt-1.5 text-sm">{t('figures_subtitle')}</p>
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-        <p className="text-sm font-medium text-amber-800 mb-1">
-          {language === 'fr' ? 'Note méthodologique' : 'Methodological note'}
-        </p>
-        <p className="text-xs text-amber-700 leading-relaxed">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
+        <p className="text-xs text-gray-500 leading-relaxed">
           {language === 'fr'
-            ? 'Cette comparaison est basée sur des interprétations d\'écrits historiques, de discours et de positions politiques. Les figures historiques ont vécu dans des contextes très différents et leurs vues ne correspondent pas parfaitement aux catégories politiques modernes. Les résultats sont indicatifs et éducatifs, non prescriptifs.'
-            : 'This comparison is based on interpretations of historical writings, speeches and political positions. Historical figures lived in very different contexts and their views may not perfectly correspond to modern political categories. Results are indicative and educational, not prescriptive.'}
+            ? 'Ces profils sont des approximations analytiques construites à partir d\'écrits, de discours et de positions historiques documentées. Les figures ont évolué dans des contextes très différents des nôtres. Ce comparateur est un outil d\'exploration intellectuelle, pas un verdict politique.'
+            : 'These profiles are analytical approximations built from documented writings, speeches and historical positions. These figures lived in very different times and contexts. This tool is meant for intellectual exploration — not political verdicts.'}
         </p>
       </div>
 
@@ -100,23 +97,23 @@ export default function HistoricalFigures() {
           </div>
 
           {/* Alignment overview */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mt-6">
-            <h3 className="font-bold text-gray-900 mb-4 text-sm">
-              {language === 'fr' ? 'Vue d\'ensemble des compatibilités' : 'Alignment overview'}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 mt-6">
+            <h3 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-5">
+              {language === 'fr' ? 'Vue d\'ensemble' : 'Alignment overview'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {rankedFigures.map(figure => {
                 const barColor =
-                  figure.alignment >= 75 ? '#16a34a' :
-                  figure.alignment >= 55 ? '#2563eb' :
-                  figure.alignment >= 35 ? '#d97706' : '#dc2626';
+                  figure.alignment >= 70 ? '#16a34a' :
+                  figure.alignment >= 50 ? '#2563eb' :
+                  figure.alignment >= 30 ? '#d97706' : '#dc2626';
                 return (
                   <div key={figure.id} className="flex items-center gap-3">
                     <span className="text-base flex-shrink-0 w-6 text-center">{figure.emoji ?? '👤'}</span>
                     <span className="text-xs text-gray-600 w-32 flex-shrink-0 truncate">{figure.name}</span>
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full transition-all duration-700"
+                        className="h-full rounded-full match-bar-fill"
                         style={{ width: `${figure.alignment}%`, backgroundColor: barColor }}
                       />
                     </div>

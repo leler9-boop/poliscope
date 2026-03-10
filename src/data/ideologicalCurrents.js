@@ -5,6 +5,7 @@
 export const ideologicalCurrents = [
   {
     id: 'social_democracy',
+    tier: 'primary',
     name: { en: 'Social Democracy', fr: 'Social-démocratie' },
     color: '#be123c',
     icon: '⚖️',
@@ -40,8 +41,9 @@ export const ideologicalCurrents = [
     },
   },
   {
-    id: 'modern_liberalism',
-    name: { en: 'Modern Liberalism', fr: 'Libéralisme moderne' },
+    id: 'liberalism',
+    tier: 'primary',
+    name: { en: 'Liberalism', fr: 'Libéralisme' },
     color: '#1d4ed8',
     icon: '🗽',
     shortDesc: {
@@ -77,6 +79,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'social_liberalism',
+    tier: 'primary',
     name: { en: 'Social Liberalism', fr: 'Libéralisme social' },
     color: '#0891b2',
     icon: '🌐',
@@ -113,6 +116,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'conservatism',
+    tier: 'primary',
     name: { en: 'Conservatism', fr: 'Conservatisme' },
     color: '#1e40af',
     icon: '🏛️',
@@ -149,6 +153,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'libertarianism',
+    tier: 'primary',
     name: { en: 'Libertarianism', fr: 'Libertarianisme' },
     color: '#b45309',
     icon: '🔓',
@@ -185,6 +190,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'democratic_socialism',
+    tier: 'primary',
     name: { en: 'Democratic Socialism', fr: 'Socialisme démocratique' },
     color: '#dc2626',
     icon: '✊',
@@ -221,6 +227,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'green_politics',
+    tier: 'primary',
     name: { en: 'Green Politics', fr: 'Politique verte' },
     color: '#15803d',
     icon: '🌿',
@@ -257,6 +264,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'national_conservatism',
+    tier: 'primary',
     name: { en: 'National Conservatism', fr: 'Conservatisme national' },
     color: '#1e3a8a',
     icon: '🚩',
@@ -293,6 +301,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'christian_democracy',
+    tier: 'secondary',
     name: { en: 'Christian Democracy', fr: 'Démocratie chrétienne' },
     color: '#7c3aed',
     icon: '✝️',
@@ -329,6 +338,7 @@ export const ideologicalCurrents = [
   },
   {
     id: 'classical_liberalism',
+    tier: 'secondary',
     name: { en: 'Classical Liberalism', fr: 'Libéralisme classique' },
     color: '#78350f',
     icon: '⚡',
@@ -361,6 +371,80 @@ export const ideologicalCurrents = [
       DEMOCRACY: 78,
       GLOBAL: 20,
       PUBLIC_SERVICES: 15,
+    },
+  },
+  {
+    id: 'centrism',
+    tier: 'primary',
+    name: { en: 'Centrism', fr: 'Centrisme' },
+    color: '#6b7280',
+    icon: '⚖️',
+    shortDesc: {
+      en: 'Pragmatic governance that bridges left and right, prioritising stability and compromise.',
+      fr: 'Une gouvernance pragmatique qui fait le pont entre gauche et droite, privilégiant la stabilité et le compromis.',
+    },
+    keyBeliefs: {
+      en: [
+        'Balanced budgets and fiscal responsibility',
+        'Moderate social policies and incremental reform',
+        'Mixed economy: markets plus targeted redistribution',
+        'Strong institutions and rule of law',
+        'Multilateral cooperation without ideological rigidity',
+      ],
+      fr: [
+        'Budgets équilibrés et responsabilité fiscale',
+        'Politiques sociales modérées et réforme graduelle',
+        'Économie mixte : marchés et redistribution ciblée',
+        'Institutions solides et état de droit',
+        'Coopération multilatérale sans rigidité idéologique',
+      ],
+    },
+    profile: {
+      ECONOMY: 52,
+      SOCIAL: 52,
+      IMMIGRATION: 50,
+      SECURITY: 50,
+      ENVIRONMENT: 55,
+      DEMOCRACY: 72,
+      GLOBAL: 42,
+      PUBLIC_SERVICES: 52,
+    },
+  },
+  {
+    id: 'progressivism',
+    tier: 'primary',
+    name: { en: 'Progressivism', fr: 'Progressisme' },
+    color: '#7c3aed',
+    icon: '🌈',
+    shortDesc: {
+      en: 'Systemic social change, expanded rights, and active government to reduce inequality.',
+      fr: 'Changement social systémique, droits élargis et gouvernement actif pour réduire les inégalités.',
+    },
+    keyBeliefs: {
+      en: [
+        'Addressing systemic racism, sexism, and discrimination',
+        'Expanding civil and social rights for marginalised groups',
+        'Strong government role in reducing economic inequality',
+        'Ambitious climate policy and environmental justice',
+        'International solidarity and human rights-centred foreign policy',
+      ],
+      fr: [
+        'Lutter contre le racisme systémique, le sexisme et les discriminations',
+        'Élargir les droits civils et sociaux des groupes marginalisés',
+        'Rôle fort de l\'État pour réduire les inégalités économiques',
+        'Politique climatique ambitieuse et justice environnementale',
+        'Solidarité internationale et politique étrangère centrée sur les droits humains',
+      ],
+    },
+    profile: {
+      ECONOMY: 25,
+      SOCIAL: 92,
+      IMMIGRATION: 12,
+      SECURITY: 25,
+      ENVIRONMENT: 85,
+      DEMOCRACY: 88,
+      GLOBAL: 18,
+      PUBLIC_SERVICES: 80,
     },
   },
 ];

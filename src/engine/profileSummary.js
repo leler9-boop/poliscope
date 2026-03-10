@@ -134,11 +134,20 @@ function getSpecialConcernSentence(themes, lang) {
 function getOverallSentence(rankedCurrents, lang) {
   if (!rankedCurrents?.length) return null;
   const top = rankedCurrents[0];
-  const name = top.name[lang] ?? top.name.en;
-  const pct = top.alignment;
+  const second = rankedCurrents[1];
+  const topName = top.name[lang] ?? top.name.en;
+
+  // If a close second exists (within 12 points), mention both
+  if (second && second.alignment >= top.alignment - 12) {
+    const secondName = second.name[lang] ?? second.name.en;
+    return lang === 'fr'
+      ? `Dans l'ensemble, vos tendances se situent entre « ${topName} » et « ${secondName} », avec des affinités dans les deux directions.`
+      : `Overall, your tendencies sit between ${topName} and ${secondName}, with genuine affinities in both directions.`;
+  }
+
   return lang === 'fr'
-    ? `Dans l'ensemble, votre profil est le plus proche du courant « ${name} » (${pct}% de compatibilité).`
-    : `Overall, your profile aligns most closely with ${name} (${pct}% match).`;
+    ? `Dans l'ensemble, vos tendances politiques se rapprochent le plus de « ${topName} » (${top.alignment}% de compatibilité).`
+    : `Overall, your political tendencies lean most strongly toward ${topName} (${top.alignment}% match).`;
 }
 
 // ─── Utility ─────────────────────────────────────────────────────────────────

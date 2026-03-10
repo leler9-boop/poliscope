@@ -12,20 +12,20 @@ export default function Elections() {
   const t = createTranslator(language);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Header */}
       <div className="mb-10">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{t('elections_title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">{t('elections_title')}</h1>
         <p className="text-gray-500 text-sm">{t('elections_subtitle')}</p>
       </div>
 
       {/* No profile notice */}
       {!profile && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8">
-          <p className="text-amber-800 text-sm font-medium mb-3">{t('elections_no_profile')}</p>
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10">
+          <p className="text-gray-700 text-sm font-medium mb-4">{t('elections_no_profile')}</p>
           <button
             onClick={() => navigate('selectTest')}
-            className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+            className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
           >
             {t('landing_cta_primary')}
           </button>
@@ -33,7 +33,7 @@ export default function Elections() {
       )}
 
       {/* Election cards */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-4 mb-12">
         {elections.map(election => {
           const hasAnswers = Object.keys(electionAnswers[election.id] ?? {}).length > 0;
           const qCount = election.specificQuestions?.length ?? 0;
@@ -41,17 +41,17 @@ export default function Elections() {
           return (
             <div
               key={election.id}
-              className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:border-gray-200 transition-all group cursor-pointer"
+              className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-7 hover:border-gray-300 hover:shadow-sm transition-all group cursor-pointer"
               onClick={() => selectElection(election.id)}
             >
               {/* Flag + title */}
               <div className="flex items-start gap-4 mb-4">
-                <span className="text-4xl leading-none">{election.flag}</span>
+                <span className="text-3xl leading-none flex-shrink-0">{election.flag}</span>
                 <div>
-                  <h2 className="font-bold text-gray-900 text-base leading-snug group-hover:text-gray-700 transition-colors">
+                  <h2 className="font-bold text-gray-900 text-base leading-snug tracking-tight">
                     {election.title[language]}
                   </h2>
-                  <p className="text-xs text-gray-400 mt-0.5">{election.country} · {election.year}</p>
+                  <p className="text-xs text-gray-400 mt-1">{election.country} · {election.year}</p>
                 </div>
               </div>
 
@@ -62,20 +62,12 @@ export default function Elections() {
 
               {/* Meta row */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {/* Candidate count */}
-                  <span className="text-xs text-gray-400">
-                    {election.candidates.length} {language === 'fr' ? 'candidats' : 'candidates'}
-                  </span>
-                  {/* Q count */}
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <span>{election.candidates.length} {language === 'fr' ? 'candidats' : 'candidates'}</span>
                   {qCount > 0 && (
-                    <span className="text-xs text-gray-400">
-                      · {qCount} {language === 'fr' ? 'questions spécifiques' : 'specific questions'}
-                    </span>
+                    <span>· {qCount} {language === 'fr' ? 'questions' : 'questions'}</span>
                   )}
                 </div>
-
-                {/* Has answers badge */}
                 {hasAnswers && (
                   <span className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
                     ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
@@ -84,8 +76,8 @@ export default function Elections() {
               </div>
 
               {/* CTA */}
-              <div className="mt-4 pt-4 border-t border-gray-50">
-                <span className="text-sm font-semibold text-gray-800 group-hover:text-gray-900 transition-colors">
+              <div className="mt-5 pt-4 border-t border-gray-100">
+                <span className="text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
                   {language === 'fr' ? 'Explorer cette élection' : 'Explore this election'} →
                 </span>
               </div>
@@ -95,10 +87,10 @@ export default function Elections() {
       </div>
 
       {/* Trust footer */}
-      <div className="mt-10 flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-x-8 gap-y-2 justify-center">
         {[t('trust_data'), t('trust_no_sell'), t('trust_anonymous')].map((msg, i) => (
           <span key={i} className="text-xs text-gray-400 flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <span className="w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
             {msg}
           </span>
         ))}

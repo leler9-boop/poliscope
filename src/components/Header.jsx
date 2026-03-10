@@ -23,7 +23,6 @@ export default function Header() {
     { key: 'figures',   label: t('nav_figures'),    page: 'figures' },
   ];
 
-  // Hide nav links during questionnaire, but keep right-side controls visible
   const hideNav = currentPage === 'questionnaire';
 
   const handleSignOut = async () => {
@@ -32,40 +31,44 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-blue-950 text-white shadow-md sticky top-0 z-40">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
+
           {/* Logo */}
           <button
             onClick={() => navigate('landing')}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2.5 hover:opacity-70 transition-opacity"
           >
-            <div className="w-7 h-7 bg-blue-400 rounded-full flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <circle cx="7" cy="7" r="6" stroke="white" strokeWidth="1.5"/>
-                <path d="M7 3v8M3 7h8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+            <div className="w-6 h-6 rounded-full border-2 border-gray-900 flex items-center justify-center flex-shrink-0">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <circle cx="5" cy="5" r="4" stroke="#111827" strokeWidth="1.2"/>
+                <path d="M5 2v6M2 5h6" stroke="#111827" strokeWidth="1.2" strokeLinecap="round"/>
               </svg>
             </div>
-            <span className="font-bold text-lg tracking-tight">Poliscope</span>
+            <span className="font-bold text-base tracking-tight text-gray-900">Poliscope</span>
           </button>
 
-          {/* Nav */}
+          {/* Desktop nav */}
           {!hideNav && (
-            <nav className="hidden sm:flex items-center gap-1">
+            <nav className="hidden sm:flex items-center">
               {navItems.map(item => (
                 <button
                   key={item.key}
                   onClick={() => !item.disabled && navigate(item.page)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  className={`relative px-4 py-1.5 text-sm font-medium transition-colors ${
                     currentPage === item.page
-                      ? 'bg-blue-800 text-white'
+                      ? 'text-gray-900'
                       : item.disabled
-                      ? 'text-blue-400 cursor-not-allowed opacity-50'
-                      : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                      ? 'text-gray-300 cursor-not-allowed'
+                      : 'text-gray-500 hover:text-gray-900'
                   }`}
                   title={item.disabled ? (language === 'fr' ? `Créez d'abord votre profil` : 'Complete your profile first') : ''}
                 >
                   {item.label}
+                  {currentPage === item.page && (
+                    <span className="absolute bottom-0 left-4 right-4 h-px bg-gray-900" />
+                  )}
                 </button>
               ))}
             </nav>
@@ -76,24 +79,24 @@ export default function Header() {
             {/* Language toggle */}
             <button
               onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-              className="text-xs font-semibold bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded transition-colors text-blue-100"
+              className="text-xs font-semibold text-gray-500 hover:text-gray-900 px-2.5 py-1.5 rounded-md hover:bg-gray-100 transition-colors"
             >
               {t('lang_switch')}
             </button>
 
-            {/* Auth button — always visible */}
+            {/* Auth */}
             {isLoggedIn ? (
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => navigate('profile')}
-                  className="text-xs font-semibold bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded transition-colors text-blue-100 max-w-[140px] truncate"
+                  className="text-xs font-medium text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-md border border-gray-200 hover:border-gray-300 transition-colors max-w-[140px] truncate"
                   title={userEmail ?? ''}
                 >
                   {userEmail ?? (language === 'fr' ? 'Mon profil' : 'My profile')}
                 </button>
                 <button
                   onClick={handleSignOut}
-                  className="text-xs text-blue-400 hover:text-red-400 px-1.5 py-1.5 rounded transition-colors"
+                  className="text-xs text-gray-400 hover:text-red-500 px-1.5 py-1.5 rounded transition-colors"
                   title={language === 'fr' ? 'Se déconnecter' : 'Sign out'}
                 >
                   ✕
@@ -102,13 +105,13 @@ export default function Header() {
             ) : (
               <button
                 onClick={() => navigate('auth')}
-                className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${
+                className={`text-xs font-semibold px-3 py-1.5 rounded-md border transition-colors ${
                   currentPage === 'auth'
-                    ? 'bg-white text-blue-900'
-                    : 'bg-blue-500 hover:bg-blue-400 text-white'
+                    ? 'bg-gray-900 text-white border-gray-900'
+                    : 'text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                {language === 'fr' ? 'Connexion' : 'Login'}
+                {language === 'fr' ? 'Connexion' : 'Sign in'}
               </button>
             )}
           </div>
@@ -116,29 +119,28 @@ export default function Header() {
 
         {/* Mobile nav */}
         {!hideNav && (
-          <div className="sm:hidden flex gap-1 pb-2 overflow-x-auto">
+          <div className="sm:hidden flex gap-0.5 pb-2 overflow-x-auto">
             {navItems.map(item => (
               <button
                 key={item.key}
                 onClick={() => !item.disabled && navigate(item.page)}
                 className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
                   currentPage === item.page
-                    ? 'bg-blue-800 text-white'
+                    ? 'text-gray-900 bg-gray-100'
                     : item.disabled
-                    ? 'text-blue-400 opacity-50'
-                    : 'text-blue-100 hover:bg-blue-800'
+                    ? 'text-gray-300'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 {item.label}
               </button>
             ))}
-            {/* Mobile sign-in */}
             {!isLoggedIn && (
               <button
                 onClick={() => navigate('auth')}
-                className="px-3 py-1 rounded text-xs font-medium whitespace-nowrap bg-blue-500 hover:bg-blue-400 text-white"
+                className="px-3 py-1 rounded text-xs font-medium whitespace-nowrap text-gray-500 hover:text-gray-900 hover:bg-gray-50"
               >
-                {language === 'fr' ? 'Connexion' : 'Login'}
+                {language === 'fr' ? 'Connexion' : 'Sign in'}
               </button>
             )}
           </div>
