@@ -3,6 +3,8 @@ import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
+import { ideologicalCurrents } from '../data/ideologicalCurrents.js';
 import RadarChart from '../components/RadarChart.jsx';
 import AxisBar from '../components/AxisBar.jsx';
 import { useAuth } from '../lib/auth.jsx';
@@ -12,6 +14,7 @@ export default function Profile() {
   const language        = useStore(s => s.language);
   const profile         = useStore(s => s.profile);
   const answers         = useStore(s => s.answers);
+  const priorityOrder   = useStore(s => s.priorityOrder);
   const navigate        = useStore(s => s.navigate);
   const exportProfile   = useStore(s => s.exportProfile);
   const importProfile   = useStore(s => s.importProfile);
@@ -25,6 +28,7 @@ export default function Profile() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
 
+  const [showAllCurrents, setShowAllCurrents] = useState(false);
   const { user, saveAnswers, saveUserProfile } = useAuth();
 
   if (!profile) {
@@ -51,6 +55,7 @@ export default function Profile() {
 
   const { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions } = profile;
   const confMeta = getConfidenceMeta(confidence, language);
+  const rankedCurrents = rankByAlignment(profile, ideologicalCurrents, priorityOrder);
   const answeredTotal = Object.keys(answers).length;
   const unansweredCount = totalQuestions - answeredTotal;
 
@@ -284,6 +289,108 @@ export default function Profile() {
             );
           })}
         </div>
+      </div>
+
+      {/* Ideological Currents */}
+      <div className="mb-6">
+        <div className="mb-5">
+          <h2 className="font-bold text-gray-900 text-lg">{t('currents_title')}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t('currents_subtitle')}</p>
+        </div>
+
+        {/* Top 3 currents */}
+        <div className="space-y-3">
+          {rankedCurrents.slice(0, 3).map((current, idx) => {
+            const barColor = alignmentBarColor(current.alignment);
+            const textColor = alignmentColorClass(current.alignment);
+            return (
+              <div key={current.id} className="bg-white border border-gray-100 rounded-xl p-4 sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="text-xl mt-0.5 flex-shrink-0">{current.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <div className="flex items-center gap-2">
+                        {idx === 0 && (
+                          <span
+                            className="text-xs font-semibold px-2 py-0.5 rounded-full text-white"
+                            style={{ backgroundColor: current.color }}
+                          >
+                            {t('currents_top_match')}
+                          </span>
+                        )}
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          {current.name[language]}
+                        </h3>
+                      </div>
+                      <span className={`text-lg font-bold tabular-nums flex-shrink-0 ${textColor}`}>
+                        {current.alignment}%
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 leading-relaxed mb-2">
+                      {current.shortDesc[language]}
+                    </p>
+                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-3">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${current.alignment}%`, backgroundColor: barColor }}
+                      />
+                    </div>
+                    {idx === 0 && current.keyBeliefs?.[language] && (
+                      <div>
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                          {t('currents_key_beliefs')}
+                        </p>
+                        <ul className="space-y-1">
+                          {current.keyBeliefs[language].map((belief, bi) => (
+                            <li key={bi} className="text-xs text-gray-600 flex items-start gap-1.5">
+                              <span className="text-gray-300 mt-0.5 flex-shrink-0">·</span>
+                              {belief}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Toggle all */}
+        <button
+          onClick={() => setShowAllCurrents(!showAllCurrents)}
+          className="mt-3 text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors"
+        >
+          {showAllCurrents ? t('currents_show_less') : t('currents_show_all')} {showAllCurrents ? '▲' : '▼'}
+        </button>
+
+        {/* All remaining currents */}
+        {showAllCurrents && (
+          <div className="mt-3 grid sm:grid-cols-2 gap-3">
+            {rankedCurrents.slice(3).map(current => {
+              const barColor = alignmentBarColor(current.alignment);
+              const textColor = alignmentColorClass(current.alignment);
+              return (
+                <div key={current.id} className="bg-white border border-gray-100 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">{current.icon}</span>
+                    <span className="font-medium text-gray-900 text-sm">{current.name[language]}</span>
+                    <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
+                      {current.alignment}%
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${current.alignment}%`, backgroundColor: barColor }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Refine + explore */}

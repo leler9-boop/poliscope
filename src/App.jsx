@@ -9,6 +9,7 @@ import PriorityRanking from './pages/PriorityRanking.jsx';
 import Questionnaire from './pages/Questionnaire.jsx';
 import Profile from './pages/Profile.jsx';
 import Elections from './pages/Elections.jsx';
+import ElectionDetail from './pages/ElectionDetail.jsx';
 import HistoricalFigures from './pages/HistoricalFigures.jsx';
 import Auth from './pages/Auth.jsx';
 
@@ -40,6 +41,7 @@ export default function App() {
     questionnaire:  <Questionnaire />,
     profile:        <Profile />,
     elections:      <Elections />,
+    electionDetail: <ElectionDetail />,
     figures:        <HistoricalFigures />,
     auth:           <Auth />,
   };

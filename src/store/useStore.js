@@ -53,6 +53,10 @@ export const useStore = create(
       // ── Migration (session-only) ──
       pendingMigration: false,
 
+      // ── Election module ──
+      selectedElectionId: null,
+      electionAnswers: {}, // { [electionId]: { [questionId]: value } }
+
       // ── Actions ──
       setLanguage: (lang) => set({ language: lang }),
       navigate: (page) => set({ currentPage: page }),
@@ -114,6 +118,25 @@ export const useStore = create(
       }),
 
       setPendingMigration: (v) => set({ pendingMigration: v }),
+
+      selectElection: (id) => set({ selectedElectionId: id, currentPage: 'electionDetail' }),
+
+      answerElectionQuestion: (electionId, questionId, value) => {
+        const current = get().electionAnswers;
+        set({
+          electionAnswers: {
+            ...current,
+            [electionId]: { ...(current[electionId] ?? {}), [questionId]: value },
+          },
+        });
+      },
+
+      clearElectionAnswers: (electionId) => {
+        const current = get().electionAnswers;
+        const next = { ...current };
+        delete next[electionId];
+        set({ electionAnswers: next });
+      },
 
       setPriorityOrder: (order) => set({ priorityOrder: order }),
 
@@ -204,6 +227,7 @@ export const useStore = create(
         answers: state.answers,
         profile: state.profile,
         priorityOrder: state.priorityOrder,
+        electionAnswers: state.electionAnswers,
       }),
     }
   )

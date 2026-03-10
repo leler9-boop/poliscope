@@ -109,6 +109,37 @@ export const translations = {
     migrate_yes: `Save to my account`,
     migrate_no: `No thanks`,
 
+    // ── Ideological Currents ──
+    currents_title: `Your Ideological Currents`,
+    currents_subtitle: `Political traditions that best match your profile.`,
+    currents_top_match: `Closest current`,
+    currents_key_beliefs: `Core beliefs`,
+    currents_show_all: `Show all currents`,
+    currents_show_less: `Show less`,
+
+    // ── Election detail ──
+    election_about: `About this election`,
+    election_understand_more: `Understand this election better`,
+    election_disclaimer: `Political debates vary by country. These questions focus on the specific issues of this election.`,
+    election_start_quiz: `Answer election-specific questions`,
+    election_skip_quiz: `Skip — use my general profile only`,
+    election_q_progress: `Question {current} of {total}`,
+    election_results_title: `Your candidate matches`,
+    election_results_note: `Based on your general profile{extra}.`,
+    election_results_note_extra: ` and {n} election-specific answers`,
+    election_agreements: `Agreements`,
+    election_disagreements: `Disagreements`,
+    election_retake: `Retake election questions`,
+    election_back: `All elections`,
+    election_overview: `Alignment overview`,
+    election_no_profile: `Build your profile first to compare with candidates.`,
+
+    // ── Trust & transparency ──
+    trust_data: `Your data belongs to you.`,
+    trust_no_sell: `Poliscope never sells personal data.`,
+    trust_anonymous: `You can explore politics anonymously.`,
+    trust_educational: `These comparisons are educational, based on simplified modeling of political positions.`,
+
     // ── Misc ──
     back: `Back`,
     loading: `Loading…`,
@@ -226,6 +257,37 @@ export const translations = {
     migrate_subtitle: `Voulez-vous les sauvegarder dans votre compte ?`,
     migrate_yes: `Sauvegarder dans mon compte`,
     migrate_no: `Non merci`,
+
+    // ── Ideological Currents ──
+    currents_title: `Vos courants idéologiques`,
+    currents_subtitle: `Les traditions politiques qui correspondent le mieux à votre profil.`,
+    currents_top_match: `Courant le plus proche`,
+    currents_key_beliefs: `Convictions fondamentales`,
+    currents_show_all: `Voir tous les courants`,
+    currents_show_less: `Réduire`,
+
+    // ── Election detail ──
+    election_about: `À propos de cette élection`,
+    election_understand_more: `Comprendre cette élection`,
+    election_disclaimer: `Les débats politiques varient selon les pays. Ces questions portent sur les enjeux spécifiques de cette élection.`,
+    election_start_quiz: `Répondre aux questions spécifiques`,
+    election_skip_quiz: `Passer — utiliser uniquement mon profil général`,
+    election_q_progress: `Question {current} sur {total}`,
+    election_results_title: `Vos correspondances candidates`,
+    election_results_note: `Basé sur votre profil général{extra}.`,
+    election_results_note_extra: ` et {n} réponses électorales spécifiques`,
+    election_agreements: `Points d'accord`,
+    election_disagreements: `Points de désaccord`,
+    election_retake: `Refaire les questions électorales`,
+    election_back: `Toutes les élections`,
+    election_overview: `Vue d'ensemble`,
+    election_no_profile: `Construisez d'abord votre profil pour comparer avec les candidats.`,
+
+    // ── Trust & transparency ──
+    trust_data: `Vos données vous appartiennent.`,
+    trust_no_sell: `Poliscope ne vend jamais de données personnelles.`,
+    trust_anonymous: `Vous pouvez explorer la politique anonymement.`,
+    trust_educational: `Ces comparaisons sont éducatives, basées sur une modélisation simplifiée des positions politiques.`,
 
     // ── Misc ──
     back: `Retour`,
