@@ -42,14 +42,30 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-10">
-        <span className="text-4xl">{election.flag}</span>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{election.title[language]}</h1>
-          <span className="text-sm text-gray-400 mt-0.5 block">{election.country} · {election.year}</span>
+      {/* Election image header */}
+      {election.image ? (
+        <div className="relative h-48 sm:h-56 rounded-2xl overflow-hidden bg-gray-900 mb-8">
+          <img
+            src={election.image}
+            alt={election.title[language]}
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 p-5">
+            <p className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-1">{election.country} · {election.year}</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{election.title[language]}</h1>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-4 mb-10">
+          <span className="text-4xl">{election.flag}</span>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{election.title[language]}</h1>
+            <span className="text-sm text-gray-400 mt-0.5 block">{election.country} · {election.year}</span>
+          </div>
+        </div>
+      )}
 
       {/* Context intro */}
       <div className="mb-8">
@@ -84,22 +100,36 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
       )}
 
       {/* Candidates preview */}
-      <div className="mb-6">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+      <div className="mb-8">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Candidats' : 'Candidates'}
         </p>
-        <div className="flex flex-wrap gap-2">
-          {election.candidates.map(c => (
-            <span
-              key={c.id}
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white text-gray-700"
-            >
-              {c.color && (
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: c.color }} />
-              )}
-              {c.name}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-3">
+          {election.candidates.map(c => {
+            const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            return (
+              <div key={c.id} className="flex items-center gap-2">
+                {c.image ? (
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    width={32}
+                    height={32}
+                    loading="lazy"
+                    className="rounded-full object-cover flex-shrink-0 w-8 h-8"
+                  />
+                ) : (
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                    style={{ backgroundColor: c.color ?? '#374151' }}
+                  >
+                    {initials}
+                  </div>
+                )}
+                <span className="text-xs font-medium text-gray-700">{c.name}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -452,6 +482,34 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   );
 }
 
+function CandidatePortrait({ candidate, size = 48 }) {
+  const [imgError, setImgError] = React.useState(false);
+  if (candidate.image && !imgError) {
+    return (
+      <img
+        src={candidate.image}
+        alt={candidate.name}
+        width={size}
+        height={size}
+        loading="lazy"
+        onError={() => setImgError(true)}
+        className="rounded-full object-cover flex-shrink-0"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  // Fallback: initials circle
+  const initials = candidate.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  return (
+    <div
+      className="rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
+      style={{ width: size, height: size, backgroundColor: candidate.color ?? '#374151' }}
+    >
+      {initials}
+    </div>
+  );
+}
+
 function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnswers, questions, expanded, onToggle }) {
   const { name, color, party, result, description, alignment } = candidate;
   const barColor = alignmentBarColor(alignment);
@@ -468,25 +526,20 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
     }`}>
       {isTop && <div className="h-0.5 bg-gray-900" />}
       <div className="p-5 sm:p-6">
-        <div className="flex items-start gap-3">
-          {/* Rank */}
-          <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 flex-shrink-0 mt-0.5">
-            {rank}
-          </div>
+        <div className="flex items-start gap-3 sm:gap-4">
+          {/* Portrait */}
+          <CandidatePortrait candidate={candidate} size={52} />
 
-          {/* Name */}
+          {/* Name + meta */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              {color && <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />}
-              <h3 className="font-semibold text-gray-900 text-sm truncate">{name}</h3>
-            </div>
+            <h3 className={`font-semibold text-gray-900 truncate leading-tight ${isTop ? 'text-base' : 'text-sm'}`}>{name}</h3>
             {party && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 mt-0.5">
                 {typeof party === 'object' ? party[language] : party}
               </p>
             )}
             {result && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 mt-0.5">
                 {typeof result === 'object' ? result[language] : result}
               </p>
             )}
@@ -494,8 +547,8 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
 
           {/* Score */}
           <div className="text-right flex-shrink-0">
-            <div className={`text-2xl font-bold tabular-nums ${textColor}`}>{alignment}%</div>
-            <div className="text-xs text-gray-400">{language === 'fr' ? 'compat.' : 'match'}</div>
+            <div className={`font-bold tabular-nums ${isTop ? 'text-3xl' : 'text-2xl'} ${textColor}`}>{alignment}%</div>
+            <div className="text-xs text-gray-400 mt-0.5">{language === 'fr' ? 'compat.' : 'match'}</div>
           </div>
         </div>
 

@@ -17,6 +17,7 @@
 export const elections = [
   {
     id: `fr_2022`,
+    image: `/images/elections/fr_2022.svg`,
     title: {
       en: `French Presidential Election 2022`,
       fr: `Présidentielle française 2022`,
@@ -268,6 +269,7 @@ export const elections = [
     candidates: [
       {
         id: `macron`,
+        image: `/images/candidates/macron.svg`,
         name: `Emmanuel Macron`,
         party: { en: `La République En Marche`, fr: `La République En Marche` },
         color: `#FFD700`,
@@ -283,6 +285,7 @@ export const elections = [
       },
       {
         id: `lepen`,
+        image: `/images/candidates/lepen.svg`,
         name: `Marine Le Pen`,
         party: { en: `Rassemblement National`, fr: `Rassemblement National` },
         color: `#003189`,
@@ -298,6 +301,7 @@ export const elections = [
       },
       {
         id: `melenchon`,
+        image: `/images/candidates/melenchon.svg`,
         name: `Jean-Luc Mélenchon`,
         party: { en: `La France Insoumise`, fr: `La France Insoumise` },
         color: `#CC0000`,
@@ -313,6 +317,7 @@ export const elections = [
       },
       {
         id: `zemmour`,
+        image: `/images/candidates/zemmour.svg`,
         name: `Éric Zemmour`,
         party: { en: `Reconquête`, fr: `Reconquête` },
         color: `#00009A`,
@@ -328,6 +333,7 @@ export const elections = [
       },
       {
         id: `jadot`,
+        image: `/images/candidates/jadot.svg`,
         name: `Yannick Jadot`,
         party: { en: `Europe Écologie Les Verts`, fr: `Europe Écologie Les Verts` },
         color: `#00A550`,
@@ -343,6 +349,7 @@ export const elections = [
       },
       {
         id: `hidalgo`,
+        image: `/images/candidates/hidalgo.svg`,
         name: `Anne Hidalgo`,
         party: { en: `Parti Socialiste`, fr: `Parti Socialiste` },
         color: `#E75480`,
@@ -358,6 +365,7 @@ export const elections = [
       },
       {
         id: `pecresse`,
+        image: `/images/candidates/pecresse.svg`,
         name: `Valérie Pécresse`,
         party: { en: `Les Républicains`, fr: `Les Républicains` },
         color: `#0066CC`,
@@ -373,6 +381,7 @@ export const elections = [
       },
       {
         id: `roussel`,
+        image: `/images/candidates/roussel.svg`,
         name: `Fabien Roussel`,
         party: { en: `Parti Communiste Français`, fr: `Parti Communiste Français` },
         color: `#AA0000`,
@@ -391,6 +400,7 @@ export const elections = [
 
   {
     id: `us_2020`,
+    image: `/images/elections/us_2020.svg`,
     title: {
       en: `US Presidential Election 2020`,
       fr: `Présidentielle américaine 2020`,
@@ -603,6 +613,7 @@ export const elections = [
     candidates: [
       {
         id: `biden`,
+        image: `/images/candidates/biden.svg`,
         name: `Joe Biden`,
         party: { en: `Democratic Party`, fr: `Parti démocrate` },
         color: `#003594`,
@@ -618,6 +629,7 @@ export const elections = [
       },
       {
         id: `trump`,
+        image: `/images/candidates/trump.svg`,
         name: `Donald Trump`,
         party: { en: `Republican Party`, fr: `Parti républicain` },
         color: `#CC0000`,

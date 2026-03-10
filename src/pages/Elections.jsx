@@ -41,45 +41,54 @@ export default function Elections() {
           return (
             <div
               key={election.id}
-              className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-7 hover:border-gray-300 hover:shadow-sm transition-all group cursor-pointer"
+              className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-sm transition-all group cursor-pointer"
               onClick={() => selectElection(election.id)}
             >
-              {/* Flag + title */}
-              <div className="flex items-start gap-4 mb-4">
-                <span className="text-3xl leading-none flex-shrink-0">{election.flag}</span>
-                <div>
-                  <h2 className="font-bold text-gray-900 text-base leading-snug tracking-tight">
-                    {election.title[language]}
-                  </h2>
-                  <p className="text-xs text-gray-400 mt-1">{election.country} · {election.year}</p>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-sm text-gray-500 leading-relaxed mb-5">
-                {election.description[language]}
-              </p>
-
-              {/* Meta row */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <span>{election.candidates.length} {language === 'fr' ? 'candidats' : 'candidates'}</span>
-                  {qCount > 0 && (
-                    <span>· {qCount} {language === 'fr' ? 'questions' : 'questions'}</span>
+              {/* Banner image */}
+              {election.image && (
+                <div className="relative h-36 overflow-hidden bg-gray-900">
+                  <img
+                    src={election.image}
+                    alt={election.title[language]}
+                    className="w-full h-full object-cover object-center"
+                    loading="lazy"
+                  />
+                  {/* Answered badge overlay */}
+                  {hasAnswers && (
+                    <span className="absolute top-3 right-3 text-xs font-medium text-green-100 bg-green-900 bg-opacity-80 border border-green-700 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                      ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
+                    </span>
                   )}
                 </div>
-                {hasAnswers && (
-                  <span className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
-                    ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
-                  </span>
-                )}
-              </div>
+              )}
 
-              {/* CTA */}
-              <div className="mt-5 pt-4 border-t border-gray-100">
-                <span className="text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
-                  {language === 'fr' ? 'Explorer cette élection' : 'Explore this election'} →
-                </span>
+              {/* Card body */}
+              <div className="p-5 sm:p-6">
+                {/* Country / year */}
+                <p className="text-xs text-gray-400 mb-2">{election.country} · {election.year}</p>
+
+                {/* Title */}
+                <h2 className="font-bold text-gray-900 text-base leading-snug tracking-tight mb-3">
+                  {election.title[language]}
+                </h2>
+
+                {/* Description */}
+                <p className="text-sm text-gray-500 leading-relaxed mb-5">
+                  {election.description[language]}
+                </p>
+
+                {/* Meta + CTA row */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <span>{election.candidates.length} {language === 'fr' ? 'candidats' : 'candidates'}</span>
+                    {qCount > 0 && (
+                      <span>· {qCount} {language === 'fr' ? 'questions' : 'questions'}</span>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
+                    {language === 'fr' ? 'Explorer →' : 'Explore →'}
+                  </span>
+                </div>
               </div>
             </div>
           );
