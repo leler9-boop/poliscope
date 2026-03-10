@@ -25,7 +25,7 @@ export default function Profile() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
 
-  const { user, saveProfile: saveToCloud } = useAuth();
+  const { user, saveAnswers, saveUserProfile } = useAuth();
 
   if (!profile) {
     return (
@@ -92,8 +92,8 @@ export default function Profile() {
               <button
                 onClick={async () => {
                   setSaveStatus('saving');
-                  const ok = await saveToCloud(answers, profile.themes);
-                  setSaveStatus(ok ? 'saved' : 'error');
+                  const [a, p] = await Promise.all([saveAnswers(answers), saveUserProfile(profile)]);
+                  setSaveStatus(!a.error && !p.error ? 'saved' : 'error');
                   setTimeout(() => setSaveStatus(null), 3000);
                 }}
                 disabled={saveStatus === 'saving'}
@@ -177,8 +177,8 @@ export default function Profile() {
             <button
               onClick={async () => {
                 setSaveStatus('saving');
-                const ok = await saveToCloud(answers, profile.themes);
-                setSaveStatus(ok ? 'saved' : 'error');
+                const [a, p] = await Promise.all([saveAnswers(answers), saveUserProfile(profile)]);
+                setSaveStatus(!a.error && !p.error ? 'saved' : 'error');
                 setTimeout(() => setSaveStatus(null), 3000);
                 setPendingMigration(false);
               }}

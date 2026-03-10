@@ -42,6 +42,10 @@ export const useStore = create(
       priorityOrder: [...THEMES_ORDER],
       profile: null,
 
+      // ── Auth state (session-only, synced from auth.jsx) ──
+      userId: null,
+      userEmail: null,
+
       // ── Improve mode (session-only, not persisted) ──
       improveMode: false,
       recentThemes: [],
@@ -103,6 +107,11 @@ export const useStore = create(
           recentThemes: updatedRecent,
         });
       },
+
+      setAuthUser: (user) => set({
+        userId:    user?.id    ?? null,
+        userEmail: user?.email ?? null,
+      }),
 
       setPendingMigration: (v) => set({ pendingMigration: v }),
 

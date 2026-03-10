@@ -19,7 +19,7 @@ export default function App() {
   const profile     = useStore(s => s.profile);
   const t = createTranslator(language);
 
-  const { saveProfile, isAuthenticated } = useAuth();
+  const { saveAnswers, saveUserProfile, isAuthenticated } = useAuth();
   const saveTimer = useRef(null);
 
   // Auto-save to Supabase 3s after any answer change (debounced)
@@ -27,7 +27,8 @@ export default function App() {
     if (!isAuthenticated || !profile) return;
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      saveProfile(answers, profile.themes);
+      saveAnswers(answers);
+      saveUserProfile(profile);
     }, 3000);
     return () => clearTimeout(saveTimer.current);
   }, [answers]); // eslint-disable-line react-hooks/exhaustive-deps

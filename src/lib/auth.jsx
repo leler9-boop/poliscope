@@ -2,6 +2,7 @@
 // The entire app works without auth (guest mode).
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase.js';
+import { useStore } from '../store/useStore.js';
 
 const AuthContext = createContext(null);
 
@@ -17,13 +18,25 @@ export function AuthProvider({ children }) {
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      useStore.getState().setAuthUser(u);
       setLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      useStore.getState().setAuthUser(u);
+
+      // Offer migration when user signs in and has local answers
+      if (event === 'SIGNED_IN' && u) {
+        const { answers, setPendingMigration } = useStore.getState();
+        if (Object.keys(answers).length > 0) {
+          setPendingMigration(true);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -41,44 +54,81 @@ export function AuthProvider({ children }) {
     return supabase.auth.signInWithPassword({ email, password });
   }
 
+  async function signInWithGoogle() {
+    if (!isSupabaseEnabled) return { error: { message: 'Backend not configured' } };
+    return supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+  }
+
   async function signOut() {
     if (!isSupabaseEnabled) return;
     await supabase.auth.signOut();
     setUser(null);
+    useStore.getState().setAuthUser(null);
   }
 
-  // ── Profile storage ───────────────────────────────────────────────────────
+  // ── Data persistence ──────────────────────────────────────────────────────
 
-  async function saveProfile(answers, themeScores) {
-    if (!isSupabaseEnabled || !user) return { error: 'Not authenticated or backend not configured' };
+  /**
+   * Upsert all answers into user_answers (one row per question).
+   */
+  async function saveAnswers(answers) {
+    if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
+    const rows = Object.entries(answers).map(([question_id, answer_value]) => ({
+      user_id: user.id,
+      question_id,
+      answer_value,
+      updated_at: new Date().toISOString(),
+    }));
+    if (rows.length === 0) return { data: null, error: null };
+    const { data, error } = await supabase
+      .from('user_answers')
+      .upsert(rows, { onConflict: 'user_id,question_id' });
+    return { data, error };
+  }
 
+  /**
+   * Upsert computed profile snapshot into user_profiles.
+   */
+  async function saveUserProfile(profile) {
+    if (!isSupabaseEnabled || !user || !profile) return { error: 'Not authenticated' };
     const payload = {
-      user_id:      user.id,
-      answers:      answers,
-      theme_scores: themeScores,
-      updated_at:   new Date().toISOString(),
+      user_id:          user.id,
+      theme_scores:     profile.themes,
+      axes:             profile.axes,
+      confidence:       profile.confidence,
+      confidence_score: profile.confidenceScore ?? 0,
+      answered_count:   profile.answeredCount ?? 0,
+      updated_at:       new Date().toISOString(),
     };
-
-    // Upsert — create or update
     const { data, error } = await supabase
-      .from('profiles')
-      .upsert(payload, { onConflict: 'user_id' })
-      .select()
-      .single();
-
+      .from('user_profiles')
+      .upsert(payload, { onConflict: 'user_id' });
     return { data, error };
   }
 
-  async function loadProfile() {
-    if (!isSupabaseEnabled || !user) return { data: null, error: null };
+  /**
+   * Load answers + profile snapshot from Supabase.
+   */
+  async function loadCloudData() {
+    if (!isSupabaseEnabled || !user) return { answers: null, profile: null };
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
+    const [answersRes, profileRes] = await Promise.all([
+      supabase.from('user_answers').select('question_id, answer_value').eq('user_id', user.id),
+      supabase.from('user_profiles').select('*').eq('user_id', user.id).maybeSingle(),
+    ]);
 
-    return { data, error };
+    const answersMap = {};
+    (answersRes.data ?? []).forEach(row => {
+      answersMap[row.question_id] = row.answer_value;
+    });
+
+    return {
+      answers: Object.keys(answersMap).length > 0 ? answersMap : null,
+      profile: profileRes.data ?? null,
+    };
   }
 
   const value = {
@@ -88,9 +138,13 @@ export function AuthProvider({ children }) {
     isSupabaseEnabled,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
-    saveProfile,
-    loadProfile,
+    saveAnswers,
+    saveUserProfile,
+    loadCloudData,
+    // Legacy alias used by the Profile.jsx cloud-save button
+    saveProfile: async (answers) => saveAnswers(answers),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
