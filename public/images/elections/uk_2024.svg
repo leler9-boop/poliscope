@@ -1,0 +1,54 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-uk" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1520"/>
+      <stop offset="100%" stop-color="#1a2535"/>
+    </linearGradient>
+    <linearGradient id="glow-uk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3060" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0d1520" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="320" fill="url(#bg-uk)"/>
+  <ellipse cx="400" cy="160" rx="380" ry="160" fill="url(#glow-uk)"/>
+  <text x="40" y="260" font-family="Georgia, 'Times New Roman', serif" font-size="180" font-weight="bold" fill="white" opacity="0.04" letter-spacing="-4">2024</text>
+  <!-- Big Ben / Elizabeth Tower -->
+  <!-- Base structure -->
+  <rect x="375" y="240" width="50" height="50" fill="white" opacity="0.07"/>
+  <!-- Middle tower section -->
+  <rect x="378" y="185" width="44" height="58" fill="white" opacity="0.06"/>
+  <!-- Clock face area -->
+  <rect x="380" y="190" width="40" height="40" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <circle cx="400" cy="210" r="14" fill="none" stroke="white" stroke-width="1" opacity="0.18"/>
+  <!-- Clock hands suggestion -->
+  <line x1="400" y1="210" x2="400" y2="200" stroke="white" stroke-width="1" opacity="0.20"/>
+  <line x1="400" y1="210" x2="408" y2="212" stroke="white" stroke-width="1" opacity="0.20"/>
+  <!-- Upper belfry section -->
+  <rect x="381" y="158" width="38" height="28" fill="white" opacity="0.07"/>
+  <!-- Gothic corner turrets -->
+  <rect x="376" y="150" width="8" height="40" fill="white" opacity="0.07"/>
+  <rect x="416" y="150" width="8" height="40" fill="white" opacity="0.07"/>
+  <!-- Pointed spire -->
+  <path d="M384 150 L400 105 L416 150 Z" fill="white" opacity="0.07"/>
+  <path d="M387 150 L400 110 L413 150" fill="none" stroke="white" stroke-width="1" opacity="0.15"/>
+  <!-- Spire tip finial -->
+  <line x1="400" y1="105" x2="400" y2="95" stroke="white" stroke-width="1.5" opacity="0.14"/>
+  <!-- Gothic window details -->
+  <path d="M384 195 Q387 188 390 195" fill="none" stroke="white" stroke-width="1" opacity="0.12"/>
+  <path d="M410 195 Q413 188 416 195" fill="none" stroke="white" stroke-width="1" opacity="0.12"/>
+  <!-- Steps / base -->
+  <rect x="363" y="290" width="74" height="5" fill="white" opacity="0.07"/>
+  <rect x="355" y="295" width="90" height="5" fill="white" opacity="0.06"/>
+  <!-- Country tag -->
+  <rect x="50" y="56" width="130" height="1.5" fill="#4a70c4" opacity="0.9"/>
+  <text x="50" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#7fa8e0" letter-spacing="3">UNITED KINGDOM</text>
+  <!-- Main title -->
+  <text x="50" y="98" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">UK General Election</text>
+  <text x="50" y="136" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">2024</text>
+  <!-- Subtitle -->
+  <text x="50" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="white" opacity="0.45">Starmer · Sunak · Davey · Farage</text>
+  <!-- Union Jack suggestion accent bar -->
+  <rect x="0" y="308" width="267" height="12" fill="#012169" opacity="0.80"/>
+  <rect x="267" y="308" width="266" height="12" fill="#C8102E" opacity="0.75"/>
+  <rect x="533" y="308" width="267" height="12" fill="#012169" opacity="0.80"/>
+</svg>

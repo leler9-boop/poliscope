@@ -1,0 +1,52 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-eu" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="100%" stop-color="#142040"/>
+    </linearGradient>
+    <linearGradient id="glow-eu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a7a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="320" fill="url(#bg-eu)"/>
+  <ellipse cx="400" cy="160" rx="380" ry="160" fill="url(#glow-eu)"/>
+  <text x="40" y="260" font-family="Georgia, 'Times New Roman', serif" font-size="180" font-weight="bold" fill="white" opacity="0.04" letter-spacing="-4">2024</text>
+  <!-- EU 12 stars in a circle -->
+  <!-- Star positions on a circle r=65 centered at 400,185 -->
+  <!-- 12 o'clock -->
+  <polygon points="400,118 402,124 408,124 403,128 405,134 400,130 395,134 397,128 392,124 398,124" fill="white" opacity="0.18"/>
+  <!-- 1 o'clock -->
+  <polygon points="432,122 434,128 440,128 435,132 437,138 432,134 427,138 429,132 424,128 430,128" fill="white" opacity="0.18"/>
+  <!-- 2 o'clock -->
+  <polygon points="455,143 457,149 463,149 458,153 460,159 455,155 450,159 452,153 447,149 453,149" fill="white" opacity="0.18"/>
+  <!-- 3 o'clock -->
+  <polygon points="463,175 465,181 471,181 466,185 468,191 463,187 458,191 460,185 455,181 461,181" fill="white" opacity="0.18"/>
+  <!-- 4 o'clock -->
+  <polygon points="453,207 455,213 461,213 456,217 458,223 453,219 448,223 450,217 445,213 451,213" fill="white" opacity="0.18"/>
+  <!-- 5 o'clock -->
+  <polygon points="430,226 432,232 438,232 433,236 435,242 430,238 425,242 427,236 422,232 428,232" fill="white" opacity="0.18"/>
+  <!-- 6 o'clock -->
+  <polygon points="400,234 402,240 408,240 403,244 405,250 400,246 395,250 397,244 392,240 398,240" fill="white" opacity="0.18"/>
+  <!-- 7 o'clock -->
+  <polygon points="370,226 372,232 378,232 373,236 375,242 370,238 365,242 367,236 362,232 368,232" fill="white" opacity="0.18"/>
+  <!-- 8 o'clock -->
+  <polygon points="347,207 349,213 355,213 350,217 352,223 347,219 342,223 344,217 339,213 345,213" fill="white" opacity="0.18"/>
+  <!-- 9 o'clock -->
+  <polygon points="337,175 339,181 345,181 340,185 342,191 337,187 332,191 334,185 329,181 335,181" fill="white" opacity="0.18"/>
+  <!-- 10 o'clock -->
+  <polygon points="345,143 347,149 353,149 348,153 350,159 345,155 340,159 342,153 337,149 343,149" fill="white" opacity="0.18"/>
+  <!-- 11 o'clock -->
+  <polygon points="368,122 370,128 376,128 371,132 373,138 368,134 363,138 365,132 360,128 366,128" fill="white" opacity="0.18"/>
+  <!-- Country tag -->
+  <rect x="50" y="56" width="130" height="1.5" fill="#4a80d4" opacity="0.9"/>
+  <text x="50" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#7fa8e0" letter-spacing="3">EUROPEAN UNION</text>
+  <!-- Main title -->
+  <text x="50" y="98" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="bold" fill="white" opacity="0.95">European Parliament</text>
+  <text x="50" y="136" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="bold" fill="white" opacity="0.95">Election 2024</text>
+  <!-- Subtitle -->
+  <text x="50" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="white" opacity="0.45">EPP · S&amp;D · Renew · Greens · ECR · Patriots</text>
+  <!-- EU accent bars -->
+  <rect x="0" y="308" width="800" height="8" fill="#003399" opacity="0.80"/>
+  <rect x="0" y="308" width="800" height="4" fill="#FFCC00" opacity="0.20"/>
+</svg>

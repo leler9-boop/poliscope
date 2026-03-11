@@ -1,0 +1,55 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-it" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1014"/>
+      <stop offset="100%" stop-color="#2a1520"/>
+    </linearGradient>
+    <linearGradient id="glow-it" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a1a2a" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a1014" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="320" fill="url(#bg-it)"/>
+  <ellipse cx="400" cy="160" rx="380" ry="160" fill="url(#glow-it)"/>
+  <text x="40" y="260" font-family="Georgia, 'Times New Roman', serif" font-size="180" font-weight="bold" fill="white" opacity="0.04" letter-spacing="-4">2022</text>
+  <!-- Colosseum arches - tiered structure -->
+  <!-- Ground tier arches -->
+  <path d="M258 290 L258 240 Q268 225 278 240 L278 290 Z" fill="white" opacity="0.06"/>
+  <path d="M283 290 L283 240 Q293 225 303 240 L303 290 Z" fill="white" opacity="0.06"/>
+  <path d="M308 290 L308 240 Q318 225 328 240 L328 290 Z" fill="white" opacity="0.06"/>
+  <path d="M333 290 L333 240 Q343 225 353 240 L353 290 Z" fill="white" opacity="0.06"/>
+  <path d="M358 290 L358 240 Q368 225 378 240 L378 290 Z" fill="white" opacity="0.06"/>
+  <path d="M383 290 L383 240 Q393 225 403 240 L403 290 Z" fill="white" opacity="0.06"/>
+  <path d="M408 290 L408 240 Q418 225 428 240 L428 290 Z" fill="white" opacity="0.06"/>
+  <path d="M433 290 L433 240 Q443 225 453 240 L453 290 Z" fill="white" opacity="0.06"/>
+  <path d="M458 290 L458 240 Q468 225 478 240 L478 290 Z" fill="white" opacity="0.06"/>
+  <path d="M483 290 L483 240 Q493 225 503 240 L503 290 Z" fill="white" opacity="0.06"/>
+  <path d="M508 290 L508 240 Q518 225 528 240 L528 290 Z" fill="white" opacity="0.06"/>
+  <!-- Second tier arches (smaller, above) -->
+  <path d="M268 240 L268 202 Q276 191 284 202 L284 240 Z" fill="white" opacity="0.05"/>
+  <path d="M290 240 L290 202 Q298 191 306 202 L306 240 Z" fill="white" opacity="0.05"/>
+  <path d="M312 240 L312 202 Q320 191 328 202 L328 240 Z" fill="white" opacity="0.05"/>
+  <path d="M334 240 L334 202 Q342 191 350 202 L350 240 Z" fill="white" opacity="0.05"/>
+  <path d="M356 240 L356 202 Q364 191 372 202 L372 240 Z" fill="white" opacity="0.05"/>
+  <path d="M378 240 L378 202 Q386 191 394 202 L394 240 Z" fill="white" opacity="0.05"/>
+  <path d="M400 240 L400 202 Q408 191 416 202 L416 240 Z" fill="white" opacity="0.05"/>
+  <path d="M422 240 L422 202 Q430 191 438 202 L438 240 Z" fill="white" opacity="0.05"/>
+  <path d="M444 240 L444 202 Q452 191 460 202 L460 240 Z" fill="white" opacity="0.05"/>
+  <path d="M466 240 L466 202 Q474 191 482 202 L482 240 Z" fill="white" opacity="0.05"/>
+  <path d="M488 240 L488 202 Q496 191 504 202 L504 240 Z" fill="white" opacity="0.05"/>
+  <!-- Tier floors -->
+  <rect x="252" y="238" width="280" height="4" fill="white" opacity="0.09"/>
+  <rect x="260" y="200" width="250" height="3" fill="white" opacity="0.07"/>
+  <!-- Country tag -->
+  <rect x="50" y="56" width="55" height="1.5" fill="#cc4444" opacity="0.9"/>
+  <text x="50" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#e08080" letter-spacing="3">ITALY</text>
+  <!-- Main title -->
+  <text x="50" y="98" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">Elezioni Politiche</text>
+  <text x="50" y="136" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">2022</text>
+  <!-- Subtitle -->
+  <text x="50" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="white" opacity="0.45">Meloni · Letta · Salvini · Berlusconi · Conte</text>
+  <!-- Italian tricolor accent bar -->
+  <rect x="0" y="308" width="267" height="12" fill="#009246" opacity="0.75"/>
+  <rect x="267" y="308" width="266" height="12" fill="#f0f0f0" opacity="0.75"/>
+  <rect x="533" y="308" width="267" height="12" fill="#CE2B37" opacity="0.75"/>
+</svg>

@@ -1,0 +1,42 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-fr27" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1b2a"/>
+      <stop offset="100%" stop-color="#1a2d42"/>
+    </linearGradient>
+    <linearGradient id="glow-fr27" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a4a7f" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0d1b2a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="320" fill="url(#bg-fr27)"/>
+  <ellipse cx="400" cy="160" rx="380" ry="160" fill="url(#glow-fr27)"/>
+  <text x="50" y="260" font-family="Georgia, 'Times New Roman', serif" font-size="220" font-weight="bold" fill="white" opacity="0.04" letter-spacing="-6">2027</text>
+  <!-- Élysée Palace facade -->
+  <rect x="240" y="210" width="320" height="80" fill="white" opacity="0.06"/>
+  <rect x="355" y="190" width="90" height="100" fill="white" opacity="0.05"/>
+  <rect x="360" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <rect x="375" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <rect x="390" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <rect x="405" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <rect x="420" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <rect x="435" y="192" width="7" height="98" fill="white" opacity="0.10"/>
+  <path d="M353 190 L400 165 L447 190 Z" fill="white" opacity="0.07"/>
+  <path d="M258 230 Q268 218 278 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <path d="M285 230 Q295 218 305 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <path d="M312 230 Q322 218 332 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <path d="M468 230 Q478 218 488 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <path d="M495 230 Q505 218 515 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <path d="M522 230 Q532 218 542 230" fill="none" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <rect x="240" y="207" width="320" height="6" fill="white" opacity="0.10"/>
+  <rect x="230" y="290" width="340" height="5" fill="white" opacity="0.06"/>
+  <rect x="220" y="295" width="360" height="5" fill="white" opacity="0.05"/>
+  <rect x="50" y="56" width="70" height="1.5" fill="#4a80d4" opacity="0.9"/>
+  <text x="50" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#7fa8e0" letter-spacing="3">FRANCE</text>
+  <text x="50" y="98" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">Présidentielle française</text>
+  <text x="50" y="136" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="white" opacity="0.95">2027</text>
+  <text x="50" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="white" opacity="0.45">Le Pen · Philippe · Attal · Mélenchon · Glucksmann</text>
+  <rect x="0" y="308" width="267" height="12" fill="#002395" opacity="0.75"/>
+  <rect x="267" y="308" width="266" height="12" fill="#f0f0f0" opacity="0.75"/>
+  <rect x="533" y="308" width="267" height="12" fill="#ED2939" opacity="0.75"/>
+</svg>
