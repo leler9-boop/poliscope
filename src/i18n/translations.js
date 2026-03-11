@@ -12,6 +12,8 @@ export const translations = {
     nav_profile: `My Profile`,
     nav_elections: `Elections`,
     nav_figures: `Historical Figures`,
+    nav_mission: `Mission`,
+    nav_transparency: `Transparency`,
 
     // ── Landing page ──
     landing_hero_title: `Understand your political beliefs`,
@@ -179,6 +181,8 @@ export const translations = {
     nav_profile: `Mon profil`,
     nav_elections: `Élections`,
     nav_figures: `Figures historiques`,
+    nav_mission: `Mission`,
+    nav_transparency: `Transparence`,
 
     // ── Landing page ──
     landing_hero_title: `Comprenez vos convictions politiques`,

@@ -12,6 +12,8 @@ import Elections from './pages/Elections.jsx';
 import ElectionDetail from './pages/ElectionDetail.jsx';
 import HistoricalFigures from './pages/HistoricalFigures.jsx';
 import Auth from './pages/Auth.jsx';
+import Mission from './pages/Mission.jsx';
+import Transparency from './pages/Transparency.jsx';
 
 export default function App() {
   const currentPage = useStore(s => s.currentPage);
@@ -44,6 +46,8 @@ export default function App() {
     electionDetail: <ElectionDetail />,
     figures:        <HistoricalFigures />,
     auth:           <Auth />,
+    mission:        <Mission />,
+    transparency:   <Transparency />,
   };
 
   return (

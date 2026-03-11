@@ -23,6 +23,11 @@ export default function Header() {
     { key: 'figures',   label: t('nav_figures'),    page: 'figures' },
   ];
 
+  const infoItems = [
+    { key: 'mission',      label: t('nav_mission'),      page: 'mission' },
+    { key: 'transparency', label: t('nav_transparency'), page: 'transparency' },
+  ];
+
   const hideNav = currentPage === 'questionnaire';
 
   const handleSignOut = async () => {
@@ -68,6 +73,23 @@ export default function Header() {
                   {item.label}
                   {currentPage === item.page && (
                     <span className="absolute bottom-0 left-4 right-4 h-px bg-gray-900" />
+                  )}
+                </button>
+              ))}
+              <span className="mx-1 text-gray-200 select-none">|</span>
+              {infoItems.map(item => (
+                <button
+                  key={item.key}
+                  onClick={() => navigate(item.page)}
+                  className={`relative px-3 py-1.5 text-sm font-medium transition-colors ${
+                    currentPage === item.page
+                      ? 'text-gray-900'
+                      : 'text-gray-400 hover:text-gray-700'
+                  }`}
+                >
+                  {item.label}
+                  {currentPage === item.page && (
+                    <span className="absolute bottom-0 left-3 right-3 h-px bg-gray-900" />
                   )}
                 </button>
               ))}
@@ -130,6 +152,19 @@ export default function Header() {
                     : item.disabled
                     ? 'text-gray-300'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            {infoItems.map(item => (
+              <button
+                key={item.key}
+                onClick={() => navigate(item.page)}
+                className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
+                  currentPage === item.page
+                    ? 'text-gray-900 bg-gray-100'
+                    : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 {item.label}
