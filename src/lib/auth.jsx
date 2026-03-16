@@ -10,17 +10,49 @@ export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /**
+   * Fetch all answers for a given userId from Supabase and hydrate the store.
+   * Only hydrates if the store has no local answers (guest or fresh session).
+   */
+  async function loadAnswersForUser(userId) {
+    if (!isSupabaseEnabled || !supabase) return;
+    const storeState = useStore.getState();
+    const hasLocalAnswers = Object.keys(storeState.answers).length > 0;
+    if (hasLocalAnswers) return; // Let the migration flow handle this
+
+    const { data, error } = await supabase
+      .from('user_answers')
+      .select('question_id, answer_value')
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('[Poliscope] Failed to load cloud answers:', error.message);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      const answersMap = {};
+      data.forEach(row => { answersMap[row.question_id] = row.answer_value; });
+      useStore.getState().hydrateFromCloud(answersMap);
+    }
+  }
+
   useEffect(() => {
     if (!isSupabaseEnabled) {
       setLoading(false);
       return;
     }
 
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Get initial session, then load cloud answers if already logged in
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user ?? null;
       setUser(u);
       useStore.getState().setAuthUser(u);
+
+      if (u) {
+        await loadAnswersForUser(u.id);
+      }
+
       setLoading(false);
     });
 
@@ -30,11 +62,16 @@ export function AuthProvider({ children }) {
       setUser(u);
       useStore.getState().setAuthUser(u);
 
-      // Offer migration when user signs in and has local answers
       if (event === 'SIGNED_IN' && u) {
         const { answers, setPendingMigration } = useStore.getState();
-        if (Object.keys(answers).length > 0) {
+        const hasLocalAnswers = Object.keys(answers).length > 0;
+
+        if (hasLocalAnswers) {
+          // User has unsaved local answers — offer migration
           setPendingMigration(true);
+        } else {
+          // No local answers — silently load from cloud
+          loadAnswersForUser(u.id);
         }
       }
     });
@@ -80,7 +117,6 @@ export function AuthProvider({ children }) {
       user_id: user.id,
       question_id,
       answer_value,
-      updated_at: new Date().toISOString(),
     }));
     if (rows.length === 0) return { data: null, error: null };
     const { data, error } = await supabase

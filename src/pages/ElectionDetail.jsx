@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../store/useStore.js';
+// selectCandidate is accessed via useStore inside CandidateResultCard
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { calculateAlignment, alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
-import { THEME_LABELS } from '../data/questions.js';
+import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -347,6 +348,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
                 isTop={idx === 0}
                 electionAnswers={thisElectionAnswers}
                 questions={questions}
+                globalProfile={globalProfile}
                 expanded={idx === 0 || expandedId === c.id}
                 onToggle={idx !== 0 ? () => setExpandedId(expandedId === c.id ? null : c.id) : undefined}
               />
@@ -372,6 +374,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
                 isTop={false}
                 electionAnswers={thisElectionAnswers}
                 questions={questions}
+                globalProfile={globalProfile}
                 expanded={expandedId === c.id}
                 onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
               />
@@ -397,6 +400,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
                 isTop={false}
                 electionAnswers={thisElectionAnswers}
                 questions={questions}
+                globalProfile={globalProfile}
                 expanded={expandedId === c.id}
                 onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
               />
@@ -418,11 +422,17 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
               isTop={idx === 0}
               electionAnswers={thisElectionAnswers}
               questions={questions}
+              globalProfile={globalProfile}
               expanded={idx === 0 || expandedId === c.id}
               onToggle={idx !== 0 ? () => setExpandedId(expandedId === c.id ? null : c.id) : undefined}
             />
           ))}
         </div>
+      )}
+
+      {/* Compare candidates */}
+      {rankedCandidates.length >= 2 && (
+        <ComparePanel candidates={rankedCandidates} userThemes={globalProfile?.themes} language={language} />
       )}
 
       {/* Overview chart */}
@@ -482,6 +492,190 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   );
 }
 
+function ThemeBreakdown({ userThemes, candidate, language }) {
+  return (
+    <div className="mt-4 border-t border-gray-100 pt-4">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+        {language === 'fr' ? 'Scores par thème' : 'Theme scores'}
+      </p>
+      <div className="space-y-2.5">
+        {THEMES_ORDER.map(theme => {
+          const userScore = userThemes?.[theme] ?? 50;
+          const candidateScore = candidate.profile?.[theme] ?? 50;
+          const label = THEME_LABELS[language]?.[theme] ?? theme;
+          const color = THEME_COLORS[theme] ?? '#6b7280';
+          return (
+            <div key={theme}>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-gray-500">{label}</span>
+                <div className="flex items-center gap-1.5 text-xs tabular-nums">
+                  <span style={{ color: '#60a5fa' }}>{userScore}</span>
+                  <span className="text-gray-300">·</span>
+                  <span style={{ color }}>{candidateScore}</span>
+                </div>
+              </div>
+              <div className="relative h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 h-full rounded-full"
+                  style={{ width: `${userScore}%`, backgroundColor: '#3b82f6', opacity: 0.25 }}
+                />
+                <div
+                  className="absolute inset-y-0 left-0 h-full rounded-full"
+                  style={{ width: `${candidateScore}%`, backgroundColor: color, opacity: 0.75 }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-5 mt-3">
+        <div className="flex items-center gap-1.5">
+          <span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#3b82f6', opacity: 0.25 }} />
+          <span className="text-xs text-gray-400">{language === 'fr' ? 'Vous' : 'You'}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: candidate.color ?? '#374151' }} />
+          <span className="text-xs text-gray-400">{candidate.name}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ComparePanel({ candidates, userThemes, language }) {
+  const [selectedIds, setSelectedIds] = React.useState([]);
+
+  const toggleCandidate = (id) => {
+    setSelectedIds(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 2) return [prev[1], id];
+      return [...prev, id];
+    });
+  };
+
+  const selected = candidates.filter(c => selectedIds.includes(c.id));
+
+  return (
+    <div className="border border-gray-200 rounded-2xl overflow-hidden mb-6">
+      <div className="p-5 border-b border-gray-100 bg-gray-50">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          {language === 'fr' ? 'Comparer les candidats' : 'Compare candidates'}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {candidates.map(c => {
+            const isSelected = selectedIds.includes(c.id);
+            const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            return (
+              <button
+                key={c.id}
+                onClick={() => toggleCandidate(c.id)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all ${
+                  isSelected
+                    ? 'border-gray-900 bg-gray-900 text-white'
+                    : 'border-gray-200 text-gray-600 hover:border-gray-400 bg-white'
+                }`}
+              >
+                {c.image ? (
+                  <img src={c.image} alt={c.name} width={18} height={18} className="rounded-full object-cover flex-shrink-0" style={{ width: 18, height: 18 }} />
+                ) : (
+                  <span className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-white flex-shrink-0" style={{ width: 18, height: 18, backgroundColor: c.color ?? '#374151', fontSize: 8 }}>{initials}</span>
+                )}
+                {c.name}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-gray-400 mt-2">
+          {selected.length === 0
+            ? (language === 'fr' ? 'Sélectionnez 2 candidats pour comparer' : 'Select 2 candidates to compare')
+            : selected.length === 1
+            ? (language === 'fr' ? 'Sélectionnez 1 candidat de plus' : 'Select 1 more candidate')
+            : (language === 'fr' ? `Comparaison : ${selected.map(c => c.name).join(' vs ')}` : `Comparing: ${selected.map(c => c.name).join(' vs ')}`)}
+        </p>
+      </div>
+
+      {selected.length === 2 && (
+        <div className="p-5">
+          {/* Candidate headers */}
+          <div className="grid gap-3 mb-5" style={{ gridTemplateColumns: '110px 1fr 1fr' }}>
+            <div />
+            {selected.map(c => {
+              const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+              return (
+                <div key={c.id} className="flex flex-col items-center gap-1">
+                  {c.image ? (
+                    <img src={c.image} alt={c.name} width={36} height={36} className="rounded-full object-cover" style={{ width: 36, height: 36 }} />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: c.color ?? '#374151' }}>{initials}</div>
+                  )}
+                  <p className="text-xs font-semibold text-gray-800 text-center leading-tight">{c.name}</p>
+                  <p className="text-xs text-gray-400">{c.alignment}%</p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Theme comparison rows */}
+          <div className="space-y-3">
+            {THEMES_ORDER.map(theme => {
+              const label = THEME_LABELS[language]?.[theme] ?? theme;
+              const color = THEME_COLORS[theme] ?? '#6b7280';
+              const userScore = userThemes?.[theme] ?? 50;
+              return (
+                <div key={theme} className="grid gap-3 items-center" style={{ gridTemplateColumns: '110px 1fr 1fr' }}>
+                  <span className="text-xs text-gray-500 truncate">{label}</span>
+                  {selected.map(c => {
+                    const score = c.profile?.[theme] ?? 50;
+                    const diff = Math.abs(score - userScore);
+                    return (
+                      <div key={c.id}>
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${score}%`, backgroundColor: color }} />
+                          </div>
+                          <span className="text-xs tabular-nums text-gray-500 w-6 text-right flex-shrink-0">{score}</span>
+                        </div>
+                        {diff >= 30 && (
+                          <p className="text-xs mt-0.5" style={{ color: '#f59e0b', fontSize: 10 }}>
+                            {language === 'fr' ? `Δ${diff} vs vous` : `Δ${diff} vs you`}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* User reference */}
+          <div className="mt-5 pt-4 border-t border-gray-100">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
+              {language === 'fr' ? 'Votre profil (référence)' : 'Your profile (reference)'}
+            </p>
+            <div className="space-y-1.5">
+              {THEMES_ORDER.map(theme => {
+                const label = THEME_LABELS[language]?.[theme] ?? theme;
+                const color = THEME_COLORS[theme] ?? '#6b7280';
+                const userScore = userThemes?.[theme] ?? 50;
+                return (
+                  <div key={theme} className="flex items-center gap-3">
+                    <span className="text-xs text-gray-400 w-28 flex-shrink-0">{label}</span>
+                    <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${userScore}%`, backgroundColor: color, opacity: 0.5 }} />
+                    </div>
+                    <span className="text-xs tabular-nums text-gray-400 w-6 text-right">{userScore}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CandidatePortrait({ candidate, size = 48 }) {
   const [imgError, setImgError] = React.useState(false);
   if (candidate.image && !imgError) {
@@ -510,7 +704,8 @@ function CandidatePortrait({ candidate, size = 48 }) {
   );
 }
 
-function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnswers, questions, expanded, onToggle }) {
+function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnswers, questions, expanded, onToggle, globalProfile }) {
+  const selectCandidate = useStore(s => s.selectCandidate);
   const { name, color, party, result, description, alignment } = candidate;
   const barColor = alignmentBarColor(alignment);
   const textColor = alignmentColorClass(alignment);
@@ -527,12 +722,23 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
       {isTop && <div className="h-0.5 bg-gray-900" />}
       <div className="p-5 sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          {/* Portrait */}
-          <CandidatePortrait candidate={candidate} size={52} />
+          {/* Portrait — clickable */}
+          <button
+            onClick={() => selectCandidate(candidate.id)}
+            className="flex-shrink-0 rounded-full hover:opacity-80 transition-opacity"
+            aria-label={`View ${name}'s profile`}
+          >
+            <CandidatePortrait candidate={candidate} size={52} />
+          </button>
 
           {/* Name + meta */}
           <div className="flex-1 min-w-0">
-            <h3 className={`font-semibold text-gray-900 truncate leading-tight ${isTop ? 'text-base' : 'text-sm'}`}>{name}</h3>
+            <button
+              onClick={() => selectCandidate(candidate.id)}
+              className="hover:underline text-left"
+            >
+              <h3 className={`font-semibold text-gray-900 truncate leading-tight ${isTop ? 'text-base' : 'text-sm'}`}>{name}</h3>
+            </button>
             {party && (
               <p className="text-xs text-gray-400 mt-0.5">
                 {typeof party === 'object' ? party[language] : party}
@@ -597,17 +803,32 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
           </p>
         )}
 
-        {/* Toggle */}
-        {!isTop && onToggle && (
-          <button
-            onClick={onToggle}
-            className="mt-3 text-xs text-blue-500 hover:text-blue-700 font-medium"
-          >
-            {expanded
-              ? (language === 'fr' ? '▲ Réduire' : '▲ Collapse')
-              : (language === 'fr' ? '▼ Voir les détails' : '▼ View details')}
-          </button>
+        {/* Theme breakdown (expanded) */}
+        {(expanded || isTop) && globalProfile?.themes && candidate.profile && (
+          <ThemeBreakdown userThemes={globalProfile.themes} candidate={candidate} language={language} />
         )}
+
+        {/* Toggle + profile link */}
+        <div className="mt-3 flex items-center gap-4">
+          {!isTop && onToggle && (
+            <button
+              onClick={onToggle}
+              className="text-xs text-blue-500 hover:text-blue-700 font-medium"
+            >
+              {expanded
+                ? (language === 'fr' ? '▲ Réduire' : '▲ Collapse')
+                : (language === 'fr' ? '▼ Voir les détails' : '▼ View details')}
+            </button>
+          )}
+          {(expanded || isTop) && (
+            <button
+              onClick={() => selectCandidate(candidate.id)}
+              className="text-xs text-gray-400 hover:text-gray-700 font-medium transition-colors"
+            >
+              {language === 'fr' ? 'Voir le profil →' : 'View profile →'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 import { calculateProfile } from '../engine/scorer.js';
 import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
+import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 
 /**
  * Pick the next question for improve mode.
@@ -59,6 +60,10 @@ export const useStore = create(
       // ── Election module ──
       selectedElectionId: null,
       electionAnswers: {}, // { [electionId]: { [questionId]: value } }
+
+      // ── Candidate module ──
+      selectedCandidateId: null,
+      compareIds: [], // [id1, id2]
 
       // ── Actions ──
       setLanguage: (lang) => set({ language: lang }),
@@ -138,6 +143,9 @@ export const useStore = create(
 
       selectElection: (id) => set({ selectedElectionId: id, currentPage: 'electionDetail' }),
 
+      selectCandidate: (id) => set({ selectedCandidateId: id, currentPage: 'candidateProfile' }),
+      startCompare: (id1, id2) => set({ compareIds: [id1, id2], currentPage: 'compareView' }),
+
       answerElectionQuestion: (electionId, questionId, value) => {
         const current = get().electionAnswers;
         set({
@@ -161,6 +169,30 @@ export const useStore = create(
         const newAnswers = { ...get().answers, [questionId]: value };
         const profile = calculateProfile(newAnswers);
         set({ answers: newAnswers, profile });
+
+        // Immediately persist to Supabase for logged-in users
+        const { userId } = get();
+        if (isSupabaseEnabled && supabase && userId) {
+          supabase
+            .from('user_answers')
+            .upsert(
+              { user_id: userId, question_id: questionId, answer_value: value },
+              { onConflict: 'user_id,question_id' }
+            )
+            .then(({ error }) => {
+              if (error) console.error('[Poliscope] Supabase answer save error:', error.message);
+            });
+        }
+      },
+
+      /**
+       * Load answers fetched from Supabase into the store (keyed by question_id).
+       * Recalculates the profile so all derived state stays consistent.
+       */
+      hydrateFromCloud: (cloudAnswers) => {
+        if (!cloudAnswers || Object.keys(cloudAnswers).length === 0) return;
+        const profile = calculateProfile(cloudAnswers);
+        set({ answers: cloudAnswers, profile });
       },
 
       nextQuestion: () => {

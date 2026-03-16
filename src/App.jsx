@@ -14,6 +14,8 @@ import HistoricalFigures from './pages/HistoricalFigures.jsx';
 import Auth from './pages/Auth.jsx';
 import Mission from './pages/Mission.jsx';
 import Transparency from './pages/Transparency.jsx';
+import CandidateProfile from './pages/CandidateProfile.jsx';
+import CandidateCompare from './pages/CandidateCompare.jsx';
 
 export default function App() {
   const currentPage = useStore(s => s.currentPage);
@@ -25,12 +27,12 @@ export default function App() {
   const { saveAnswers, saveUserProfile, isAuthenticated } = useAuth();
   const saveTimer = useRef(null);
 
-  // Auto-save to Supabase 3s after any answer change (debounced)
+  // Debounced profile snapshot save — answers are now saved per-question in the store.
+  // This just keeps the user_profiles table in sync after each answer batch.
   useEffect(() => {
     if (!isAuthenticated || !profile) return;
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      saveAnswers(answers);
       saveUserProfile(profile);
     }, 3000);
     return () => clearTimeout(saveTimer.current);
@@ -46,8 +48,10 @@ export default function App() {
     electionDetail: <ElectionDetail />,
     figures:        <HistoricalFigures />,
     auth:           <Auth />,
-    mission:        <Mission />,
-    transparency:   <Transparency />,
+    mission:          <Mission />,
+    transparency:     <Transparency />,
+    candidateProfile: <CandidateProfile />,
+    compareView:      <CandidateCompare />,
   };
 
   return (

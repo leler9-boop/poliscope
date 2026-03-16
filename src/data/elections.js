@@ -264,6 +264,108 @@ export const elections = [
           jadot: 2, hidalgo: 4, pecresse: 4, roussel: 3,
         },
       },
+      {
+        id: `fr_2022_q13`,
+        text: {
+          en: `A major wealth tax on assets above €1 million should be introduced or restored.`,
+          fr: `Une grande taxe sur les fortunes supérieures à 1 million d'euros devrait être instaurée ou rétablie.`,
+        },
+        theme: `ECONOMY`,
+        direction: -1,
+        info: {
+          en: `Macron abolished the ISF (wealth tax) in 2017 and replaced it with a property-only tax. The left called for its full restoration; the right backed the change.`,
+          fr: `Macron a supprimé l'ISF en 2017 et l'a remplacé par une taxe uniquement sur l'immobilier. La gauche a réclamé son rétablissement ; la droite a soutenu la suppression.`,
+        },
+        positions: {
+          macron: 1, lepen: 3, melenchon: 5, zemmour: 2,
+          jadot: 5, hidalgo: 5, pecresse: 1, roussel: 5,
+        },
+      },
+      {
+        id: `fr_2022_q14`,
+        text: {
+          en: `Same-sex couples should have the same adoption and parenting rights as heterosexual couples.`,
+          fr: `Les couples de même sexe devraient avoir les mêmes droits d'adoption et de parentalité que les couples hétérosexuels.`,
+        },
+        theme: `SOCIAL`,
+        direction: 1,
+        info: {
+          en: `Same-sex marriage was legalised in France in 2013. The debate continued on medically assisted reproduction (PMA) for same-sex female couples, eventually legalised in 2021.`,
+          fr: `Le mariage pour tous a été légalisé en France en 2013. Le débat a continué sur la PMA pour les couples de femmes, finalement légalisée en 2021.`,
+        },
+        positions: {
+          macron: 5, lepen: 2, melenchon: 5, zemmour: 1,
+          jadot: 5, hidalgo: 5, pecresse: 3, roussel: 4,
+        },
+      },
+      {
+        id: `fr_2022_q15`,
+        text: {
+          en: `France should transition to a fully proportional electoral system.`,
+          fr: `La France devrait adopter un système électoral entièrement proportionnel.`,
+        },
+        theme: `DEMOCRACY`,
+        direction: 1,
+        info: {
+          en: `France uses a two-round majority system which tends to produce absolute majorities. Critics argue proportional representation would better reflect voter diversity; supporters argue it enables stable governance.`,
+          fr: `La France utilise un scrutin majoritaire à deux tours qui tend à produire des majorités absolues. Les partisans de la proportionnelle estiment qu'elle reflète mieux la diversité des électeurs.`,
+        },
+        positions: {
+          macron: 2, lepen: 3, melenchon: 5, zemmour: 2,
+          jadot: 5, hidalgo: 4, pecresse: 2, roussel: 5,
+        },
+      },
+      {
+        id: `fr_2022_q16`,
+        text: {
+          en: `The state should make major new investments in rail and public transport infrastructure.`,
+          fr: `L'État devrait réaliser de grands investissements dans les infrastructures ferroviaires et les transports en commun.`,
+        },
+        theme: `PUBLIC_SERVICES`,
+        direction: 1,
+        info: {
+          en: `France's regional rail network has suffered from years of underinvestment. The debate is whether to prioritise new TGV lines or maintain and restore everyday regional networks.`,
+          fr: `Le réseau ferroviaire régional français a souffert des années de sous-investissement. Le débat porte sur la priorité à donner aux nouvelles lignes TGV ou à l'entretien des réseaux régionaux quotidiens.`,
+        },
+        positions: {
+          macron: 3, lepen: 3, melenchon: 5, zemmour: 2,
+          jadot: 5, hidalgo: 5, pecresse: 2, roussel: 5,
+        },
+      },
+      {
+        id: `fr_2022_q17`,
+        text: {
+          en: `France should accelerate its transition to renewable energy beyond nuclear power.`,
+          fr: `La France devrait accélérer sa transition vers les énergies renouvelables au-delà du nucléaire.`,
+        },
+        theme: `ENVIRONMENT`,
+        direction: 1,
+        info: {
+          en: `France has the EU's highest nuclear share in its electricity mix. The Greens and left called for a rapid renewable transition; most other parties wanted to keep nuclear as a base.`,
+          fr: `La France a la plus grande part de nucléaire dans son mix électrique en Europe. Les Verts et la gauche réclamaient une transition rapide vers les renouvelables ; la plupart des autres partis voulaient conserver le nucléaire.`,
+        },
+        positions: {
+          macron: 3, lepen: 2, melenchon: 4, zemmour: 1,
+          jadot: 5, hidalgo: 4, pecresse: 2, roussel: 3,
+        },
+      },
+      {
+        id: `fr_2022_q18`,
+        text: {
+          en: `The judiciary should be more independent from the executive branch.`,
+          fr: `La justice devrait être plus indépendante du pouvoir exécutif.`,
+        },
+        theme: `DEMOCRACY`,
+        direction: 1,
+        info: {
+          en: `France's constitution gives the president significant influence over the judiciary, including the appointment of senior judges. Critics argue this compromises judicial independence.`,
+          fr: `La Constitution française donne au président une influence significative sur la justice, notamment dans la nomination des hauts magistrats. Les critiques estiment que cela compromet l'indépendance judiciaire.`,
+        },
+        positions: {
+          macron: 3, lepen: 3, melenchon: 5, zemmour: 3,
+          jadot: 5, hidalgo: 4, pecresse: 3, roussel: 4,
+        },
+      },
     ],
 
     candidates: [
@@ -608,6 +710,90 @@ export const elections = [
         },
         positions: { biden: 5, trump: 2 },
       },
+      {
+        id: `us_2020_q13`,
+        text: {
+          en: `The federal government should cancel a significant portion of student loan debt.`,
+          fr: `Le gouvernement fédéral devrait annuler une part importante de la dette étudiante.`,
+        },
+        theme: `PUBLIC_SERVICES`,
+        direction: 1,
+        info: {
+          en: `Americans hold over $1.7 trillion in student debt. Biden cancelled some debt via executive action; Trump opposed federal cancellation as unfair to those who did not attend college.`,
+          fr: `Les Américains détiennent plus de 1 700 milliards de dollars de dettes étudiantes. Biden en a annulé une partie par décret ; Trump s'est opposé à l'annulation fédérale comme injuste pour ceux qui n'ont pas fait d'études.`,
+        },
+        positions: { biden: 3, trump: 1 },
+      },
+      {
+        id: `us_2020_q14`,
+        text: {
+          en: `Significant police reform is needed to address systemic racism in law enforcement.`,
+          fr: `Une réforme importante de la police est nécessaire pour lutter contre le racisme systémique dans les forces de l'ordre.`,
+        },
+        theme: `SOCIAL`,
+        direction: 1,
+        info: {
+          en: `The killing of George Floyd sparked nationwide protests. Biden backed police reform legislation; Trump ran on a "Law and Order" platform and opposed the "defund the police" movement.`,
+          fr: `La mort de George Floyd a déclenché des manifestations nationales. Biden a soutenu une législation de réforme de la police ; Trump a misé sur la "Loi et l'Ordre" et s'est opposé au mouvement "Defund the police".`,
+        },
+        positions: { biden: 4, trump: 1 },
+      },
+      {
+        id: `us_2020_q15`,
+        text: {
+          en: `The wealthiest Americans should pay significantly higher income taxes.`,
+          fr: `Les Américains les plus riches devraient payer des impôts sur le revenu nettement plus élevés.`,
+        },
+        theme: `ECONOMY`,
+        direction: -1,
+        info: {
+          en: `Biden proposed raising the top marginal income tax rate from 37% to 39.6% and increasing capital gains taxes. Trump\'s 2017 tax cuts had disproportionately benefited upper-income earners.`,
+          fr: `Biden a proposé de relever le taux marginal d'imposition de 37 % à 39,6 % et d'augmenter les taxes sur les plus-values. Les baisses fiscales de Trump en 2017 avaient profité de manière disproportionnée aux hauts revenus.`,
+        },
+        positions: { biden: 4, trump: 1 },
+      },
+      {
+        id: `us_2020_q16`,
+        text: {
+          en: `Marijuana should be legalised at the federal level.`,
+          fr: `La marijuana devrait être légalisée au niveau fédéral.`,
+        },
+        theme: `SOCIAL`,
+        direction: 1,
+        info: {
+          en: `Many US states had already legalised marijuana, but it remained illegal federally. Biden supported decriminalisation and expunging prior convictions; Trump maintained the status quo.`,
+          fr: `De nombreux États avaient déjà légalisé la marijuana, mais elle restait illégale au niveau fédéral. Biden soutenait la dépénalisation ; Trump maintenait le statu quo.`,
+        },
+        positions: { biden: 3, trump: 1 },
+      },
+      {
+        id: `us_2020_q17`,
+        text: {
+          en: `Large technology companies should be more strictly regulated by the federal government.`,
+          fr: `Les grandes entreprises technologiques devraient être plus strictement réglementées par le gouvernement fédéral.`,
+        },
+        theme: `ECONOMY`,
+        direction: -1,
+        info: {
+          en: `Growing concern over the market power of Amazon, Google, Apple, and Facebook led both parties to consider antitrust action, though for different reasons. Democrats focused on privacy and fair competition; Republicans on alleged censorship of conservative voices.`,
+          fr: `La préoccupation croissante pour le pouvoir de marché d'Amazon, Google, Apple et Facebook a poussé les deux partis à envisager des mesures antitrust, pour des raisons différentes.`,
+        },
+        positions: { biden: 3, trump: 3 },
+      },
+      {
+        id: `us_2020_q18`,
+        text: {
+          en: `The US should significantly invest in rebuilding its infrastructure (roads, bridges, broadband).`,
+          fr: `Les États-Unis devraient investir massivement dans la reconstruction de leurs infrastructures (routes, ponts, haut débit).`,
+        },
+        theme: `PUBLIC_SERVICES`,
+        direction: 1,
+        info: {
+          en: `Infrastructure has been a consistent talking point across administrations. Biden passed the $1.2 trillion Bipartisan Infrastructure Law in 2021. Trump repeatedly promised infrastructure bills during his presidency.`,
+          fr: `Les infrastructures ont été un point de discussion constant. Biden a adopté la loi bipartisane de 1 200 milliards de dollars en 2021. Trump avait promis des projets de loi sur les infrastructures pendant sa présidence.`,
+        },
+        positions: { biden: 5, trump: 3 },
+      },
     ],
 
     candidates: [
@@ -757,6 +943,48 @@ export const elections = [
         theme: `ECONOMY`, direction: -1,
         info: { en: `Purchasing power is the top concern for French voters. The left calls for large SMIC increases; the right warns of job losses if labour costs rise too fast.`, fr: `Le pouvoir d'achat est la première préoccupation des électeurs français. La gauche réclame de fortes hausses du SMIC ; la droite met en garde contre les pertes d'emplois.` },
         positions: { lepen: 4, philippe: 2, attal: 2, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 1 },
+      },
+      {
+        id: `fr_2027_q12`,
+        text: { en: `France should introduce strict rent controls in major cities.`, fr: `La France devrait introduire un contrôle strict des loyers dans les grandes villes.` },
+        theme: `PUBLIC_SERVICES`, direction: 1,
+        info: { en: `Housing costs have surged in French cities. Paris tried rent controls from 2015; the left wants stronger national rent control. The right argues controls reduce housing supply.`, fr: `Les coûts du logement ont explosé dans les villes françaises. Paris a expérimenté l'encadrement des loyers depuis 2015 ; la gauche veut un contrôle national plus fort. La droite estime que les contrôles réduisent l'offre.` },
+        positions: { lepen: 3, philippe: 2, attal: 2, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 1 },
+      },
+      {
+        id: `fr_2027_q13`,
+        text: { en: `University tuition should be free for all students in France.`, fr: `Les frais universitaires devraient être gratuits pour tous les étudiants en France.` },
+        theme: `PUBLIC_SERVICES`, direction: 1,
+        info: { en: `French public universities already charge very low fees. The radical left wants full fee abolition; the right wants to introduce more differentiated pricing for better university funding.`, fr: `Les universités publiques françaises facturent déjà des frais très bas. La gauche radicale veut leur suppression complète ; la droite veut une tarification différenciée pour mieux financer les universités.` },
+        positions: { lepen: 3, philippe: 2, attal: 2, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 1 },
+      },
+      {
+        id: `fr_2027_q14`,
+        text: { en: `France should set a strict timetable to eliminate fossil fuels from its energy mix by 2040.`, fr: `La France devrait fixer un calendrier strict pour éliminer les énergies fossiles de son mix énergétique d'ici 2040.` },
+        theme: `ENVIRONMENT`, direction: 1,
+        info: { en: `France imports most of its gas and oil. Phasing out fossil fuels would require massive renewable expansion and industrial transformation, with major economic implications for workers in affected sectors.`, fr: `La France importe la majeure partie de son gaz et de son pétrole. Éliminer les fossiles nécessiterait une expansion massive des renouvelables et une transformation industrielle.` },
+        positions: { lepen: 1, philippe: 2, attal: 3, melenchon: 4, glucksmann: 4, tondelier: 5, retailleau: 2 },
+      },
+      {
+        id: `fr_2027_q15`,
+        text: { en: `Citizens should be able to initiate referendums on major policy decisions.`, fr: `Les citoyens devraient pouvoir initier des référendums sur les grandes décisions politiques.` },
+        theme: `DEMOCRACY`, direction: 1,
+        info: { en: `Citizen-initiated referendums (RIC) were a key demand of the Yellow Vest movement. The left and populist right broadly support them; mainstream parties have resisted.`, fr: `Les référendums d'initiative citoyenne (RIC) étaient une demande clé du mouvement des Gilets jaunes. La gauche et la droite populiste les soutiennent globalement ; les partis mainstream y résistent.` },
+        positions: { lepen: 4, philippe: 2, attal: 2, melenchon: 5, glucksmann: 3, tondelier: 5, retailleau: 3 },
+      },
+      {
+        id: `fr_2027_q16`,
+        text: { en: `France should expand its nuclear deterrent and maintain full strategic autonomy.`, fr: `La France devrait étendre sa dissuasion nucléaire et maintenir une pleine autonomie stratégique.` },
+        theme: `SECURITY`, direction: 1,
+        info: { en: `France is the only EU member state with nuclear weapons. All mainstream parties defend the deterrent, but disagree on whether to share it with European partners or keep it exclusively French.`, fr: `La France est le seul État membre de l'UE à posséder des armes nucléaires. Tous les partis défendent la dissuasion, mais divergent sur son partage éventuel avec des partenaires européens.` },
+        positions: { lepen: 5, philippe: 4, attal: 4, melenchon: 2, glucksmann: 4, tondelier: 2, retailleau: 5 },
+      },
+      {
+        id: `fr_2027_q17`,
+        text: { en: `Large digital companies should pay much higher taxes in France.`, fr: `Les grandes entreprises numériques devraient payer des impôts beaucoup plus élevés en France.` },
+        theme: `ECONOMY`, direction: -1,
+        info: { en: `France introduced a digital services tax in 2019 targeting companies like Google and Amazon. The debate is whether to go further nationally or push for an EU-wide digital tax.`, fr: `La France a introduit une taxe sur les services numériques en 2019 ciblant des entreprises comme Google et Amazon. Le débat porte sur la possibilité d'aller plus loin nationalement ou de pousser pour une taxe numérique européenne.` },
+        positions: { lepen: 4, philippe: 3, attal: 3, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 2 },
       },
     ],
     candidates: [
