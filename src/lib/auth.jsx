@@ -137,7 +137,6 @@ export function AuthProvider({ children }) {
       confidence:       profile.confidence,
       confidence_score: profile.confidenceScore ?? 0,
       answered_count:   profile.answeredCount ?? 0,
-      updated_at:       new Date().toISOString(),
     };
     const { data, error } = await supabase
       .from('user_profiles')
