@@ -11,7 +11,7 @@ import { THEMES, THEMES_ORDER, questions as allQuestions } from '../data/questio
 export function calculateProfile(answers) {
   const themeData = {};
   THEMES_ORDER.forEach(theme => {
-    themeData[theme] = { sum: 0, count: 0 };
+    themeData[theme] = { weightedSum: 0, totalWeight: 0 };
   });
 
   allQuestions.forEach(q => {
@@ -24,18 +24,20 @@ export function calculateProfile(answers) {
     // Apply direction: direction=1 means agree shifts score up, -1 means it shifts down
     const contribution = q.direction === 1 ? normalized : 1 - normalized;
 
-    themeData[q.theme].sum += contribution;
-    themeData[q.theme].count += 1;
+    // Weight by question importance (core=5, refinement=3/2, deep=1)
+    const w = q.weight ?? 1;
+    themeData[q.theme].weightedSum += contribution * w;
+    themeData[q.theme].totalWeight += w;
   });
 
-  // Build theme scores (0–100)
+  // Build theme scores (0–100) using weighted average
   const themes = {};
   THEMES_ORDER.forEach(theme => {
     const d = themeData[theme];
-    if (d.count === 0) {
+    if (d.totalWeight === 0) {
       themes[theme] = 50; // default to center when no data
     } else {
-      themes[theme] = Math.round((d.sum / d.count) * 100);
+      themes[theme] = Math.round((d.weightedSum / d.totalWeight) * 100);
     }
   });
 

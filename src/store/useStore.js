@@ -57,6 +57,9 @@ export const useStore = create(
       // ── Profile adjustments (manual refinement, does not touch original answers) ──
       profileAdjustments: {}, // { [THEME]: deltaPoints }
 
+      // ── Priority weights (100 points allocated across themes, null = equal) ──
+      themeWeights: null, // { ECONOMY: 20, SOCIAL: 15, … } summing to 100
+
       // ── Election module ──
       selectedElectionId: null,
       electionAnswers: {}, // { [electionId]: { [questionId]: value } }
@@ -141,6 +144,8 @@ export const useStore = create(
 
       resetAdjustments: () => set({ profileAdjustments: {} }),
 
+      setThemeWeights: (weights) => set({ themeWeights: weights }),
+
       selectElection: (id) => set({ selectedElectionId: id, currentPage: 'electionDetail' }),
 
       selectCandidate: (id) => set({ selectedCandidateId: id, currentPage: 'candidateProfile' }),
@@ -224,6 +229,7 @@ export const useStore = create(
           answers: {},
           profile: null,
           profileAdjustments: {},
+          themeWeights: null,
           testMode: null,
           questionsQueue: [],
           currentQuestionIndex: 0,
@@ -279,6 +285,7 @@ export const useStore = create(
         priorityOrder: state.priorityOrder,
         electionAnswers: state.electionAnswers,
         profileAdjustments: state.profileAdjustments,
+        themeWeights: state.themeWeights,
       }),
     }
   )

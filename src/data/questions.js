@@ -55,6 +55,7 @@ export const questions = [
     id: `ECO_1`,
     theme: THEMES.ECONOMY,
     priority: 1,
+    weight: 5,
     text: {
       en: `The top income tax rate should be significantly increased.`,
       fr: `Le taux marginal d'imposition sur le revenu devrait être significativement augmenté.`,
@@ -69,6 +70,7 @@ export const questions = [
     id: `ECO_2`,
     theme: THEMES.ECONOMY,
     priority: 1,
+    weight: 3,
     text: {
       en: `The minimum wage should be raised significantly above current levels.`,
       fr: `Le salaire minimum devrait être augmenté de manière significative au-dessus des niveaux actuels.`,
@@ -83,6 +85,7 @@ export const questions = [
     id: `ECO_3`,
     theme: THEMES.ECONOMY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Corporate taxes should be lowered to attract investment and create jobs.`,
       fr: `Les impôts sur les sociétés devraient être abaissés pour attirer les investissements et créer des emplois.`,
@@ -97,6 +100,7 @@ export const questions = [
     id: `ECO_4`,
     theme: THEMES.ECONOMY,
     priority: 2,
+    weight: 3,
     text: {
       en: `Wealth taxes on assets above a high threshold should be introduced or expanded.`,
       fr: `Des impôts sur la fortune au-delà d'un seuil élevé devraient être introduits ou élargis.`,
@@ -111,6 +115,7 @@ export const questions = [
     id: `ECO_5`,
     theme: THEMES.ECONOMY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Austerity policies (cutting public spending to reduce deficits) are necessary and effective.`,
       fr: `Les politiques d'austérité (réduction des dépenses publiques pour réduire les déficits) sont nécessaires et efficaces.`,
@@ -125,6 +130,7 @@ export const questions = [
     id: `ECO_6`,
     theme: THEMES.ECONOMY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Workers should have stronger rights to unionize and engage in collective bargaining.`,
       fr: `Les travailleurs devraient avoir des droits plus solides pour se syndiquer et s'engager dans la négociation collective.`,
@@ -139,6 +145,7 @@ export const questions = [
     id: `ECO_7`,
     theme: THEMES.ECONOMY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Free trade agreements are generally beneficial for the economy.`,
       fr: `Les accords de libre-échange sont généralement bénéfiques pour l'économie.`,
@@ -153,6 +160,7 @@ export const questions = [
     id: `ECO_8`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The government should nationalize strategic industries such as energy and rail.`,
       fr: `Le gouvernement devrait nationaliser les industries stratégiques comme l'énergie et le rail.`,
@@ -167,6 +175,7 @@ export const questions = [
     id: `ECO_9`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Financial markets should face significantly more regulation to prevent crises.`,
       fr: `Les marchés financiers devraient faire face à une réglementation nettement plus stricte pour prévenir les crises.`,
@@ -181,6 +190,7 @@ export const questions = [
     id: `ECO_10`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `A universal basic income (UBI) should replace most existing welfare programmes.`,
       fr: `Un revenu universel de base (RUB) devrait remplacer la plupart des programmes d'aide sociale existants.`,
@@ -195,6 +205,7 @@ export const questions = [
     id: `ECO_11`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Reducing the national debt should be the government's top fiscal priority.`,
       fr: `La réduction de la dette nationale devrait être la priorité fiscale numéro un du gouvernement.`,
@@ -209,6 +220,7 @@ export const questions = [
     id: `ECO_12`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Large technology companies should be broken up under anti-monopoly laws.`,
       fr: `Les grandes entreprises technologiques devraient être démantelées en vertu des lois antitrust.`,
@@ -223,6 +235,7 @@ export const questions = [
     id: `ECO_13`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The gig economy provides valuable flexibility and should face minimal regulation.`,
       fr: `L'économie de plateforme offre une flexibilité précieuse et devrait faire l'objet d'une réglementation minimale.`,
@@ -237,6 +250,7 @@ export const questions = [
     id: `ECO_14`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Inheritance taxes should be substantially increased to reduce generational wealth inequality.`,
       fr: `Les droits de succession devraient être substantiellement augmentés pour réduire les inégalités de richesse intergénérationnelles.`,
@@ -251,6 +265,7 @@ export const questions = [
     id: `ECO_15`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 5,
     text: {
       en: `Privatisation of state-owned enterprises generally improves efficiency and should be pursued.`,
       fr: `La privatisation des entreprises publiques améliore généralement l'efficacité et devrait être poursuivie.`,
@@ -267,6 +282,7 @@ export const questions = [
     id: `SOC_1`,
     theme: THEMES.SOCIAL,
     priority: 1,
+    weight: 3,
     text: {
       en: `Same-sex couples should have exactly the same legal rights as heterosexual couples.`,
       fr: `Les couples de même sexe devraient avoir exactement les mêmes droits légaux que les couples hétérosexuels.`,
@@ -281,6 +297,7 @@ export const questions = [
     id: `SOC_2`,
     theme: THEMES.SOCIAL,
     priority: 1,
+    weight: 3,
     text: {
       en: `Women should have unrestricted access to abortion services.`,
       fr: `Les femmes devraient avoir un accès sans restriction aux services d'avortement.`,
@@ -295,6 +312,7 @@ export const questions = [
     id: `SOC_3`,
     theme: THEMES.SOCIAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Cannabis should be fully legalised and regulated for recreational use.`,
       fr: `Le cannabis devrait être entièrement légalisé et réglementé pour un usage récréatif.`,
@@ -309,6 +327,7 @@ export const questions = [
     id: `SOC_4`,
     theme: THEMES.SOCIAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Affirmative action programmes to help historically disadvantaged groups are justified.`,
       fr: `Les programmes de discrimination positive pour aider les groupes historiquement défavorisés sont justifiés.`,
@@ -323,6 +342,7 @@ export const questions = [
     id: `SOC_5`,
     theme: THEMES.SOCIAL,
     priority: 2,
+    weight: 5,
     text: {
       en: `Religious values should play a greater role in shaping public policy.`,
       fr: `Les valeurs religieuses devraient jouer un rôle plus important dans l'élaboration des politiques publiques.`,
@@ -337,6 +357,7 @@ export const questions = [
     id: `SOC_6`,
     theme: THEMES.SOCIAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Transgender people should be able to legally change their gender without medical requirements.`,
       fr: `Les personnes transgenres devraient pouvoir changer légalement de genre sans exigences médicales.`,
@@ -351,6 +372,7 @@ export const questions = [
     id: `SOC_7`,
     theme: THEMES.SOCIAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Traditional family structures (two-parent, heterosexual households) should be actively promoted by the state.`,
       fr: `Les structures familiales traditionnelles (foyers hétérosexuels, deux parents) devraient être activement promues par l'État.`,
@@ -365,6 +387,7 @@ export const questions = [
     id: `SOC_8`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Hate speech laws should be expanded to better protect marginalised groups.`,
       fr: `Les lois sur les discours haineux devraient être élargies pour mieux protéger les groupes marginalisés.`,
@@ -379,6 +402,7 @@ export const questions = [
     id: `SOC_9`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Sex work should be fully decriminalised.`,
       fr: `Le travail du sexe devrait être entièrement décriminalisé.`,
@@ -393,6 +417,7 @@ export const questions = [
     id: `SOC_10`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Assisted dying should be legal for terminally ill patients who request it.`,
       fr: `L'aide médicale à mourir devrait être légale pour les patients en phase terminale qui en font la demande.`,
@@ -407,6 +432,7 @@ export const questions = [
     id: `SOC_11`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Stricter gun control laws should be introduced to reduce violence.`,
       fr: `Des lois plus strictes sur le contrôle des armes devraient être introduites pour réduire la violence.`,
@@ -421,6 +447,7 @@ export const questions = [
     id: `SOC_12`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Universities and schools should be required to use gender-neutral language in all communications.`,
       fr: `Les universités et les écoles devraient être tenues d'utiliser un langage neutre sur le plan du genre dans toutes leurs communications.`,
@@ -435,6 +462,7 @@ export const questions = [
     id: `SOC_13`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `The death penalty should be abolished in all circumstances.`,
       fr: `La peine de mort devrait être abolie dans toutes les circonstances.`,
@@ -449,6 +477,7 @@ export const questions = [
     id: `SOC_14`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Pornography should face stricter age verification and content regulation.`,
       fr: `La pornographie devrait faire l'objet de vérifications d'âge plus strictes et d'une réglementation du contenu.`,
@@ -463,6 +492,7 @@ export const questions = [
     id: `SOC_15`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Social media platforms should be held legally responsible for harmful content posted by users.`,
       fr: `Les plateformes de réseaux sociaux devraient être tenues légalement responsables des contenus nuisibles publiés par leurs utilisateurs.`,
@@ -479,6 +509,7 @@ export const questions = [
     id: `IMM_1`,
     theme: THEMES.IMMIGRATION,
     priority: 1,
+    weight: 5,
     text: {
       en: `Immigration levels into our country should be significantly reduced.`,
       fr: `Les niveaux d'immigration dans notre pays devraient être significativement réduits.`,
@@ -493,6 +524,7 @@ export const questions = [
     id: `IMM_2`,
     theme: THEMES.IMMIGRATION,
     priority: 1,
+    weight: 3,
     text: {
       en: `Refugees and asylum seekers should receive full welfare rights and legal protection upon arrival.`,
       fr: `Les réfugiés et les demandeurs d'asile devraient recevoir tous les droits sociaux et la protection juridique à leur arrivée.`,
@@ -507,6 +539,7 @@ export const questions = [
     id: `IMM_3`,
     theme: THEMES.IMMIGRATION,
     priority: 2,
+    weight: 2,
     text: {
       en: `People who have lived in a country for many years without legal status should be given a path to citizenship.`,
       fr: `Les personnes qui vivent dans un pays depuis de nombreuses années sans statut légal devraient se voir offrir une voie vers la citoyenneté.`,
@@ -522,6 +555,7 @@ export const questions = [
     id: `IMM_4`,
     theme: THEMES.IMMIGRATION,
     priority: 2,
+    weight: 2,
     text: {
       en: `Immigration policy should focus on attracting highly skilled workers only.`,
       fr: `La politique d'immigration devrait se concentrer sur l'attraction des travailleurs hautement qualifiés uniquement.`,
@@ -536,6 +570,7 @@ export const questions = [
     id: `IMM_5`,
     theme: THEMES.IMMIGRATION,
     priority: 2,
+    weight: 3,
     text: {
       en: `Border controls within the EU or similar regional blocs should be strengthened.`,
       fr: `Les contrôles aux frontières au sein de l'UE ou de blocs régionaux similaires devraient être renforcés.`,
@@ -550,6 +585,7 @@ export const questions = [
     id: `IMM_6`,
     theme: THEMES.IMMIGRATION,
     priority: 2,
+    weight: 2,
     text: {
       en: `Immigrants should be required to demonstrate cultural integration before receiving residency rights.`,
       fr: `Les immigrants devraient être tenus de démontrer leur intégration culturelle avant de recevoir des droits de résidence.`,
@@ -564,6 +600,7 @@ export const questions = [
     id: `IMM_7`,
     theme: THEMES.IMMIGRATION,
     priority: 2,
+    weight: 3,
     text: {
       en: `The state should actively promote multiculturalism and cultural diversity.`,
       fr: `L'État devrait activement promouvoir le multiculturalisme et la diversité culturelle.`,
@@ -578,6 +615,7 @@ export const questions = [
     id: `IMM_8`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Economic migrants should have the same rights as citizens once they are employed and paying taxes.`,
       fr: `Les migrants économiques devraient avoir les mêmes droits que les citoyens une fois qu'ils travaillent et paient des impôts.`,
@@ -592,6 +630,7 @@ export const questions = [
     id: `IMM_9`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should accept more climate refugees as global warming displaces populations.`,
       fr: `Les pays devraient accueillir davantage de réfugiés climatiques à mesure que le réchauffement climatique déplace des populations.`,
@@ -606,6 +645,7 @@ export const questions = [
     id: `IMM_10`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Immigration detention centres should be abolished.`,
       fr: `Les centres de détention pour immigrants devraient être abolis.`,
@@ -620,6 +660,7 @@ export const questions = [
     id: `IMM_11`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Immigrants bring significant economic benefits and should be actively encouraged.`,
       fr: `Les immigrants apportent d'importants avantages économiques et devraient être activement encouragés.`,
@@ -634,6 +675,7 @@ export const questions = [
     id: `IMM_12`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Foreign nationals who commit serious crimes should be automatically deported after serving their sentence.`,
       fr: `Les ressortissants étrangers qui commettent des crimes graves devraient être automatiquement expulsés après avoir purgé leur peine.`,
@@ -648,6 +690,7 @@ export const questions = [
     id: `IMM_13`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Second-generation immigrants should be expected to identify primarily with their host country.`,
       fr: `Les immigrants de deuxième génération devraient être censés s'identifier principalement à leur pays d'accueil.`,
@@ -662,6 +705,7 @@ export const questions = [
     id: `IMM_14`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `The processing of asylum claims should be done offshore, outside the host country.`,
       fr: `Le traitement des demandes d'asile devrait être effectué à l'étranger, en dehors du pays d'accueil.`,
@@ -676,6 +720,7 @@ export const questions = [
     id: `IMM_15`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Language and integration tests for immigration should be abolished as discriminatory.`,
       fr: `Les tests de langue et d'intégration pour l'immigration devraient être abolis comme discriminatoires.`,
@@ -692,6 +737,7 @@ export const questions = [
     id: `SEC_1`,
     theme: THEMES.SECURITY,
     priority: 1,
+    weight: 5,
     text: {
       en: `Mass surveillance of citizens' communications goes too far and should be curtailed.`,
       fr: `La surveillance de masse des communications des citoyens va trop loin et devrait être restreinte.`,
@@ -706,6 +752,7 @@ export const questions = [
     id: `SEC_2`,
     theme: THEMES.SECURITY,
     priority: 1,
+    weight: 5,
     text: {
       en: `Police should be given more powers and resources to tackle crime.`,
       fr: `La police devrait se voir accorder davantage de pouvoirs et de ressources pour lutter contre la criminalité.`,
@@ -720,6 +767,7 @@ export const questions = [
     id: `SEC_3`,
     theme: THEMES.SECURITY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Anti-terrorism laws that restrict civil liberties are justified by the security benefits they provide.`,
       fr: `Les lois antiterroristes qui restreignent les libertés civiles sont justifiées par les avantages de sécurité qu'elles procurent.`,
@@ -734,6 +782,7 @@ export const questions = [
     id: `SEC_4`,
     theme: THEMES.SECURITY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Facial recognition technology should not be used by police in public spaces.`,
       fr: `La technologie de reconnaissance faciale ne devrait pas être utilisée par la police dans les espaces publics.`,
@@ -748,6 +797,7 @@ export const questions = [
     id: `SEC_5`,
     theme: THEMES.SECURITY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Prison sentences for most crimes should be longer and more severe.`,
       fr: `Les peines de prison pour la plupart des crimes devraient être plus longues et plus sévères.`,
@@ -762,6 +812,7 @@ export const questions = [
     id: `SEC_6`,
     theme: THEMES.SECURITY,
     priority: 2,
+    weight: 2,
     text: {
       en: `The focus of the criminal justice system should be rehabilitation rather than punishment.`,
       fr: `L'accent du système judiciaire pénal devrait être mis sur la réhabilitation plutôt que sur la punition.`,
@@ -776,6 +827,7 @@ export const questions = [
     id: `SEC_7`,
     theme: THEMES.SECURITY,
     priority: 2,
+    weight: 3,
     text: {
       en: `Military spending should be significantly increased to counter external threats.`,
       fr: `Les dépenses militaires devraient être significativement augmentées pour contrer les menaces extérieures.`,
@@ -790,6 +842,7 @@ export const questions = [
     id: `SEC_8`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Intelligence agencies should operate with greater parliamentary oversight and transparency.`,
       fr: `Les services de renseignement devraient opérer avec une plus grande surveillance parlementaire et transparence.`,
@@ -804,6 +857,7 @@ export const questions = [
     id: `SEC_9`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Drug possession for personal use should be decriminalised.`,
       fr: `La possession de drogues pour usage personnel devrait être décriminalisée.`,
@@ -818,6 +872,7 @@ export const questions = [
     id: `SEC_10`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Citizens who spread misinformation online should face legal consequences.`,
       fr: `Les citoyens qui répandent de la désinformation en ligne devraient faire face à des conséquences légales.`,
@@ -832,6 +887,7 @@ export const questions = [
     id: `SEC_11`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should have the power to revoke citizenship of individuals convicted of terrorism.`,
       fr: `L'État devrait avoir le pouvoir de révoquer la citoyenneté des individus condamnés pour terrorisme.`,
@@ -846,6 +902,7 @@ export const questions = [
     id: `SEC_12`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Encryption backdoors should be mandatory so security services can access private communications.`,
       fr: `Des portes dérobées dans le chiffrement devraient être obligatoires pour que les services de sécurité puissent accéder aux communications privées.`,
@@ -860,6 +917,7 @@ export const questions = [
     id: `SEC_13`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Police should be required to wear body cameras at all times.`,
       fr: `La police devrait être obligée de porter des caméras-piétons en permanence.`,
@@ -874,6 +932,7 @@ export const questions = [
     id: `SEC_14`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Juvenile offenders should be treated more leniently than adult criminals.`,
       fr: `Les délinquants juvéniles devraient être traités avec plus de clémence que les criminels adultes.`,
@@ -888,6 +947,7 @@ export const questions = [
     id: `SEC_15`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Citizens should have a right to own firearms for self-defence.`,
       fr: `Les citoyens devraient avoir le droit de posséder des armes à feu pour se défendre.`,
@@ -904,6 +964,7 @@ export const questions = [
     id: `ENV_1`,
     theme: THEMES.ENVIRONMENT,
     priority: 1,
+    weight: 3,
     text: {
       en: `Climate change is primarily caused by human activity and requires urgent action.`,
       fr: `Le changement climatique est principalement causé par l'activité humaine et nécessite une action urgente.`,
@@ -918,6 +979,7 @@ export const questions = [
     id: `ENV_2`,
     theme: THEMES.ENVIRONMENT,
     priority: 1,
+    weight: 2,
     text: {
       en: `Nuclear energy should be expanded as part of the transition to a low-carbon economy.`,
       fr: `L'énergie nucléaire devrait être développée dans le cadre de la transition vers une économie bas-carbone.`,
@@ -932,6 +994,7 @@ export const questions = [
     id: `ENV_3`,
     theme: THEMES.ENVIRONMENT,
     priority: 2,
+    weight: 3,
     text: {
       en: `A carbon tax or carbon pricing should be significantly expanded.`,
       fr: `Une taxe carbone ou une tarification du carbone devrait être significativement étendue.`,
@@ -946,6 +1009,7 @@ export const questions = [
     id: `ENV_4`,
     theme: THEMES.ENVIRONMENT,
     priority: 2,
+    weight: 2,
     text: {
       en: `Businesses should face strict environmental regulations, even if it costs jobs.`,
       fr: `Les entreprises devraient faire face à des réglementations environnementales strictes, même si cela coûte des emplois.`,
@@ -960,6 +1024,7 @@ export const questions = [
     id: `ENV_5`,
     theme: THEMES.ENVIRONMENT,
     priority: 2,
+    weight: 5,
     text: {
       en: `The transition to renewable energy should be accelerated, even at significant economic cost.`,
       fr: `La transition vers les énergies renouvelables devrait être accélérée, même à un coût économique significatif.`,
@@ -974,6 +1039,7 @@ export const questions = [
     id: `ENV_6`,
     theme: THEMES.ENVIRONMENT,
     priority: 2,
+    weight: 2,
     text: {
       en: `Intensive farming practices should be heavily regulated to protect biodiversity.`,
       fr: `Les pratiques agricoles intensives devraient être fortement réglementées pour protéger la biodiversité.`,
@@ -988,6 +1054,7 @@ export const questions = [
     id: `ENV_7`,
     theme: THEMES.ENVIRONMENT,
     priority: 2,
+    weight: 2,
     text: {
       en: `The sale of new petrol and diesel cars should be banned before 2035.`,
       fr: `La vente de nouvelles voitures à essence et diesel devrait être interdite avant 2035.`,
@@ -1002,6 +1069,7 @@ export const questions = [
     id: `ENV_8`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Economic growth and environmental protection are fundamentally incompatible.`,
       fr: `La croissance économique et la protection de l'environnement sont fondamentalement incompatibles.`,
@@ -1016,6 +1084,7 @@ export const questions = [
     id: `ENV_9`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Meat consumption should be taxed to reflect its environmental impact.`,
       fr: `La consommation de viande devrait être taxée pour refléter son impact environnemental.`,
@@ -1030,6 +1099,7 @@ export const questions = [
     id: `ENV_10`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Rich countries should provide substantial financial compensation to poorer nations for climate damage.`,
       fr: `Les pays riches devraient fournir une compensation financière substantielle aux pays plus pauvres pour les dommages climatiques.`,
@@ -1044,6 +1114,7 @@ export const questions = [
     id: `ENV_11`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Environmental activists who engage in civil disobedience should not face criminal charges.`,
       fr: `Les militants écologistes qui pratiquent la désobéissance civile ne devraient pas faire face à des poursuites pénales.`,
@@ -1058,6 +1129,7 @@ export const questions = [
     id: `ENV_12`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Environmental concerns should take precedence over economic development in planning decisions.`,
       fr: `Les préoccupations environnementales devraient primer sur le développement économique dans les décisions d'urbanisme.`,
@@ -1072,6 +1144,7 @@ export const questions = [
     id: `ENV_13`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `International environmental treaties should be enforceable against nation-states.`,
       fr: `Les traités environnementaux internationaux devraient être applicables contre les États-nations.`,
@@ -1086,6 +1159,7 @@ export const questions = [
     id: `ENV_14`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Geoengineering (e.g. solar radiation management) should be researched and potentially deployed to combat climate change.`,
       fr: `La géo-ingénierie (p. ex. gestion du rayonnement solaire) devrait être étudiée et potentiellement déployée pour lutter contre le changement climatique.`,
@@ -1100,6 +1174,7 @@ export const questions = [
     id: `ENV_15`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Single-use plastics should be completely banned worldwide.`,
       fr: `Les plastiques à usage unique devraient être complètement interdits dans le monde entier.`,
@@ -1116,6 +1191,7 @@ export const questions = [
     id: `DEM_1`,
     theme: THEMES.DEMOCRACY,
     priority: 1,
+    weight: 2,
     text: {
       en: `Voting should be compulsory for all citizens.`,
       fr: `Le vote devrait être obligatoire pour tous les citoyens.`,
@@ -1130,6 +1206,7 @@ export const questions = [
     id: `DEM_2`,
     theme: THEMES.DEMOCRACY,
     priority: 1,
+    weight: 2,
     text: {
       en: `Social media companies have too much unaccountable power over democratic debate.`,
       fr: `Les entreprises de médias sociaux ont trop de pouvoir non contrôlé sur le débat démocratique.`,
@@ -1144,6 +1221,7 @@ export const questions = [
     id: `DEM_3`,
     theme: THEMES.DEMOCRACY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Citizens should be able to vote in referendums on major national decisions.`,
       fr: `Les citoyens devraient pouvoir voter lors de référendums sur les grandes décisions nationales.`,
@@ -1158,6 +1236,7 @@ export const questions = [
     id: `DEM_4`,
     theme: THEMES.DEMOCRACY,
     priority: 2,
+    weight: 5,
     text: {
       en: `The judiciary should be fully independent from political influence.`,
       fr: `La magistrature devrait être totalement indépendante de toute influence politique.`,
@@ -1172,6 +1251,7 @@ export const questions = [
     id: `DEM_5`,
     theme: THEMES.DEMOCRACY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Electoral systems should use proportional representation to better reflect voters' choices.`,
       fr: `Les systèmes électoraux devraient utiliser la représentation proportionnelle pour mieux refléter les choix des électeurs.`,
@@ -1186,6 +1266,7 @@ export const questions = [
     id: `DEM_6`,
     theme: THEMES.DEMOCRACY,
     priority: 2,
+    weight: 2,
     text: {
       en: `The voting age should be lowered to 16.`,
       fr: `L'âge de voter devrait être abaissé à 16 ans.`,
@@ -1200,6 +1281,7 @@ export const questions = [
     id: `DEM_7`,
     theme: THEMES.DEMOCRACY,
     priority: 2,
+    weight: 2,
     text: {
       en: `Politicians who spread deliberate misinformation should face sanctions or removal from office.`,
       fr: `Les hommes politiques qui répandent délibérément de la désinformation devraient faire l'objet de sanctions ou être révoqués.`,
@@ -1214,6 +1296,7 @@ export const questions = [
     id: `DEM_8`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Political donations from corporations and wealthy individuals should be banned.`,
       fr: `Les dons politiques des entreprises et des individus fortunés devraient être interdits.`,
@@ -1228,6 +1311,7 @@ export const questions = [
     id: `DEM_9`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `An unelected upper house (like the UK House of Lords) should be abolished or fully elected.`,
       fr: `Une chambre haute non élue (comme la Chambre des lords britannique) devrait être abolie ou entièrement élue.`,
@@ -1242,6 +1326,7 @@ export const questions = [
     id: `DEM_10`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Emergency powers granted to governments during crises should automatically expire after 30 days unless renewed by parliament.`,
       fr: `Les pouvoirs d'urgence accordés aux gouvernements en temps de crise devraient expirer automatiquement après 30 jours sauf renouvellement par le parlement.`,
@@ -1256,6 +1341,7 @@ export const questions = [
     id: `DEM_11`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Term limits should be introduced for all elected political offices.`,
       fr: `Des limites de mandats devraient être introduites pour toutes les fonctions politiques électives.`,
@@ -1270,6 +1356,7 @@ export const questions = [
     id: `DEM_12`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Citizens should be able to recall their elected representatives before their term ends.`,
       fr: `Les citoyens devraient pouvoir révoquer leurs représentants élus avant la fin de leur mandat.`,
@@ -1284,6 +1371,7 @@ export const questions = [
     id: `DEM_13`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The press should face stricter regulations on political bias to ensure balanced reporting.`,
       fr: `La presse devrait faire face à des réglementations plus strictes sur le biais politique pour garantir une couverture équilibrée.`,
@@ -1298,6 +1386,7 @@ export const questions = [
     id: `DEM_14`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Parliamentary privileges protecting what politicians say in debates should be significantly reduced.`,
       fr: `Les privilèges parlementaires protégeant ce que disent les politiciens dans les débats devraient être significativement réduits.`,
@@ -1312,6 +1401,7 @@ export const questions = [
     id: `DEM_15`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Lobbying by corporations should be much more strictly regulated and disclosed.`,
       fr: `Le lobbying par les entreprises devrait être beaucoup plus strictement réglementé et divulgué.`,
@@ -1328,6 +1418,7 @@ export const questions = [
     id: `GLO_1`,
     theme: THEMES.GLOBAL,
     priority: 1,
+    weight: 5,
     text: {
       en: `Countries should prioritise their own national interest above international commitments.`,
       fr: `Les pays devraient prioriser leur propre intérêt national au-dessus des engagements internationaux.`,
@@ -1342,6 +1433,7 @@ export const questions = [
     id: `GLO_2`,
     theme: THEMES.GLOBAL,
     priority: 1,
+    weight: 3,
     text: {
       en: `Global institutions like the UN, WTO, and IMF have too much power over national governments.`,
       fr: `Les institutions mondiales comme l'ONU, l'OMC et le FMI ont trop de pouvoir sur les gouvernements nationaux.`,
@@ -1356,6 +1448,7 @@ export const questions = [
     id: `GLO_3`,
     theme: THEMES.GLOBAL,
     priority: 2,
+    weight: 3,
     text: {
       en: `NATO and military alliances are essential for national security.`,
       fr: `L'OTAN et les alliances militaires sont essentielles pour la sécurité nationale.`,
@@ -1370,6 +1463,7 @@ export const questions = [
     id: `GLO_4`,
     theme: THEMES.GLOBAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Our country should increase its foreign aid budget.`,
       fr: `Notre pays devrait augmenter son budget d'aide étrangère.`,
@@ -1384,6 +1478,7 @@ export const questions = [
     id: `GLO_5`,
     theme: THEMES.GLOBAL,
     priority: 2,
+    weight: 3,
     text: {
       en: `National sovereignty is more important than international agreements on human rights.`,
       fr: `La souveraineté nationale est plus importante que les accords internationaux sur les droits de l'homme.`,
@@ -1398,6 +1493,7 @@ export const questions = [
     id: `GLO_6`,
     theme: THEMES.GLOBAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Protectionist tariffs and industrial policy are legitimate tools to preserve domestic industries.`,
       fr: `Les tarifs protectionnistes et la politique industrielle sont des outils légitimes pour préserver les industries nationales.`,
@@ -1412,6 +1508,7 @@ export const questions = [
     id: `GLO_7`,
     theme: THEMES.GLOBAL,
     priority: 2,
+    weight: 2,
     text: {
       en: `Economic sanctions against authoritarian regimes are effective and should be used more.`,
       fr: `Les sanctions économiques contre les régimes autoritaires sont efficaces et devraient être davantage utilisées.`,
@@ -1426,6 +1523,7 @@ export const questions = [
     id: `GLO_8`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `The European Union should deepen political and fiscal integration among member states.`,
       fr: `L'Union européenne devrait approfondir l'intégration politique et fiscale entre les États membres.`,
@@ -1440,6 +1538,7 @@ export const questions = [
     id: `GLO_9`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Cultural globalisation (the spread of American/Western culture globally) is a negative force.`,
       fr: `La mondialisation culturelle (la diffusion de la culture américaine/occidentale dans le monde) est une force négative.`,
@@ -1454,6 +1553,7 @@ export const questions = [
     id: `GLO_10`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Multinational corporations should be subject to a global minimum tax to prevent tax avoidance.`,
       fr: `Les entreprises multinationales devraient être soumises à un impôt minimum mondial pour prévenir l'évasion fiscale.`,
@@ -1468,6 +1568,7 @@ export const questions = [
     id: `GLO_11`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should reduce their economic dependency on China.`,
       fr: `Les pays devraient réduire leur dépendance économique vis-à-vis de la Chine.`,
@@ -1482,6 +1583,7 @@ export const questions = [
     id: `GLO_12`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries with colonial histories owe reparations to formerly colonised nations.`,
       fr: `Les pays ayant un passé colonial doivent des réparations aux nations anciennement colonisées.`,
@@ -1496,6 +1598,7 @@ export const questions = [
     id: `GLO_13`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `International courts (like the ICC) should have jurisdiction over war crimes regardless of the nationality of the accused.`,
       fr: `Les tribunaux internationaux (comme la CPI) devraient avoir compétence sur les crimes de guerre quelle que soit la nationalité des accusés.`,
@@ -1510,6 +1613,7 @@ export const questions = [
     id: `GLO_14`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should be able to restrict foreign ownership of media and strategic companies.`,
       fr: `Les pays devraient pouvoir restreindre la propriété étrangère des médias et des entreprises stratégiques.`,
@@ -1524,6 +1628,7 @@ export const questions = [
     id: `GLO_15`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Rich nations have a moral obligation to intervene militarily to stop genocide or mass atrocities.`,
       fr: `Les nations riches ont une obligation morale d'intervenir militairement pour arrêter les génocides ou les atrocités de masse.`,
@@ -1540,6 +1645,7 @@ export const questions = [
     id: `PUB_1`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 1,
+    weight: 5,
     text: {
       en: `The government should provide free universal healthcare for all citizens.`,
       fr: `Le gouvernement devrait fournir des soins de santé universels et gratuits à tous les citoyens.`,
@@ -1554,6 +1660,7 @@ export const questions = [
     id: `PUB_2`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 1,
+    weight: 3,
     text: {
       en: `Public schools should receive significantly more government funding.`,
       fr: `Les écoles publiques devraient recevoir des financements gouvernementaux nettement plus importants.`,
@@ -1568,6 +1675,7 @@ export const questions = [
     id: `PUB_3`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 2,
+    weight: 3,
     text: {
       en: `Private companies should be allowed to compete with state services in healthcare and education.`,
       fr: `Les entreprises privées devraient être autorisées à concurrencer les services publics dans les domaines de la santé et de l'éducation.`,
@@ -1582,6 +1690,7 @@ export const questions = [
     id: `PUB_4`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 2,
+    weight: 2,
     text: {
       en: `The state pension system should be strengthened and expanded.`,
       fr: `Le système de retraite par répartition devrait être renforcé et étendu.`,
@@ -1596,6 +1705,7 @@ export const questions = [
     id: `PUB_5`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 2,
+    weight: 2,
     text: {
       en: `Higher education should be free or heavily subsidised for all students.`,
       fr: `L'enseignement supérieur devrait être gratuit ou fortement subventionné pour tous les étudiants.`,
@@ -1610,6 +1720,7 @@ export const questions = [
     id: `PUB_6`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 2,
+    weight: 2,
     text: {
       en: `Social housing should be significantly expanded to tackle the housing crisis.`,
       fr: `Le logement social devrait être significativement étendu pour résoudre la crise du logement.`,
@@ -1624,6 +1735,7 @@ export const questions = [
     id: `PUB_7`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 2,
+    weight: 2,
     text: {
       en: `A state-funded basic income or negative income tax should replace the current welfare bureaucracy.`,
       fr: `Un revenu de base financé par l'État ou un impôt négatif sur le revenu devrait remplacer la bureaucratie actuelle de l'aide sociale.`,
@@ -1638,6 +1750,7 @@ export const questions = [
     id: `PUB_8`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Public libraries and cultural institutions should receive guaranteed long-term funding.`,
       fr: `Les bibliothèques publiques et les institutions culturelles devraient recevoir un financement garanti à long terme.`,
@@ -1652,6 +1765,7 @@ export const questions = [
     id: `PUB_9`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Childcare should be universally free and publicly provided.`,
       fr: `La garde d'enfants devrait être universellement gratuite et fournie par le secteur public.`,
@@ -1666,6 +1780,7 @@ export const questions = [
     id: `PUB_10`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Mental health services should receive the same level of funding as physical health services.`,
       fr: `Les services de santé mentale devraient recevoir le même niveau de financement que les services de santé physique.`,
@@ -1680,6 +1795,7 @@ export const questions = [
     id: `PUB_11`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should cap rents in major cities to address the housing crisis.`,
       fr: `L'État devrait plafonner les loyers dans les grandes villes pour résoudre la crise du logement.`,
@@ -1694,6 +1810,7 @@ export const questions = [
     id: `PUB_12`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Public transport should be free or heavily subsidised and massively expanded.`,
       fr: `Les transports en commun devraient être gratuits ou fortement subventionnés et massivement étendus.`,
@@ -1708,6 +1825,7 @@ export const questions = [
     id: `PUB_13`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `The welfare state has grown too large and should be significantly reformed to reduce dependency.`,
       fr: `L'État-providence est devenu trop important et devrait être significativement réformé pour réduire la dépendance.`,
@@ -1722,6 +1840,7 @@ export const questions = [
     id: `PUB_14`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should guarantee employment to anyone willing to work.`,
       fr: `L'État devrait garantir un emploi à quiconque est prêt à travailler.`,
@@ -1736,6 +1855,7 @@ export const questions = [
     id: `PUB_15`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Healthcare rationing (deciding who gets limited treatments based on cost-effectiveness) is a necessary and acceptable part of public health systems.`,
       fr: `Le rationnement des soins de santé (décider qui reçoit des traitements limités en fonction du rapport coût-efficacité) est une partie nécessaire et acceptable des systèmes de santé publics.`,
@@ -1752,6 +1872,7 @@ export const questions = [
     id: `ECO_16`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The government should redistribute wealth more aggressively to reduce economic inequality.`,
       fr: `Le gouvernement devrait redistribuer les richesses plus agressivement pour réduire les inégalités économiques.`,
@@ -1766,6 +1887,7 @@ export const questions = [
     id: `ECO_17`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `International free trade agreements generally benefit workers and consumers.`,
       fr: `Les accords de libre-échange international profitent généralement aux travailleurs et aux consommateurs.`,
@@ -1780,6 +1902,7 @@ export const questions = [
     id: `ECO_18`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Large corporations exercise too much influence over government policy and should be more strictly regulated.`,
       fr: `Les grandes entreprises exercent trop d'influence sur les politiques gouvernementales et devraient être plus strictement réglementées.`,
@@ -1794,6 +1917,7 @@ export const questions = [
     id: `ECO_19`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `A shorter working week (e.g. 4 days) should be mandated by law without loss of pay.`,
       fr: `Une semaine de travail plus courte (ex. 4 jours) devrait être imposée par la loi sans perte de salaire.`,
@@ -1808,6 +1932,7 @@ export const questions = [
     id: `ECO_20`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Central banks should be subject to greater democratic accountability and parliamentary oversight.`,
       fr: `Les banques centrales devraient être soumises à une plus grande responsabilité démocratique et à une surveillance parlementaire accrue.`,
@@ -1822,6 +1947,7 @@ export const questions = [
     id: `ECO_21`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Inheritance taxes should be significantly increased to limit the transfer of large fortunes across generations.`,
       fr: `Les droits de succession devraient être significativement augmentés pour limiter le transfert de grandes fortunes entre générations.`,
@@ -1836,6 +1962,7 @@ export const questions = [
     id: `ECO_22`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should own or control strategically important industries such as energy, railways, and telecommunications.`,
       fr: `L'État devrait posséder ou contrôler les industries stratégiquement importantes telles que l'énergie, les chemins de fer et les télécommunications.`,
@@ -1850,6 +1977,7 @@ export const questions = [
     id: `ECO_23`,
     theme: THEMES.ECONOMY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Economic growth should take priority over reducing inequality when the two goals conflict.`,
       fr: `La croissance économique devrait primer sur la réduction des inégalités lorsque ces deux objectifs s'opposent.`,
@@ -1866,6 +1994,7 @@ export const questions = [
     id: `SOC_16`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Religious symbols and dress should be permitted in all public spaces including government offices and schools.`,
       fr: `Les symboles et vêtements religieux devraient être autorisés dans tous les espaces publics, y compris les bureaux gouvernementaux et les écoles.`,
@@ -1880,6 +2009,7 @@ export const questions = [
     id: `SOC_17`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Affirmative action policies that give preference to historically marginalised groups are justified to correct past injustices.`,
       fr: `Les politiques de discrimination positive qui donnent la préférence aux groupes historiquement marginalisés sont justifiées pour corriger les injustices passées.`,
@@ -1894,6 +2024,7 @@ export const questions = [
     id: `SOC_18`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should guarantee the right to assisted dying for terminally ill patients who wish it.`,
       fr: `L'État devrait garantir le droit à l'euthanasie pour les patients en phase terminale qui le souhaitent.`,
@@ -1908,6 +2039,7 @@ export const questions = [
     id: `SOC_19`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Gender is determined by biology and cannot be changed.`,
       fr: `Le genre est déterminé par la biologie et ne peut pas être changé.`,
@@ -1922,6 +2054,7 @@ export const questions = [
     id: `SOC_20`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Sex work between consenting adults should be fully decriminalised.`,
       fr: `Le travail du sexe entre adultes consentants devrait être entièrement décriminalisé.`,
@@ -1936,6 +2069,7 @@ export const questions = [
     id: `SOC_21`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Drug possession for personal use should be decriminalised or treated as a public health issue rather than a criminal one.`,
       fr: `La possession de drogues pour usage personnel devrait être dépénalisée ou traitée comme un problème de santé publique plutôt que comme une affaire criminelle.`,
@@ -1950,6 +2084,7 @@ export const questions = [
     id: `SOC_22`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Freedom of speech must be protected even when it causes offence to religious or minority communities.`,
       fr: `La liberté d'expression doit être protégée même lorsqu'elle offense des communautés religieuses ou minoritaires.`,
@@ -1964,6 +2099,7 @@ export const questions = [
     id: `SOC_23`,
     theme: THEMES.SOCIAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Public schools should provide comprehensive, evidence-based sex education to all students.`,
       fr: `Les écoles publiques devraient dispenser une éducation sexuelle complète et fondée sur des preuves à tous les élèves.`,
@@ -1980,6 +2116,7 @@ export const questions = [
     id: `IMM_16`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries have a moral obligation to accept refugees fleeing war or persecution, regardless of their number.`,
       fr: `Les pays ont une obligation morale d'accueillir les réfugiés fuyant la guerre ou la persécution, quel que soit leur nombre.`,
@@ -1994,6 +2131,7 @@ export const questions = [
     id: `IMM_17`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Immigration strengthens a country's economy and culture.`,
       fr: `L'immigration renforce l'économie et la culture d'un pays.`,
@@ -2008,6 +2146,7 @@ export const questions = [
     id: `IMM_18`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Undocumented immigrants who have lived and worked in a country for many years should be given a path to citizenship.`,
       fr: `Les immigrants en situation irrégulière qui ont vécu et travaillé dans un pays pendant de nombreuses années devraient se voir offrir une voie vers la citoyenneté.`,
@@ -2022,6 +2161,7 @@ export const questions = [
     id: `IMM_19`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `A country's immigration policy should prioritise cultural compatibility with the host society.`,
       fr: `La politique d'immigration d'un pays devrait accorder la priorité à la compatibilité culturelle avec la société d'accueil.`,
@@ -2036,6 +2176,7 @@ export const questions = [
     id: `IMM_20`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Immigrants should be required to learn the official language of their host country as a condition of residence.`,
       fr: `Les immigrants devraient être tenus d'apprendre la langue officielle de leur pays d'accueil comme condition de résidence.`,
@@ -2050,6 +2191,7 @@ export const questions = [
     id: `IMM_21`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `The European Union should develop a common immigration and asylum policy binding on all member states.`,
       fr: `L'Union européenne devrait développer une politique commune d'immigration et d'asile contraignante pour tous les États membres.`,
@@ -2065,6 +2207,7 @@ export const questions = [
     id: `IMM_22`,
     theme: THEMES.IMMIGRATION,
     priority: 3,
+    weight: 1,
     text: {
       en: `Strict border controls are an effective and necessary tool for managing immigration.`,
       fr: `Les contrôles stricts aux frontières sont un outil efficace et nécessaire pour gérer l'immigration.`,
@@ -2081,6 +2224,7 @@ export const questions = [
     id: `SEC_16`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Mass surveillance programmes are an acceptable tool for preventing terrorism even if they compromise privacy.`,
       fr: `Les programmes de surveillance de masse sont un outil acceptable pour prévenir le terrorisme même s'ils compromettent la vie privée.`,
@@ -2095,6 +2239,7 @@ export const questions = [
     id: `SEC_17`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The death penalty should be abolished in all circumstances.`,
       fr: `La peine de mort devrait être abolie dans toutes les circonstances.`,
@@ -2109,6 +2254,7 @@ export const questions = [
     id: `SEC_18`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The right to bear arms should be protected and not significantly restricted by government.`,
       fr: `Le droit de porter des armes devrait être protégé et non significativement restreint par le gouvernement.`,
@@ -2123,6 +2269,7 @@ export const questions = [
     id: `SEC_19`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `People convicted of terrorist offences should be subject to extended detention beyond normal criminal sentences.`,
       fr: `Les personnes condamnées pour des infractions terroristes devraient être soumises à une détention prolongée au-delà des peines criminelles normales.`,
@@ -2137,6 +2284,7 @@ export const questions = [
     id: `SEC_20`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Police should be given broader stop-and-search powers even if this leads to racial profiling.`,
       fr: `La police devrait disposer de pouvoirs de contrôle et de fouille plus larges, même si cela conduit à du profilage racial.`,
@@ -2151,6 +2299,7 @@ export const questions = [
     id: `SEC_21`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Whistleblowers who reveal illegal government surveillance or war crimes should be protected from prosecution.`,
       fr: `Les lanceurs d'alerte qui révèlent une surveillance gouvernementale illégale ou des crimes de guerre devraient être protégés contre les poursuites judiciaires.`,
@@ -2165,6 +2314,7 @@ export const questions = [
     id: `SEC_22`,
     theme: THEMES.SECURITY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Strong national defence spending is necessary to ensure a country's security and geopolitical influence.`,
       fr: `Des dépenses importantes en matière de défense nationale sont nécessaires pour assurer la sécurité d'un pays et son influence géopolitique.`,
@@ -2181,6 +2331,7 @@ export const questions = [
     id: `ENV_16`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Environmental protection should take priority over economic growth when the two conflict.`,
       fr: `La protection de l'environnement devrait primer sur la croissance économique lorsque les deux objectifs s'opposent.`,
@@ -2195,6 +2346,7 @@ export const questions = [
     id: `ENV_17`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Nuclear energy should be part of a country's strategy to address climate change.`,
       fr: `L'énergie nucléaire devrait faire partie de la stratégie d'un pays pour lutter contre le changement climatique.`,
@@ -2209,6 +2361,7 @@ export const questions = [
     id: `ENV_18`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `A carbon tax is the most effective tool for reducing greenhouse gas emissions.`,
       fr: `Une taxe carbone est l'outil le plus efficace pour réduire les émissions de gaz à effet de serre.`,
@@ -2223,6 +2376,7 @@ export const questions = [
     id: `ENV_19`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Meat consumption should be significantly reduced through taxation or regulation to address climate change.`,
       fr: `La consommation de viande devrait être significativement réduite par la taxation ou la réglementation pour lutter contre le changement climatique.`,
@@ -2237,6 +2391,7 @@ export const questions = [
     id: `ENV_20`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Rich countries have a moral obligation to pay climate reparations to developing countries most affected by climate change.`,
       fr: `Les pays riches ont une obligation morale de verser des réparations climatiques aux pays en développement les plus touchés par le changement climatique.`,
@@ -2251,6 +2406,7 @@ export const questions = [
     id: `ENV_21`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Protecting biodiversity should be treated as urgently as addressing climate change.`,
       fr: `La protection de la biodiversité devrait être traitée avec la même urgence que la lutte contre le changement climatique.`,
@@ -2265,6 +2421,7 @@ export const questions = [
     id: `ENV_22`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Private car ownership should be discouraged through taxation and urban planning in favour of public transport.`,
       fr: `La possession d'une voiture particulière devrait être découragée par la fiscalité et l'urbanisme au profit des transports en commun.`,
@@ -2279,6 +2436,7 @@ export const questions = [
     id: `ENV_23`,
     theme: THEMES.ENVIRONMENT,
     priority: 3,
+    weight: 1,
     text: {
       en: `Economic degrowth — deliberately reducing GDP — is necessary to achieve environmental sustainability.`,
       fr: `La décroissance économique — réduire délibérément le PIB — est nécessaire pour atteindre la durabilité environnementale.`,
@@ -2295,6 +2453,7 @@ export const questions = [
     id: `DEM_16`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Judges and courts should have the power to strike down laws passed by elected parliaments.`,
       fr: `Les juges et les tribunaux devraient avoir le pouvoir d'annuler les lois adoptées par des parlements élus.`,
@@ -2309,6 +2468,7 @@ export const questions = [
     id: `DEM_17`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Voting should be mandatory for all eligible citizens.`,
       fr: `Le vote devrait être obligatoire pour tous les citoyens éligibles.`,
@@ -2323,6 +2483,7 @@ export const questions = [
     id: `DEM_18`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Citizens should be able to directly vote on major policy decisions through referendums.`,
       fr: `Les citoyens devraient pouvoir voter directement sur les grandes décisions politiques par le biais de référendums.`,
@@ -2337,6 +2498,7 @@ export const questions = [
     id: `DEM_19`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Political parties should be publicly funded to reduce dependence on private donors and corporate interests.`,
       fr: `Les partis politiques devraient être financés publiquement pour réduire la dépendance envers les donateurs privés et les intérêts des entreprises.`,
@@ -2351,6 +2513,7 @@ export const questions = [
     id: `DEM_20`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `The media has too much power to shape public opinion and should be more strictly regulated.`,
       fr: `Les médias ont trop de pouvoir pour façonner l'opinion publique et devraient être plus strictement réglementés.`,
@@ -2365,6 +2528,7 @@ export const questions = [
     id: `DEM_21`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Elected governments should have the power to remove judges who make rulings that conflict with the will of the democratic majority.`,
       fr: `Les gouvernements élus devraient avoir le pouvoir de révoquer les juges qui rendent des décisions contraires à la volonté de la majorité démocratique.`,
@@ -2379,6 +2543,7 @@ export const questions = [
     id: `DEM_22`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `Social media platforms should be held legally responsible for the content they host and amplify.`,
       fr: `Les plateformes de médias sociaux devraient être légalement responsables du contenu qu'elles hébergent et amplifient.`,
@@ -2393,6 +2558,7 @@ export const questions = [
     id: `DEM_23`,
     theme: THEMES.DEMOCRACY,
     priority: 3,
+    weight: 1,
     text: {
       en: `International institutions (UN, WTO, ICC) should have stronger powers to enforce their decisions on member states.`,
       fr: `Les institutions internationales (ONU, OMC, CPI) devraient avoir des pouvoirs plus forts pour faire respecter leurs décisions par les États membres.`,
@@ -2409,6 +2575,7 @@ export const questions = [
     id: `GLO_16`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should prioritise national self-sufficiency in strategic goods like food, energy, and medicines.`,
       fr: `Les pays devraient prioriser l'autosuffisance nationale dans les biens stratégiques comme la nourriture, l'énergie et les médicaments.`,
@@ -2423,6 +2590,7 @@ export const questions = [
     id: `GLO_17`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should reduce their military alliances and pursue a policy of neutrality.`,
       fr: `Les pays devraient réduire leurs alliances militaires et poursuivre une politique de neutralité.`,
@@ -2437,6 +2605,7 @@ export const questions = [
     id: `GLO_18`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should be willing to use military force to protect human rights in other nations.`,
       fr: `Les pays devraient être prêts à utiliser la force militaire pour protéger les droits de l'homme dans d'autres nations.`,
@@ -2451,6 +2620,7 @@ export const questions = [
     id: `GLO_19`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Rich countries should increase foreign aid to at least 0.7% of GNI as agreed at the UN.`,
       fr: `Les pays riches devraient augmenter l'aide étrangère à au moins 0,7% du RNB comme convenu à l'ONU.`,
@@ -2465,6 +2635,7 @@ export const questions = [
     id: `GLO_20`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `Countries should impose economic sanctions on states that violate human rights or international law.`,
       fr: `Les pays devraient imposer des sanctions économiques aux États qui violent les droits de l'homme ou le droit international.`,
@@ -2479,6 +2650,7 @@ export const questions = [
     id: `GLO_21`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `European integration should be deepened with more powers transferred to EU institutions.`,
       fr: `L'intégration européenne devrait être approfondie avec plus de pouvoirs transférés aux institutions de l'UE.`,
@@ -2493,6 +2665,7 @@ export const questions = [
     id: `GLO_22`,
     theme: THEMES.GLOBAL,
     priority: 3,
+    weight: 1,
     text: {
       en: `National culture and traditions must be actively protected from the homogenising effects of globalisation.`,
       fr: `La culture et les traditions nationales doivent être activement protégées des effets homogénéisants de la mondialisation.`,
@@ -2509,6 +2682,7 @@ export const questions = [
     id: `PUB_16`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `A universal basic income (UBI) should replace means-tested welfare programmes.`,
       fr: `Un revenu universel de base (RUB) devrait remplacer les programmes d'aide sociale sous conditions de ressources.`,
@@ -2523,6 +2697,7 @@ export const questions = [
     id: `PUB_17`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Private companies should not be allowed to profit from delivering essential public services such as prisons, water, or probation.`,
       fr: `Les entreprises privées ne devraient pas être autorisées à tirer profit de la fourniture de services publics essentiels tels que les prisons, l'eau ou la probation.`,
@@ -2537,6 +2712,7 @@ export const questions = [
     id: `PUB_18`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `University education should be free for all students, funded through general taxation.`,
       fr: `L'enseignement universitaire devrait être gratuit pour tous les étudiants, financé par l'impôt général.`,
@@ -2551,6 +2727,7 @@ export const questions = [
     id: `PUB_19`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Pension entitlements should not be reduced even if public finances require difficult choices.`,
       fr: `Les droits à la retraite ne devraient pas être réduits, même si les finances publiques nécessitent des choix difficiles.`,
@@ -2565,6 +2742,7 @@ export const questions = [
     id: `PUB_20`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `The state should invest heavily in affordable housing to address the housing crisis.`,
       fr: `L'État devrait investir massivement dans le logement abordable pour résoudre la crise du logement.`,
@@ -2579,6 +2757,7 @@ export const questions = [
     id: `PUB_21`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Mental health services should receive the same funding priority as physical health services.`,
       fr: `Les services de santé mentale devraient recevoir la même priorité de financement que les services de santé physique.`,
@@ -2593,6 +2772,7 @@ export const questions = [
     id: `PUB_22`,
     theme: THEMES.PUBLIC_SERVICES,
     priority: 3,
+    weight: 1,
     text: {
       en: `Governments should provide free, high-quality childcare from birth to school age.`,
       fr: `Les gouvernements devraient fournir une garde d'enfants gratuite et de haute qualité de la naissance jusqu'à l'âge scolaire.`,

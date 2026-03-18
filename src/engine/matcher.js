@@ -20,17 +20,24 @@ import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';
  * @param {Array}  priorityOrder - optional array of theme keys in priority order (highest first)
  * @returns {number} alignment 0–100
  */
-export function calculateAlignment(userThemes, targetProfile, priorityOrder) {
-  // Build weight map from priority order
+export function calculateAlignment(userThemes, targetProfile, priorityOrder, themeWeights) {
+  // Build weight map — explicit themeWeights take priority over priorityOrder
   const weightMap = {};
-  const order = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
-    ? priorityOrder
-    : THEMES_ORDER;
 
-  order.forEach((theme, idx) => {
-    // Weights: rank 1 = weight 8, rank 8 = weight 1
-    weightMap[theme] = THEMES_ORDER.length - idx;
-  });
+  if (themeWeights && THEMES_ORDER.every(t => themeWeights[t] != null)) {
+    // Use user-defined 100-point allocation directly as weights
+    THEMES_ORDER.forEach(theme => {
+      weightMap[theme] = themeWeights[theme];
+    });
+  } else {
+    const order = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
+      ? priorityOrder
+      : THEMES_ORDER;
+    order.forEach((theme, idx) => {
+      // Weights: rank 1 = weight 8, rank 8 = weight 1
+      weightMap[theme] = THEMES_ORDER.length - idx;
+    });
+  }
 
   let weightedDistanceSum = 0;
   let totalWeight = 0;
@@ -74,10 +81,10 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder) {
  * @param {Array}  priorityOrder - optional
  * @returns {Array} sorted targets with .alignment added, highest first
  */
-export function rankByAlignment(userProfile, targets, priorityOrder) {
+export function rankByAlignment(userProfile, targets, priorityOrder, themeWeights) {
   const results = targets.map(target => ({
     ...target,
-    alignment: calculateAlignment(userProfile.themes, target.profile, priorityOrder),
+    alignment: calculateAlignment(userProfile.themes, target.profile, priorityOrder, themeWeights),
   }));
   return results.sort((a, b) => b.alignment - a.alignment);
 }

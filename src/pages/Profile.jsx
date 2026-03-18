@@ -12,6 +12,93 @@ import AxisBar from '../components/AxisBar.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 
+/** Weight editor — lets user allocate 100 points across themes. */
+function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClose }) {
+  const defaultWeights = () => {
+    const base = Math.floor(100 / THEMES_ORDER.length);
+    const extra = 100 - base * THEMES_ORDER.length;
+    return Object.fromEntries(THEMES_ORDER.map((t, i) => [t, base + (i < extra ? 1 : 0)]));
+  };
+
+  const [weights, setWeights] = React.useState(
+    () => initial ?? defaultWeights()
+  );
+  const total = Object.values(weights).reduce((a, b) => a + b, 0);
+  const remaining = 100 - total;
+
+  const handleChange = (theme, raw) => {
+    const val = Math.max(0, Math.min(100, Number(raw) || 0));
+    setWeights(prev => ({ ...prev, [theme]: val }));
+  };
+
+  return (
+    <div>
+      <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+        {language === 'fr'
+          ? 'Répartissez 100 points entre les thèmes selon leur importance pour vous. Cela pondérera votre score d\'alignement avec les candidats.'
+          : 'Allocate 100 points across themes based on how much each matters to you. This weights your alignment scores with candidates and figures.'}
+      </p>
+
+      <div className={`text-xs font-semibold mb-4 tabular-nums ${remaining === 0 ? 'text-green-600' : 'text-amber-600'}`}>
+        {remaining === 0
+          ? (language === 'fr' ? '✓ Total : 100' : '✓ Total: 100')
+          : (language === 'fr' ? `Points restants : ${remaining}` : `Remaining: ${remaining}`)}
+      </div>
+
+      <div className="space-y-3 mb-5">
+        {THEMES_ORDER.map(theme => {
+          const label = THEME_LABELS[language]?.[theme] ?? theme;
+          const color = THEME_COLORS[theme] ?? '#6b7280';
+          return (
+            <div key={theme} className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+              <span className="text-xs text-gray-700 flex-1 min-w-0 truncate">{label}</span>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <button
+                  onClick={() => handleChange(theme, weights[theme] - 1)}
+                  className="w-6 h-6 rounded border border-gray-200 text-gray-500 hover:bg-gray-100 text-xs leading-none flex items-center justify-center transition-colors"
+                >−</button>
+                <span className="text-sm font-bold tabular-nums w-7 text-center text-gray-800">
+                  {weights[theme]}
+                </span>
+                <button
+                  onClick={() => handleChange(theme, weights[theme] + 1)}
+                  className="w-6 h-6 rounded border border-gray-200 text-gray-500 hover:bg-gray-100 text-xs leading-none flex items-center justify-center transition-colors"
+                >+</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          onClick={() => { setThemeWeights(weights); onClose(); }}
+          disabled={remaining !== 0}
+          className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold py-2.5 rounded-xl transition-colors"
+        >
+          {language === 'fr' ? 'Appliquer les priorités' : 'Apply priorities'}
+        </button>
+        <button
+          onClick={onClose}
+          className="text-xs text-gray-400 hover:text-gray-600 px-3 transition-colors"
+        >
+          {language === 'fr' ? 'Annuler' : 'Cancel'}
+        </button>
+      </div>
+
+      {themeWeights && (
+        <button
+          onClick={() => { setThemeWeights(null); onClose(); }}
+          className="mt-3 text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+        >
+          ✕ {language === 'fr' ? 'Réinitialiser les priorités' : 'Reset priorities'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 /** Apply manual adjustments on top of computed theme scores. */
 function buildAdjustedThemes(themes, adjustments) {
   if (!adjustments || Object.keys(adjustments).length === 0) return themes;
@@ -30,6 +117,8 @@ export default function Profile() {
   const profileAdjustments = useStore(s => s.profileAdjustments);
   const applyRefinement    = useStore(s => s.applyRefinement);
   const resetAdjustments   = useStore(s => s.resetAdjustments);
+  const themeWeights       = useStore(s => s.themeWeights);
+  const setThemeWeights    = useStore(s => s.setThemeWeights);
   const navigate        = useStore(s => s.navigate);
   const exportProfile   = useStore(s => s.exportProfile);
   const importProfile   = useStore(s => s.importProfile);
@@ -44,6 +133,7 @@ export default function Profile() {
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
 
   const [showAllCurrents, setShowAllCurrents] = useState(false);
+  const [weightEditorOpen, setWeightEditorOpen] = useState(false);
 
   // Refinement UI state
   const [refineOpen, setRefineOpen] = useState(false);
@@ -84,8 +174,8 @@ export default function Profile() {
   const adjustedProfile = useMemo(() => ({ ...profile, themes }), [profile, themes]);
   const confMeta = getConfidenceMeta(confidence, language);
   const rankedCurrents = useMemo(
-    () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder),
-    [adjustedProfile, priorityOrder]
+    () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder, themeWeights),
+    [adjustedProfile, priorityOrder, themeWeights]
   );
   const profileSummary = useMemo(
     () => generateProfileSummary(themes, rankedCurrents, language),
@@ -306,6 +396,9 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
                       <span className="text-sm font-medium text-gray-700">{label}</span>
+                      {themeWeights?.[theme] != null && (
+                        <span className="text-xs text-gray-400 tabular-nums">{themeWeights[theme]}%</span>
+                      )}
                     </div>
                     <span className="text-sm font-bold text-gray-800 tabular-nums">{score}</span>
                   </div>
@@ -650,36 +743,78 @@ export default function Profile() {
       <div className="grid sm:grid-cols-2 gap-4 mb-8">
         {/* Refine profile */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6">
-          <h3 className="font-semibold text-gray-900 mb-1 text-sm">{t('profile_refine')}</h3>
-          <p className="text-xs text-gray-400 mb-4">
-            {language === 'fr'
-              ? `${unansweredCount} questions non répondues restantes`
-              : `${unansweredCount} unanswered questions remaining`}
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            {[15, 40].filter(n => n <= unansweredCount + 1).map(n => (
-              <button
-                key={n}
-                onClick={() => startRefinement(n)}
-                className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
-              >
-                +{n} {language === 'fr' ? 'questions' : 'questions'}
-              </button>
-            ))}
-            {unansweredCount > 0 && (
-              <button
-                onClick={() => startRefinement(unansweredCount)}
-                className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
-              >
-                {language === 'fr' ? 'Toutes les questions restantes' : 'All remaining questions'}
-              </button>
-            )}
-            {unansweredCount === 0 && (
-              <p className="text-xs text-green-600 font-medium">
-                ✓ {language === 'fr' ? 'Profil complet !' : 'Profile complete!'}
-              </p>
-            )}
-          </div>
+          <h3 className="font-semibold text-gray-900 mb-3 text-sm">{t('profile_refine')}</h3>
+
+          {!weightEditorOpen ? (
+            <div className="space-y-4">
+              {/* Option 1: Answer more questions */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 mb-2">
+                  {language === 'fr' ? '1. Répondre à plus de questions' : '1. Answer more questions'}
+                </p>
+                <p className="text-xs text-gray-400 mb-2">
+                  {language === 'fr'
+                    ? `${unansweredCount} questions non répondues restantes`
+                    : `${unansweredCount} unanswered questions remaining`}
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  {[15, 40].filter(n => n <= unansweredCount + 1).map(n => (
+                    <button
+                      key={n}
+                      onClick={() => startRefinement(n)}
+                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+                    >
+                      +{n} {language === 'fr' ? 'questions' : 'questions'}
+                    </button>
+                  ))}
+                  {unansweredCount > 0 && (
+                    <button
+                      onClick={() => startRefinement(unansweredCount)}
+                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+                    >
+                      {language === 'fr' ? 'Toutes' : 'All remaining'}
+                    </button>
+                  )}
+                  {unansweredCount === 0 && (
+                    <p className="text-xs text-green-600 font-medium">
+                      ✓ {language === 'fr' ? 'Profil complet !' : 'Profile complete!'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Option 2: Define priorities */}
+              <div className="border-t border-gray-100 pt-4">
+                <p className="text-xs font-semibold text-gray-500 mb-1">
+                  {language === 'fr' ? '2. Définir mes priorités politiques' : '2. Define my political priorities'}
+                </p>
+                <p className="text-xs text-gray-400 mb-2 leading-relaxed">
+                  {language === 'fr'
+                    ? 'Pondérez les thèmes selon leur importance pour vous.'
+                    : 'Weight themes by how much they matter to you.'}
+                </p>
+                <button
+                  onClick={() => setWeightEditorOpen(true)}
+                  className="flex items-center gap-1.5 text-xs font-medium text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  ⚖ {themeWeights
+                    ? (language === 'fr' ? 'Modifier les priorités' : 'Edit priorities')
+                    : (language === 'fr' ? 'Définir mes priorités' : 'Set my priorities')}
+                  {themeWeights && (
+                    <span className="ml-1 bg-gray-900 text-white text-xs px-1.5 py-0.5 rounded-full">✓</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <WeightEditor
+              initial={themeWeights}
+              themeWeights={themeWeights}
+              setThemeWeights={setThemeWeights}
+              language={language}
+              onClose={() => setWeightEditorOpen(false)}
+            />
+          )}
         </div>
 
         {/* Quick navigation */}
