@@ -7,7 +7,14 @@
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install && npm run build 2>&1)",
       "Bash(sudo chown -R 502:20 \"/Users/arnaudlery/.npm\" && cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install && npm run build 2>&1)",
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install --cache /tmp/npm-cache && npm run build 2>&1)",
-      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" add . && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" commit -m \"Add confidence system + improve profile mode + progressive storage\" && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" push)"
+      "Bash(git -C \"/Users/arnaudlery/Desktop/poliscope copy\" add . && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" commit -m \"Add confidence system + improve profile mode + progressive storage\" && git -C \"/Users/arnaudlery/Desktop/poliscope copy\" push)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -20)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npx vite build 2>&1)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npx vite build 2>&1 | tail -15)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node node_modules/.bin/vite build 2>&1; echo \"EXIT:$?\")",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && timeout 180 npx vite build 2>&1 | tail -20)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npx vite build 2>&1 | tail -25)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node -e \"\nconst fs = require\\('fs'\\);\nconst content = fs.readFileSync\\('src/pages/Profile.jsx', 'utf8'\\);\nconst selfClose = \\(content.match\\(/<motion\\\\.div[^>]*\\\\/>/g\\) || []\\).length;\nconsole.log\\('self-closing motion.div:', selfClose\\);\n// so total open = open tags that need close = 15 - selfClose\nconsole.log\\('motion.div needing close:', 15 - selfClose, 'found:', 10\\);\n\")"
     ]
   }
 }

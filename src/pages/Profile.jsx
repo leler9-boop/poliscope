@@ -1,4 +1,5 @@
 import React, { useRef, useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
@@ -205,12 +206,17 @@ export default function Profile() {
     reader.readAsText(file);
   };
 
-  const axisKeys = ['economic', 'social', 'institutional', 'international'];
+  const axisKeys = ['social', 'institutional', 'international'];
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Header */}
-      <div className="flex items-start justify-between mb-10 flex-wrap gap-4">
+      <motion.div
+        className="flex items-start justify-between mb-10 flex-wrap gap-4"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">{t('profile_title')}</h1>
           <p className="text-gray-500 mt-1.5 text-sm">{t('profile_subtitle')}</p>
@@ -272,7 +278,7 @@ export default function Profile() {
             ✕ {t('profile_reset')}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Reset confirmation */}
       {showResetConfirm && (
@@ -328,51 +334,175 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Confidence bar */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-8">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">{t('confidence_label')}</span>
-          <span className="text-sm font-bold text-gray-900 tabular-nums">{confidenceScore ?? 0}%</span>
-        </div>
-        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-3">
-          <div
-            className="h-full rounded-full transition-all duration-700"
-            style={{ width: `${confidenceScore ?? 0}%`, backgroundColor: confBarColor }}
-          />
-        </div>
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-xs text-gray-500 flex-1 leading-relaxed">{confMeta.message}</p>
-          <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0 tabular-nums">
-            {answeredTotal} / {totalQuestions}
-          </span>
-        </div>
-        {(confidenceScore ?? 0) < 40 && (
-          <button
-            onClick={startImproveMode}
-            className="mt-4 text-xs font-semibold text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            {t('confidence_improve_cta')} →
-          </button>
-        )}
-      </div>
+      {/* ═══ HERO ═══ */}
+      {(() => {
+        const topCurrent = rankedCurrents[0];
+        const accentColor = topCurrent?.color ?? '#2563eb';
+        const econScore = axes?.economic ?? 50;
+        const isRight = econScore >= 50;
 
-      {/* Profile summary */}
-      {profileSummary && (
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-7 mb-8">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
-            {t('profile_summary_title')}
-          </p>
-          <p className="text-base text-gray-700 leading-relaxed">{profileSummary}</p>
-          {hasAdjustments && (
-            <p className="mt-4 text-xs text-gray-400 font-medium">
-              ✎ {t('refine_active', { n: adjustmentCount })}
-            </p>
-          )}
-        </div>
-      )}
+        return (
+          <motion.div
+            className="relative rounded-3xl border border-gray-200 overflow-hidden mb-8"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            {/* Top accent bar — animates in from left */}
+            <motion.div
+              className="h-[3px]"
+              style={{ backgroundColor: accentColor }}
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
+
+            <div
+              className="p-7 sm:p-10"
+              style={{ background: `linear-gradient(160deg, ${accentColor}0D 0%, transparent 55%)` }}
+            >
+              {/* Confidence pill — top right */}
+              <div className="flex justify-end mb-6">
+                <span
+                  className="text-xs font-semibold px-3 py-1 rounded-full tabular-nums"
+                  style={{ backgroundColor: `${confBarColor}18`, color: confBarColor }}
+                >
+                  {language === 'fr' ? 'Fiabilité' : 'Confidence'} {confidenceScore ?? 0}%
+                </span>
+              </div>
+
+              {/* "You lean" label */}
+              <motion.p
+                className="text-sm font-medium text-gray-400 mb-1.5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {language === 'fr' ? 'Vous êtes plutôt' : 'You lean'}
+              </motion.p>
+
+              {/* Current name — big */}
+              <motion.h2
+                className="text-3xl sm:text-4xl font-bold tracking-tight mb-2"
+                style={{ color: accentColor }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                {topCurrent?.icon} {topCurrent?.name[language]}
+              </motion.h2>
+
+              {/* Short description */}
+              <motion.p
+                className="text-sm text-gray-500 leading-relaxed max-w-lg mb-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45 }}
+              >
+                {topCurrent?.shortDesc[language]}
+              </motion.p>
+
+              {/* ── Featured economic axis ── */}
+              <div>
+                <div className="flex justify-between items-center mb-2.5">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    {AXES_LABELS.economic[language]?.label}
+                  </span>
+                  <motion.span
+                    className="text-xs font-bold tabular-nums"
+                    style={{ color: accentColor }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6, duration: 0.4, ease: [0.34, 1.2, 0.64, 1] }}
+                  >
+                    {econScore}
+                  </motion.span>
+                </div>
+
+                <div className="relative h-3 bg-gray-100 rounded-full">
+                  {/* Fill from center */}
+                  <div
+                    className="absolute top-0 h-full rounded-full"
+                    style={{
+                      left:  isRight ? '50%' : `${econScore}%`,
+                      right: isRight ? `${100 - econScore}%` : '50%',
+                      backgroundColor: accentColor,
+                      opacity: 0.25,
+                    }}
+                  />
+                  {/* Center tick */}
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 w-px h-5 bg-gray-300"
+                    style={{ left: '50%' }}
+                  />
+                  {/* "You are here" animated dot */}
+                  <motion.div
+                    className="absolute top-1/2 -translate-y-1/2 z-10"
+                    initial={{ left: 'calc(50% - 9px)' }}
+                    animate={{ left: `calc(${econScore}% - 9px)` }}
+                    transition={{ duration: 1.3, delay: 0.4, ease: [0.34, 1.2, 0.64, 1] }}
+                  >
+                    <div className="relative w-[18px] h-[18px]">
+                      {/* Pulse ring */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{ backgroundColor: accentColor }}
+                        animate={{ scale: [1, 2.4], opacity: [0.45, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.2, ease: 'easeOut' }}
+                      />
+                      {/* Dot */}
+                      <div
+                        className="absolute inset-0 rounded-full bg-white shadow-lg border-[3px]"
+                        style={{ borderColor: accentColor }}
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-gray-400">← {AXES_LABELS.economic[language]?.left}</span>
+                  <span className="text-xs text-gray-400">{AXES_LABELS.economic[language]?.right} →</span>
+                </div>
+              </div>
+
+              {/* Profile summary */}
+              {profileSummary && (
+                <motion.p
+                  className="mt-7 pt-6 border-t border-gray-100 text-sm text-gray-600 leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  {profileSummary}
+                  {hasAdjustments && (
+                    <span className="ml-2 text-xs text-gray-400 font-medium">
+                      ✎ {t('refine_active', { n: adjustmentCount })}
+                    </span>
+                  )}
+                </motion.p>
+              )}
+
+              {/* Low-confidence CTA */}
+              {(confidenceScore ?? 0) < 40 && (
+                <button
+                  onClick={startImproveMode}
+                  className="mt-5 text-xs font-semibold text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  {t('confidence_improve_cta')} →
+                </button>
+              )}
+            </div>
+          </motion.div>
+        );
+      })()}
 
       {/* Main grid */}
-      <div className="grid sm:grid-cols-2 gap-5 mb-8">
+      <motion.div
+        className="grid sm:grid-cols-2 gap-5 mb-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
 
         {/* Radar chart */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7">
@@ -386,12 +516,17 @@ export default function Profile() {
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7">
           <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-5">{t('profile_themes_title')}</h2>
           <div className="space-y-4">
-            {THEMES_ORDER.map(theme => {
+            {THEMES_ORDER.map((theme, idx) => {
               const score = themes[theme] ?? 50;
               const label = THEME_LABELS[language]?.[theme] ?? theme;
               const color = THEME_COLORS[theme] ?? '#6b7280';
               return (
-                <div key={theme}>
+                <motion.div
+                  key={theme}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.35 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
                   <div className="flex justify-between items-center mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
@@ -403,22 +538,30 @@ export default function Profile() {
                     <span className="text-sm font-bold text-gray-800 tabular-nums">{score}</span>
                   </div>
                   <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{ width: `${score}%`, backgroundColor: color }}
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: color }}
+                      initial={{ width: '0%' }}
+                      animate={{ width: `${score}%` }}
+                      transition={{ duration: 0.9, delay: 0.4 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
                     />
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Ideological axes */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 mb-8">
+      <motion.div
+        className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 mb-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-6">{t('profile_axes_title')}</h2>
-        <div className="grid sm:grid-cols-2 gap-x-10">
+        <div className="grid sm:grid-cols-3 gap-x-10">
           {axisKeys.map(axisKey => {
             const axisInfo = AXES_LABELS[axisKey]?.[language];
             if (!axisInfo) return null;
@@ -433,7 +576,7 @@ export default function Profile() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* Ideological Currents */}
       {(() => {
@@ -456,7 +599,14 @@ export default function Profile() {
                 const barColor = alignmentBarColor(current.alignment);
                 const textColor = alignmentColorClass(current.alignment);
                 return (
-                  <div key={current.id} className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
+                  <motion.div
+                    key={current.id}
+                    className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 overflow-hidden"
+                    style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: current.color } : {}}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 + idx * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
                     <div className="flex items-start gap-3">
                       <span className="text-xl mt-0.5 flex-shrink-0">{current.icon}</span>
                       <div className="flex-1 min-w-0">
@@ -474,17 +624,25 @@ export default function Profile() {
                               {current.name[language]}
                             </h3>
                           </div>
-                          <span className={`text-lg font-bold tabular-nums flex-shrink-0 ${textColor}`}>
+                          <motion.span
+                            className={`text-lg font-bold tabular-nums flex-shrink-0 ${textColor}`}
+                            initial={{ opacity: 0, scale: 0.7 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5, delay: 0.7 + idx * 0.12, ease: [0.34, 1.2, 0.64, 1] }}
+                          >
                             {current.alignment}%
-                          </span>
+                          </motion.span>
                         </div>
                         <p className="text-xs text-gray-500 leading-relaxed mb-2">
                           {current.shortDesc[language]}
                         </p>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-3">
-                          <div
-                            className="h-full rounded-full transition-all duration-700"
-                            style={{ width: `${current.alignment}%`, backgroundColor: barColor }}
+                          <motion.div
+                            className="h-full rounded-full"
+                            style={{ backgroundColor: barColor }}
+                            initial={{ width: '0%' }}
+                            animate={{ width: `${current.alignment}%` }}
+                            transition={{ duration: 1.0, delay: 0.65 + idx * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
                           />
                         </div>
                         {idx === 0 && current.keyBeliefs?.[language] && (
@@ -504,7 +662,7 @@ export default function Profile() {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -518,31 +676,48 @@ export default function Profile() {
                 >
                   {showAllCurrents ? t('currents_show_less') : t('currents_show_all')} {showAllCurrents ? '▲' : '▼'}
                 </button>
-                {showAllCurrents && (
-                  <div className="mt-3 grid sm:grid-cols-2 gap-3">
-                    {restPrimary.map(current => {
-                      const barColor = alignmentBarColor(current.alignment);
-                      const textColor = alignmentColorClass(current.alignment);
-                      return (
-                        <div key={current.id} className="bg-white border border-gray-200 rounded-2xl p-4">
-                          <div className="flex items-center gap-2 mb-2.5">
-                            <span className="text-base">{current.icon}</span>
-                            <span className="font-medium text-gray-900 text-sm">{current.name[language]}</span>
-                            <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
-                              {current.alignment}%
-                            </span>
-                          </div>
-                          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full match-bar-fill"
-                              style={{ width: `${current.alignment}%`, backgroundColor: barColor }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {showAllCurrents && (
+                    <motion.div
+                      className="mt-3 grid sm:grid-cols-2 gap-3"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    >
+                      {restPrimary.map((current, idx) => {
+                        const barColor = alignmentBarColor(current.alignment);
+                        const textColor = alignmentColorClass(current.alignment);
+                        return (
+                          <motion.div
+                            key={current.id}
+                            className="bg-white border border-gray-200 rounded-2xl p-4"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: idx * 0.05 }}
+                          >
+                            <div className="flex items-center gap-2 mb-2.5">
+                              <span className="text-base">{current.icon}</span>
+                              <span className="font-medium text-gray-900 text-sm">{current.name[language]}</span>
+                              <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
+                                {current.alignment}%
+                              </span>
+                            </div>
+                            <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: barColor }}
+                                initial={{ width: '0%' }}
+                                animate={{ width: `${current.alignment}%` }}
+                                transition={{ duration: 0.7, delay: idx * 0.05 }}
+                              />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </>
             )}
 
@@ -553,11 +728,17 @@ export default function Profile() {
                   {language === 'fr' ? 'Traditions apparentées' : 'Related traditions'}
                 </p>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {secondaryCurrents.map(current => {
+                  {secondaryCurrents.map((current, idx) => {
                     const barColor = alignmentBarColor(current.alignment);
                     const textColor = alignmentColorClass(current.alignment);
                     return (
-                      <div key={current.id} className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+                      <motion.div
+                        key={current.id}
+                        className="bg-gray-50 border border-gray-200 rounded-2xl p-4"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.55 + idx * 0.08 }}
+                      >
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-base">{current.icon}</span>
                           <span className="font-medium text-gray-700 text-sm">{current.name[language]}</span>
@@ -567,12 +748,15 @@ export default function Profile() {
                         </div>
                         <p className="text-xs text-gray-400 leading-relaxed mb-2">{current.shortDesc[language]}</p>
                         <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                          <div
+                          <motion.div
                             className="h-full rounded-full"
-                            style={{ width: `${current.alignment}%`, backgroundColor: barColor }}
+                            style={{ backgroundColor: barColor }}
+                            initial={{ width: '0%' }}
+                            animate={{ width: `${current.alignment}%` }}
+                            transition={{ duration: 0.8, delay: 0.6 + idx * 0.08 }}
                           />
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
