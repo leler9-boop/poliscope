@@ -27,6 +27,11 @@ export default function App() {
   const { saveAnswers, saveUserProfile, isAuthenticated } = useAuth();
   const saveTimer = useRef(null);
 
+  // Scroll to top on every page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [currentPage]);
+
   // Debounced profile snapshot save — answers are now saved per-question in the store.
   // This just keeps the user_profiles table in sync after each answer batch.
   useEffect(() => {
