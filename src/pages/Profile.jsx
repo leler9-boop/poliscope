@@ -10,6 +10,7 @@ import { generateProfileSummary } from '../engine/profileSummary.js';
 import { refinementThemes } from '../data/refinementThemes.js';
 import RadarChart from '../components/RadarChart.jsx';
 import AxisBar from '../components/AxisBar.jsx';
+import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 
@@ -135,6 +136,7 @@ export default function Profile() {
 
   const [showAllCurrents, setShowAllCurrents] = useState(false);
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Refinement UI state
   const [refineOpen, setRefineOpen] = useState(false);
@@ -258,6 +260,12 @@ export default function Profile() {
             )
           )}
 
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black border border-gray-900 px-3 py-2 rounded-lg transition-colors"
+          >
+            ↗ {language === 'fr' ? 'Partager' : 'Share'}
+          </button>
           <button
             onClick={exportProfile}
             className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
@@ -1029,6 +1037,18 @@ export default function Profile() {
           ? 'Les scores représentent vos positions sur des spectres thématiques, pas des verdicts moraux. Une valeur de 50 est neutre/centrale.'
           : 'Scores represent your position on thematic spectrums, not moral verdicts. A value of 50 is neutral/centrist.'}
       </p>
+
+      {/* Share modal */}
+      <AnimatePresence>
+        {showShareModal && (
+          <ProfileShareModal
+            themes={themes}
+            rankedCurrents={rankedCurrents}
+            language={language}
+            onClose={() => setShowShareModal(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
