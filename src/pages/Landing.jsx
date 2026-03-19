@@ -3,10 +3,19 @@ import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 
+// Mount-based — for hero (always visible on load)
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] },
+});
+
+// Scroll-triggered — for below-fold sections
+const scrollReveal = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
 });
 
 export default function Landing() {
@@ -123,13 +132,16 @@ export default function Landing() {
             className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16"
             {...fadeUp(0.24)}
           >
-            <button
+            <motion.button
               onClick={() => navigate('selectTest')}
-              className="inline-flex items-center gap-2 bg-gray-900 hover:bg-black text-white font-semibold px-8 py-4 rounded-2xl shadow-md hover:shadow-xl transition-all text-sm"
+              className="inline-flex items-center gap-2 bg-gray-900 text-white font-semibold px-8 py-4 rounded-2xl shadow-md text-sm"
+              whileHover={{ scale: 1.03, boxShadow: '0 12px 32px rgba(0,0,0,0.18)' }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               {t('landing_cta_primary')}
               <span className="opacity-50">→</span>
-            </button>
+            </motion.button>
 
             {profile ? (
               <button
@@ -173,7 +185,7 @@ export default function Landing() {
         <section className="pb-20 sm:pb-24">
           <motion.p
             className="text-xs font-semibold text-gray-400 uppercase tracking-widest text-center mb-12"
-            {...fadeUp(0.38)}
+            {...scrollReveal()}
           >
             {language === 'fr' ? 'Comment ça fonctionne' : 'How it works'}
           </motion.p>
@@ -182,11 +194,12 @@ export default function Landing() {
             {steps.map((step, i) => (
               <motion.div
                 key={step.n}
-                className="bg-white rounded-2xl border border-gray-100 p-7 hover:border-gray-200 hover:shadow-lg transition-all duration-300"
+                className="bg-white rounded-2xl border border-gray-100 p-7 hover:border-gray-200 hover:shadow-lg transition-shadow duration-300"
                 initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.42 + i * 0.09, ease: [0.25, 0.46, 0.45, 0.94] }}
-                whileHover={{ y: -2 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ y: -3, transition: { duration: 0.2 } }}
               >
                 <span className="text-4xl font-black text-gray-100 tabular-nums block mb-5 leading-none">
                   {step.n}
@@ -204,7 +217,7 @@ export default function Landing() {
         <section className="pb-20 sm:pb-24">
           <motion.p
             className="text-xs font-semibold text-gray-400 uppercase tracking-widest text-center mb-12"
-            {...fadeUp(0.6)}
+            {...scrollReveal()}
           >
             {language === 'fr' ? 'Pourquoi Poliscope' : 'Why Poliscope'}
           </motion.p>
@@ -213,11 +226,12 @@ export default function Landing() {
             {features.map((f, i) => (
               <motion.div
                 key={i}
-                className="bg-white rounded-2xl border border-gray-100 p-7 hover:border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col"
+                className="bg-white rounded-2xl border border-gray-100 p-7 hover:border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col"
                 initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.65 + i * 0.09, ease: [0.25, 0.46, 0.45, 0.94] }}
-                whileHover={{ y: -3 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ y: -3, transition: { duration: 0.2 } }}
               >
                 <span className="text-3xl mb-5 block">{f.icon}</span>
                 <h3 className="font-semibold text-gray-900 text-sm mb-2 leading-snug">{f.title}</h3>
@@ -245,9 +259,7 @@ export default function Landing() {
         <section className="pb-20 sm:pb-28">
           <motion.div
             className="bg-gray-900 rounded-3xl px-10 py-16 sm:px-16 sm:py-20 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.85, ease: [0.25, 0.46, 0.45, 0.94] }}
+            {...scrollReveal()}
           >
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-5">
               {language === 'fr' ? 'Commencer' : 'Get started'}
@@ -261,13 +273,16 @@ export default function Landing() {
               {language === 'fr' ? '5 minutes · Anonyme · Gratuit' : '5 minutes · Anonymous · Free'}
             </p>
 
-            <button
+            <motion.button
               onClick={() => navigate('selectTest')}
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 font-semibold px-8 py-4 rounded-2xl transition-all text-sm shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-8 py-4 rounded-2xl text-sm shadow-lg"
+              whileHover={{ scale: 1.03, boxShadow: '0 16px 40px rgba(0,0,0,0.25)' }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               {t('landing_cta_primary')}
               <span>→</span>
-            </button>
+            </motion.button>
 
             {/* Trust row */}
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-12 pt-10 border-t border-gray-800">
