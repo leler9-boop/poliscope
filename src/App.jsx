@@ -20,6 +20,7 @@ const Mission          = lazy(() => import('./pages/Mission.jsx'));
 const Transparency     = lazy(() => import('./pages/Transparency.jsx'));
 const CandidateProfile = lazy(() => import('./pages/CandidateProfile.jsx'));
 const CandidateCompare = lazy(() => import('./pages/CandidateCompare.jsx'));
+const Beginner         = lazy(() => import('./pages/Beginner.jsx'));
 
 function PageLoader() {
   return (
@@ -69,6 +70,7 @@ export default function App() {
     transparency:     <Transparency />,
     candidateProfile: <CandidateProfile />,
     compareView:      <CandidateCompare />,
+    beginner:         <Beginner />,
   };
 
   return (

@@ -24,6 +24,7 @@ export default function Header() {
   ];
 
   const infoItems = [
+    { key: 'beginner',     label: t('nav_beginner'),     page: 'beginner' },
     { key: 'mission',      label: t('nav_mission'),      page: 'mission' },
     { key: 'transparency', label: t('nav_transparency'), page: 'transparency' },
   ];
