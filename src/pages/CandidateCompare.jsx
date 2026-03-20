@@ -1,8 +1,148 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+
+const THEME_AXES = {
+  ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'      } },
+  SOCIAL:          { en: { left: 'Traditional',     right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'      } },
+  IMMIGRATION:     { en: { left: 'Restrictive',     right: 'Open'           }, fr: { left: 'Restrictive',    right: 'Ouverte'           } },
+  SECURITY:        { en: { left: 'State security',  right: 'Civil liberties'}, fr: { left: 'Sécurité d\'État','right': 'Libertés civiles'} },
+  ENVIRONMENT:     { en: { left: 'Growth first',    right: 'Ecology first'  }, fr: { left: 'Croissance',     right: 'Écologie'          } },
+  DEMOCRACY:       { en: { left: 'Strong state',    right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'      } },
+  GLOBAL:          { en: { left: 'Sovereignty',     right: 'Multilateralism'}, fr: { left: 'Souveraineté',   right: 'Multilatéralisme'  } },
+  PUBLIC_SERVICES: { en: { left: 'Private sector',  right: 'Public services'}, fr: { left: 'Secteur privé',  right: 'Services publics'  } },
+};
+
+function diffColor(diff) {
+  if (diff < 12) return '#16a34a';
+  if (diff < 28) return '#2563eb';
+  if (diff < 45) return '#d97706';
+  return '#dc2626';
+}
+
+function diffLabel(diff, language) {
+  if (diff < 12) return language === 'fr' ? 'Très proches' : 'Very similar';
+  if (diff < 28) return language === 'fr' ? 'Proches' : 'Close';
+  if (diff < 45) return language === 'fr' ? 'Différence modérée' : 'Moderate difference';
+  return language === 'fr' ? 'Désaccord marqué' : 'Strong disagreement';
+}
+
+function compareSentence(s1, s2, c1Name, c2Name, userScore, themeLabel, language) {
+  const diff = Math.abs(s1 - s2);
+  const n1 = c1Name.split(' ').pop();
+  const n2 = c2Name.split(' ').pop();
+  const theme = themeLabel.toLowerCase();
+
+  let base;
+  if (language === 'fr') {
+    if (diff < 12) base = `${n1} et ${n2} ont des positions très similaires sur ${theme}.`;
+    else if (diff < 28) base = `${n1} et ${n2} ont des vues légèrement différentes sur ${theme}.`;
+    else if (diff < 45) base = `${n1} et ${n2} diffèrent modérément sur ${theme}.`;
+    else base = `${n1} et ${n2} ont des positions opposées sur ${theme}.`;
+  } else {
+    if (diff < 12) base = `${n1} and ${n2} share very similar views on ${theme}.`;
+    else if (diff < 28) base = `${n1} and ${n2} have slightly different views on ${theme}.`;
+    else if (diff < 45) base = `${n1} and ${n2} differ moderately on ${theme}.`;
+    else base = `${n1} and ${n2} hold opposing views on ${theme}.`;
+  }
+
+  if (userScore == null) return base;
+  const d1 = Math.abs(userScore - s1);
+  const d2 = Math.abs(userScore - s2);
+  if (Math.abs(d1 - d2) < 5) {
+    return base + (language === 'fr' ? ' Vous êtes à égale distance des deux.' : ' You are equidistant from both.');
+  }
+  const closer = d1 < d2 ? n1 : n2;
+  return base + (language === 'fr' ? ` Votre position se rapproche de ${closer}.` : ` Your views are closer to ${closer}.`);
+}
+
+/**
+ * Shared axis showing two candidate dots (+ optional user dot).
+ * c1 / c2 are candidates, user is optional.
+ */
+function CompareAxis({ s1, s2, userScore, color1, color2, leftLabel, rightLabel, diff, sentence, c1Name, c2Name, language, delay = 0 }) {
+  const hasUser = userScore != null;
+
+  return (
+    <div>
+      {/* Track */}
+      <div className="relative h-2 bg-gray-100 rounded-full">
+        {/* Center tick */}
+        <div className="absolute top-1/2 -translate-y-1/2 w-px h-4 bg-gray-200" style={{ left: '50%' }} />
+
+        {/* User dot (bottom layer) */}
+        {hasUser && (
+          <motion.div
+            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gray-800 border-2 border-gray-800 shadow z-10"
+            initial={{ left: 'calc(50% - 8px)' }}
+            animate={{ left: `calc(${userScore}% - 8px)` }}
+            transition={{ duration: 1.1, delay, ease: [0.34, 1.15, 0.64, 1] }}
+          />
+        )}
+
+        {/* c1 dot */}
+        <motion.div
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-[2.5px] shadow-md z-20"
+          style={{ borderColor: color1 }}
+          initial={{ left: 'calc(50% - 8px)' }}
+          animate={{ left: `calc(${s1}% - 8px)` }}
+          transition={{ duration: 1.1, delay: delay + 0.07, ease: [0.34, 1.15, 0.64, 1] }}
+        />
+
+        {/* c2 dot */}
+        <motion.div
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-[2.5px] shadow-md z-30"
+          style={{ borderColor: color2 }}
+          initial={{ left: 'calc(50% - 8px)' }}
+          animate={{ left: `calc(${s2}% - 8px)` }}
+          transition={{ duration: 1.1, delay: delay + 0.14, ease: [0.34, 1.15, 0.64, 1] }}
+        />
+      </div>
+
+      {/* Pole labels */}
+      <div className="flex justify-between mt-1.5 mb-2">
+        <span className="text-xs text-gray-400">{leftLabel}</span>
+        <span className="text-xs text-gray-400">{rightLabel}</span>
+      </div>
+
+      {/* Legend row */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 text-xs text-gray-500 flex-wrap">
+          {hasUser && (
+            <span className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-gray-800 inline-block" />
+              {language === 'fr' ? 'Vous' : 'You'}
+            </span>
+          )}
+          <span className="flex items-center gap-1" style={{ color: color1 }}>
+            <span className="w-2.5 h-2.5 rounded-full bg-white border-[2px] inline-block" style={{ borderColor: color1 }} />
+            {c1Name.split(' ').pop()}
+          </span>
+          <span className="flex items-center gap-1" style={{ color: color2 }}>
+            <span className="w-2.5 h-2.5 rounded-full bg-white border-[2px] inline-block" style={{ borderColor: color2 }} />
+            {c2Name.split(' ').pop()}
+          </span>
+        </div>
+        <span className="text-xs font-semibold flex-shrink-0" style={{ color: diffColor(diff) }}>
+          {diffLabel(diff, language)}
+        </span>
+      </div>
+
+      {/* Sentence */}
+      <motion.p
+        className="text-xs text-gray-500 mt-1.5 leading-relaxed"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delay + 0.8 }}
+      >
+        {sentence}
+      </motion.p>
+    </div>
+  );
+}
 
 function findCandidate(id) {
   for (const election of elections) {
@@ -39,12 +179,12 @@ function Portrait({ candidate, size = 56 }) {
 }
 
 export default function CandidateCompare() {
-  const language     = useStore(s => s.language);
-  const navigate     = useStore(s => s.navigate);
-  const compareIds   = useStore(s => s.compareIds);
-  const selectCandidate = useStore(s => s.selectCandidate);
-  const profile      = useStore(s => s.profile);
-  const profileAdjustments = useStore(s => s.profileAdjustments);
+  const language            = useStore(s => s.language);
+  const navigate            = useStore(s => s.navigate);
+  const compareIds          = useStore(s => s.compareIds);
+  const selectCandidate     = useStore(s => s.selectCandidate);
+  const profile             = useStore(s => s.profile);
+  const profileAdjustments  = useStore(s => s.profileAdjustments);
 
   const [id1, id2] = compareIds ?? [];
   const r1 = id1 ? findCandidate(id1) : null;
@@ -58,7 +198,6 @@ export default function CandidateCompare() {
   const c1 = r1.candidate;
   const c2 = r2.candidate;
 
-  // Adjusted user themes for reference
   const userThemes = React.useMemo(() => {
     if (!profile?.themes) return null;
     const themes = { ...profile.themes };
@@ -88,7 +227,7 @@ export default function CandidateCompare() {
           <button
             key={c.id}
             onClick={() => selectCandidate(c.id)}
-            className="flex flex-col items-center gap-2 p-4 bg-white border border-gray-200 rounded-2xl hover:border-gray-400 hover:shadow-sm transition-all text-left"
+            className="flex flex-col items-center gap-2 p-4 bg-white border border-gray-200 rounded-2xl hover:border-gray-400 hover:shadow-sm transition-all"
           >
             <Portrait candidate={c} size={56} />
             <div className="text-center">
@@ -104,90 +243,52 @@ export default function CandidateCompare() {
         ))}
       </div>
 
-      {/* Theme comparison table */}
+      {/* Unified axis comparison */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
           {language === 'fr' ? 'Comparaison par thème' : 'Theme comparison'}
         </h2>
+        {userThemes && (
+          <p className="text-xs text-gray-400 mb-5">
+            {language === 'fr'
+              ? 'Point sombre = votre position.'
+              : 'Dark dot = your position.'}
+          </p>
+        )}
 
-        {/* Column labels */}
-        <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 mb-2 px-1">
-          <div />
-          <div className="w-24 text-center text-xs font-medium text-gray-500 truncate">{c1.name.split(' ').pop()}</div>
-          <div className="w-24 text-center text-xs font-medium text-gray-500 truncate">{c2.name.split(' ').pop()}</div>
-        </div>
-
-        <div className="space-y-4">
-          {THEMES_ORDER.map(theme => {
-            const label = THEME_LABELS[language]?.[theme] ?? theme;
-            const color = THEME_COLORS[theme] ?? '#6b7280';
-            const s1 = c1.profile?.[theme] ?? 50;
-            const s2 = c2.profile?.[theme] ?? 50;
-            const diff = Math.abs(s1 - s2);
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 divide-y divide-gray-50">
+          {THEMES_ORDER.map((theme, idx) => {
+            const label  = THEME_LABELS[language]?.[theme] ?? theme;
+            const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
+            const s1     = c1.profile?.[theme] ?? 50;
+            const s2     = c2.profile?.[theme] ?? 50;
+            const u      = userThemes?.[theme];
+            const diff   = Math.abs(s1 - s2);
+            const sentence = compareSentence(s1, s2, c1.name, c2.name, u, label, language);
 
             return (
-              <div key={theme}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm text-gray-600">{label}</span>
-                  {diff >= 25 && (
-                    <span className="text-xs font-semibold px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600">
-                      Δ{diff}
-                    </span>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {[{ c: c1, s: s1 }, { c: c2, s: s2 }].map(({ c, s }) => (
-                    <div key={c.id}>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${s}%`, backgroundColor: color }} />
-                        </div>
-                        <span className="text-xs tabular-nums text-gray-500 w-6 text-right flex-shrink-0">{s}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div key={theme} className={idx > 0 ? 'pt-5' : ''}>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">{label}</p>
+                <CompareAxis
+                  s1={s1}
+                  s2={s2}
+                  userScore={u}
+                  color1={c1.color ?? '#374151'}
+                  color2={c2.color ?? '#9ca3af'}
+                  leftLabel={poles.left}
+                  rightLabel={poles.right}
+                  diff={diff}
+                  sentence={sentence}
+                  c1Name={c1.name}
+                  c2Name={c2.name}
+                  language={language}
+                  delay={0.06 + idx * 0.04}
+                />
               </div>
             );
           })}
         </div>
       </section>
-
-      {/* User reference section (only if profile exists) */}
-      {userThemes && (
-        <section className="mb-8 bg-blue-50 border border-blue-100 rounded-2xl p-5">
-          <h2 className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4">
-            {language === 'fr' ? 'Votre profil (référence)' : 'Your profile (reference)'}
-          </h2>
-          <div className="space-y-2.5">
-            {THEMES_ORDER.map(theme => {
-              const label = THEME_LABELS[language]?.[theme] ?? theme;
-              const color = THEME_COLORS[theme] ?? '#6b7280';
-              const u = userThemes[theme] ?? 50;
-              const s1 = c1.profile?.[theme] ?? 50;
-              const s2 = c2.profile?.[theme] ?? 50;
-              const d1 = Math.abs(u - s1);
-              const d2 = Math.abs(u - s2);
-              // Who is closer
-              const closer = d1 < d2 ? c1 : d2 < d1 ? c2 : null;
-              return (
-                <div key={theme} className="flex items-center gap-3">
-                  <span className="text-xs text-blue-700 w-28 flex-shrink-0">{label}</span>
-                  <div className="flex-1 h-1.5 bg-blue-100 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${u}%`, backgroundColor: '#3b82f6' }} />
-                  </div>
-                  <span className="text-xs tabular-nums text-blue-500 w-6 text-right flex-shrink-0">{u}</span>
-                  {closer && (
-                    <span className="text-xs text-blue-400 flex-shrink-0" style={{ minWidth: 60 }}>
-                      → {closer.name.split(' ').pop()}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* Bio side-by-side */}
       <section className="mb-8">
