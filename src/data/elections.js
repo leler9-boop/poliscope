@@ -841,19 +841,19 @@ export const elections = [
     flag: `🇫🇷`,
     year: 2027,
     description: {
-      en: `The 2027 presidential election will determine France's direction after five years of Macron's second term. Le Pen leads early polls but faces a fragmented field.`,
-      fr: `L'élection présidentielle de 2027 déterminera l'orientation de la France après cinq ans du second mandat de Macron. Le Pen mène dans les sondages face à un paysage fragmenté.`,
+      en: `France will elect a new president in spring 2027. Emmanuel Macron cannot stand again. No candidates are officially declared yet.`,
+      fr: `La France élira un nouveau président au printemps 2027. Emmanuel Macron ne peut pas se représenter. Aucun candidat n'est officiellement déclaré à ce stade.`,
     },
     context: {
       en: [
-        `France is a republic in western Europe with a powerful president elected every five years. The 2027 election follows Emmanuel Macron's final term — he cannot run again. This creates an open race for the first time in a decade.`,
-        `The main debates centre on the cost of living, public services, immigration, and France's role in a Europe dealing with war, energy prices and great-power competition. The far right under Marine Le Pen has grown steadily in support.`,
-        `Early polls suggest a competitive race between Le Pen (RN), Édouard Philippe (Horizons), and Gabriel Attal (Renaissance). The left remains fragmented among Mélenchon, Glucksmann, and Tondelier.`,
+        `France is a republic in western Europe with a directly elected president who holds strong executive power. The president is elected every five years in a two-round system. The 2027 election follows Emmanuel Macron's second and final term.`,
+        `Key issues expected to dominate the campaign:\n• Cost of living and purchasing power\n• Immigration and national identity\n• Public services — hospitals, schools, housing\n• Energy: nuclear investment vs. renewable transition\n• France's role in the EU and support for Ukraine`,
+        `With Macron unable to stand, the race is unusually open. Several figures are publicly positioning themselves — including Marine Le Pen (RN), Édouard Philippe (Horizons), and Gabriel Attal (Renaissance) on one side, and Raphaël Glucksmann and Marine Tondelier on the left — but no formal candidacy has been announced.\n\n⚠ Candidates shown are based on public signals as of early 2026. No official declarations have been made.`,
       ],
       fr: [
-        `La France est une république d'Europe de l'Ouest avec un président puissant élu tous les cinq ans. L'élection de 2027 suit le dernier mandat d'Emmanuel Macron — il ne peut pas se représenter. Cela crée une course ouverte pour la première fois depuis une décennie.`,
-        `Les principaux débats portent sur le coût de la vie, les services publics, l'immigration et le rôle de la France dans une Europe confrontée à la guerre, aux prix de l'énergie et à la compétition entre grandes puissances.`,
-        `Les premiers sondages suggèrent une course compétitive entre Le Pen (RN), Édouard Philippe (Horizons) et Gabriel Attal (Renaissance). La gauche reste fragmentée entre Mélenchon, Glucksmann et Tondelier.`,
+        `La France est une république avec un président élu au suffrage direct disposant d'un fort pouvoir exécutif. Le président est élu tous les cinq ans au scrutin à deux tours. L'élection de 2027 suit le deuxième et dernier mandat d'Emmanuel Macron.`,
+        `Les principaux enjeux attendus :\n• Pouvoir d'achat et coût de la vie\n• Immigration et identité nationale\n• Services publics — hôpitaux, écoles, logement\n• Énergie : nucléaire vs. transition renouvelable\n• Rôle de la France dans l'UE et soutien à l'Ukraine`,
+        `Macron ne pouvant se représenter, la course est inhabituellement ouverte. Plusieurs personnalités se positionnent publiquement — dont Marine Le Pen (RN), Édouard Philippe (Horizons) et Gabriel Attal (Renaissance) d'un côté, et Raphaël Glucksmann et Marine Tondelier à gauche — mais aucune candidature officielle n'a été annoncée.\n\n⚠ Les candidats présentés sont basés sur des signaux publics début 2026. Aucune déclaration officielle n'a été faite.`,
       ],
     },
     deeperContext: {
@@ -1070,19 +1070,19 @@ export const elections = [
     flag: `🇫🇷`,
     year: 2026,
     description: {
-      en: `Paris will elect its mayor in 2026. Anne Hidalgo seeks a third term against Rachida Dati (LR), David Belliard (Greens), and Clément Beaune (Renaissance).`,
-      fr: `Paris élira son maire en 2026. Anne Hidalgo brigue un troisième mandat face à Rachida Dati (LR), David Belliard (Verts) et Clément Beaune (Renaissance).`,
+      en: `Paris will elect its mayor and city council in March 2026. Anne Hidalgo has been mayor since 2014 and is seeking a third term. Final candidate lists are not yet confirmed.`,
+      fr: `Paris élira son maire et son conseil municipal en mars 2026. Anne Hidalgo est maire depuis 2014 et brigue un troisième mandat. Les listes définitives ne sont pas encore confirmées.`,
     },
     context: {
       en: [
-        `Paris is France's capital and largest city, home to 2.1 million people in the city proper and 12 million in the greater region. The mayor of Paris is elected by city councillors after municipal elections.`,
-        `The main debates in Paris focus on housing costs, cycling and traffic policy, the Olympic legacy from 2024, public cleanliness, and how to balance environmental ambition with the daily concerns of residents and businesses.`,
-        `Anne Hidalgo has governed since 2014. Her tenure has been marked by ambitious cycling infrastructure and car restrictions, generating both praise and fierce opposition from business groups and motorists.`,
+        `Paris is France's capital, with 2.1 million residents in the city and around 12 million in the greater region. The mayor is elected by city councillors following proportional municipal elections held across all 20 arrondissements.`,
+        `Key issues for 2026:\n• Public cleanliness — consistently the top complaint of Parisians\n• Housing costs — one of Europe's most expensive rental markets\n• Car restrictions and cycling policy — deeply divisive\n• Public security — disorder in parks and public spaces\n• Legacy of the 2024 Paris Olympics`,
+        `Anne Hidalgo (PS) has governed since 2014. Her tenure is associated with ambitious cycling infrastructure, car restrictions, and climate commitments. She faces opposition from the right (Rachida Dati, LR) and the centre (Clément Beaune, Renaissance), as well as from the Greens.\n\n⚠ Candidate lists are not officially confirmed. The names shown reflect current public positioning as of early 2026.`,
       ],
       fr: [
-        `Paris est la capitale et la plus grande ville de France, avec 2,1 millions d'habitants en ville propre et 12 millions dans la région. Le maire de Paris est élu par les conseillers municipaux après les élections.`,
-        `Les principaux débats à Paris portent sur le coût du logement, le vélo et la politique de circulation, l'héritage des JO 2024, la propreté et l'équilibre entre ambition environnementale et préoccupations quotidiennes.`,
-        `Anne Hidalgo gouverne depuis 2014. Son mandat a été marqué par d'ambitieuses infrastructures cyclables et des restrictions de voitures, suscitant admiration et vive opposition.`,
+        `Paris est la capitale de la France, avec 2,1 millions d'habitants en ville et environ 12 millions dans la région. Le maire est élu par les conseillers municipaux à l'issue d'élections proportionnelles dans les 20 arrondissements.`,
+        `Enjeux clés pour 2026 :\n• Propreté — première préoccupation des Parisiens\n• Logement — l'un des marchés locatifs les plus chers d'Europe\n• Restrictions voiture et vélo — un sujet profondément clivant\n• Sécurité — désordre dans les parcs et espaces publics\n• Héritage des Jeux olympiques de 2024`,
+        `Anne Hidalgo (PS) gouverne depuis 2014. Son mandat est associé aux pistes cyclables, aux restrictions de voitures et aux engagements climatiques. Elle fait face à l'opposition de droite (Rachida Dati, LR) et du centre (Clément Beaune, Renaissance), ainsi que des Verts.\n\n⚠ Les listes candidates ne sont pas officiellement confirmées. Les noms présentés reflètent les positionnements publics début 2026.`,
       ],
     },
     deeperContext: {
@@ -1193,6 +1193,111 @@ export const elections = [
         result: { en: `Macronist candidate`, fr: `Candidat macroniste` },
         profile: { ECONOMY: 62, SOCIAL: 68, IMMIGRATION: 42, SECURITY: 58, ENVIRONMENT: 60, DEMOCRACY: 80, GLOBAL: 22, PUBLIC_SERVICES: 50 },
         description: { en: `Centrist liberal. Pro-EU, pragmatic on cycling/environment, balanced approach to business and services.`, fr: `Libéral centriste. Pro-UE, pragmatique sur le vélo/environnement, approche équilibrée entre business et services.` },
+      },
+    ],
+  },
+
+  // ── stras_2026 ───────────────────────────────────────────────────────────
+  {
+    id: `stras_2026`,
+    image: `/images/elections/stras_2026.svg`,
+    title: { en: `Strasbourg Municipal Election 2026`, fr: `Municipales Strasbourg 2026` },
+    country: `France`,
+    flag: `🇫🇷`,
+    year: 2026,
+    description: {
+      en: `Strasbourg will elect its mayor and city council in March 2026. Jeanne Barseghian (Greens) has been mayor since 2020. Candidate lists are not yet confirmed.`,
+      fr: `Strasbourg élira son maire et son conseil municipal en mars 2026. Jeanne Barseghian (Verts) est maire depuis 2020. Les listes candidates ne sont pas encore confirmées.`,
+    },
+    context: {
+      en: [
+        `Strasbourg is the capital of Alsace and the seat of the European Parliament and the Council of Europe. With around 290,000 inhabitants, it is France's seventh largest city and has a distinctive bilingual character shaped by its French-German history.`,
+        `Key issues for 2026:\n• Urban mobility — cycling, trams, and cross-Rhine links with Germany\n• Housing — rising rents and student accommodation shortage\n• Strasbourg's role as a European capital — EU institutions and international profile\n• Public services and social inequalities — especially in the Neudorf and Hautepierre districts\n• Economic development and the attractiveness of the city centre`,
+        `Jeanne Barseghian (EELV) won in 2020, ending 26 years of conservative rule. Her mandate has focused on cycling infrastructure, ecological transition, and social housing. She is expected to seek re-election, but no candidate has officially declared.\n\n⚠ All candidates shown are based on public signals as of early 2026. No official declarations have been made.`,
+      ],
+      fr: [
+        `Strasbourg est la capitale de l'Alsace et le siège du Parlement européen et du Conseil de l'Europe. Avec environ 290 000 habitants, c'est la septième ville de France, marquée par une double culture franco-allemande.`,
+        `Enjeux clés pour 2026 :\n• Mobilité urbaine — vélos, tramways et liaisons transfrontalières avec l'Allemagne\n• Logement — hausse des loyers et pénurie de logements étudiants\n• Rôle de capitale européenne — institutions européennes et rayonnement international\n• Services publics et inégalités — notamment dans les quartiers Neudorf et Hautepierre\n• Développement économique et attractivité du centre-ville`,
+        `Jeanne Barseghian (EELV) a remporté les élections en 2020, mettant fin à 26 ans de droite. Son mandat s'est concentré sur les pistes cyclables, la transition écologique et le logement social. Elle devrait se représenter, mais aucun candidat n'a officiellement déclaré.\n\n⚠ Les candidats présentés reflètent les positionnements publics début 2026. Aucune déclaration officielle n'a été faite.`,
+      ],
+    },
+    deeperContext: {
+      en: [
+        `Strasbourg occupies a unique position in French politics. As host to EU institutions, European issues carry more weight here than in most French cities. The city also benefits from close economic ties with the Baden-Württemberg region in Germany — cross-border commuting is significant.`,
+        `Key local debates:\n• The Rhine crossing — a new bridge or tunnel linking Strasbourg to Kehl is debated\n• University city — Strasbourg has 60,000 students; housing and cost of living are acute\n• Tourism and heritage — the historic Grande Île is a UNESCO World Heritage site, but over-tourism is a concern\n• Political positioning — Strasbourg leans centre-left but has a sizeable conservative electorate in outer neighbourhoods`,
+      ],
+      fr: [
+        `Strasbourg occupe une place particulière dans la politique française. En tant que siège des institutions européennes, les enjeux européens y pèsent davantage que dans la plupart des villes françaises. La ville bénéficie aussi de liens économiques étroits avec le Bade-Wurtemberg.`,
+        `Débats locaux clés :\n• La traversée du Rhin — un nouveau pont ou tunnel entre Strasbourg et Kehl est débattu\n• Ville universitaire — 60 000 étudiants ; logement et coût de la vie sont des sujets aigus\n• Tourisme et patrimoine — la Grande Île est classée au patrimoine mondial de l'UNESCO\n• Positionnement politique — Strasbourg penche centre-gauche mais avec un électorat conservateur dans les quartiers périphériques`,
+      ],
+    },
+    specificQuestions: [
+      {
+        id: `stras_2026_q1`,
+        text: { en: `Strasbourg should further restrict car access to the city centre and expand cycling infrastructure.`, fr: `Strasbourg devrait davantage restreindre l'accès des voitures au centre-ville et développer les infrastructures cyclables.` },
+        theme: `ENVIRONMENT`, direction: 1,
+        info: { en: `Strasbourg is already one of France's most cycling-friendly cities. The debate is whether to go further with car restrictions, or to prioritise access for residents and businesses.`, fr: `Strasbourg est déjà l'une des villes les plus cyclables de France. Le débat porte sur l'opportunité d'aller plus loin dans les restrictions ou de préserver l'accès pour résidents et commerces.` },
+        positions: { barseghian: 5, lr_stras: 1, renaissance_stras: 3 },
+      },
+      {
+        id: `stras_2026_q2`,
+        text: { en: `The city should build significantly more social and affordable housing.`, fr: `La ville devrait construire beaucoup plus de logements sociaux et abordables.` },
+        theme: `PUBLIC_SERVICES`, direction: 1,
+        info: { en: `Housing costs have risen sharply in Strasbourg, driven partly by student demand and the presence of EU institutions. Waiting lists for social housing are long.`, fr: `Les coûts de logement ont fortement augmenté à Strasbourg, en partie en raison de la demande étudiante et des institutions européennes. Les listes d'attente de logements sociaux sont longues.` },
+        positions: { barseghian: 5, lr_stras: 2, renaissance_stras: 3 },
+      },
+      {
+        id: `stras_2026_q3`,
+        text: { en: `Strasbourg should strengthen its profile as a European capital and invest in its EU institutions.`, fr: `Strasbourg devrait renforcer son rayonnement de capitale européenne et investir dans ses institutions européennes.` },
+        theme: `GLOBAL`, direction: -1,
+        info: { en: `Strasbourg hosts the European Parliament, the Council of Europe, and the European Court of Human Rights. There is ongoing debate about whether Brussels should host all EU institutions permanently.`, fr: `Strasbourg accueille le Parlement européen, le Conseil de l'Europe et la Cour européenne des droits de l'homme. Un débat existe sur la concentration des institutions à Bruxelles.` },
+        positions: { barseghian: 5, lr_stras: 4, renaissance_stras: 5 },
+      },
+      {
+        id: `stras_2026_q4`,
+        text: { en: `Public safety and policing in Strasbourg should be significantly reinforced.`, fr: `La sécurité publique et la police à Strasbourg devraient être significativement renforcées.` },
+        theme: `SECURITY`, direction: 1,
+        info: { en: `Security is a concern in some Strasbourg neighbourhoods. The Neuhof and Hautepierre districts face social difficulties. The right calls for more policing; the left argues for social investment.`, fr: `La sécurité est une préoccupation dans certains quartiers de Strasbourg. Les quartiers Neuhof et Hautepierre connaissent des difficultés sociales. La droite réclame plus de police ; la gauche préconise l'investissement social.` },
+        positions: { barseghian: 2, lr_stras: 5, renaissance_stras: 3 },
+      },
+      {
+        id: `stras_2026_q5`,
+        text: { en: `Strasbourg should develop stronger economic and mobility links with Germany and the Rhine region.`, fr: `Strasbourg devrait développer des liens économiques et de mobilité plus forts avec l'Allemagne et la région du Rhin.` },
+        theme: `GLOBAL`, direction: -1,
+        info: { en: `Over 30,000 people cross the Rhine daily for work. A new Rhine bridge is under discussion. Cross-border cooperation with Kehl and Baden-Württemberg is a defining local issue.`, fr: `Plus de 30 000 personnes traversent le Rhin chaque jour pour le travail. Un nouveau pont sur le Rhin est en discussion. La coopération transfrontalière avec Kehl et le Bade-Wurtemberg est un enjeu local majeur.` },
+        positions: { barseghian: 4, lr_stras: 4, renaissance_stras: 5 },
+      },
+    ],
+    candidates: [
+      {
+        id: `barseghian`,
+        image: `/images/candidates/barseghian.svg`,
+        name: `Jeanne Barseghian`,
+        party: { en: `Les Écologistes (EELV)`, fr: `Les Écologistes (EELV)` },
+        color: `#00A550`,
+        result: { en: `Incumbent mayor (elected 2020)`, fr: `Maire sortante (élue en 2020)` },
+        profile: { ECONOMY: 22, SOCIAL: 82, IMMIGRATION: 20, SECURITY: 28, ENVIRONMENT: 90, DEMOCRACY: 82, GLOBAL: 20, PUBLIC_SERVICES: 75 },
+        description: { en: `Green ecologist. Climate-focused, pro-cycling, social housing, cross-border cooperation.`, fr: `Écologiste verte. Axée sur le climat, pro-vélo, logement social, coopération transfrontalière.` },
+      },
+      {
+        id: `lr_stras`,
+        image: `/images/candidates/lr_stras.svg`,
+        name: `Candidat(e) LR`,
+        party: { en: `Les Républicains`, fr: `Les Républicains` },
+        color: `#0066CC`,
+        result: { en: `Projected opposition candidate (not confirmed)`, fr: `Candidat(e) d'opposition pressenti(e) (non confirmé(e))` },
+        profile: { ECONOMY: 65, SOCIAL: 35, IMMIGRATION: 60, SECURITY: 75, ENVIRONMENT: 42, DEMOCRACY: 70, GLOBAL: 38, PUBLIC_SERVICES: 40 },
+        description: { en: `Conservative right. Pro-business, security-focused, critical of car restrictions.`, fr: `Droite conservatrice. Pro-business, axé sur la sécurité, critique des restrictions de circulation.` },
+      },
+      {
+        id: `renaissance_stras`,
+        image: `/images/candidates/renaissance_stras.svg`,
+        name: `Candidat(e) Renaissance`,
+        party: { en: `Renaissance`, fr: `Renaissance` },
+        color: `#FFD700`,
+        result: { en: `Projected candidate (not confirmed)`, fr: `Candidat(e) pressenti(e) (non confirmé(e))` },
+        profile: { ECONOMY: 62, SOCIAL: 65, IMMIGRATION: 40, SECURITY: 55, ENVIRONMENT: 58, DEMOCRACY: 78, GLOBAL: 22, PUBLIC_SERVICES: 50 },
+        description: { en: `Centrist liberal. Pro-EU, pragmatic on mobility, balanced on public services and business.`, fr: `Libéral centriste. Pro-UE, pragmatique sur la mobilité, équilibré entre services publics et économie.` },
       },
     ],
   },
