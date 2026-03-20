@@ -504,6 +504,27 @@ export default function Profile() {
         );
       })()}
 
+      {/* ── Share CTA — prominent, below hero ── */}
+      <motion.div
+        className="flex items-center gap-3 mb-8"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <motion.button
+          onClick={() => setShowShareModal(true)}
+          className="flex items-center gap-2 bg-gray-900 hover:bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.15 }}
+        >
+          ↗ {language === 'fr' ? 'Partager mon profil' : 'Share my profile'}
+        </motion.button>
+        <span className="text-xs text-gray-400">
+          {language === 'fr' ? 'Carte visuelle à partager' : 'Visual card to share'}
+        </span>
+      </motion.div>
+
       {/* Main grid */}
       <motion.div
         className="grid sm:grid-cols-2 gap-5 mb-8"
