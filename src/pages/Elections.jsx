@@ -73,51 +73,56 @@ export default function Elections() {
             >
               {/* Banner image */}
               {election.image ? (
-                <div className="relative h-40 overflow-hidden bg-gray-900">
+                <div className="relative h-44 overflow-hidden bg-gray-950">
                   <img
                     src={election.image}
                     alt={election.title[language]}
-                    className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700"
                     loading="lazy"
                   />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent" />
+                  {/* Base tint */}
+                  <div className="absolute inset-0 bg-black/15" />
+                  {/* Bottom gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                   {/* Answered badge */}
                   {hasAnswers && (
-                    <span className="absolute top-3 right-3 text-xs font-semibold text-white bg-green-600 px-2.5 py-0.5 rounded-full shadow">
+                    <span className="absolute top-3 right-3 text-[11px] font-semibold text-white bg-green-600/90 px-2.5 py-0.5 rounded-full shadow-sm">
                       ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
                     </span>
                   )}
 
-                  {/* Country + year pill on image */}
-                  <div className="absolute bottom-3 left-4">
-                    <span className="text-xs font-semibold text-white/90 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">
-                      {election.country} · {election.year}
-                    </span>
+                  {/* Country · year + title layered at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 pt-10">
+                    <p className="text-[10px] font-semibold text-white/55 uppercase tracking-[0.13em] mb-1.5">
+                      {election.flag}&ensp;{election.country}&nbsp;·&nbsp;{election.year}
+                    </p>
+                    <h2 className="font-bold text-white text-[15px] leading-snug tracking-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                      {election.title[language]}
+                    </h2>
                   </div>
                 </div>
               ) : (
                 /* No image fallback */
-                <div className="h-16 bg-gradient-to-br from-gray-100 to-gray-50 flex items-end px-5 pb-3">
-                  <span className="text-xs font-semibold text-gray-400">
-                    {election.country} · {election.year}
-                  </span>
-                  {hasAnswers && (
-                    <span className="ml-auto text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
-                      ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
-                    </span>
-                  )}
+                <div className="bg-gray-950 px-5 pt-5 pb-4">
+                  <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.13em] mb-1.5">
+                    {election.flag}&ensp;{election.country}&nbsp;·&nbsp;{election.year}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <h2 className="font-bold text-white text-[15px] leading-snug tracking-tight">
+                      {election.title[language]}
+                    </h2>
+                    {hasAnswers && (
+                      <span className="text-[11px] font-semibold text-green-400 flex-shrink-0 ml-3">
+                        ✓ {language === 'fr' ? 'Répondu' : 'Answered'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
 
               {/* Card body */}
               <div className="p-5 sm:p-6">
-                {/* Title */}
-                <h2 className="font-bold text-gray-900 text-base leading-snug tracking-tight mb-2">
-                  {election.title[language]}
-                </h2>
-
                 {/* Description */}
                 <p className="text-sm text-gray-500 leading-relaxed mb-5 line-clamp-2">
                   {election.description[language]}

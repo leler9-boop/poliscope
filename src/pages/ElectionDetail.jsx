@@ -45,26 +45,41 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
     <div className="max-w-2xl mx-auto">
       {/* Election image header */}
       {election.image ? (
-        <div className="relative h-48 sm:h-56 rounded-2xl overflow-hidden bg-gray-900 mb-8">
+        <div className="relative -mx-4 sm:-mx-6 h-56 sm:h-72 overflow-hidden bg-gray-950 mb-10">
           <img
             src={election.image}
             alt={election.title[language]}
             className="w-full h-full object-cover object-center"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 p-5">
-            <p className="text-xs font-semibold text-white/60 uppercase tracking-widest mb-1">{election.country} · {election.year}</p>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{election.title[language]}</h1>
+          {/* Base tint */}
+          <div className="absolute inset-0 bg-black/20" />
+          {/* Bottom gradient for text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+          {/* Layered text */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-7">
+            <p className="text-[11px] font-semibold text-white/55 uppercase tracking-[0.14em] mb-2.5">
+              {election.flag}&ensp;{election.country}&nbsp;·&nbsp;{election.year}
+            </p>
+            <h1 className="text-2xl sm:text-[28px] font-bold text-white tracking-tight leading-tight mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              {election.title[language]}
+            </h1>
+            <p className="text-[13px] text-white/65 leading-snug line-clamp-1 max-w-xl font-normal">
+              {typeof election.description === 'object' ? election.description[language] : election.description}
+            </p>
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-4 mb-10">
-          <span className="text-4xl">{election.flag}</span>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{election.title[language]}</h1>
-            <span className="text-sm text-gray-400 mt-0.5 block">{election.country} · {election.year}</span>
-          </div>
+        <div className="-mx-4 sm:-mx-6 bg-gray-950 px-4 sm:px-6 pt-8 pb-8 mb-10">
+          <p className="text-[11px] font-semibold text-white/50 uppercase tracking-[0.14em] mb-2.5">
+            {election.flag}&ensp;{election.country}&nbsp;·&nbsp;{election.year}
+          </p>
+          <h1 className="text-2xl sm:text-[28px] font-bold text-white tracking-tight leading-tight mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+            {election.title[language]}
+          </h1>
+          <p className="text-[13px] text-white/60 leading-snug line-clamp-1 max-w-xl">
+            {typeof election.description === 'object' ? election.description[language] : election.description}
+          </p>
         </div>
       )}
 
