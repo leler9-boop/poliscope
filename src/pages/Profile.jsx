@@ -5,6 +5,26 @@ import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
+
+/** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
+const THEME_AXES = {
+  ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'      } },
+  SOCIAL:          { en: { left: 'Traditional',     right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'      } },
+  IMMIGRATION:     { en: { left: 'Restrictive',     right: 'Open'           }, fr: { left: 'Restrictive',    right: 'Ouverte'           } },
+  SECURITY:        { en: { left: 'State security',  right: 'Civil liberties'}, fr: { left: 'Sécurité d\'État', right: 'Libertés civiles'} },
+  ENVIRONMENT:     { en: { left: 'Growth first',    right: 'Ecology first'  }, fr: { left: 'Croissance',     right: 'Écologie'          } },
+  DEMOCRACY:       { en: { left: 'Strong state',    right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'      } },
+  GLOBAL:          { en: { left: 'Sovereignty',     right: 'Multilateralism'}, fr: { left: 'Souveraineté',   right: 'Multilatéralisme'  } },
+  PUBLIC_SERVICES: { en: { left: 'Private sector',  right: 'Public services'}, fr: { left: 'Secteur privé',  right: 'Services publics'  } },
+};
+
+/** Short word describing alignment closeness. */
+function alignmentWord(score, language) {
+  if (score >= 75) return language === 'fr' ? 'Très proche' : 'Very close';
+  if (score >= 55) return language === 'fr' ? 'Proche' : 'Close';
+  if (score >= 35) return language === 'fr' ? 'Modéré' : 'Moderate';
+  return language === 'fr' ? 'Éloigné' : 'Distant';
+}
 import { ideologicalCurrents } from '../data/ideologicalCurrents.js';
 import { generateProfileSummary } from '../engine/profileSummary.js';
 import { refinementThemes } from '../data/refinementThemes.js';
@@ -541,40 +561,33 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Theme scores list */}
+        {/* Theme positions */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7">
-          <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-5">{t('profile_themes_title')}</h2>
-          <div className="space-y-4">
+          <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-6">
+            {language === 'fr' ? 'Vos positions' : 'Your positions'}
+          </h2>
+          <div>
             {THEMES_ORDER.map((theme, idx) => {
-              const score = themes[theme] ?? 50;
-              const label = THEME_LABELS[language]?.[theme] ?? theme;
-              const color = THEME_COLORS[theme] ?? '#6b7280';
+              const score  = themes[theme] ?? 50;
+              const label  = THEME_LABELS[language]?.[theme] ?? theme;
+              const color  = THEME_COLORS[theme] ?? '#6b7280';
+              const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
               return (
                 <motion.div
                   key={theme}
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.35 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.4, delay: 0.3 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
-                  <div className="flex justify-between items-center mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                      <span className="text-sm font-medium text-gray-700">{label}</span>
-                      {themeWeights?.[theme] != null && (
-                        <span className="text-xs text-gray-400 tabular-nums">{themeWeights[theme]}%</span>
-                      )}
-                    </div>
-                    <span className="text-sm font-bold text-gray-800 tabular-nums">{score}</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: color }}
-                      initial={{ width: '0%' }}
-                      animate={{ width: `${score}%` }}
-                      transition={{ duration: 0.9, delay: 0.4 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    />
-                  </div>
+                  <AxisBar
+                    label={label}
+                    score={score}
+                    leftLabel={poles.left}
+                    rightLabel={poles.right}
+                    color={color}
+                    language={language}
+                    delay={0.32 + idx * 0.06}
+                  />
                 </motion.div>
               );
             })}
@@ -601,6 +614,8 @@ export default function Profile() {
                 score={axes[axisKey] ?? 50}
                 leftLabel={axisInfo.left}
                 rightLabel={axisInfo.right}
+                language={language}
+                delay={0.1 + axisKeys.indexOf(axisKey) * 0.08}
               />
             );
           })}
@@ -639,40 +654,60 @@ export default function Profile() {
                     <div className="flex items-start gap-3">
                       <span className="text-xl mt-0.5 flex-shrink-0">{current.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <div className="flex items-center gap-2">
-                            {idx === 0 && (
-                              <span
-                                className="text-xs font-semibold px-2 py-0.5 rounded-full text-white"
-                                style={{ backgroundColor: current.color }}
-                              >
-                                {t('currents_top_match')}
-                              </span>
-                            )}
-                            <h3 className="font-semibold text-gray-900 text-sm">
-                              {current.name[language]}
-                            </h3>
-                          </div>
-                          <motion.span
-                            className={`text-lg font-bold tabular-nums flex-shrink-0 ${textColor}`}
-                            initial={{ opacity: 0, scale: 0.7 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5, delay: 0.7 + idx * 0.12, ease: [0.34, 1.2, 0.64, 1] }}
-                          >
-                            {current.alignment}%
-                          </motion.span>
+                        <div className="flex items-center gap-2 mb-1">
+                          {idx === 0 && (
+                            <span
+                              className="text-xs font-semibold px-2 py-0.5 rounded-full text-white flex-shrink-0"
+                              style={{ backgroundColor: current.color }}
+                            >
+                              {t('currents_top_match')}
+                            </span>
+                          )}
+                          <h3 className="font-semibold text-gray-900 text-sm">
+                            {current.name[language]}
+                          </h3>
                         </div>
-                        <p className="text-xs text-gray-500 leading-relaxed mb-2">
+                        <p className="text-xs text-gray-500 leading-relaxed mb-3">
                           {current.shortDesc[language]}
                         </p>
-                        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-3">
-                          <motion.div
-                            className="h-full rounded-full"
-                            style={{ backgroundColor: barColor }}
-                            initial={{ width: '0%' }}
-                            animate={{ width: `${current.alignment}%` }}
-                            transition={{ duration: 1.0, delay: 0.65 + idx * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
-                          />
+
+                        {/* Proximity axis — ideology dot slides toward user dot */}
+                        <div className="mb-1">
+                          <div className="relative h-2 bg-gray-100 rounded-full">
+                            {/* Fill between ideology dot and user dot */}
+                            <div
+                              className="absolute top-0 h-full rounded-full"
+                              style={{ left: `${current.alignment}%`, right: '4px', backgroundColor: barColor, opacity: 0.2 }}
+                            />
+                            {/* Ideology dot (animated) */}
+                            <motion.div
+                              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 shadow"
+                              style={{ borderColor: barColor }}
+                              initial={{ left: '0%' }}
+                              animate={{ left: `calc(${current.alignment}% - 7px)` }}
+                              transition={{ duration: 1.1, delay: 0.65 + idx * 0.12, ease: [0.34, 1.15, 0.64, 1] }}
+                            />
+                            {/* User dot — fixed at far right */}
+                            <div
+                              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 bg-gray-800 border-gray-800 shadow"
+                              style={{ right: '-2px' }}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center mt-1.5">
+                            <motion.span
+                              className="text-xs font-semibold"
+                              style={{ color: barColor }}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.9 + idx * 0.12 }}
+                            >
+                              {alignmentWord(current.alignment, language)}
+                            </motion.span>
+                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-gray-800 inline-block" />
+                              {language === 'fr' ? 'Vous' : 'You'}
+                            </span>
+                          </div>
                         </div>
                         {idx === 0 && current.keyBeliefs?.[language] && (
                           <div>
@@ -727,15 +762,15 @@ export default function Profile() {
                           >
                             <div className="flex items-center gap-2 mb-2.5">
                               <span className="text-base">{current.icon}</span>
-                              <span className="font-medium text-gray-900 text-sm">{current.name[language]}</span>
-                              <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
-                                {current.alignment}%
+                              <span className="font-medium text-gray-900 text-sm flex-1 min-w-0 truncate">{current.name[language]}</span>
+                              <span className="text-xs font-semibold flex-shrink-0" style={{ color: barColor }}>
+                                {alignmentWord(current.alignment, language)}
                               </span>
                             </div>
-                            <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="relative h-1.5 bg-gray-100 rounded-full overflow-hidden">
                               <motion.div
-                                className="h-full rounded-full"
-                                style={{ backgroundColor: barColor }}
+                                className="absolute top-0 left-0 h-full rounded-full"
+                                style={{ backgroundColor: barColor, opacity: 0.7 }}
                                 initial={{ width: '0%' }}
                                 animate={{ width: `${current.alignment}%` }}
                                 transition={{ duration: 0.7, delay: idx * 0.05 }}
