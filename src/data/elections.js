@@ -17,7 +17,7 @@
 export const elections = [
   {
     id: `fr_2022`,
-    image: `/images/elections/fr_2022.svg`,
+    image: `https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=1200&q=80`,
     title: {
       en: `French Presidential Election 2022`,
       fr: `Présidentielle française 2022`,
@@ -502,7 +502,7 @@ export const elections = [
 
   {
     id: `us_2020`,
-    image: `/images/elections/us_2020.svg`,
+    image: `https://images.unsplash.com/photo-1501854401050-3be78c9f85ea?auto=format&fit=crop&w=1200&q=80`,
     title: {
       en: `US Presidential Election 2020`,
       fr: `Présidentielle américaine 2020`,
@@ -835,7 +835,7 @@ export const elections = [
   // ── fr_2027 ─────────────────────────────────────────────────────────────
   {
     id: `fr_2027`,
-    image: `/images/elections/fr_2027.svg`,
+    image: `https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `French Presidential Election 2027`, fr: `Présidentielle française 2027` },
     country: `France`,
     flag: `🇫🇷`,
@@ -1064,7 +1064,7 @@ export const elections = [
   // ── paris_2026 ───────────────────────────────────────────────────────────
   {
     id: `paris_2026`,
-    image: `/images/elections/paris_2026.svg`,
+    image: `https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `Paris Municipal Election 2026`, fr: `Municipales Paris 2026` },
     country: `France`,
     flag: `🇫🇷`,
@@ -1190,7 +1190,7 @@ export const elections = [
   // ── stras_2026 ───────────────────────────────────────────────────────────
   {
     id: `stras_2026`,
-    image: `/images/elections/stras_2026.svg`,
+    image: `https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `Strasbourg Municipal Election 2026`, fr: `Municipales Strasbourg 2026` },
     country: `France`,
     flag: `🇫🇷`,
@@ -1319,7 +1319,7 @@ export const elections = [
   // ── eu_2024 ──────────────────────────────────────────────────────────────
   {
     id: `eu_2024`,
-    image: `/images/elections/eu_2024.svg`,
+    image: `https://images.unsplash.com/photo-1567781242377-eef5cfe0cb68?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `European Parliament Election 2024`, fr: `Élections européennes 2024` },
     country: `European Union`,
     flag: `🇪🇺`,
@@ -1489,7 +1489,7 @@ export const elections = [
   // ── de_2025 ──────────────────────────────────────────────────────────────
   {
     id: `de_2025`,
-    image: `/images/elections/de_2025.svg`,
+    image: `https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `German Federal Election 2025`, fr: `Élections fédérales allemandes 2025` },
     country: `Germany`,
     flag: `🇩🇪`,
@@ -1659,7 +1659,7 @@ export const elections = [
   // ── it_2022 ──────────────────────────────────────────────────────────────
   {
     id: `it_2022`,
-    image: `/images/elections/it_2022.svg`,
+    image: `https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `Italian General Election 2022`, fr: `Élections législatives italiennes 2022` },
     country: `Italy`,
     flag: `🇮🇹`,
@@ -1805,7 +1805,7 @@ export const elections = [
   // ── es_2023 ──────────────────────────────────────────────────────────────
   {
     id: `es_2023`,
-    image: `/images/elections/es_2023.svg`,
+    image: `https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `Spanish General Election 2023`, fr: `Élections législatives espagnoles 2023` },
     country: `Spain`,
     flag: `🇪🇸`,
@@ -1941,7 +1941,7 @@ export const elections = [
   // ── uk_2024 ──────────────────────────────────────────────────────────────
   {
     id: `uk_2024`,
-    image: `/images/elections/uk_2024.svg`,
+    image: `https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=80`,
     title: { en: `UK General Election 2024`, fr: `Élections législatives britanniques 2024` },
     country: `United Kingdom`,
     flag: `🇬🇧`,
