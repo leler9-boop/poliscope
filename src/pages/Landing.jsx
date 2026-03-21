@@ -107,12 +107,12 @@ export default function Landing() {
             {language === 'fr' ? (
               <>
                 Comprenez vos<br />
-                <span className="text-gray-300">convictions politiques.</span>
+                <span className="text-gray-500">convictions politiques.</span>
               </>
             ) : (
               <>
                 Know where<br />
-                <span className="text-gray-300">you stand.</span>
+                <span className="text-gray-500">you stand.</span>
               </>
             )}
           </motion.h1>

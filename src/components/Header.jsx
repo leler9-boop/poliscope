@@ -24,7 +24,7 @@ export default function Header() {
   ];
 
   const infoItems = [
-    { key: 'beginner',     label: t('nav_beginner'),     page: 'beginner' },
+    { key: 'beginner',     label: t('nav_beginner'),     page: 'beginner',     highlight: true },
     { key: 'mission',      label: t('nav_mission'),      page: 'mission' },
     { key: 'transparency', label: t('nav_transparency'), page: 'transparency' },
   ];
@@ -82,15 +82,17 @@ export default function Header() {
                 <button
                   key={item.key}
                   onClick={() => navigate(item.page)}
-                  className={`relative px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`relative px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
                     currentPage === item.page
-                      ? 'text-gray-900'
+                      ? item.highlight ? 'text-amber-700' : 'text-gray-900'
+                      : item.highlight
+                      ? 'text-amber-600 hover:text-amber-800'
                       : 'text-gray-400 hover:text-gray-700'
                   }`}
                 >
                   {item.label}
                   {currentPage === item.page && (
-                    <span className="absolute bottom-0 left-3 right-3 h-px bg-gray-900" />
+                    <span className={`absolute bottom-0 left-3 right-3 h-px ${item.highlight ? 'bg-amber-600' : 'bg-gray-900'}`} />
                   )}
                 </button>
               ))}
@@ -164,7 +166,9 @@ export default function Header() {
                 onClick={() => navigate(item.page)}
                 className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
                   currentPage === item.page
-                    ? 'text-gray-900 bg-gray-100'
+                    ? item.highlight ? 'text-amber-700 bg-amber-50' : 'text-gray-900 bg-gray-100'
+                    : item.highlight
+                    ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50'
                     : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >

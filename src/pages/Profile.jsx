@@ -671,42 +671,27 @@ export default function Profile() {
                           {current.shortDesc[language]}
                         </p>
 
-                        {/* Proximity axis — ideology dot slides toward user dot */}
+                        {/* Match bar */}
                         <div className="mb-1">
-                          <div className="relative h-2 bg-gray-100 rounded-full">
-                            {/* Fill between ideology dot and user dot */}
-                            <div
-                              className="absolute top-0 h-full rounded-full"
-                              style={{ left: `${current.alignment}%`, right: '4px', backgroundColor: barColor, opacity: 0.2 }}
-                            />
-                            {/* Ideology dot (animated) */}
-                            <motion.div
-                              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 shadow"
-                              style={{ borderColor: barColor }}
-                              initial={{ left: '0%' }}
-                              animate={{ left: `calc(${current.alignment}% - 7px)` }}
-                              transition={{ duration: 1.1, delay: 0.65 + idx * 0.12, ease: [0.34, 1.15, 0.64, 1] }}
-                            />
-                            {/* User dot — fixed at far right */}
-                            <div
-                              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 bg-gray-800 border-gray-800 shadow"
-                              style={{ right: '-2px' }}
-                            />
-                          </div>
-                          <div className="flex justify-between items-center mt-1.5">
+                          <div className="flex items-center justify-between mb-1.5">
                             <motion.span
                               className="text-xs font-semibold"
                               style={{ color: barColor }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 0.9 + idx * 0.12 }}
+                              transition={{ delay: 0.65 + idx * 0.12 }}
                             >
-                              {alignmentWord(current.alignment, language)}
+                              {alignmentWord(current.alignment, language)} ({current.alignment}%)
                             </motion.span>
-                            <span className="text-xs text-gray-400 flex items-center gap-1">
-                              <span className="w-2 h-2 rounded-full bg-gray-800 inline-block" />
-                              {language === 'fr' ? 'Vous' : 'You'}
-                            </span>
+                          </div>
+                          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full rounded-full"
+                              style={{ backgroundColor: barColor }}
+                              initial={{ width: 0 }}
+                              animate={{ width: `${current.alignment}%` }}
+                              transition={{ duration: 0.85, delay: 0.65 + idx * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            />
                           </div>
                         </div>
                         {idx === 0 && current.keyBeliefs?.[language] && (

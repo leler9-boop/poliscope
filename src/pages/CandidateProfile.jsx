@@ -47,74 +47,69 @@ function diffSentence(diff, themeLabel, candidateName, language) {
   return `You and ${name} hold opposing views on ${themeLabel.toLowerCase()}.`;
 }
 
-/** Single-theme axis — candidate dot (colored) + optional user dot (dark) */
+/** Single bar row: label | ████░░░ | score */
+function ThemeBarRow({ label, score, color, delay = 0 }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="w-16 flex-shrink-0 text-xs text-gray-500 text-right truncate">{label}</span>
+      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+        <motion.div
+          className="h-full rounded-full"
+          style={{ backgroundColor: color }}
+          initial={{ width: 0 }}
+          animate={{ width: `${score}%` }}
+          transition={{ duration: 0.85, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+        />
+      </div>
+      <span className="w-7 flex-shrink-0 text-right text-xs font-semibold tabular-nums text-gray-500">{score}</span>
+    </div>
+  );
+}
+
+/** User vs candidate — two aligned bars on the same scale */
 function ThemeAxis({ score, userScore, color, leftLabel, rightLabel, diff, themeLabel, candidateName, language, delay = 0 }) {
-  const hasUser = userScore != null;
+  const hasUser  = userScore != null;
+  const shortName = candidateName.split(' ').pop();
+  const youLabel  = language === 'fr' ? 'Vous' : 'You';
 
   return (
-    <div className="mb-6 last:mb-0">
-      {/* Track */}
-      <div className="relative h-2 bg-gray-100 rounded-full">
-        {/* Center tick */}
-        <div className="absolute top-1/2 -translate-y-1/2 w-px h-4 bg-gray-200" style={{ left: '50%' }} />
+    <div className="space-y-2">
+      {/* Row 1 — user */}
+      {hasUser && (
+        <ThemeBarRow label={youLabel} score={Math.round(userScore)} color="#1f2937" delay={delay} />
+      )}
+      {/* Row 2 — candidate */}
+      <ThemeBarRow label={shortName} score={Math.round(score)} color={color} delay={delay + (hasUser ? 0.1 : 0)} />
 
-        {/* Candidate dot */}
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-[2.5px] shadow-md z-10"
-          style={{ borderColor: color }}
-          initial={{ left: 'calc(50% - 8px)' }}
-          animate={{ left: `calc(${score}% - 8px)` }}
-          transition={{ duration: 1.1, delay, ease: [0.34, 1.15, 0.64, 1] }}
-        />
-
-        {/* User dot (if available) */}
-        {hasUser && (
-          <motion.div
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gray-800 border-2 border-gray-800 shadow-md z-20"
-            initial={{ left: 'calc(50% - 8px)' }}
-            animate={{ left: `calc(${userScore}% - 8px)` }}
-            transition={{ duration: 1.1, delay: delay + 0.1, ease: [0.34, 1.15, 0.64, 1] }}
-          />
-        )}
+      {/* Pole labels aligned with bars */}
+      <div className="flex items-center gap-3">
+        <div className="w-16 flex-shrink-0" />
+        <div className="flex-1 flex justify-between">
+          <span className="text-[10px] text-gray-300">{leftLabel}</span>
+          <span className="text-[10px] text-gray-300">{rightLabel}</span>
+        </div>
+        <div className="w-7 flex-shrink-0" />
       </div>
 
-      {/* Pole labels */}
-      <div className="flex justify-between mt-1.5 mb-1">
-        <span className="text-xs text-gray-400">{leftLabel}</span>
-        <span className="text-xs text-gray-400">{rightLabel}</span>
-      </div>
-
-      {/* Legend + diff label */}
-      <div className="flex items-center justify-between">
-        {hasUser ? (
-          <div className="flex items-center gap-3 text-xs">
-            <span className="flex items-center gap-1 text-gray-500">
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-800 inline-block" />
-              {language === 'fr' ? 'Vous' : 'You'}
-            </span>
-            <span className="flex items-center gap-1" style={{ color }}>
-              <span className="w-2.5 h-2.5 rounded-full border-[2px] inline-block bg-white" style={{ borderColor: color }} />
-              {candidateName.split(' ').pop()}
-            </span>
-          </div>
-        ) : <div />}
-        {hasUser && diff != null && (
-          <span className="text-xs font-semibold" style={{ color: diffColor(diff) }}>
-            {diffLabel(diff, language)}
-          </span>
-        )}
-      </div>
-
-      {/* Interpretation sentence */}
+      {/* Diff label + interpretation */}
       {hasUser && diff != null && (
-        <motion.p
-          className="text-xs text-gray-500 mt-1 leading-relaxed"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: delay + 0.7 }}
-        >
-          {diffSentence(diff, themeLabel, candidateName, language)}
-        </motion.p>
+        <div className="flex items-start gap-3">
+          <div className="w-16 flex-shrink-0" />
+          <div className="flex-1 pb-1">
+            <span className="text-xs font-semibold" style={{ color: diffColor(diff) }}>
+              {diffLabel(diff, language)}
+            </span>
+            <motion.p
+              className="text-xs text-gray-400 leading-relaxed mt-0.5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: delay + 0.7 }}
+            >
+              {diffSentence(diff, themeLabel, candidateName, language)}
+            </motion.p>
+          </div>
+          <div className="w-7 flex-shrink-0" />
+        </div>
       )}
     </div>
   );
@@ -284,8 +279,8 @@ export default function CandidateProfile() {
         {userThemes && (
           <p className="text-xs text-gray-400 mb-5">
             {language === 'fr'
-              ? 'Comparé à votre profil (point sombre = vous).'
-              : 'Compared to your profile (dark dot = you).'}
+              ? 'Votre position (gris foncé) comparée à celle du candidat.'
+              : 'Your position (dark) compared to the candidate\'s.'}
           </p>
         )}
         <div className="bg-white border border-gray-100 rounded-2xl p-5 divide-y divide-gray-50">
@@ -298,7 +293,7 @@ export default function CandidateProfile() {
             const diff       = userScore != null ? Math.abs(score - userScore) : null;
             return (
               <div key={theme} className={idx > 0 ? 'pt-5' : ''}>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">{label}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">{label}</p>
                 <ThemeAxis
                   score={score}
                   userScore={userScore}
