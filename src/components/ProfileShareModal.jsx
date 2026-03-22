@@ -1,12 +1,25 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { rankByAlignment } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
-import RadarChart from './RadarChart.jsx';
+import { THEMES_ORDER } from '../data/questions.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Short labels for compact bar display ────────────────────────────────────
+
+const SHORT_LABELS = {
+  ECONOMY:         { fr: 'Économie',  en: 'Economy'  },
+  SOCIAL:          { fr: 'Social',    en: 'Social'   },
+  IMMIGRATION:     { fr: 'Immigr.',   en: 'Immigr.'  },
+  SECURITY:        { fr: 'Sécurité',  en: 'Security' },
+  ENVIRONMENT:     { fr: 'Environ.',  en: 'Environ.' },
+  DEMOCRACY:       { fr: 'Démocr.',   en: 'Democr.'  },
+  GLOBAL:          { fr: 'Mondial.',  en: 'Global'   },
+  PUBLIC_SERVICES: { fr: 'Services',  en: 'Services' },
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getPersonalPhrases(themes, lang) {
   const { ECONOMY, SOCIAL, IMMIGRATION, SECURITY, ENVIRONMENT, PUBLIC_SERVICES, GLOBAL, DEMOCRACY } = themes;
@@ -39,35 +52,6 @@ function getPersonalPhrases(themes, lang) {
   return [phraseEcon, phraseSocial, phraseThird].map(p => p[lang] ?? p.en);
 }
 
-function getTendencyTags(themes, lang) {
-  const { ECONOMY, SOCIAL, IMMIGRATION, SECURITY, ENVIRONMENT, PUBLIC_SERVICES, GLOBAL, DEMOCRACY } = themes;
-  const econScore   = Math.round((ECONOMY + (100 - PUBLIC_SERVICES)) / 2);
-  const socialScore = Math.round((SOCIAL  + (100 - IMMIGRATION))     / 2);
-
-  const tag1 = econScore < 43   ? { fr: 'solidarité',       en: 'solidarity'    }
-             : econScore > 57   ? { fr: 'liberté',           en: 'freedom'       }
-             :                    { fr: 'pragmatisme',        en: 'pragmatism'    };
-
-  const tag2 = socialScore < 43 ? { fr: 'stabilité',        en: 'stability'     }
-             : socialScore > 57 ? { fr: 'progressisme',      en: 'progressivism' }
-             :                    { fr: 'compromis',          en: 'compromise'    };
-
-  // Third: most deviant from 50 among remaining themes
-  const candidates = { ENVIRONMENT, SECURITY, GLOBAL, DEMOCRACY };
-  const [maxKey, maxVal] = Object.entries(candidates).reduce((a, b) =>
-    Math.abs(b[1] - 50) > Math.abs(a[1] - 50) ? b : a
-  );
-  const hi = maxVal >= 50;
-  const tag3 = {
-    ENVIRONMENT: hi ? { fr: 'écologie',      en: 'ecology'      } : { fr: 'croissance',    en: 'growth'       },
-    SECURITY:    hi ? { fr: 'sécurité',       en: 'security'     } : { fr: 'libertés',      en: 'freedoms'     },
-    GLOBAL:      hi ? { fr: 'coopération',    en: 'cooperation'  } : { fr: 'souveraineté',  en: 'sovereignty'  },
-    DEMOCRACY:   hi ? { fr: 'participation',  en: 'participation'} : { fr: 'autorité',      en: 'authority'    },
-  }[maxKey] ?? { fr: 'équilibre', en: 'balance' };
-
-  return [tag1, tag2, tag3].map(t => t[lang] ?? t.en);
-}
-
 function getSubtitle(themes, lang) {
   const { ECONOMY, SOCIAL, IMMIGRATION, PUBLIC_SERVICES } = themes;
   const econScore   = Math.round((ECONOMY + (100 - PUBLIC_SERVICES)) / 2);
@@ -76,27 +60,22 @@ function getSubtitle(themes, lang) {
   const isCenter = econScore >= 40 && econScore <= 60 && socialScore >= 40 && socialScore <= 60;
   if (isCenter) return lang === 'fr' ? 'Profil modéré et pragmatique' : 'Moderate, pragmatic profile';
 
-  const econAdj   = econScore   < 40 ? { fr: 'social',        en: 'social'        }
-                  : econScore   > 60 ? { fr: 'libéral',        en: 'liberal'       }
-                  :                    { fr: 'équilibré',       en: 'balanced'      };
+  const econAdj   = econScore   < 40 ? { fr: 'social',      en: 'social'      }
+                  : econScore   > 60 ? { fr: 'libéral',      en: 'liberal'     }
+                  :                    { fr: 'équilibré',     en: 'balanced'    };
 
-  const socialAdj = socialScore < 40 ? { fr: 'conservateur',   en: 'conservative'  }
-                  : socialScore > 60 ? { fr: 'progressiste',    en: 'progressive'   }
-                  :                    { fr: 'modéré',          en: 'moderate'      };
+  const socialAdj = socialScore < 40 ? { fr: 'conservateur', en: 'conservative' }
+                  : socialScore > 60 ? { fr: 'progressiste',  en: 'progressive'  }
+                  :                    { fr: 'modéré',        en: 'moderate'     };
 
   if (lang === 'fr') return `Profil ${socialAdj.fr} et ${econAdj.fr}`;
   const s = socialAdj.en;
   return `${s.charAt(0).toUpperCase() + s.slice(1)}, ${econAdj.en} profile`;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 
-export default function ProfileShareModal({
-  themes,
-  rankedCurrents,
-  language,
-  onClose,
-}) {
+export default function ProfileShareModal({ themes, rankedCurrents, language, onClose }) {
   const cardRef = useRef(null);
   const [copyStatus,     setCopyStatus]     = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(null);
@@ -104,7 +83,7 @@ export default function ProfileShareModal({
 
   const topCurrent  = rankedCurrents?.[0];
   const accentColor = topCurrent?.color ?? '#2563eb';
-  const lang = language === 'fr' ? 'fr' : 'en';
+  const lang        = language === 'fr' ? 'fr' : 'en';
 
   const topFigure = useMemo(() => {
     if (!themes) return null;
@@ -112,9 +91,8 @@ export default function ProfileShareModal({
     return ranked[0] ?? null;
   }, [themes]);
 
-  const phrases     = useMemo(() => themes ? getPersonalPhrases(themes, lang) : [], [themes, lang]);
-  const tags        = useMemo(() => themes ? getTendencyTags(themes, lang)    : [], [themes, lang]);
-  const subtitle    = useMemo(() => themes ? getSubtitle(themes, lang)        : '', [themes, lang]);
+  const phrases  = useMemo(() => themes ? getPersonalPhrases(themes, lang) : [], [themes, lang]);
+  const subtitle = useMemo(() => themes ? getSubtitle(themes, lang)        : '', [themes, lang]);
 
   const shareText = lang === 'fr'
     ? `Je viens de cartographier mon profil politique sur Poliscope. Curieux(se) de savoir où tu te situes ? Essaie ici → https://poliscope.app`
@@ -126,14 +104,12 @@ export default function ProfileShareModal({
     try {
       await navigator.share({
         title: lang === 'fr' ? 'Mon profil politique – Poliscope' : 'My political profile – Poliscope',
-        text: shareText,
-        url: 'https://poliscope.app',
+        text:  shareText,
+        url:   'https://poliscope.app',
       });
       setShareStatus('done');
       setTimeout(() => setShareStatus(null), 2500);
-    } catch {
-      setShareStatus(null);
-    }
+    } catch { setShareStatus(null); }
   };
 
   const handleCopyLink = async () => {
@@ -164,11 +140,62 @@ export default function ProfileShareModal({
     }
   };
 
-  const fadeUp = (delay = 0) => ({
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.4, delay, ease: [0.25, 0.46, 0.45, 0.94] },
-  });
+  // ── Card styles (all inline — required for html-to-image) ──────────────────
+
+  const card = {
+    root: {
+      background: '#0f172a',
+      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+      borderRadius: 20,
+      overflow: 'hidden',
+      width: '100%',
+    },
+    accent: { height: 3, background: accentColor },
+    inner: { padding: '20px 22px 18px' },
+
+    // Header
+    brandRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    brandName: { fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' },
+    brandSub:  { fontSize: 10, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.06em' },
+
+    // Ideology block
+    isoLabel: { fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em', marginBottom: 6 },
+    isoRow:   { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 },
+    isoName:  { fontSize: 22, fontWeight: 800, color: accentColor, letterSpacing: '-0.02em', lineHeight: 1.1, flex: 1, minWidth: 0 },
+    isoScore: { fontSize: 28, fontWeight: 800, color: accentColor, letterSpacing: '-0.03em', flexShrink: 0, lineHeight: 1 },
+    isoSub:   { fontSize: 11, color: 'rgba(255,255,255,0.32)', fontStyle: 'italic', letterSpacing: '0.01em', marginBottom: 18 },
+
+    divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', margin: '14px 0' },
+
+    // Theme bars
+    barsLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 },
+    barRow:    { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 },
+    barLabel:  { width: 54, flexShrink: 0, fontSize: 9, color: 'rgba(255,255,255,0.38)', textAlign: 'right', overflow: 'hidden', whiteSpace: 'nowrap' },
+    barTrack:  { flex: 1, height: 4, backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: 2, overflow: 'hidden' },
+    barValue:  { width: 20, flexShrink: 0, fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.38)', textAlign: 'right' },
+
+    // Phrases
+    phraseLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 },
+    phraseRow:   { display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 7 },
+    phraseDash:  { color: accentColor, fontSize: 12, lineHeight: 1.5, flexShrink: 0 },
+    phraseText:  { fontSize: 11, color: 'rgba(255,255,255,0.68)', lineHeight: 1.5, margin: 0 },
+
+    // Figure row
+    figureRow: {
+      display: 'flex', alignItems: 'center', gap: 9,
+      backgroundColor: 'rgba(255,255,255,0.04)',
+      border: '1px solid rgba(255,255,255,0.07)',
+      borderRadius: 10, padding: '8px 11px', marginTop: 14,
+    },
+    figureEmoji:  { fontSize: 18, lineHeight: 1, flexShrink: 0 },
+    figureText:   { flex: 1, fontSize: 11, color: 'rgba(255,255,255,0.5)', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
+    figureScore:  { fontSize: 13, fontWeight: 800, color: accentColor, flexShrink: 0 },
+
+    // Footer
+    footer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 14 },
+    footerCta:  { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.01em' },
+    footerUrl:  { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+  };
 
   return (
     <motion.div
@@ -189,146 +216,79 @@ export default function ProfileShareModal({
         onClick={e => e.stopPropagation()}
       >
 
-        {/* ── Shareable card ── */}
-        <div
-          ref={cardRef}
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(145deg, #0f172a 0%, #1a2540 55%, #0f172a 100%)',
-            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-          }}
-        >
-          {/* Accent top bar */}
-          <div style={{ height: 4, background: `linear-gradient(90deg, ${accentColor}, ${accentColor}88)` }} />
+        {/* ── Share card ── */}
+        <div ref={cardRef} style={card.root}>
+          <div style={card.accent} />
 
-          <div style={{ padding: '22px 24px 20px' }}>
+          <div style={card.inner}>
 
             {/* Brand row */}
-            <motion.div
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}
-              {...fadeUp(0.04)}
-            >
-              <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' }}>
-                POLISCOPE
-              </span>
-              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.05em' }}>
-                {lang === 'fr' ? 'profil politique' : 'political profile'}
-              </span>
-            </motion.div>
+            <div style={card.brandRow}>
+              <span style={card.brandName}>POLISCOPE</span>
+              <span style={card.brandSub}>{lang === 'fr' ? 'profil politique' : 'political profile'}</span>
+            </div>
 
-            {/* "Je suis plutôt" + current name */}
-            <motion.div {...fadeUp(0.1)}>
-              <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.38)', marginBottom: 4, letterSpacing: '0.02em' }}>
-                {lang === 'fr' ? 'Je suis plutôt' : 'I am rather'}
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                {topCurrent?.icon && (
-                  <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{topCurrent.icon}</span>
-                )}
-                <h2 style={{
-                  fontSize: 26,
-                  fontWeight: 800,
-                  margin: 0,
-                  color: accentColor,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.1,
-                }}>
-                  {topCurrent?.name[language]}
-                </h2>
-              </div>
-              {/* Subtitle */}
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 18, fontStyle: 'italic', letterSpacing: '0.01em' }}>
-                {subtitle}
-              </p>
-            </motion.div>
+            {/* Ideology block */}
+            <p style={card.isoLabel}>{lang === 'fr' ? 'Je suis plutôt' : 'I am rather'}</p>
+            <div style={card.isoRow}>
+              <span style={card.isoName} title={topCurrent?.name[language]}>
+                {topCurrent?.icon && <span style={{ marginRight: 6 }}>{topCurrent.icon}</span>}
+                {topCurrent?.name[language]}
+              </span>
+              <span style={card.isoScore}>{topCurrent?.alignment ?? '—'}%</span>
+            </div>
+            <p style={card.isoSub}>{subtitle}</p>
 
-            {/* Divider */}
-            <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.06)', marginBottom: 16 }} />
+            {/* Theme bars */}
+            <div style={card.divider} />
+            <p style={card.barsLabel}>{lang === 'fr' ? 'Par thème' : 'By theme'}</p>
+            <div>
+              {THEMES_ORDER.map(theme => {
+                const score = Math.round(themes?.[theme] ?? 50);
+                const label = SHORT_LABELS[theme]?.[lang] ?? theme;
+                return (
+                  <div key={theme} style={card.barRow}>
+                    <span style={card.barLabel}>{label}</span>
+                    <div style={card.barTrack}>
+                      <div style={{ width: `${score}%`, height: '100%', backgroundColor: accentColor, borderRadius: 2, opacity: 0.85 }} />
+                    </div>
+                    <span style={card.barValue}>{score}</span>
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Personal phrases */}
-            <motion.div style={{ marginBottom: 18 }} {...fadeUp(0.18)}>
+            <div style={card.divider} />
+            <p style={card.phraseLabel}>{lang === 'fr' ? 'En quelques mots' : 'In a few words'}</p>
+            <div>
               {phrases.map((phrase, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: i < phrases.length - 1 ? 8 : 0 }}>
-                  <span style={{ color: accentColor, fontSize: 13, lineHeight: 1.45, flexShrink: 0, marginTop: 1 }}>—</span>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.45, margin: 0 }}>
-                    {phrase}
-                  </p>
+                <div key={i} style={{ ...card.phraseRow, marginBottom: i < phrases.length - 1 ? 7 : 0 }}>
+                  <span style={card.phraseDash}>—</span>
+                  <p style={card.phraseText}>{phrase}</p>
                 </div>
               ))}
-            </motion.div>
-
-            {/* Divider */}
-            <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.06)', marginBottom: 16 }} />
-
-            {/* Radar + tendency tags */}
-            <motion.div
-              style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}
-              {...fadeUp(0.26)}
-            >
-              <div style={{ flexShrink: 0 }}>
-                <RadarChart themes={themes} language={language} size={110} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
-                  {lang === 'fr' ? 'Mes tendances' : 'My tendencies'}
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {tags.map((tag, i) => (
-                    <div key={i} style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 6,
-                      backgroundColor: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: 20,
-                      padding: '4px 10px',
-                      width: 'fit-content',
-                    }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: accentColor, opacity: 0.75, flexShrink: 0 }} />
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>{tag}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            </div>
 
             {/* Closest historical figure */}
             {topFigure && (
-              <motion.div
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  backgroundColor: 'rgba(255,255,255,0.05)',
-                  borderRadius: 10, padding: '9px 12px',
-                  marginBottom: 18,
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-                {...fadeUp(0.34)}
-              >
-                <span style={{ fontSize: 20, lineHeight: 1, flexShrink: 0 }}>{topFigure.emoji ?? '👤'}</span>
-                <p style={{ flex: 1, fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.65)', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                  {lang === 'fr' ? `Profil proche de ` : `Profile close to `}
-                  <span style={{ color: 'white', fontWeight: 700 }}>{topFigure.name}</span>
+              <div style={card.figureRow}>
+                <span style={card.figureEmoji}>{topFigure.emoji ?? '👤'}</span>
+                <p style={card.figureText}>
+                  <span style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    {lang === 'fr' ? 'Proche de ' : 'Close to '}
+                  </span>
+                  <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>{topFigure.name}</span>
                 </p>
-                <span style={{ fontSize: 15, fontWeight: 800, color: accentColor, flexShrink: 0 }}>
-                  {topFigure.alignment}%
-                </span>
-              </motion.div>
+                <span style={card.figureScore}>{topFigure.alignment}%</span>
+              </div>
             )}
 
-            {/* Footer CTA */}
-            <motion.div
-              style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                paddingTop: 14,
-                borderTop: '1px solid rgba(255,255,255,0.07)',
-              }}
-              {...fadeUp(0.4)}
-            >
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.02em' }}>
-                {lang === 'fr' ? 'Et toi ?' : 'What about you?'}
-              </span>
-              <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                poliscope.app
-              </span>
-            </motion.div>
+            {/* Footer */}
+            <div style={card.footer}>
+              <span style={card.footerCta}>{lang === 'fr' ? 'Et toi ?' : 'What about you?'}</span>
+              <span style={card.footerUrl}>poliscope.app</span>
+            </div>
 
           </div>
         </div>
@@ -340,8 +300,7 @@ export default function ProfileShareModal({
             <motion.button
               onClick={handleNativeShare}
               className="w-full flex items-center justify-center gap-2 bg-white text-gray-900 font-semibold py-3.5 rounded-2xl text-sm"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.15 }}
             >
               {shareStatus === 'done' ? '✓' : '↗'}
@@ -353,8 +312,7 @@ export default function ProfileShareModal({
             <motion.button
               onClick={handleCopyLink}
               className="w-full flex items-center justify-center gap-2 bg-white text-gray-900 font-semibold py-3.5 rounded-2xl text-sm"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.15 }}
             >
               {copyStatus === 'copied' ? '✓' : '🔗'}
@@ -370,17 +328,15 @@ export default function ProfileShareModal({
               className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl text-sm border"
               style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.12)', color: 'white' }}
               whileHover={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.15 }}
+              whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}
             >
               {downloadStatus === 'loading' ? <span className="opacity-60 text-xs">…</span>
                : downloadStatus === 'done'  ? '✓'
-               : downloadStatus === 'error' ? '✗'
-               : '↓'}
-              {downloadStatus === 'loading' ? (lang === 'fr' ? 'Export…'        : 'Exporting…')
-               : downloadStatus === 'done'  ? (lang === 'fr' ? 'Téléchargé !'  : 'Downloaded!')
-               : downloadStatus === 'error' ? (lang === 'fr' ? 'Erreur'        : 'Error')
-               :                              (lang === 'fr' ? 'Image'         : 'Save image')}
+               : downloadStatus === 'error' ? '✗' : '↓'}
+              {downloadStatus === 'loading' ? (lang === 'fr' ? 'Export…'       : 'Exporting…')
+               : downloadStatus === 'done'  ? (lang === 'fr' ? 'Téléchargé !' : 'Downloaded!')
+               : downloadStatus === 'error' ? (lang === 'fr' ? 'Erreur'       : 'Error')
+               :                              (lang === 'fr' ? 'Image'        : 'Save image')}
             </motion.button>
 
             {canNativeShare && (
@@ -389,12 +345,11 @@ export default function ProfileShareModal({
                 className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl text-sm border"
                 style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.12)', color: 'white' }}
                 whileHover={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.15 }}
+                whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}
               >
                 {copyStatus === 'copied' ? '✓' : '🔗'}
                 {copyStatus === 'copied'
-                  ? (lang === 'fr' ? 'Copié !'       : 'Copied!')
+                  ? (lang === 'fr' ? 'Copié !'        : 'Copied!')
                   : (lang === 'fr' ? 'Copier le lien' : 'Copy link')}
               </motion.button>
             )}

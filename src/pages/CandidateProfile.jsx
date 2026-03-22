@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
@@ -162,7 +163,17 @@ export default function CandidateProfile() {
   const profileAdjustments  = useStore(s => s.profileAdjustments);
   const t = createTranslator(language);
 
-  const found = findCandidate(selectedCandidateId);
+  // Support direct URL access (/candidates/:id)
+  const { id: paramId } = useParams();
+  const candidateId = paramId ?? selectedCandidateId;
+
+  useEffect(() => {
+    if (paramId && paramId !== selectedCandidateId) {
+      useStore.setState({ selectedCandidateId: paramId, currentPage: 'candidateProfile' });
+    }
+  }, [paramId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const found = findCandidate(candidateId);
 
   if (!found) {
     navigate('elections');

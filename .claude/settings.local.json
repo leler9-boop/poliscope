@@ -22,7 +22,11 @@
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node -e \"\nconst { buildSync } = require\\('esbuild'\\);\ntry {\n  buildSync\\({ entryPoints: ['src/App.jsx'], bundle: false, write: false, jsx: 'transform', loader: { '.jsx': 'jsx' } }\\);\n  console.log\\('App.jsx OK'\\);\n} catch\\(e\\) { console.error\\('ERROR:', e.message.slice\\(0,300\\)\\); }\n\")",
       "WebSearch",
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -5)",
-      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -4)"
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -4)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | grep -E \"error|warning|built in|ElectionDetail\")",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm install react-router-dom 2>&1 | tail -5)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | grep -E \"error|Error|built in|ElectionDetail|CandidateProfile|CandidateCompare\")",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | grep -E \"error|Error|built in|ProfileShare\")"
     ]
   }
 }

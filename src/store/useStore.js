@@ -5,6 +5,7 @@ import { calculateProfile } from '../engine/scorer.js';
 import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
+import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 
 /**
  * Pick the next question for improve mode.
@@ -70,7 +71,16 @@ export const useStore = create(
 
       // ── Actions ──
       setLanguage: (lang) => set({ language: lang }),
-      navigate: (page) => set({ currentPage: page }),
+
+      navigate: (page) => {
+        set({ currentPage: page });
+        const { selectedElectionId, selectedCandidateId, compareIds } = get();
+        let path = PAGE_TO_PATH[page];
+        if (page === 'electionDetail')   path = `/elections/${selectedElectionId}`;
+        if (page === 'candidateProfile') path = `/candidates/${selectedCandidateId}`;
+        if (page === 'compareView')      path = `/compare/${compareIds[0]}/${compareIds[1]}`;
+        if (path) routerNavigate(path);
+      },
 
       startTest: (mode) => {
         const { priorityOrder } = get();
@@ -81,6 +91,7 @@ export const useStore = create(
           currentQuestionIndex: 0,
           currentPage: 'questionnaire',
         });
+        routerNavigate('/quiz');
       },
 
       startRefinement: (extraCount) => {
@@ -92,6 +103,7 @@ export const useStore = create(
           currentQuestionIndex: 0,
           currentPage: 'questionnaire',
         });
+        routerNavigate('/quiz');
       },
 
       startImproveMode: () => {
@@ -103,10 +115,12 @@ export const useStore = create(
           currentQuestionIndex: 0,
           currentPage: 'questionnaire',
         });
+        routerNavigate('/quiz');
       },
 
       stopImproveMode: () => {
         set({ improveMode: false, currentPage: 'profile' });
+        routerNavigate('/profile');
       },
 
       nextImproveQuestion: () => {
@@ -146,10 +160,20 @@ export const useStore = create(
 
       setThemeWeights: (weights) => set({ themeWeights: weights }),
 
-      selectElection: (id) => set({ selectedElectionId: id, currentPage: 'electionDetail' }),
+      selectElection: (id) => {
+        set({ selectedElectionId: id, currentPage: 'electionDetail' });
+        routerNavigate(`/elections/${id}`);
+      },
 
-      selectCandidate: (id) => set({ selectedCandidateId: id, currentPage: 'candidateProfile' }),
-      startCompare: (id1, id2) => set({ compareIds: [id1, id2], currentPage: 'compareView' }),
+      selectCandidate: (id) => {
+        set({ selectedCandidateId: id, currentPage: 'candidateProfile' });
+        routerNavigate(`/candidates/${id}`);
+      },
+
+      startCompare: (id1, id2) => {
+        set({ compareIds: [id1, id2], currentPage: 'compareView' });
+        routerNavigate(`/compare/${id1}/${id2}`);
+      },
 
       answerElectionQuestion: (electionId, questionId, value) => {
         const current = get().electionAnswers;
@@ -208,6 +232,7 @@ export const useStore = create(
           const { answers } = get();
           const profile = calculateProfile(answers);
           set({ profile, currentPage: 'profile' });
+          routerNavigate('/profile');
         }
       },
 
@@ -222,6 +247,7 @@ export const useStore = create(
         const { answers } = get();
         const profile = calculateProfile(answers);
         set({ profile, currentPage: 'profile' });
+        routerNavigate('/profile');
       },
 
       resetProfile: () => {
@@ -238,6 +264,7 @@ export const useStore = create(
           pendingMigration: false,
           currentPage: 'landing',
         });
+        routerNavigate('/');
       },
 
       exportProfile: () => {
@@ -268,6 +295,7 @@ export const useStore = create(
               priorityOrder: data.priorityOrder ?? [...THEMES_ORDER],
               currentPage: 'profile',
             });
+            routerNavigate('/profile');
             return true;
           }
         } catch (e) {

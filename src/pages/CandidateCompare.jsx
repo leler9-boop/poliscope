@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
@@ -170,7 +171,16 @@ export default function CandidateCompare() {
   const profile             = useStore(s => s.profile);
   const profileAdjustments  = useStore(s => s.profileAdjustments);
 
-  const [id1, id2] = compareIds ?? [];
+  // Support direct URL access (/compare/:id1/:id2)
+  const { id1: paramId1, id2: paramId2 } = useParams();
+
+  useEffect(() => {
+    if (paramId1 && paramId2 && (paramId1 !== compareIds[0] || paramId2 !== compareIds[1])) {
+      useStore.setState({ compareIds: [paramId1, paramId2], currentPage: 'compareView' });
+    }
+  }, [paramId1, paramId2]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [id1, id2] = (paramId1 && paramId2) ? [paramId1, paramId2] : (compareIds ?? []);
   const r1 = id1 ? findCandidate(id1) : null;
   const r2 = id2 ? findCandidate(id2) : null;
 

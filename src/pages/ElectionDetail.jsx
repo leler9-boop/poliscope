@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useStore } from '../store/useStore.js';
 // selectCandidate is accessed via useStore inside CandidateResultCard
 import { createTranslator } from '../i18n/translations.js';
@@ -32,6 +33,136 @@ function getQuestionBreakdown(electionAnswers, candidate, questions) {
       distance: Math.abs(electionAnswers[q.id] - q.positions[candidate.id]),
     }))
     .sort((a, b) => a.distance - b.distance);
+}
+
+// ─── Profile analysis ────────────────────────────────────────────────────────
+
+function generateProfileAnalysis(userThemes, rankedCandidates, language) {
+  if (!userThemes || rankedCandidates.length < 1) return null;
+
+  const fr = language === 'fr';
+  const top    = rankedCandidates[0];
+  const second = rankedCandidates[1] ?? null;
+  const last   = rankedCandidates[rankedCandidates.length - 1];
+
+  const themeLabels = THEME_LABELS[language] ?? THEME_LABELS.en;
+
+  // Per-theme distances
+  const themeDiffs = THEMES_ORDER.map(theme => ({
+    label:      themeLabels[theme] ?? theme,
+    user:       userThemes[theme] ?? 50,
+    diffTop:    Math.abs((userThemes[theme] ?? 50) - (top.profile?.[theme]    ?? 50)),
+    diffSecond: second ? Math.abs((userThemes[theme] ?? 50) - (second.profile?.[theme] ?? 50)) : 100,
+  }));
+
+  // Themes where user ≈ top candidate
+  const byCloseness = [...themeDiffs].sort((a, b) => a.diffTop - b.diffTop);
+  const shared1 = byCloseness[0];
+  const shared2 = byCloseness[1];
+
+  // Theme where user diverges most from second vs top
+  const divergeFromSecond = second
+    ? [...themeDiffs].sort((a, b) => (b.diffSecond - b.diffTop) - (a.diffSecond - a.diffTop))[0]
+    : null;
+
+  // Short names
+  const topName    = top.name.split(' ').pop();
+  const secondName = second?.name.split(' ').pop();
+  const lastName   = last.name.split(' ').pop();
+
+  // Positioning descriptors
+  const econ   = userThemes.ECONOMY    ?? 50;
+  const social = userThemes.SOCIAL     ?? 50;
+  const enviro = userThemes.ENVIRONMENT ?? 50;
+
+  const econPhrase = fr
+    ? (econ   < 38 ? `des convictions solidaires sur le plan économique`
+                   : econ > 62 ? `une sensibilité libérale sur l'économie`
+                   : `une vision économique plutôt modérée`)
+    : (econ   < 38 ? `redistributive economic values`
+                   : econ > 62 ? `market-liberal economic leanings`
+                   : `centrist economic views`);
+
+  const socialPhrase = fr
+    ? (social < 38 ? `des valeurs plus traditionnelles sur les questions de société`
+                   : social > 62 ? `des positions socialement progressistes`
+                   : `un équilibre sur les questions de société`)
+    : (social < 38 ? `socially traditional leanings`
+                   : social > 62 ? `progressive social values`
+                   : `a balanced approach to social issues`);
+
+  const enviroPhrase = enviro > 62
+    ? (fr ? `une priorité marquée pour l'écologie` : `a clear environmental priority`)
+    : enviro < 38
+    ? (fr ? `une priorité donnée à la croissance sur l'environnement` : `growth-first priorities over environmental concerns`)
+    : null;
+
+  // S1 — overall positioning
+  const s1 = fr
+    ? `Ton profil révèle ${econPhrase}, combiné à ${socialPhrase}${enviroPhrase ? ` et ${enviroPhrase}` : ''}.`
+    : `Your profile shows ${econPhrase}, combined with ${socialPhrase}${enviroPhrase ? ` and ${enviroPhrase}` : ''}.`;
+
+  // S2 — closeness to top candidate
+  const s2 = shared1.diffTop < 20
+    ? (fr
+        ? `Tu te rapproches de ${topName} surtout sur ${shared1.label.toLowerCase()}${shared2.diffTop < 25 ? ` et ${shared2.label.toLowerCase()}` : ''}, où vos sensibilités convergent.`
+        : `You align most with ${topName} particularly on ${shared1.label.toLowerCase()}${shared2.diffTop < 25 ? ` and ${shared2.label.toLowerCase()}` : ''}, where your views converge.`)
+    : (fr
+        ? `Parmi les candidats, c'est ${topName} qui se rapproche le plus de tes positions, même si des différences subsistent sur plusieurs sujets.`
+        : `Among the candidates, ${topName} comes closest to your positions, even though differences remain on several issues.`);
+
+  // S3 — contrast with second candidate
+  let s3 = '';
+  if (second) {
+    const gap = top.alignment - second.alignment;
+    if (gap > 15 && divergeFromSecond && divergeFromSecond.diffSecond > 25) {
+      s3 = fr
+        ? `En revanche, ${divergeFromSecond.label.toLowerCase()} te sépare nettement de ${secondName}.`
+        : `On the other hand, ${divergeFromSecond.label.toLowerCase()} clearly sets you apart from ${secondName}.`;
+    } else if (gap <= 10) {
+      s3 = fr
+        ? `Ton profil est assez proche à la fois de ${topName} et de ${secondName} — la différence tient à des nuances sur ${shared1.label.toLowerCase()}.`
+        : `Your profile is fairly close to both ${topName} and ${secondName} — the difference comes down to nuances on ${shared1.label.toLowerCase()}.`;
+    } else {
+      s3 = fr
+        ? `Sur certains sujets comme ${divergeFromSecond ? divergeFromSecond.label.toLowerCase() : shared1.label.toLowerCase()}, tu partages moins de terrain avec ${secondName}.`
+        : `On issues like ${divergeFromSecond ? divergeFromSecond.label.toLowerCase() : shared1.label.toLowerCase()}, you share less common ground with ${secondName}.`;
+    }
+  }
+
+  // S4 — distance from last candidate (only if gap is significant)
+  let s4 = '';
+  if (last.id !== top.id && top.alignment - last.alignment > 30) {
+    s4 = fr
+      ? `C'est avec ${lastName} que tes positions divergent le plus — un écart qui traduit des orientations fondamentalement différentes.`
+      : `Your positions diverge most from ${lastName} — a gap that reflects fundamentally different political orientations.`;
+  }
+
+  // S5 — closing nuance
+  const isCentrist = econ > 38 && econ < 62 && social > 38 && social < 62;
+  const s5 = fr
+    ? (isCentrist
+        ? `Globalement, ton profil se situe dans une zone de nuances qui ne se réduit pas à un seul courant — ce qui reflète une approche complexe des enjeux politiques.`
+        : `Globalement, tes positions sont assez marquées sur plusieurs axes, ce qui explique la clarté de ton classement.`)
+    : (isCentrist
+        ? `Overall, your profile occupies a nuanced space that doesn't fit neatly into one political tradition — reflecting a complex view of political issues.`
+        : `Overall, your positions are fairly pronounced on several key axes, which explains the clarity of your ranking.`);
+
+  return [s1, s2, s3, s4, s5].filter(Boolean).join(' ');
+}
+
+function ProfileAnalysis({ userThemes, rankedCandidates, language }) {
+  const text = generateProfileAnalysis(userThemes, rankedCandidates, language);
+  if (!text) return null;
+
+  return (
+    <div className="bg-gray-50 border border-gray-200 rounded-2xl px-5 py-5 mb-6">
+      <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-3">
+        {language === 'fr' ? `Analyse de ton profil` : 'Profile analysis'}
+      </p>
+      <p className="text-sm text-gray-700 leading-relaxed">{text}</p>
+    </div>
+  );
 }
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -345,6 +476,15 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
             : 'Your general political profile is adjusted here with election-specific questions, because the issues that matter vary from one country and election to another.'}
         </p>
       </div>
+
+      {/* Profile analysis */}
+      {globalProfile?.themes && (
+        <ProfileAnalysis
+          userThemes={globalProfile.themes}
+          rankedCandidates={rankedCandidates}
+          language={language}
+        />
+      )}
 
       {/* Strong matches */}
       {strongMatches.length > 0 && (
@@ -867,10 +1007,23 @@ export default function ElectionDetail() {
   const priorityOrder      = useStore(s => s.priorityOrder);
   const navigate           = useStore(s => s.navigate);
   const selectedElectionId = useStore(s => s.selectedElectionId);
+  const setSelectedElection = useStore(s => s.selectElection);
   const electionAnswers    = useStore(s => s.electionAnswers);
   const answerElectionQuestion = useStore(s => s.answerElectionQuestion);
   const clearElectionAnswers = useStore(s => s.clearElectionAnswers);
   const t = createTranslator(language);
+
+  // Support direct URL access (/elections/:id)
+  const { id: paramId } = useParams();
+  const electionId = paramId ?? selectedElectionId;
+
+  // Sync URL param → store so the rest of the app stays in sync
+  useEffect(() => {
+    if (paramId && paramId !== selectedElectionId) {
+      // Update store without re-triggering router navigation
+      useStore.setState({ selectedElectionId: paramId, currentPage: 'electionDetail' });
+    }
+  }, [paramId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const adjustedProfile = profile
     ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }
@@ -878,7 +1031,7 @@ export default function ElectionDetail() {
 
   const [step, setStep] = useState('context'); // 'context' | 'questionnaire' | 'results'
 
-  const election = elections.find(e => e.id === selectedElectionId);
+  const election = elections.find(e => e.id === electionId);
 
   if (!election) {
     navigate('elections');

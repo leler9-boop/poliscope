@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { useAuth } from '../lib/auth.jsx';
@@ -8,28 +9,34 @@ export default function Header() {
   const setLanguage = useStore(s => s.setLanguage);
   const navigate    = useStore(s => s.navigate);
   const profile     = useStore(s => s.profile);
-  const currentPage = useStore(s => s.currentPage);
   const userId      = useStore(s => s.userId);
   const userEmail   = useStore(s => s.userEmail);
   const t = createTranslator(language);
 
   const { signOut } = useAuth();
-  const isLoggedIn  = Boolean(userId);
+  const { pathname } = useLocation();
+  const isLoggedIn = Boolean(userId);
 
   const navItems = [
-    { key: 'home',      label: t('nav_home'),       page: 'landing' },
-    { key: 'profile',   label: t('nav_profile'),    page: 'profile',    disabled: !profile },
-    { key: 'elections', label: t('nav_elections'),  page: 'elections' },
-    { key: 'figures',   label: t('nav_figures'),    page: 'figures' },
+    { key: 'home',      label: t('nav_home'),      page: 'landing',   path: '/' },
+    { key: 'profile',   label: t('nav_profile'),   page: 'profile',   path: '/profile',   disabled: !profile },
+    { key: 'elections', label: t('nav_elections'), page: 'elections', path: '/elections' },
+    { key: 'figures',   label: t('nav_figures'),   page: 'figures',   path: '/figures' },
   ];
 
   const infoItems = [
-    { key: 'beginner',     label: t('nav_beginner'),     page: 'beginner',     highlight: true },
-    { key: 'mission',      label: t('nav_mission'),      page: 'mission' },
-    { key: 'transparency', label: t('nav_transparency'), page: 'transparency' },
+    { key: 'beginner',     label: t('nav_beginner'),     page: 'beginner',     path: '/learn',        highlight: true },
+    { key: 'mission',      label: t('nav_mission'),      page: 'mission',      path: '/mission' },
+    { key: 'transparency', label: t('nav_transparency'), page: 'transparency', path: '/transparency' },
   ];
 
-  const hideNav = currentPage === 'questionnaire';
+  // Active state based on URL, not store
+  const isActive = (path) => {
+    if (path === '/') return pathname === '/';
+    return pathname.startsWith(path);
+  };
+
+  const hideNav = pathname === '/quiz';
 
   const handleSignOut = async () => {
     await signOut();
@@ -63,7 +70,7 @@ export default function Header() {
                   key={item.key}
                   onClick={() => !item.disabled && navigate(item.page)}
                   className={`relative px-4 py-1.5 text-sm font-medium transition-colors ${
-                    currentPage === item.page
+                    isActive(item.path)
                       ? 'text-gray-900'
                       : item.disabled
                       ? 'text-gray-300 cursor-not-allowed'
@@ -72,7 +79,7 @@ export default function Header() {
                   title={item.disabled ? (language === 'fr' ? `Créez d'abord votre profil` : 'Complete your profile first') : ''}
                 >
                   {item.label}
-                  {currentPage === item.page && (
+                  {isActive(item.path) && (
                     <span className="absolute bottom-0 left-4 right-4 h-px bg-gray-900" />
                   )}
                 </button>
@@ -83,7 +90,7 @@ export default function Header() {
                   key={item.key}
                   onClick={() => navigate(item.page)}
                   className={`relative px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
-                    currentPage === item.page
+                    isActive(item.path)
                       ? item.highlight ? 'text-amber-700' : 'text-gray-900'
                       : item.highlight
                       ? 'text-amber-600 hover:text-amber-800'
@@ -91,7 +98,7 @@ export default function Header() {
                   }`}
                 >
                   {item.label}
-                  {currentPage === item.page && (
+                  {isActive(item.path) && (
                     <span className={`absolute bottom-0 left-3 right-3 h-px ${item.highlight ? 'bg-amber-600' : 'bg-gray-900'}`} />
                   )}
                 </button>
@@ -131,7 +138,7 @@ export default function Header() {
               <button
                 onClick={() => navigate('auth')}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-md border transition-colors ${
-                  currentPage === 'auth'
+                  isActive('/auth')
                     ? 'bg-gray-900 text-white border-gray-900'
                     : 'text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
@@ -150,7 +157,7 @@ export default function Header() {
                 key={item.key}
                 onClick={() => !item.disabled && navigate(item.page)}
                 className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
-                  currentPage === item.page
+                  isActive(item.path)
                     ? 'text-gray-900 bg-gray-100'
                     : item.disabled
                     ? 'text-gray-300'
@@ -165,7 +172,7 @@ export default function Header() {
                 key={item.key}
                 onClick={() => navigate(item.page)}
                 className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${
-                  currentPage === item.page
+                  isActive(item.path)
                     ? item.highlight ? 'text-amber-700 bg-amber-50' : 'text-gray-900 bg-gray-100'
                     : item.highlight
                     ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50'

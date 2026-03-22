@@ -250,6 +250,506 @@ const CRISES = [
   },
 ];
 
+// ─── Glossary ─────────────────────────────────────────────────────────────────
+
+const GLOSSARY_CATEGORIES = [
+  {
+    id: 'institutions',
+    icon: '🏛️',
+    label: { en: 'Institutions', fr: 'Institutions' },
+    terms: [
+      {
+        id: 'article_49_3',
+        term: { en: 'Article 49.3', fr: 'Article 49.3' },
+        simple: {
+          en: `A constitutional provision that lets the French Prime Minister pass a law without a vote in the National Assembly.`,
+          fr: `Un article de la Constitution française qui permet au Premier ministre de faire adopter une loi sans vote à l'Assemblée nationale.`,
+        },
+        concretement: {
+          en: `Normally, laws must be voted on by MPs. With 49.3, the government declares the law passed automatically. MPs can respond by filing a "motion de censure" — a vote to topple the government. If the motion fails, the law stands. If it passes, the government falls. In practice, 49.3 is used when the government doesn't have a stable majority.`,
+          fr: `Normalement, les lois doivent être votées par les députés. Avec le 49.3, le gouvernement déclare la loi adoptée d'office. Les députés peuvent réagir en déposant une motion de censure — un vote pour renverser le gouvernement. Si elle échoue, la loi passe. Si elle est adoptée, le gouvernement tombe. En pratique, le 49.3 est utilisé quand le gouvernement n'a pas de majorité stable.`,
+        },
+        exemple: {
+          en: `In 2023, Prime Minister Élisabeth Borne used 49.3 to pass the pension reform raising the retirement age from 62 to 64 — without a final vote in the National Assembly.`,
+          fr: `En 2023, la Première ministre Élisabeth Borne a utilisé le 49.3 pour faire passer la réforme des retraites reculant l'âge de départ de 62 à 64 ans — sans vote final à l'Assemblée nationale.`,
+        },
+        debat: {
+          en: `Supporters say it's a necessary tool for governing when parliament is fragmented. Critics argue it bypasses democracy and silences elected representatives. Its repeated use tends to anger the public and fuel street protests.`,
+          fr: `Ses partisans estiment que c'est un outil nécessaire pour gouverner quand l'Assemblée est fragmentée. Ses opposants estiment qu'il contourne la démocratie et fait taire les élus. Son usage répété tend à mettre en colère l'opinion et à alimenter les protestations dans la rue.`,
+        },
+      },
+      {
+        id: 'motion_censure',
+        term: { en: 'Motion de censure', fr: 'Motion de censure' },
+        simple: {
+          en: `A vote by MPs to bring down the government — if it passes, the Prime Minister must resign.`,
+          fr: `Un vote des députés pour renverser le gouvernement — si elle est adoptée, le Premier ministre doit démissionner.`,
+        },
+        concretement: {
+          en: `MPs who oppose the government can gather signatures and table a motion de censure. An absolute majority (289 out of 577 MPs) must vote in favour for the government to fall. The motion is debated in the National Assembly. It is a key check on executive power in France's system.`,
+          fr: `Les députés qui s'opposent au gouvernement peuvent rassembler des signatures et déposer une motion de censure. Une majorité absolue (289 sur 577 députés) doit voter pour qu'elle soit adoptée. Elle est débattue à l'Assemblée nationale. C'est un contrepoids clé au pouvoir exécutif dans le système français.`,
+        },
+        exemple: {
+          en: `In December 2024, a motion de censure brought down Prime Minister Michel Barnier's government after just 89 days in office — the shortest in the Fifth Republic.`,
+          fr: `En décembre 2024, une motion de censure a renversé le gouvernement de Michel Barnier après seulement 89 jours — le plus court de la Ve République.`,
+        },
+        debat: {
+          en: `Some see it as a vital democratic tool to hold governments accountable. Others argue that its use in fragmented parliaments leads to political instability and makes governing nearly impossible.`,
+          fr: `Certains y voient un outil démocratique vital pour responsabiliser les gouvernements. D'autres estiment que son usage dans des assemblées fragmentées mène à l'instabilité politique et rend la gouvernance quasi impossible.`,
+        },
+      },
+      {
+        id: 'dissolution',
+        term: { en: 'Dissolution', fr: 'Dissolution' },
+        simple: {
+          en: `When the President dissolves the National Assembly, forcing early legislative elections.`,
+          fr: `Quand le Président dissout l'Assemblée nationale, forçant des élections législatives anticipées.`,
+        },
+        concretement: {
+          en: `Under the Fifth Republic, the President can dissolve the National Assembly at almost any time. This triggers snap legislative elections — a political gamble. The President hopes the vote will give their side a stronger majority. But the outcome is uncertain and can backfire completely.`,
+          fr: `Sous la Ve République, le Président peut dissoudre l'Assemblée nationale à presque n'importe quel moment. Cela déclenche des élections législatives anticipées — un pari politique. Le Président espère que le scrutin donnera à son camp une majorité plus solide. Mais le résultat est incertain et peut se retourner contre lui.`,
+        },
+        exemple: {
+          en: `In June 2024, President Macron dissolved the National Assembly after a poor result in the European elections — and his party lost seats rather than gaining them.`,
+          fr: `En juin 2024, le Président Macron a dissous l'Assemblée nationale après un mauvais résultat aux élections européennes — et son camp a perdu des sièges au lieu d'en gagner.`,
+        },
+        debat: {
+          en: `Some see dissolution as a legitimate way to seek a democratic mandate. Critics argue it can be used strategically by presidents in their own political interest rather than for the national good.`,
+          fr: `Certains voient la dissolution comme un moyen légitime de chercher un mandat démocratique. Des critiques estiment qu'elle peut être utilisée stratégiquement par le président dans son intérêt politique personnel plutôt que pour le bien national.`,
+        },
+      },
+      {
+        id: 'majorite',
+        term: { en: 'Majorité / Minority government', fr: 'Majorité / Minorité' },
+        simple: {
+          en: `A majority government has over half of MPs on its side; a minority government does not.`,
+          fr: `Un gouvernement majoritaire dispose de plus de la moitié des députés ; un gouvernement minoritaire non.`,
+        },
+        concretement: {
+          en: `In France's National Assembly, 289 seats out of 577 are needed for an absolute majority. If the ruling party or coalition has that, it can pass laws more easily. Without it, the government must negotiate every bill, make concessions, or use tools like the 49.3. A minority government is weaker and more vulnerable.`,
+          fr: `À l'Assemblée nationale française, 289 sièges sur 577 sont nécessaires pour une majorité absolue. Si le parti ou la coalition au pouvoir en dispose, il peut voter des lois plus facilement. Sans cela, le gouvernement doit négocier chaque texte, faire des concessions, ou utiliser des outils comme le 49.3. Un gouvernement minoritaire est plus faible et plus vulnérable.`,
+        },
+        exemple: {
+          en: `Since 2022, Macron's government has governed without an absolute majority, forcing it to seek allies bill by bill — or use 49.3.`,
+          fr: `Depuis 2022, le gouvernement de Macron gouverne sans majorité absolue, l'obligeant à chercher des alliés texte par texte — ou à recourir au 49.3.`,
+        },
+        debat: {
+          en: `Some argue minority governments force compromise and better represent voters. Others say they paralyse decision-making and create instability.`,
+          fr: `Certains estiment que les gouvernements minoritaires forcent le compromis et représentent mieux les électeurs. D'autres disent qu'ils paralysent la prise de décision et créent de l'instabilité.`,
+        },
+      },
+      {
+        id: 'coalition',
+        term: { en: 'Coalition', fr: 'Coalition' },
+        simple: {
+          en: `An alliance of several parties that agree to govern together because none has a majority alone.`,
+          fr: `Une alliance de plusieurs partis qui acceptent de gouverner ensemble parce qu'aucun n'a de majorité seul.`,
+        },
+        concretement: {
+          en: `In coalition governments, parties negotiate a shared programme. Each partner gets ministerial positions. They must agree on major decisions, which requires compromise. Coalitions are common in proportional voting systems like Germany's. In France, presidential elections make them less frequent — but they occur in parliament.`,
+          fr: `Dans les gouvernements de coalition, les partis négocient un programme commun. Chaque partenaire obtient des postes ministériels. Ils doivent s'accorder sur les grandes décisions, ce qui exige des compromis. Les coalitions sont courantes dans les systèmes à représentation proportionnelle comme en Allemagne. En France, les élections présidentielles les rendent moins fréquentes — mais elles existent au parlement.`,
+        },
+        exemple: {
+          en: `Germany has been governed by coalitions for decades. After the 2021 elections, the SPD, Greens, and FDP formed a three-party coalition called the "traffic light coalition."`,
+          fr: `L'Allemagne est gouvernée par des coalitions depuis des décennies. Après les élections de 2021, le SPD, les Verts et le FDP ont formé une coalition à trois partis appelée la « coalition feu tricolore ».`,
+        },
+        debat: {
+          en: `Coalitions can represent a wider range of voters and force moderation. But they can also be slow, unstable, and lead to backroom deals that voters never explicitly approved.`,
+          fr: `Les coalitions peuvent représenter un plus large éventail d'électeurs et favoriser la modération. Mais elles peuvent aussi être lentes, instables, et mener à des accords en coulisse que les électeurs n'ont pas explicitement approuvés.`,
+        },
+      },
+      {
+        id: 'amendement',
+        term: { en: 'Amendment', fr: 'Amendement' },
+        simple: {
+          en: `A proposed modification to a law being debated in parliament.`,
+          fr: `Une proposition de modification d'un texte de loi en cours de débat au parlement.`,
+        },
+        concretement: {
+          en: `When a bill is debated, MPs can propose changes — these are amendments. They can add, remove, or reword sections. Thousands of amendments can be filed on a single bill. The government can declare amendments "irrecevable" (inadmissible) if they don't fit the bill's scope. Amendments are a key tool for opposition parties to reshape legislation.`,
+          fr: `Quand un projet de loi est débattu, les députés peuvent proposer des modifications — ce sont des amendements. Ils peuvent ajouter, supprimer ou reformuler des articles. Des milliers d'amendements peuvent être déposés sur un seul texte. Le gouvernement peut les déclarer « irrecevables » s'ils ne correspondent pas à l'objet du texte. Les amendements sont un outil clé pour les partis d'opposition.`,
+        },
+        exemple: {
+          en: `During the 2023 pension reform debate, over 20,000 amendments were filed by opposition parties in an attempt to delay or block the bill.`,
+          fr: `Lors du débat sur la réforme des retraites en 2023, plus de 20 000 amendements ont été déposés par les partis d'opposition pour tenter de ralentir ou bloquer le texte.`,
+        },
+        debat: {
+          en: `Amendments allow MPs to improve and adapt laws — a vital democratic process. But mass filing of amendments is also used as "obstruction" to slow down legislation, which some see as legitimate resistance and others as abuse of procedure.`,
+          fr: `Les amendements permettent aux députés d'améliorer et d'adapter les lois — un processus démocratique essentiel. Mais le dépôt massif d'amendements est aussi utilisé comme « obstruction » pour ralentir la législation, ce que certains voient comme une résistance légitime et d'autres comme un abus de procédure.`,
+        },
+      },
+    ],
+  },
+  {
+    id: 'economie',
+    icon: '💰',
+    label: { en: 'Economy', fr: 'Économie' },
+    terms: [
+      {
+        id: 'inflation',
+        term: { en: 'Inflation', fr: 'Inflation' },
+        simple: {
+          en: `When prices rise across the economy, making your money worth less than before.`,
+          fr: `Quand les prix augmentent dans toute l'économie, rendant votre argent moins puissant qu'avant.`,
+        },
+        concretement: {
+          en: `If inflation is 5%, a coffee that cost €2 last year now costs €2.10. Your salary buys less unless it also rises. Central banks (like the ECB for Europe) try to keep inflation around 2% — low enough to be stable, high enough to avoid deflation. When inflation spikes, they raise interest rates to cool down spending.`,
+          fr: `Si l'inflation est de 5 %, un café qui coûtait 2 € l'an dernier coûte maintenant 2,10 €. Votre salaire achète moins, sauf s'il augmente aussi. Les banques centrales (comme la BCE pour l'Europe) s'efforcent de maintenir l'inflation autour de 2 % — assez basse pour être stable, assez haute pour éviter la déflation. Quand l'inflation s'envole, elles augmentent les taux d'intérêt pour freiner les dépenses.`,
+        },
+        exemple: {
+          en: `In 2022, inflation hit 6% in France — driven by energy prices after Russia's invasion of Ukraine. Supermarket prices soared, hitting low-income households hardest.`,
+          fr: `En 2022, l'inflation a atteint 6 % en France — poussée par les prix de l'énergie après l'invasion de l'Ukraine par la Russie. Les prix des supermarchés ont flambé, touchant surtout les ménages modestes.`,
+        },
+        debat: {
+          en: `Governments disagree on how to fight inflation: raise interest rates (which slows growth and hits borrowers) or subsidise energy prices (which costs public money). Neither is painless. The poor are generally hit hardest since they spend more of their income on food and energy.`,
+          fr: `Les gouvernements sont en désaccord sur la façon de combattre l'inflation : augmenter les taux d'intérêt (ce qui ralentit la croissance et pénalise les emprunteurs) ou subventionner les prix de l'énergie (ce qui coûte de l'argent public). Aucune option n'est indolore. Les plus modestes sont généralement les plus touchés car ils dépensent une plus grande part de leurs revenus en alimentation et énergie.`,
+        },
+      },
+      {
+        id: 'dette',
+        term: { en: 'National debt', fr: 'Dette publique' },
+        simple: {
+          en: `The total amount of money a government has borrowed and not yet paid back.`,
+          fr: `Le montant total d'argent qu'un gouvernement a emprunté et n'a pas encore remboursé.`,
+        },
+        concretement: {
+          en: `Governments borrow money by issuing bonds — investors lend them money and get interest in return. The debt grows when a government spends more than it collects in taxes (a deficit). Debt is measured as a percentage of GDP. France's debt is around 110% of GDP. This means interest payments take up a large share of the budget each year.`,
+          fr: `Les gouvernements empruntent en émettant des obligations — les investisseurs leur prêtent de l'argent et reçoivent des intérêts en échange. La dette augmente quand un gouvernement dépense plus qu'il ne collecte en impôts (un déficit). La dette est mesurée en pourcentage du PIB. Celle de la France est d'environ 110 % du PIB. Cela signifie que les remboursements d'intérêts absorbent une grande part du budget chaque année.`,
+        },
+        exemple: {
+          en: `France's national debt surpassed €3,000 billion in 2024. The government pays over €50 billion per year just in interest — more than the entire education budget.`,
+          fr: `La dette publique française a dépassé 3 000 milliards d'euros en 2024. Le gouvernement rembourse plus de 50 milliards d'euros par an rien qu'en intérêts — plus que l'ensemble du budget de l'éducation.`,
+        },
+        debat: {
+          en: `Some economists argue debt is dangerous and must be reduced urgently. Others say borrowing for investment (schools, infrastructure, green energy) is rational. The debate is about speed and priorities, not whether debt exists.`,
+          fr: `Certains économistes estiment que la dette est dangereuse et doit être réduite d'urgence. D'autres disent qu'emprunter pour investir (écoles, infrastructures, énergie verte) est rationnel. Le débat porte sur le rythme et les priorités, pas sur l'existence de la dette.`,
+        },
+      },
+      {
+        id: 'deficit',
+        term: { en: 'Deficit', fr: 'Déficit' },
+        simple: {
+          en: `When the government spends more money in a year than it collects in taxes.`,
+          fr: `Quand le gouvernement dépense plus d'argent dans l'année qu'il n'en collecte en impôts.`,
+        },
+        concretement: {
+          en: `If the government collects €1,000 billion in taxes but spends €1,050 billion, the deficit is €50 billion. That gap must be financed by borrowing. The EU's rules (Stability and Growth Pact) say deficits should stay below 3% of GDP. Countries that exceed this can face fines. Running a deficit isn't always bad — it depends on what the spending is for.`,
+          fr: `Si le gouvernement collecte 1 000 milliards en impôts mais dépense 1 050 milliards, le déficit est de 50 milliards. Cet écart doit être financé par l'emprunt. Les règles de l'UE (Pacte de stabilité) imposent que les déficits restent sous 3 % du PIB. Les pays qui dépassent ce seuil peuvent être sanctionnés. Avoir un déficit n'est pas toujours mauvais — tout dépend de ce à quoi sert la dépense.`,
+        },
+        exemple: {
+          en: `France's 2023 deficit was 5.5% of GDP — well above the EU's 3% limit — triggering an EU "excessive deficit procedure" in 2024.`,
+          fr: `Le déficit français de 2023 était de 5,5 % du PIB — bien au-dessus de la limite de 3 % imposée par l'UE — déclenchant une procédure de déficit excessif en 2024.`,
+        },
+        debat: {
+          en: `Left-leaning economists often accept deficits to fund social spending during crises. Right-leaning economists prioritise balancing the books to avoid debt spiral. The EU's rules are themselves contested — some say they force austerity at the worst moment.`,
+          fr: `Les économistes de gauche acceptent souvent les déficits pour financer les dépenses sociales en temps de crise. Ceux de droite privilégient l'équilibre budgétaire pour éviter une spirale de la dette. Les règles de l'UE sont elles-mêmes contestées — certains estiment qu'elles imposent l'austérité au pire moment.`,
+        },
+      },
+      {
+        id: 'tva',
+        term: { en: 'VAT (TVA)', fr: 'TVA' },
+        simple: {
+          en: `A tax added to the price of almost everything you buy — it's the main source of state revenue.`,
+          fr: `Une taxe ajoutée sur le prix de presque tout ce que vous achetez — c'est la principale source de revenus de l'État.`,
+        },
+        concretement: {
+          en: `In France, the standard VAT rate is 20%. On food basics it's 5.5%, and on medicine it's 2.1%. Unlike income tax, VAT is paid by everyone who buys goods — regardless of income. When you pay €120 for a product, €20 goes to the state. Businesses collect it and pass it on.`,
+          fr: `En France, le taux normal de TVA est de 20 %. Sur les produits alimentaires de base, il est de 5,5 %, et sur les médicaments de 2,1 %. Contrairement à l'impôt sur le revenu, la TVA est payée par toute personne qui achète des biens — quelle que soit sa situation. Quand vous payez 120 € pour un produit, 20 € vont à l'État. Les entreprises la collectent et la reversent.`,
+        },
+        exemple: {
+          en: `France collects around €200 billion in VAT annually — its single largest source of tax revenue, more than income tax.`,
+          fr: `La France collecte environ 200 milliards d'euros de TVA chaque année — sa principale source de recettes fiscales, davantage que l'impôt sur le revenu.`,
+        },
+        debat: {
+          en: `VAT is criticised as regressive: poorer households spend a larger share of their income on goods, so they pay proportionally more. Some argue reduced VAT rates on essentials help. Others say it's better to redistribute through income taxes and social benefits.`,
+          fr: `La TVA est critiquée comme régressive : les ménages modestes dépensent une plus grande part de leurs revenus en biens, ils paient donc proportionnellement plus. Certains estiment que les taux réduits sur les produits essentiels aident. D'autres pensent qu'il vaut mieux redistribuer via l'impôt sur le revenu et les aides sociales.`,
+        },
+      },
+      {
+        id: 'pouvoir_achat',
+        term: { en: 'Purchasing power', fr: 'Pouvoir d\'achat' },
+        simple: {
+          en: `What your money can actually buy — how many goods and services your income covers.`,
+          fr: `Ce que votre argent peut réellement acheter — combien de biens et services votre revenu permet de couvrir.`,
+        },
+        concretement: {
+          en: `If your salary stays flat but prices rise by 5%, your purchasing power drops — you can buy less even with the same income. Purchasing power depends on wages, inflation, taxes, housing costs, and public services. It's one of the top concerns in French elections. Even small changes feel very concrete in daily life.`,
+          fr: `Si votre salaire reste stable mais que les prix augmentent de 5 %, votre pouvoir d'achat baisse — vous achetez moins à revenu égal. Il dépend des salaires, de l'inflation, des impôts, du coût du logement et des services publics. C'est l'une des premières préoccupations des Français lors des élections. Même de petits changements se ressentent très concrètement au quotidien.`,
+        },
+        exemple: {
+          en: `During the Gilets Jaunes crisis in 2018, the trigger was a fuel tax increase that reduced purchasing power for rural workers who depend on their cars.`,
+          fr: `Pendant la crise des Gilets Jaunes en 2018, le déclencheur a été une hausse de la taxe sur les carburants qui a réduit le pouvoir d'achat des travailleurs ruraux dépendant de leur voiture.`,
+        },
+        debat: {
+          en: `The left often proposes raising the minimum wage and taxing the wealthy to boost purchasing power. The right tends to favour reducing taxes on labour and businesses. Both sides claim to defend purchasing power — they disagree on how.`,
+          fr: `La gauche propose souvent d'augmenter le SMIC et de taxer les plus riches pour soutenir le pouvoir d'achat. La droite tend à préférer la baisse des charges et des impôts sur les entreprises. Les deux bords prétendent défendre le pouvoir d'achat — ils s'opposent sur la méthode.`,
+        },
+      },
+      {
+        id: 'croissance',
+        term: { en: 'GDP & Growth', fr: 'Croissance / PIB' },
+        simple: {
+          en: `GDP (Gross Domestic Product) measures the total value of all goods and services produced in a country. Growth means GDP is increasing.`,
+          fr: `Le PIB (Produit Intérieur Brut) mesure la valeur totale de tous les biens et services produits dans un pays. La croissance signifie que ce chiffre augmente.`,
+        },
+        concretement: {
+          en: `If France's GDP grows by 1.5% this year, it means the economy produced 1.5% more than last year. Positive growth generally means more jobs, more tax revenue, and room to fund public services. Negative growth for two consecutive quarters is called a recession. GDP is the most-used but also most-criticised economic indicator.`,
+          fr: `Si le PIB de la France augmente de 1,5 % cette année, cela signifie que l'économie a produit 1,5 % de plus que l'année précédente. Une croissance positive signifie généralement plus d'emplois, plus de recettes fiscales et de quoi financer les services publics. Une croissance négative pendant deux trimestres consécutifs s'appelle une récession. Le PIB est l'indicateur économique le plus utilisé mais aussi le plus critiqué.`,
+        },
+        exemple: {
+          en: `France's GDP shrank by 7.9% in 2020 due to COVID lockdowns — the worst drop since World War II. It rebounded strongly in 2021.`,
+          fr: `Le PIB de la France a chuté de 7,9 % en 2020 en raison des confinements liés au COVID — la pire baisse depuis la Seconde Guerre mondiale. Il a fortement rebondi en 2021.`,
+        },
+        debat: {
+          en: `GDP doesn't measure inequality, happiness, or environmental damage. Many economists argue for complementary indicators like the Human Development Index or carbon footprint metrics. "Degrowth" advocates say pursuing endless GDP growth is incompatible with ecological sustainability.`,
+          fr: `Le PIB ne mesure pas les inégalités, le bonheur ni les dégâts environnementaux. Beaucoup d'économistes préconisent des indicateurs complémentaires comme l'Indice de Développement Humain ou des mesures d'empreinte carbone. Les partisans de la « décroissance » estiment que la quête d'une croissance infinie est incompatible avec la durabilité écologique.`,
+        },
+      },
+    ],
+  },
+  {
+    id: 'societe',
+    icon: '🌍',
+    label: { en: 'Society', fr: 'Société' },
+    terms: [
+      {
+        id: 'laicite',
+        term: { en: 'Secularism (Laïcité)', fr: 'Laïcité' },
+        simple: {
+          en: `The strict separation of religion from the state — a core principle of the French Republic.`,
+          fr: `La séparation stricte entre la religion et l'État — un principe fondamental de la République française.`,
+        },
+        concretement: {
+          en: `In France, the state is officially neutral on religion. Public schools cannot teach religion. Civil servants cannot display religious symbols at work. Religious groups can practise freely, but don't receive state funding. The 1905 law established this separation. Laïcité is seen by many French people as a marker of national identity and equality.`,
+          fr: `En France, l'État est officiellement neutre en matière de religion. Les écoles publiques ne peuvent pas enseigner la religion. Les fonctionnaires ne peuvent pas porter de signes religieux au travail. Les groupes religieux peuvent pratiquer librement, mais ne reçoivent pas de financement public. La loi de 1905 a établi cette séparation. La laïcité est perçue par beaucoup de Français comme un marqueur d'identité nationale et d'égalité.`,
+        },
+        exemple: {
+          en: `In 2004, France banned the wearing of conspicuous religious symbols (including headscarves, large crosses, and kippahs) in public schools. The law sparked intense national debate.`,
+          fr: `En 2004, la France a interdit le port de signes religieux ostensibles (y compris le voile, les grandes croix et la kippa) dans les écoles publiques. Cette loi a déclenché un intense débat national.`,
+        },
+        debat: {
+          en: `Some see laïcité as a guarantee of equality and republican unity. Others argue that in practice it disproportionately targets Muslim women, and that a stricter interpretation limits religious freedom rather than protecting it.`,
+          fr: `Certains voient la laïcité comme une garantie d'égalité et d'unité républicaine. D'autres estiment qu'en pratique elle cible de manière disproportionnée les femmes musulmanes, et qu'une interprétation plus stricte restreint la liberté religieuse plutôt qu'elle ne la protège.`,
+        },
+      },
+      {
+        id: 'immigration',
+        term: { en: 'Immigration', fr: 'Immigration' },
+        simple: {
+          en: `The movement of people to live permanently in a country that is not their country of birth.`,
+          fr: `Le déplacement de personnes pour vivre de façon permanente dans un pays qui n'est pas leur pays de naissance.`,
+        },
+        concretement: {
+          en: `People immigrate for many reasons: work, family reunification, fleeing war or persecution (asylum), or study. France has different legal paths for each. The number of people who arrive each year, how many receive residency, and how many are expelled are all political flashpoints. Immigration policy involves border control, asylum law, integration programmes, and citizenship rules.`,
+          fr: `Les personnes immigrent pour de nombreuses raisons : le travail, le regroupement familial, la fuite de la guerre ou des persécutions (asile), ou les études. La France dispose de différentes voies légales pour chacun. Le nombre de personnes qui arrivent chaque année, combien obtiennent un titre de séjour, et combien sont expulsées sont tous des points d'accrochage politique. La politique d'immigration touche au contrôle des frontières, au droit d'asile, aux programmes d'intégration et aux règles de citoyenneté.`,
+        },
+        exemple: {
+          en: `The 2024 immigration law in France tightened conditions for family reunification, restricted access to social benefits for foreigners, and expanded the use of deportation orders.`,
+          fr: `La loi immigration de 2024 en France a durci les conditions de regroupement familial, restreint l'accès aux aides sociales pour les étrangers, et élargi le recours aux mesures d'expulsion.`,
+        },
+        debat: {
+          en: `The right generally wants stricter border control and faster deportations. The left tends to emphasise humanitarian duties and integration. Far-right parties call for a drastic reduction in immigration. Far-left parties argue the real issue is global inequality and climate change — which drive migration in the first place.`,
+          fr: `La droite veut généralement un contrôle plus strict des frontières et des expulsions plus rapides. La gauche tend à mettre en avant les obligations humanitaires et l'intégration. Les partis d'extrême droite réclament une réduction drastique de l'immigration. Ceux d'extrême gauche estiment que le vrai problème est l'inégalité mondiale et le changement climatique — qui alimentent les migrations à la base.`,
+        },
+      },
+      {
+        id: 'services_publics',
+        term: { en: 'Public services', fr: 'Services publics' },
+        simple: {
+          en: `Services provided by the state to all citizens, like hospitals, schools, public transport, and post offices.`,
+          fr: `Des services fournis par l'État à tous les citoyens, comme les hôpitaux, les écoles, les transports en commun et les bureaux de poste.`,
+        },
+        concretement: {
+          en: `Public services are funded by taxes and are meant to be accessible to everyone regardless of income. France has one of the largest public sectors in Europe. In recent decades, some services have been privatised or reduced. Public servants (fonctionnaires) work in these services and have specific employment protections.`,
+          fr: `Les services publics sont financés par les impôts et sont censés être accessibles à tous quelle que soit la situation financière. La France possède l'un des secteurs publics les plus importants d'Europe. Ces dernières décennies, certains services ont été privatisés ou réduits. Les fonctionnaires travaillent dans ces services et bénéficient de protections spécifiques de l'emploi.`,
+        },
+        exemple: {
+          en: `France's universal healthcare system (Sécurité Sociale) covers everyone — including low-income people. Closing a rural hospital or post office triggers intense local protests.`,
+          fr: `Le système de santé universel français (Sécurité Sociale) couvre tout le monde — y compris les personnes à faibles revenus. La fermeture d'un hôpital ou d'un bureau de poste rural déclenche d'intenses protestations locales.`,
+        },
+        debat: {
+          en: `The left generally wants to expand and protect public services. The right often argues for efficiency, privatisation, or market competition to reduce costs. Closing services in rural areas is particularly sensitive, fuelling resentment toward Paris and the political class.`,
+          fr: `La gauche veut généralement développer et protéger les services publics. La droite plaide souvent pour l'efficacité, la privatisation ou la concurrence pour réduire les coûts. La fermeture de services en zones rurales est particulièrement sensible, alimentant le ressentiment envers Paris et la classe politique.`,
+        },
+      },
+      {
+        id: 'ecologie',
+        term: { en: 'Ecology / Green transition', fr: 'Écologie / Transition énergétique' },
+        simple: {
+          en: `The political effort to reduce pollution and carbon emissions, and shift to renewable energy.`,
+          fr: `L'effort politique pour réduire la pollution et les émissions de carbone, et passer aux énergies renouvelables.`,
+        },
+        concretement: {
+          en: `Countries signed the Paris Agreement in 2015 to limit global warming. To do this, they need to phase out fossil fuels (oil, gas, coal), invest in renewables (solar, wind), and change farming and transport. This is expensive and touches almost every sector of the economy. Some changes happen fast; others face strong resistance from affected industries or workers.`,
+          fr: `Les pays ont signé l'Accord de Paris en 2015 pour limiter le réchauffement climatique. Pour cela, ils doivent abandonner les combustibles fossiles (pétrole, gaz, charbon), investir dans les énergies renouvelables (solaire, éolien), et transformer l'agriculture et les transports. C'est coûteux et cela touche presque tous les secteurs de l'économie. Certains changements avancent vite ; d'autres font face à de fortes résistances des industries ou travailleurs concernés.`,
+        },
+        exemple: {
+          en: `France plans to close all coal plants by 2027 and expand nuclear and offshore wind. The EU's "Fit for 55" package aims to cut emissions by 55% by 2030 compared to 1990.`,
+          fr: `La France prévoit de fermer toutes ses centrales à charbon d'ici 2027 et d'étendre le nucléaire et l'éolien en mer. Le paquet « Fit for 55 » de l'UE vise à réduire les émissions de 55 % d'ici 2030 par rapport à 1990.`,
+        },
+        debat: {
+          en: `Greens want faster and more radical action. Industry groups warn of job losses and competitiveness risks. Some on the left argue the wealthy must pay more for the transition. Some on the right question the pace and economic cost. There is broad consensus that climate change is real — the debates are about who pays and how fast.`,
+          fr: `Les Verts veulent des actions plus rapides et plus radicales. Les groupes industriels avertissent des risques de perte d'emplois et de compétitivité. Certains à gauche estiment que les plus riches doivent davantage financer la transition. Certains à droite s'interrogent sur le rythme et le coût économique. Il y a un large consensus sur le fait que le changement climatique est réel — les débats portent sur qui paie et à quelle vitesse.`,
+        },
+      },
+    ],
+  },
+  {
+    id: 'commerce',
+    icon: '🌐',
+    label: { en: 'Trade & Globalisation', fr: 'Commerce & Mondialisation' },
+    terms: [
+      {
+        id: 'mondialisation',
+        term: { en: 'Globalisation', fr: 'Mondialisation' },
+        simple: {
+          en: `The process by which countries, economies, and cultures become increasingly interconnected.`,
+          fr: `Le processus par lequel les pays, les économies et les cultures deviennent de plus en plus interconnectés.`,
+        },
+        concretement: {
+          en: `Globalisation means goods, money, data, and people move across borders more freely than ever. A phone made in China, with chips from Taiwan, software from the US, and sold in France — that's globalisation. It drives down consumer prices but also moves jobs overseas. Supply chains span dozens of countries. Financial crises in one place ripple everywhere.`,
+          fr: `La mondialisation signifie que les biens, l'argent, les données et les personnes traversent les frontières plus librement que jamais. Un téléphone fabriqué en Chine, avec des puces de Taïwan, un logiciel américain, et vendu en France — c'est la mondialisation. Elle fait baisser les prix à la consommation mais déplace aussi des emplois à l'étranger. Les chaînes d'approvisionnement s'étendent sur des dizaines de pays. Les crises financières dans un endroit se répercutent partout.`,
+        },
+        exemple: {
+          en: `During the COVID pandemic, France struggled to source masks and medicines because production had been moved to Asia. This reignited the debate about strategic independence.`,
+          fr: `Pendant la pandémie de COVID, la France a eu du mal à s'approvisionner en masques et médicaments car la production avait été déplacée en Asie. Cela a relancé le débat sur l'indépendance stratégique.`,
+        },
+        debat: {
+          en: `Supporters say globalisation reduces poverty globally and lowers prices. Critics say it benefits multinational corporations and wealthy countries most, while workers in rich nations lose jobs and workers in poor nations face exploitation. Both can be partially true.`,
+          fr: `Ses partisans disent que la mondialisation réduit la pauvreté à l'échelle mondiale et fait baisser les prix. Ses critiques estiment qu'elle profite surtout aux multinationales et aux pays riches, tandis que les travailleurs des pays riches perdent des emplois et ceux des pays pauvres font face à l'exploitation. Les deux peuvent être partiellement vrais.`,
+        },
+      },
+      {
+        id: 'protectionnisme',
+        term: { en: 'Protectionism', fr: 'Protectionnisme' },
+        simple: {
+          en: `When a government protects its own industries by taxing or limiting imports from other countries.`,
+          fr: `Quand un gouvernement protège ses propres industries en taxant ou en limitant les importations d'autres pays.`,
+        },
+        concretement: {
+          en: `Protectionist measures include tariffs (extra taxes on imports), import quotas, or subsidies for domestic producers. The goal is to make foreign goods more expensive so local ones stay competitive. This protects local jobs but raises consumer prices. The opposite of protectionism is free trade, where goods flow with minimal barriers.`,
+          fr: `Les mesures protectionnistes comprennent les droits de douane (taxes supplémentaires sur les importations), les quotas d'importation, ou les subventions aux producteurs nationaux. L'objectif est de rendre les produits étrangers plus chers pour que les produits locaux restent compétitifs. Cela protège les emplois locaux mais augmente les prix à la consommation. L'opposé du protectionnisme est le libre-échange, où les biens circulent avec peu de barrières.`,
+        },
+        exemple: {
+          en: `In 2025, the US imposed 25% tariffs on European steel and aluminium under Trump. The EU responded with counter-tariffs on American goods — a trade war.`,
+          fr: `En 2025, les États-Unis ont imposé des droits de douane de 25 % sur l'acier et l'aluminium européens sous Trump. L'UE a répondu avec des contre-tarifs sur les produits américains — une guerre commerciale.`,
+        },
+        debat: {
+          en: `The right often favours protectionism to defend national industry and sovereignty. Mainstream economists generally prefer free trade for its efficiency gains. The left is split: some support protectionism to defend workers' jobs; others worry it raises prices for the poor.`,
+          fr: `La droite est souvent favorable au protectionnisme pour défendre l'industrie nationale et la souveraineté. Les économistes dominants préfèrent généralement le libre-échange pour ses gains d'efficacité. La gauche est divisée : certains soutiennent le protectionnisme pour défendre les emplois des travailleurs ; d'autres craignent qu'il augmente les prix pour les plus modestes.`,
+        },
+      },
+      {
+        id: 'libre_echange',
+        term: { en: 'Free trade', fr: 'Libre-échange' },
+        simple: {
+          en: `Trade between countries with no or minimal tariffs and restrictions.`,
+          fr: `Le commerce entre pays sans droits de douane ni restrictions, ou avec un minimum de barrières.`,
+        },
+        concretement: {
+          en: `Free trade agreements (like CETA between the EU and Canada) allow goods to cross borders more freely. This can lower consumer prices and create export opportunities. But it also means domestic industries face more competition — which can mean job losses. The EU's single market is the world's largest free trade area.`,
+          fr: `Les accords de libre-échange (comme le CETA entre l'UE et le Canada) permettent aux marchandises de traverser les frontières plus librement. Cela peut faire baisser les prix à la consommation et créer des opportunités d'exportation. Mais cela expose aussi les industries nationales à une concurrence accrue — ce qui peut signifier des pertes d'emplois. Le marché unique de l'UE est la plus grande zone de libre-échange au monde.`,
+        },
+        exemple: {
+          en: `CETA, the EU–Canada trade deal, lowered tariffs on cars, food, and services. French farmers protested, fearing competition from cheaper Canadian agricultural imports.`,
+          fr: `Le CETA, l'accord commercial UE–Canada, a réduit les droits de douane sur les voitures, l'alimentation et les services. Des agriculteurs français ont manifesté, craignant la concurrence des importations agricoles canadiennes moins chères.`,
+        },
+        debat: {
+          en: `Supporters of free trade argue it boosts prosperity for all. Critics — on both left and right — argue it can undermine labour standards, food safety, and sovereignty. The debate is often about the terms of trade, not just whether trade happens.`,
+          fr: `Les partisans du libre-échange estiment qu'il accroît la prospérité de tous. Ses critiques — à gauche comme à droite — affirment qu'il peut affaiblir les normes sociales, la sécurité alimentaire et la souveraineté. Le débat porte souvent sur les conditions des échanges, pas seulement sur leur existence.`,
+        },
+      },
+    ],
+  },
+  {
+    id: 'concepts',
+    icon: '🧠',
+    label: { en: 'Political concepts', fr: 'Concepts politiques' },
+    terms: [
+      {
+        id: 'extreme_gauche',
+        term: { en: 'Far left', fr: 'Extrême gauche' },
+        simple: {
+          en: `Political movements that seek radical transformation of society toward equality and collective ownership.`,
+          fr: `Des mouvements politiques qui cherchent une transformation radicale de la société vers l'égalité et la propriété collective.`,
+        },
+        concretement: {
+          en: `Far-left parties generally advocate nationalising major industries, heavily taxing wealth, redistributing land, and abolishing or drastically reforming capitalism. They often support strong workers' rights and radical climate action. In France, parties to the left of La France Insoumise are often labelled far-left (e.g. NPA, Lutte Ouvrière). The term has a broader definition in the US.`,
+          fr: `Les partis d'extrême gauche préconisent généralement la nationalisation des grandes industries, une forte taxation de la richesse, la redistribution des terres, et l'abolition ou la réforme radicale du capitalisme. Ils soutiennent souvent des droits des travailleurs solides et une action climatique radicale. En France, les partis à gauche de La France Insoumise sont souvent étiquetés extrême gauche (ex. : NPA, Lutte Ouvrière). Le terme a une définition plus large aux États-Unis.`,
+        },
+        exemple: {
+          en: `Lutte Ouvrière (LO), a Trotskyist party in France, regularly runs in elections and advocates for workers' control of factories and abolition of the market economy.`,
+          fr: `Lutte Ouvrière (LO), parti trotskyste français, se présente régulièrement aux élections et prône le contrôle ouvrier des usines et l'abolition de l'économie de marché.`,
+        },
+        debat: {
+          en: `Supporters say capitalism generates inequality that only radical change can fix. Critics argue far-left programmes have historically failed or led to authoritarianism. The label "far left" is itself contested — often used pejoratively by opponents.`,
+          fr: `Ses partisans estiment que le capitalisme génère des inégalités que seul un changement radical peut corriger. Ses critiques avancent que les programmes d'extrême gauche ont historiquement échoué ou conduit à l'autoritarisme. L'étiquette « extrême gauche » est elle-même contestée — souvent utilisée de façon péjorative par les adversaires.`,
+        },
+      },
+      {
+        id: 'extreme_droite',
+        term: { en: 'Far right', fr: 'Extrême droite' },
+        simple: {
+          en: `Political movements that prioritise national identity, strict immigration control, and strong state authority — often rejecting liberal democracy or multiculturalism.`,
+          fr: `Des mouvements politiques qui privilégient l'identité nationale, un contrôle strict de l'immigration et une autorité étatique forte — rejetant souvent la démocratie libérale ou le multiculturalisme.`,
+        },
+        concretement: {
+          en: `Far-right parties typically call for steep reductions in immigration, prioritising citizens over foreigners in social benefits ("national preference"), strong law-and-order policies, and scepticism of international institutions like the EU. Some embrace nationalism; a smaller fringe advocates authoritarianism. In France, the Rassemblement National (RN) is the main far-right party.`,
+          fr: `Les partis d'extrême droite appellent généralement à une forte réduction de l'immigration, à la priorité nationale dans les aides sociales, à des politiques sécuritaires fortes et au scepticisme envers les institutions internationales comme l'UE. Certains embrassent le nationalisme ; une frange plus petite prône l'autoritarisme. En France, le Rassemblement National (RN) est le principal parti d'extrême droite.`,
+        },
+        exemple: {
+          en: `In the 2024 French legislative elections, the RN came first in the first round with around 33% of votes — the highest score for a far-right party in French history.`,
+          fr: `Lors des élections législatives françaises de 2024, le RN est arrivé premier au premier tour avec environ 33 % des voix — le meilleur score d'un parti d'extrême droite dans l'histoire de la France.`,
+        },
+        debat: {
+          en: `Supporters say far-right parties give voice to concerns about identity and security ignored by mainstream politics. Critics warn of risks to minority rights, democratic institutions, and international cooperation. The boundary between "conservative right" and "far right" is itself contested.`,
+          fr: `Ses partisans estiment que les partis d'extrême droite donnent une voix aux préoccupations d'identité et de sécurité ignorées par la politique traditionnelle. Ses critiques mettent en garde contre les risques pour les droits des minorités, les institutions démocratiques et la coopération internationale. La frontière entre « droite conservatrice » et « extrême droite » est elle-même contestée.`,
+        },
+      },
+      {
+        id: 'populisme',
+        term: { en: 'Populism', fr: 'Populisme' },
+        simple: {
+          en: `A political style that pits "the people" against "the elite" — claiming to represent the real majority against corrupt or out-of-touch leaders.`,
+          fr: `Un style politique qui oppose « le peuple » aux « élites » — prétendant représenter la vraie majorité contre des dirigeants corrompus ou déconnectés.`,
+        },
+        concretement: {
+          en: `Populism isn't a fixed ideology — it can be left-wing (redistributing from the rich) or right-wing (protecting the "real" nation from immigrants or globalists). What defines it is the claim that a pure, authentic "people" is being betrayed by a corrupt elite. Populist leaders tend to bypass traditional institutions, appeal directly to voters, and distrust journalists and experts.`,
+          fr: `Le populisme n'est pas une idéologie fixe — il peut être de gauche (redistribuer des riches) ou de droite (protéger la « vraie » nation contre les immigrés ou les mondialistes). Ce qui le définit, c'est l'affirmation qu'un « peuple » pur et authentique est trahi par une élite corrompue. Les leaders populistes tendent à contourner les institutions traditionnelles, à s'adresser directement aux électeurs et à se méfier des journalistes et des experts.`,
+        },
+        exemple: {
+          en: `Donald Trump ("Make America Great Again") and Jean-Luc Mélenchon ("La France Insoumise") are both described as populist — despite being on opposite ends of the political spectrum.`,
+          fr: `Donald Trump (« Make America Great Again ») et Jean-Luc Mélenchon (« La France Insoumise ») sont tous deux décrits comme populistes — malgré leurs positions opposées sur l'échiquier politique.`,
+        },
+        debat: {
+          en: `Some see populism as a healthy democratic corrective — a way for ordinary people to reclaim power from entrenched elites. Others warn that populists, once in power, often attack democratic institutions (courts, press, opposition) in the name of "the people."`,
+          fr: `Certains voient le populisme comme un correctif démocratique sain — un moyen pour les citoyens ordinaires de reprendre le pouvoir aux élites établies. D'autres avertissent que les populistes, une fois au pouvoir, s'attaquent souvent aux institutions démocratiques (tribunaux, presse, opposition) au nom du « peuple ».`,
+        },
+      },
+      {
+        id: 'souverainete',
+        term: { en: 'Sovereignty', fr: 'Souveraineté' },
+        simple: {
+          en: `The idea that a nation has the right and power to make its own decisions, free from external interference.`,
+          fr: `L'idée qu'une nation a le droit et le pouvoir de prendre ses propres décisions, sans ingérence extérieure.`,
+        },
+        concretement: {
+          en: `Sovereignty means a country controls its own laws, borders, currency, and military. In the EU, member states have shared some sovereignty — EU law overrides national law in many areas. Sovereignists want to reclaim more national control. The debate became central with Brexit, when the UK voted to leave the EU partly to "take back control."`,
+          fr: `La souveraineté signifie qu'un pays contrôle ses propres lois, frontières, monnaie et armée. Dans l'UE, les États membres ont partagé une partie de leur souveraineté — le droit européen prime sur le droit national dans de nombreux domaines. Les souverainistes veulent reprendre plus de contrôle national. Ce débat est devenu central avec le Brexit, lorsque le Royaume-Uni a voté pour quitter l'UE en partie pour « reprendre le contrôle ».`,
+        },
+        exemple: {
+          en: `France's decision to develop its own nuclear deterrent (the "Force de frappe") in the 1960s was a sovereignty move — choosing not to rely entirely on the US for defence.`,
+          fr: `La décision de la France de développer sa propre dissuasion nucléaire (la « Force de frappe ») dans les années 1960 était un geste de souveraineté — choisir de ne pas dépendre entièrement des États-Unis pour sa défense.`,
+        },
+        debat: {
+          en: `Sovereignists — on left and right — argue that shared governance undermines democracy because voters can't change rules set at EU or international level. European integrationists counter that pooling sovereignty gives small countries more collective power in a globalised world.`,
+          fr: `Les souverainistes — à gauche comme à droite — soutiennent que la gouvernance partagée affaiblit la démocratie car les électeurs ne peuvent pas changer les règles fixées au niveau européen ou international. Les partisans de l'intégration européenne rétorquent que la mise en commun de la souveraineté donne aux petits pays plus de puissance collective dans un monde globalisé.`,
+        },
+      },
+    ],
+  },
+];
+
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 14 },
   animate: { opacity: 1, y: 0 },
@@ -429,6 +929,124 @@ function CrisisCard({ crisis, language, delay }) {
   );
 }
 
+// ─── Glossary card ────────────────────────────────────────────────────────────
+
+function GlossaryCard({ term, language, delay }) {
+  const [open, setOpen] = useState(false);
+
+  const t = (key) => term[key]?.[language] ?? term[key]?.en ?? '';
+
+  return (
+    <motion.div
+      className="bg-white border border-gray-100 rounded-xl overflow-hidden"
+      {...fadeUp(delay)}
+    >
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-gray-50 transition-colors gap-3"
+      >
+        <span className="font-semibold text-gray-800 text-sm leading-snug">{t('term')}</span>
+        <span className="text-gray-300 text-lg leading-none flex-shrink-0">{open ? '−' : '+'}</span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-5 pt-1 border-t border-gray-50 space-y-3.5">
+              {/* Simple definition */}
+              <p className="text-sm text-gray-700 leading-relaxed">👉 {t('simple')}</p>
+
+              {/* Concrètement */}
+              <div className="bg-gray-50 rounded-xl px-4 py-3.5">
+                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">
+                  {language === 'fr' ? 'Concrètement' : 'In practice'}
+                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">{t('concretement')}</p>
+              </div>
+
+              {/* Exemple */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">
+                  {language === 'fr' ? 'Exemple' : 'Example'}
+                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">{t('exemple')}</p>
+              </div>
+
+              {/* Pourquoi c'est débattu */}
+              <div className="border-l-2 border-amber-200 pl-3.5">
+                <p className="text-[11px] font-semibold text-amber-600 uppercase tracking-widest mb-1.5">
+                  {language === 'fr' ? `Pourquoi c'est débattu` : 'Why it\'s debated'}
+                </p>
+                <p className="text-sm text-gray-500 leading-relaxed">{t('debat')}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function GlossaryCategory({ category, language, baseDelay }) {
+  const [open, setOpen] = useState(false);
+
+  const label = category.label[language] ?? category.label.en;
+
+  return (
+    <motion.div
+      className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm"
+      {...fadeUp(baseDelay)}
+    >
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-gray-50 transition-colors"
+      >
+        <span className="text-2xl flex-shrink-0 w-9 text-center">{category.icon}</span>
+        <div className="flex-1">
+          <span className="font-semibold text-gray-900 text-base leading-snug">{label}</span>
+          <span className="ml-2 text-xs text-gray-400">
+            {category.terms.length} {language === 'fr' ? 'termes' : 'terms'}
+          </span>
+        </div>
+        <span className="text-gray-300 text-xl leading-none flex-shrink-0 w-5 text-center">
+          {open ? '−' : '+'}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="terms"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-4 pt-1 border-t border-gray-50 space-y-2">
+              {category.terms.map((term, idx) => (
+                <GlossaryCard
+                  key={term.id}
+                  term={term}
+                  language={language}
+                  delay={0.04 + idx * 0.02}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Beginner() {
@@ -494,10 +1112,37 @@ export default function Beginner() {
         ))}
       </div>
 
+      {/* Glossary section */}
+      <motion.div className="mb-6" {...fadeUp(0.45)}>
+        <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+          <span>📖</span>
+          {language === 'fr' ? 'Glossaire' : 'Glossary'}
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-2">
+          {language === 'fr' ? 'Les mots que tu dois connaître' : 'Words you need to know'}
+        </h2>
+        <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
+          {language === 'fr'
+            ? `Les termes politiques expliqués sans jargon. Clique sur une catégorie pour explorer.`
+            : `Political terms explained without jargon. Click a category to explore.`}
+        </p>
+      </motion.div>
+
+      <div className="space-y-3 mb-14">
+        {GLOSSARY_CATEGORIES.map((category, idx) => (
+          <GlossaryCategory
+            key={category.id}
+            category={category}
+            language={language}
+            baseDelay={0.47 + idx * 0.03}
+          />
+        ))}
+      </div>
+
       {/* Bottom CTA */}
       <motion.div
         className="bg-gray-900 rounded-2xl px-6 py-8 text-center"
-        {...fadeUp(0.5)}
+        {...fadeUp(0.6)}
       >
         <p className="text-white font-bold text-lg mb-2">
           {language === 'fr' ? `Prêt à découvrir votre profil ?` : 'Ready to find your profile?'}
