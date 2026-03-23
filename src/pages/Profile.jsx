@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions } from '../data/questions.js';
 import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
@@ -1086,6 +1086,8 @@ export default function Profile() {
             themes={themes}
             rankedCurrents={rankedCurrents}
             language={language}
+            answeredCount={Object.keys(answers).length}
+            totalCount={questions.length}
             onClose={() => setShowShareModal(false)}
           />
         )}

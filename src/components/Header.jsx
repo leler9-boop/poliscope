@@ -21,7 +21,8 @@ export default function Header() {
     { key: 'home',      label: t('nav_home'),      page: 'landing',   path: '/' },
     { key: 'profile',   label: t('nav_profile'),   page: 'profile',   path: '/profile',   disabled: !profile },
     { key: 'elections', label: t('nav_elections'), page: 'elections', path: '/elections' },
-    { key: 'figures',   label: t('nav_figures'),   page: 'figures',   path: '/figures' },
+    { key: 'figures',        label: t('nav_figures'),        page: 'figures',        path: '/figures' },
+    { key: 'french_figures', label: t('nav_french_figures'), page: 'frenchFigures',  path: '/france' },
   ];
 
   const infoItems = [

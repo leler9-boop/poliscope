@@ -2,22 +2,48 @@ import React, { useRef, useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { rankByAlignment } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
-import { THEMES_ORDER } from '../data/questions.js';
+import { THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
-// ─── Short labels for compact bar display ────────────────────────────────────
+// ─── Axis definitions: pole labels + full labels for context ─────────────────
 
-const SHORT_LABELS = {
-  ECONOMY:         { fr: 'Économie',  en: 'Economy'  },
-  SOCIAL:          { fr: 'Social',    en: 'Social'   },
-  IMMIGRATION:     { fr: 'Immigr.',   en: 'Immigr.'  },
-  SECURITY:        { fr: 'Sécurité',  en: 'Security' },
-  ENVIRONMENT:     { fr: 'Environ.',  en: 'Environ.' },
-  DEMOCRACY:       { fr: 'Démocr.',   en: 'Democr.'  },
-  GLOBAL:          { fr: 'Mondial.',  en: 'Global'   },
-  PUBLIC_SERVICES: { fr: 'Services',  en: 'Services' },
+const THEME_AXES = {
+  ECONOMY:         { en: { name: 'Economy',      left: 'Redistrib.',   right: 'Free market',  leftFull: 'redistribution',  rightFull: 'free market'             },
+                     fr: { name: 'Économie',      left: 'Redistrib.',   right: 'Marché libre', leftFull: 'redistribution',  rightFull: 'marché libre'            } },
+  SOCIAL:          { en: { name: 'Social',        left: 'Traditional',  right: 'Progressive',  leftFull: 'tradition',       rightFull: 'progressisme'            },
+                     fr: { name: 'Social',         left: 'Trad.',        right: 'Progressiste', leftFull: 'tradition',       rightFull: 'progressisme'            } },
+  IMMIGRATION:     { en: { name: 'Immigration',   left: 'Restrictive',  right: 'Open',         leftFull: 'restriction',     rightFull: 'openness'                },
+                     fr: { name: 'Immigration',    left: 'Restrictif',   right: 'Ouverture',    leftFull: 'restriction',     rightFull: "ouverture"               } },
+  SECURITY:        { en: { name: 'Security',      left: 'State sec.',   right: 'Civil lib.',   leftFull: 'state security',  rightFull: 'civil liberties'         },
+                     fr: { name: 'Sécurité',       left: 'État',         right: 'Libertés',     leftFull: "sécurité d'État", rightFull: 'libertés civiles'        } },
+  ENVIRONMENT:     { en: { name: 'Environment',   left: 'Growth first', right: 'Ecology',      leftFull: 'growth',          rightFull: 'ecology'                 },
+                     fr: { name: 'Environnement',  left: 'Croissance',   right: 'Écologie',     leftFull: 'croissance',      rightFull: 'écologie'                } },
+  DEMOCRACY:       { en: { name: 'Democracy',     left: 'Strong state', right: 'Participative',leftFull: 'strong state',    rightFull: 'participatory democracy' },
+                     fr: { name: 'Démocratie',     left: 'État fort',    right: 'Participatif', leftFull: 'état fort',       rightFull: 'démocratie participative'} },
+  GLOBAL:          { en: { name: 'Global',         left: 'Sovereignty',  right: 'Multilateral.',leftFull: 'sovereignty',     rightFull: 'multilateralism'         },
+                     fr: { name: 'Mondial',         left: 'Souverain.',   right: 'Multilatér.',  leftFull: 'souveraineté',    rightFull: 'multilatéralisme'        } },
+  PUBLIC_SERVICES: { en: { name: 'Public services',left: 'Private',      right: 'Public',       leftFull: 'private sector',  rightFull: 'public services'         },
+                     fr: { name: 'Services pub.',   left: 'Privé',        right: 'Public',       leftFull: 'secteur privé',   rightFull: 'services publics'        } },
 };
+
+function positionContext(score, poles, lang) {
+  const { leftFull, rightFull } = poles;
+  if (score < 20) return lang === 'fr' ? `Très orienté vers ${leftFull}`      : `Strongly towards ${leftFull}`;
+  if (score < 38) return lang === 'fr' ? `Orienté vers ${leftFull}`           : `Leaning towards ${leftFull}`;
+  if (score < 46) return lang === 'fr' ? `Légèrement vers ${leftFull}`        : `Slightly towards ${leftFull}`;
+  if (score <= 54) return lang === 'fr' ? `Position équilibrée`               : `Balanced position`;
+  if (score <= 62) return lang === 'fr' ? `Légèrement vers ${rightFull}`      : `Slightly towards ${rightFull}`;
+  if (score <= 80) return lang === 'fr' ? `Orienté vers ${rightFull}`         : `Leaning towards ${rightFull}`;
+  return              lang === 'fr' ? `Très orienté vers ${rightFull}`        : `Strongly towards ${rightFull}`;
+}
+
+function hexAlpha(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -75,7 +101,13 @@ function getSubtitle(themes, lang) {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function ProfileShareModal({ themes, rankedCurrents, language, onClose }) {
+function getReliabilityLabel(pct, lang) {
+  if (pct >= 80) return lang === 'fr' ? 'Profil solide, peu susceptible de changer.' : 'Solid profile, unlikely to shift much.';
+  if (pct >= 50) return lang === 'fr' ? 'Profil partiel, à affiner avec plus de réponses.' : 'Partial profile — more answers would refine it.';
+  return lang === 'fr' ? 'Encore en construction — mais déjà révélateur.' : 'Still in progress — but already revealing.';
+}
+
+export default function ProfileShareModal({ themes, rankedCurrents, language, answeredCount = 0, totalCount = 120, onClose }) {
   const cardRef = useRef(null);
   const [copyStatus,     setCopyStatus]     = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(null);
@@ -93,6 +125,9 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, on
 
   const phrases  = useMemo(() => themes ? getPersonalPhrases(themes, lang) : [], [themes, lang]);
   const subtitle = useMemo(() => themes ? getSubtitle(themes, lang)        : '', [themes, lang]);
+
+  const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
+  const reliabilityLabel = getReliabilityLabel(reliabilityPct, lang);
 
   const shareText = lang === 'fr'
     ? `Je viens de cartographier mon profil politique sur Poliscope. Curieux(se) de savoir où tu te situes ? Essaie ici → https://poliscope.app`
@@ -167,12 +202,17 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, on
 
     divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', margin: '14px 0' },
 
-    // Theme bars
-    barsLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 },
-    barRow:    { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 },
-    barLabel:  { width: 54, flexShrink: 0, fontSize: 9, color: 'rgba(255,255,255,0.38)', textAlign: 'right', overflow: 'hidden', whiteSpace: 'nowrap' },
-    barTrack:  { flex: 1, height: 4, backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: 2, overflow: 'hidden' },
-    barValue:  { width: 20, flexShrink: 0, fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.38)', textAlign: 'right' },
+    // Theme axes
+    axesLabel:    { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 },
+    axisBlock:    { marginBottom: 10 },
+    axisHeader:   { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 },
+    axisName:     { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.08em' },
+    axisRow:      { display: 'flex', alignItems: 'center', gap: 5 },
+    axisPoleLeft: { width: 48, flexShrink: 0, fontSize: 8, color: 'rgba(255,255,255,0.2)', textAlign: 'right', overflow: 'hidden', whiteSpace: 'nowrap' },
+    axisPoleRight:{ width: 48, flexShrink: 0, fontSize: 8, color: 'rgba(255,255,255,0.2)', overflow: 'hidden', whiteSpace: 'nowrap' },
+    axisTrack:    { flex: 1, position: 'relative', height: 14, display: 'flex', alignItems: 'center' },
+    axisLine:     { position: 'absolute', left: 0, right: 0, height: 2, borderRadius: 1 },
+    axisContext:  { fontSize: 8, fontStyle: 'italic', color: 'rgba(255,255,255,0.2)', marginTop: 3 },
 
     // Phrases
     phraseLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10 },
@@ -191,8 +231,14 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, on
     figureText:   { flex: 1, fontSize: 11, color: 'rgba(255,255,255,0.5)', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
     figureScore:  { fontSize: 13, fontWeight: 800, color: accentColor, flexShrink: 0 },
 
+    // Reliability
+    reliabilityRow:   { display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 14 },
+    reliabilityLabel: { fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 },
+    reliabilityPct:   { fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.32)' },
+    reliabilitySub:   { fontSize: 9, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic', marginTop: 2 },
+
     // Footer
-    footer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 14 },
+    footer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 10 },
     footerCta:  { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.01em' },
     footerUrl:  { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.14em', textTransform: 'uppercase' },
   };
@@ -239,20 +285,46 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, on
             </div>
             <p style={card.isoSub}>{subtitle}</p>
 
-            {/* Theme bars */}
+            {/* Theme axes */}
             <div style={card.divider} />
-            <p style={card.barsLabel}>{lang === 'fr' ? 'Par thème' : 'By theme'}</p>
+            <p style={card.axesLabel}>{lang === 'fr' ? 'Par thème' : 'By theme'}</p>
             <div>
-              {THEMES_ORDER.map(theme => {
-                const score = Math.round(themes?.[theme] ?? 50);
-                const label = SHORT_LABELS[theme]?.[lang] ?? theme;
+              {THEMES_ORDER.map((theme, idx) => {
+                const score   = Math.round(themes?.[theme] ?? 50);
+                const tColor  = THEME_COLORS[theme] ?? '#6b7280';
+                const poles   = THEME_AXES[theme]?.[lang] ?? THEME_AXES[theme]?.en ?? {};
+                const context = positionContext(score, poles, lang);
                 return (
-                  <div key={theme} style={card.barRow}>
-                    <span style={card.barLabel}>{label}</span>
-                    <div style={card.barTrack}>
-                      <div style={{ width: `${score}%`, height: '100%', backgroundColor: accentColor, borderRadius: 2, opacity: 0.85 }} />
+                  <div key={theme} style={{ ...card.axisBlock, marginBottom: idx < THEMES_ORDER.length - 1 ? 10 : 0 }}>
+                    {/* Name + score */}
+                    <div style={card.axisHeader}>
+                      <span style={card.axisName}>{poles.name ?? theme}</span>
+                      <span style={{ fontSize: 11, fontWeight: 800, color: tColor, letterSpacing: '-0.01em' }}>{score}</span>
                     </div>
-                    <span style={card.barValue}>{score}</span>
+                    {/* Axis row: left pole | track+dot | right pole */}
+                    <div style={card.axisRow}>
+                      <span style={card.axisPoleLeft}>{poles.left}</span>
+                      <div style={card.axisTrack}>
+                        <div style={{
+                          ...card.axisLine,
+                          background: `linear-gradient(to right, rgba(255,255,255,0.06), ${hexAlpha(tColor, 0.35)})`,
+                        }} />
+                        <div style={{
+                          position: 'absolute',
+                          left: `${score}%`,
+                          transform: 'translateX(-50%)',
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          backgroundColor: tColor,
+                          boxShadow: `0 0 6px 2px ${hexAlpha(tColor, 0.45)}`,
+                          flexShrink: 0,
+                        }} />
+                      </div>
+                      <span style={card.axisPoleRight}>{poles.right}</span>
+                    </div>
+                    {/* Context sentence */}
+                    <p style={card.axisContext}>{context}</p>
                   </div>
                 );
               })}
@@ -283,6 +355,15 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, on
                 <span style={card.figureScore}>{topFigure.alignment}%</span>
               </div>
             )}
+
+            {/* Reliability */}
+            <div style={{ marginTop: 14 }}>
+              <div style={card.reliabilityRow}>
+                <span style={card.reliabilityLabel}>{lang === 'fr' ? 'Fiabilité du profil' : 'Profile reliability'}</span>
+                <span style={card.reliabilityPct}>{reliabilityPct}%</span>
+              </div>
+              <p style={card.reliabilitySub}>{reliabilityLabel}</p>
+            </div>
 
             {/* Footer */}
             <div style={card.footer}>

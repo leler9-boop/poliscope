@@ -26,6 +26,7 @@ export const PAGE_TO_PATH = {
   mission:      '/mission',
   transparency: '/transparency',
   beginner:     '/learn',
+  frenchFigures: '/france',
   // Dynamic — resolved at call time with IDs from store
   electionDetail:   null,
   candidateProfile: null,
@@ -45,4 +46,5 @@ export const PATH_TO_PAGE = {
   '/mission':      'mission',
   '/transparency': 'transparency',
   '/learn':        'beginner',
+  '/france':       'frenchFigures',
 };

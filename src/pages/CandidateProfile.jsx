@@ -6,6 +6,7 @@ import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { candidateDetails } from '../data/candidateDetails.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 
 // Pole labels for each theme (0 = left pole, 100 = right pole)
 const THEME_AXES = {
@@ -68,7 +69,7 @@ function ThemeBarRow({ label, score, color, delay = 0 }) {
 }
 
 /** User vs candidate — two aligned bars on the same scale */
-function ThemeAxis({ score, userScore, color, leftLabel, rightLabel, diff, themeLabel, candidateName, language, delay = 0 }) {
+function ThemeAxis({ score, userScore, color, leftLabel, rightLabel, diff, themeLabel, candidateName, language, policyText, delay = 0 }) {
   const hasUser  = userScore != null;
   const shortName = candidateName.split(' ').pop();
   const youLabel  = language === 'fr' ? 'Vous' : 'You';
@@ -108,6 +109,16 @@ function ThemeAxis({ score, userScore, color, leftLabel, rightLabel, diff, theme
             >
               {diffSentence(diff, themeLabel, candidateName, language)}
             </motion.p>
+            {policyText && (
+              <motion.p
+                className="text-xs text-gray-500 leading-relaxed mt-2 pl-3 border-l-2 border-gray-200"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: delay + 0.9 }}
+              >
+                {policyText}
+              </motion.p>
+            )}
           </div>
           <div className="w-7 flex-shrink-0" />
         </div>
@@ -302,6 +313,9 @@ export default function CandidateProfile() {
             const color      = THEME_COLORS[theme] ?? '#6b7280';
             const poles      = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
             const diff       = userScore != null ? Math.abs(score - userScore) : null;
+            const policyText = POLICY_ELECTION_IDS.has(election.id) && diff != null && diff < 28
+              ? CANDIDATE_POLICIES[candidateId]?.[theme]?.[language] ?? null
+              : null;
             return (
               <div key={theme} className={idx > 0 ? 'pt-5' : ''}>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">{label}</p>
@@ -315,6 +329,7 @@ export default function CandidateProfile() {
                   themeLabel={label}
                   candidateName={candidate.name}
                   language={language}
+                  policyText={policyText}
                   delay={0.08 + idx * 0.05}
                 />
               </div>

@@ -17,6 +17,7 @@ const Profile          = lazy(() => import('./pages/Profile.jsx'));
 const Elections        = lazy(() => import('./pages/Elections.jsx'));
 const ElectionDetail   = lazy(() => import('./pages/ElectionDetail.jsx'));
 const HistoricalFigures = lazy(() => import('./pages/HistoricalFigures.jsx'));
+const FrenchFigures     = lazy(() => import('./pages/FrenchFigures.jsx'));
 const Auth             = lazy(() => import('./pages/Auth.jsx'));
 const Mission          = lazy(() => import('./pages/Mission.jsx'));
 const Transparency     = lazy(() => import('./pages/Transparency.jsx'));
@@ -95,6 +96,7 @@ function AppInner() {
             <Route path="/candidates/:id" element={<CandidateProfile />} />
             <Route path="/compare/:id1/:id2" element={<CandidateCompare />} />
             <Route path="/figures"      element={<HistoricalFigures />} />
+            <Route path="/france"       element={<FrenchFigures />} />
             <Route path="/auth"         element={<Auth />} />
             <Route path="/mission"      element={<Mission />} />
             <Route path="/transparency" element={<Transparency />} />
