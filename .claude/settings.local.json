@@ -31,7 +31,15 @@
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node -e \"\nconst { elections } = await import\\('./src/data/elections.js'\\);\nconsole.log\\(elections.map\\(e => e.id\\)\\);\n\" --input-type=module 2>&1)",
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node -e \"\nconst { elections } = await import\\('./src/data/elections.js'\\);\nelections.filter\\(e => e.id === 'us_2020'\\).forEach\\(e => {\n  e.candidates.forEach\\(c => console.log\\(c.id, '|', c.name\\)\\);\n}\\);\n\" --input-type=module 2>&1)",
       "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -8)",
-      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1; echo \"BUILD_DONE_$?\")"
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1; echo \"BUILD_DONE_$?\")",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npm run build 2>&1 | tail -6)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && npx vite build 2>&1 | grep -E \"✓|error|Error|built\" | tail -5)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && timeout 120 npx vite build 2>&1)",
+      "Bash(which uv && uv --version 2>&1)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/**)",
+      "Bash(pyenv versions)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1)"
     ]
   }
 }

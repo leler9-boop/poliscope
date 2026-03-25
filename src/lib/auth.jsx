@@ -11,15 +11,66 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   /**
-   * Fetch all answers for a given userId from Supabase and hydrate the store.
-   * Only hydrates if the store has no local answers (guest or fresh session).
+   * Smart sync: compare local vs cloud answer counts and apply the best profile.
+   *
+   * Rules:
+   * - no remote profile  → push local to cloud (background)
+   * - remote > local     → hydrate from cloud
+   * - local > remote     → push local to cloud (background)
+   * - equal count        → use most recent (last_updated)
    */
-  async function loadAnswersForUser(userId) {
+  async function smartSync(userId) {
     if (!isSupabaseEnabled || !supabase) return;
-    const storeState = useStore.getState();
-    const hasLocalAnswers = Object.keys(storeState.answers).length > 0;
-    if (hasLocalAnswers) return; // Let the migration flow handle this
 
+    const storeState    = useStore.getState();
+    const localAnswers  = storeState.answers;
+    const localCount    = Object.keys(localAnswers).length;
+
+    // Fetch cloud profile snapshot for count + timestamp comparison
+    const { data: cloudProfile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('answered_count, updated_at')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('[Poliscope] smartSync profile fetch error:', profileError.message);
+      return;
+    }
+
+    const remoteCount = cloudProfile?.answered_count ?? 0;
+
+    if (remoteCount === 0 && localCount === 0) return;
+
+    if (remoteCount === 0) {
+      // No remote profile → upload local in background
+      if (localCount > 0) _pushLocalToCloud(userId, localAnswers);
+      return;
+    }
+
+    if (remoteCount > localCount) {
+      // Cloud is more complete → hydrate local from cloud
+      await _hydrateFromCloud(userId);
+      return;
+    }
+
+    if (localCount > remoteCount) {
+      // Local is more complete → push to cloud in background
+      _pushLocalToCloud(userId, localAnswers);
+      return;
+    }
+
+    // Equal count → compare timestamps, use most recent
+    const remoteUpdated = cloudProfile?.updated_at ? new Date(cloudProfile.updated_at) : null;
+    const localUpdated  = storeState.profileLastUpdated ? new Date(storeState.profileLastUpdated) : null;
+
+    if (remoteUpdated && (!localUpdated || remoteUpdated > localUpdated)) {
+      await _hydrateFromCloud(userId);
+    }
+    // otherwise local is most recent — keep it as-is
+  }
+
+  async function _hydrateFromCloud(userId) {
     const { data, error } = await supabase
       .from('user_answers')
       .select('question_id, answer_value')
@@ -37,41 +88,54 @@ export function AuthProvider({ children }) {
     }
   }
 
+  function _pushLocalToCloud(userId, localAnswers) {
+    const rows = Object.entries(localAnswers).map(([question_id, answer_value]) => ({
+      user_id: userId, question_id, answer_value,
+    }));
+    if (rows.length === 0) return;
+    supabase
+      .from('user_answers')
+      .upsert(rows, { onConflict: 'user_id,question_id' })
+      .then(({ error }) => {
+        if (error) console.error('[Poliscope] Sync upload error:', error.message);
+      });
+  }
+
   useEffect(() => {
     if (!isSupabaseEnabled) {
       setLoading(false);
       return;
     }
 
-    // Get initial session, then load cloud answers if already logged in
+    // Get initial session and sync answers
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user ?? null;
       setUser(u);
       useStore.getState().setAuthUser(u);
 
-      if (u) {
-        await loadAnswersForUser(u.id);
-      }
+      if (u) await smartSync(u.id);
 
       setLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       const u = session?.user ?? null;
       setUser(u);
       useStore.getState().setAuthUser(u);
 
       if (event === 'SIGNED_IN' && u) {
-        const { answers, setPendingMigration } = useStore.getState();
-        const hasLocalAnswers = Object.keys(answers).length > 0;
+        await smartSync(u.id);
 
-        if (hasLocalAnswers) {
-          // User has unsaved local answers — offer migration
-          setPendingMigration(true);
-        } else {
-          // No local answers — silently load from cloud
-          loadAnswersForUser(u.id);
+        // Show onboarding if user has never filled in demographics
+        const { data: demo } = await supabase
+          .from('user_demographics')
+          .select('id')
+          .eq('user_id', u.id)
+          .maybeSingle();
+
+        if (!demo) {
+          useStore.getState().setNeedsOnboarding(true);
         }
       }
     });
@@ -166,6 +230,35 @@ export function AuthProvider({ children }) {
     };
   }
 
+  /**
+   * Save optional demographic data. Creates a record even if all fields are null
+   * (used to mark onboarding as seen/skipped).
+   */
+  async function saveDemographics({ age_range, education_level, postal_code }) {
+    if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
+    const { error } = await supabase
+      .from('user_demographics')
+      .upsert(
+        { user_id: user.id, age_range: age_range ?? null, education_level: education_level ?? null, postal_code: postal_code ?? null },
+        { onConflict: 'user_id' }
+      );
+    if (error) console.error('[Poliscope] Demographics save error:', error.message);
+    return { error };
+  }
+
+  /**
+   * Load demographic data for the current user.
+   */
+  async function loadDemographics() {
+    if (!isSupabaseEnabled || !user) return null;
+    const { data } = await supabase
+      .from('user_demographics')
+      .select('*')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    return data;
+  }
+
   const value = {
     user,
     loading,
@@ -178,6 +271,8 @@ export function AuthProvider({ children }) {
     saveAnswers,
     saveUserProfile,
     loadCloudData,
+    saveDemographics,
+    loadDemographics,
     // Legacy alias used by the Profile.jsx cloud-save button
     saveProfile: async (answers) => saveAnswers(answers),
   };

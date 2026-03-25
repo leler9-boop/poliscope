@@ -5,6 +5,7 @@ import { createTranslator } from './i18n/translations.js';
 import { useAuth } from './lib/auth.jsx';
 import { setRouterNavigate } from './lib/router.js';
 import Header from './components/Header.jsx';
+import OnboardingModal from './components/OnboardingModal.jsx';
 
 // Eager — core quiz flow
 import Landing from './pages/Landing.jsx';
@@ -62,9 +63,10 @@ function ProfileGuard({ children }) {
 }
 
 function AppInner() {
-  const language = useStore(s => s.language);
-  const answers  = useStore(s => s.answers);
-  const profile  = useStore(s => s.profile);
+  const language        = useStore(s => s.language);
+  const answers         = useStore(s => s.answers);
+  const profile         = useStore(s => s.profile);
+  const needsOnboarding = useStore(s => s.needsOnboarding);
   const t = createTranslator(language);
 
   const { saveUserProfile, isAuthenticated } = useAuth();
@@ -83,6 +85,7 @@ function AppInner() {
       <NavigationBridge />
       <ScrollToTop />
       <Header t={t} />
+      {needsOnboarding && <OnboardingModal />}
       <main className="flex-1">
         <Suspense fallback={<PageLoader />}>
           <Routes>

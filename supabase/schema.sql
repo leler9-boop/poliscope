@@ -92,8 +92,37 @@ CREATE TRIGGER set_user_profiles_updated_at
 
 CREATE INDEX IF NOT EXISTS user_profiles_user_id_idx ON public.user_profiles (user_id);
 
+-- ─────────────────────────────────────────────────────────────────────────────
+-- user_demographics: optional onboarding data — one row per user
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.user_demographics (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  age_range       text,
+  education_level text,
+  postal_code     text,
+  updated_at      timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT user_demographics_user_id_unique UNIQUE (user_id)
+);
+
+ALTER TABLE public.user_demographics ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "user_demographics: users manage own row"
+  ON public.user_demographics FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+DROP TRIGGER IF EXISTS set_user_demographics_updated_at ON public.user_demographics;
+CREATE TRIGGER set_user_demographics_updated_at
+  BEFORE UPDATE ON public.user_demographics
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE INDEX IF NOT EXISTS user_demographics_user_id_idx ON public.user_demographics (user_id);
+
 -- ── Notes ─────────────────────────────────────────────────────────────────────
 -- user_answers.answer_value : 1–5 (Likert scale)
 -- user_profiles.theme_scores: { "ECONOMY": 62, "SOCIAL": 45, ... }
 -- user_profiles.axes        : { "economic": 55, "social": 72, ... }
 -- user_profiles.confidence  : "very_low" | "low" | "medium" | "high" | "very_high"
+-- user_demographics.age_range       : "18-24" | "25-34" | "35-44" | "45-54" | "55-64" | "65+"
+-- user_demographics.education_level : "primaire" | "college" | "lycee" | "bac" | "bac_1_2" | "bac_3" | "bac_4_5" | "bac_5_plus"

@@ -55,6 +55,12 @@ export const useStore = create(
       // ── Migration (session-only) ──
       pendingMigration: false,
 
+      // ── Onboarding (session-only) ──
+      needsOnboarding: false,
+
+      // ── Profile last updated timestamp (persisted for cross-device sync) ──
+      profileLastUpdated: null,
+
       // ── Profile adjustments (manual refinement, does not touch original answers) ──
       profileAdjustments: {}, // { [THEME]: deltaPoints }
 
@@ -144,6 +150,8 @@ export const useStore = create(
 
       setPendingMigration: (v) => set({ pendingMigration: v }),
 
+      setNeedsOnboarding: (v) => set({ needsOnboarding: v }),
+
       applyRefinement: (themeDeltas) => {
         // themeDeltas: { ECONOMY: -5, PUBLIC_SERVICES: +5, ... }
         const current = get().profileAdjustments;
@@ -197,11 +205,13 @@ export const useStore = create(
       answerQuestion: (questionId, value) => {
         const newAnswers = { ...get().answers, [questionId]: value };
         const profile = calculateProfile(newAnswers);
-        set({ answers: newAnswers, profile });
+        const now = new Date().toISOString();
+        set({ answers: newAnswers, profile, profileLastUpdated: now });
 
         // Immediately persist to Supabase for logged-in users
         const { userId } = get();
         if (isSupabaseEnabled && supabase && userId) {
+          // Save individual answer
           supabase
             .from('user_answers')
             .upsert(
@@ -210,6 +220,23 @@ export const useStore = create(
             )
             .then(({ error }) => {
               if (error) console.error('[Poliscope] Supabase answer save error:', error.message);
+            });
+          // Save profile snapshot (answered_count used for cross-device sync)
+          supabase
+            .from('user_profiles')
+            .upsert(
+              {
+                user_id:          userId,
+                theme_scores:     profile.themes,
+                axes:             profile.axes,
+                confidence:       profile.confidence ?? 'very_low',
+                confidence_score: profile.confidenceScore ?? 0,
+                answered_count:   Object.keys(newAnswers).length,
+              },
+              { onConflict: 'user_id' }
+            )
+            .then(({ error }) => {
+              if (error) console.error('[Poliscope] Supabase profile snapshot error:', error.message);
             });
         }
       },
@@ -314,6 +341,7 @@ export const useStore = create(
         electionAnswers: state.electionAnswers,
         profileAdjustments: state.profileAdjustments,
         themeWeights: state.themeWeights,
+        profileLastUpdated: state.profileLastUpdated,
       }),
     }
   )

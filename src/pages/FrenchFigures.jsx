@@ -62,6 +62,168 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.5, delay, ease: [0.25, 0.46, 0.45, 0.94] },
 });
 
+// ── Profile Drawer ────────────────────────────────────────────────────────────
+
+function ProfileDrawer({ figure, language, onClose }) {
+  const drawerRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const party    = typeof figure.party === 'object' ? figure.party[language] : figure.party;
+  const role     = typeof figure.role  === 'object' ? figure.role[language]  : figure.role;
+  const summary  = figure.short_summary?.[language];
+  const desc     = typeof figure.description === 'object' ? figure.description[language] : figure.description;
+  const positions = figure.key_positions?.[language] ?? [];
+  const facts     = figure.key_facts?.[language] ?? [];
+  const timeline  = figure.career_timeline ?? [];
+
+  const FAMILY_COLORS = {
+    center: '#3b82f6', left: '#ef4444', right: '#1e40af',
+    far_right: '#1f2937', ecology: '#10b981',
+  };
+  const familyColor = FAMILY_COLORS[figure.family] ?? '#6b7280';
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex justify-end"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+        onClick={onClose}
+      >
+        <motion.div
+          ref={drawerRef}
+          className="relative bg-white w-full max-w-lg h-full overflow-y-auto shadow-2xl"
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Color accent top bar */}
+          <div style={{ height: 3, backgroundColor: familyColor }} />
+
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors text-xl leading-none z-10"
+          >
+            ×
+          </button>
+
+          <div className="p-6 pt-5 space-y-7">
+
+            {/* Header */}
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{figure.emoji}</span>
+                <div className="min-w-0">
+                  <h2 className="text-xl font-bold text-gray-900 leading-tight">{figure.name}</h2>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span
+                      className="text-xs font-semibold px-2 py-0.5 rounded-full text-white"
+                      style={{ backgroundColor: familyColor }}
+                    >
+                      {party}
+                    </span>
+                    <span className="text-xs text-gray-400">{role}</span>
+                  </div>
+                </div>
+              </div>
+              {summary && (
+                <p className="text-sm text-gray-600 leading-relaxed">{summary}</p>
+              )}
+            </div>
+
+            {/* Description */}
+            {desc && (
+              <section>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
+                  {language === 'fr' ? 'Qui est-il / elle ?' : 'Who are they?'}
+                </h3>
+                <p className="text-sm text-gray-700 leading-relaxed">{desc}</p>
+              </section>
+            )}
+
+            {/* Key positions */}
+            {positions.length > 0 && (
+              <section>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+                  {language === 'fr' ? 'Positions clés' : 'Key positions'}
+                </h3>
+                <ul className="space-y-2">
+                  {positions.map((pos, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700 leading-snug">
+                      <span
+                        className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: familyColor }}
+                      />
+                      {pos}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Key facts */}
+            {facts.length > 0 && (
+              <section>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+                  {language === 'fr' ? 'Pourquoi on en parle' : 'Why people talk about them'}
+                </h3>
+                <div className="space-y-2">
+                  {facts.map((fact, i) => (
+                    <p
+                      key={i}
+                      className="text-sm text-gray-600 leading-snug pl-3 border-l-2 border-amber-300"
+                    >
+                      {fact}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Timeline */}
+            {timeline.length > 0 && (
+              <section>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                  {language === 'fr' ? 'Parcours' : 'Career'}
+                </h3>
+                <div className="relative pl-5 border-l-2 border-gray-100 space-y-4">
+                  {timeline.map((item, i) => (
+                    <div key={i} className="relative">
+                      <span className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-white border-2 border-gray-300" />
+                      <div className="flex gap-3 items-start">
+                        <span className="text-xs font-bold text-gray-400 w-10 flex-shrink-0 pt-0.5">{item.year}</span>
+                        <span className="text-sm text-gray-700 leading-snug">{item[language] ?? item.en}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Disclaimer */}
+            {figure.disclaimer && (
+              <p className="text-xs text-gray-400 leading-relaxed border-t border-gray-100 pt-4 italic">
+                {typeof figure.disclaimer === 'object' ? figure.disclaimer[language] : figure.disclaimer}
+              </p>
+            )}
+
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 // ── Compare Modal ─────────────────────────────────────────────────────────────
 
 function CompareModal({ figure, userThemes, language, onClose }) {
@@ -227,6 +389,7 @@ export default function FrenchFigures() {
   const [search,        setSearch]        = useState('');
   const [familyFilter,  setFamilyFilter]  = useState('all');
   const [compareTarget, setCompareTarget] = useState(null);
+  const [profileTarget, setProfileTarget] = useState(null);
 
   const adjustedProfile = profile
     ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }
@@ -348,7 +511,13 @@ export default function FrenchFigures() {
                 showDetails={true}
                 whyMatch={generateWhyMatch(adjustedProfile.themes, topMatch, language)}
               />
-              <div className="mt-2 flex justify-end">
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => setProfileTarget(topMatch)}
+                  className="text-xs font-medium text-gray-500 hover:text-gray-900 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors"
+                >
+                  {language === 'fr' ? `Voir le profil` : `View profile`}
+                </button>
                 <button
                   onClick={() => setCompareTarget(topMatch)}
                   className="text-xs font-medium text-gray-400 hover:text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
@@ -376,7 +545,13 @@ export default function FrenchFigures() {
                     showDetails={true}
                     whyMatch={generateWhyMatch(adjustedProfile.themes, figure, language)}
                   />
-                  <div className="mt-2 flex justify-end">
+                  <div className="mt-2 flex justify-end gap-2">
+                    <button
+                      onClick={() => setProfileTarget(figure)}
+                      className="text-xs font-medium text-gray-500 hover:text-gray-900 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors"
+                    >
+                      {language === 'fr' ? `Voir le profil` : `View profile`}
+                    </button>
                     <button
                       onClick={() => setCompareTarget(figure)}
                       className="text-xs font-medium text-gray-400 hover:text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
@@ -410,7 +585,13 @@ export default function FrenchFigures() {
                       showDetails={true}
                       whyMatch={generateWhyMatch(adjustedProfile.themes, figure, language)}
                     />
-                    <div className="mt-2 flex justify-end">
+                    <div className="mt-2 flex justify-end gap-2">
+                      <button
+                        onClick={() => setProfileTarget(figure)}
+                        className="text-xs font-medium text-gray-500 hover:text-gray-900 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors"
+                      >
+                        {language === 'fr' ? `Voir le profil` : `View profile`}
+                      </button>
                       <button
                         onClick={() => setCompareTarget(figure)}
                         className="text-xs font-medium text-gray-400 hover:text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
@@ -480,7 +661,13 @@ export default function FrenchFigures() {
                 showDetails={true}
                 whyMatch={null}
               />
-              <div className="mt-2 flex justify-end">
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => setProfileTarget(figure)}
+                  className="text-xs font-medium text-gray-500 hover:text-gray-900 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors"
+                >
+                  {language === 'fr' ? `Voir le profil` : `View profile`}
+                </button>
                 <button
                   onClick={() => setCompareTarget(figure)}
                   className="text-xs font-medium text-gray-400 hover:text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
@@ -491,6 +678,15 @@ export default function FrenchFigures() {
             </motion.div>
           ))}
         </div>
+      )}
+
+      {/* ── Profile drawer ── */}
+      {profileTarget && (
+        <ProfileDrawer
+          figure={profileTarget}
+          language={language}
+          onClose={() => setProfileTarget(null)}
+        />
       )}
 
       {/* ── Compare modal ── */}
