@@ -55,8 +55,16 @@ export function AuthProvider({ children }) {
     }
 
     if (localCount > remoteCount) {
-      // Local is more complete → push to cloud in background
-      _pushLocalToCloud(userId, localAnswers);
+      // Local is more complete → ask user which profile to keep
+      const { data: remoteData } = await supabase
+        .from('user_answers')
+        .select('question_id, answer_value')
+        .eq('user_id', userId);
+
+      const remoteAnswers = {};
+      (remoteData ?? []).forEach(row => { remoteAnswers[row.question_id] = row.answer_value; });
+
+      useStore.getState().setSyncConflict({ remoteAnswers, remoteCount, localCount, userId });
       return;
     }
 

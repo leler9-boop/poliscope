@@ -58,6 +58,10 @@ export const useStore = create(
       // ── Onboarding (session-only) ──
       needsOnboarding: false,
 
+      // ── Sync conflict (session-only): set when local > remote on login ──
+      // null | { remoteAnswers, remoteCount, localCount, userId }
+      syncConflict: null,
+
       // ── Profile last updated timestamp (persisted for cross-device sync) ──
       profileLastUpdated: null,
 
@@ -151,6 +155,8 @@ export const useStore = create(
       setPendingMigration: (v) => set({ pendingMigration: v }),
 
       setNeedsOnboarding: (v) => set({ needsOnboarding: v }),
+
+      setSyncConflict: (v) => set({ syncConflict: v }),
 
       applyRefinement: (themeDeltas) => {
         // themeDeltas: { ECONOMY: -5, PUBLIC_SERVICES: +5, ... }

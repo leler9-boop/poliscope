@@ -6,6 +6,7 @@ import { useAuth } from './lib/auth.jsx';
 import { setRouterNavigate } from './lib/router.js';
 import Header from './components/Header.jsx';
 import OnboardingModal from './components/OnboardingModal.jsx';
+import SyncConflictModal from './components/SyncConflictModal.jsx';
 
 // Eager — core quiz flow
 import Landing from './pages/Landing.jsx';
@@ -67,6 +68,7 @@ function AppInner() {
   const answers         = useStore(s => s.answers);
   const profile         = useStore(s => s.profile);
   const needsOnboarding = useStore(s => s.needsOnboarding);
+  const syncConflict    = useStore(s => s.syncConflict);
   const t = createTranslator(language);
 
   const { saveUserProfile, isAuthenticated } = useAuth();
@@ -85,7 +87,8 @@ function AppInner() {
       <NavigationBridge />
       <ScrollToTop />
       <Header t={t} />
-      {needsOnboarding && <OnboardingModal />}
+      {syncConflict && <SyncConflictModal />}
+      {needsOnboarding && !syncConflict && <OnboardingModal />}
       <main className="flex-1">
         <Suspense fallback={<PageLoader />}>
           <Routes>
