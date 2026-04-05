@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import QuestionCard from '../components/QuestionCard.jsx';
+import PreQuizModal from '../components/PreQuizModal.jsx';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -18,6 +20,15 @@ export default function Questionnaire() {
   const nextImproveQuestion  = useStore(s => s.nextImproveQuestion);
   const totalAnswered        = Object.keys(answers).length;
   const t = createTranslator(language);
+
+  const [introSeen, setIntroSeen] = useState(() => {
+    try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
+  });
+
+  const handleIntroStart = () => {
+    try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
+    setIntroSeen(true);
+  };
 
   if (!questionsQueue || questionsQueue.length === 0) {
     return (
@@ -62,6 +73,12 @@ export default function Questionnaire() {
   };
 
   return (
+    <>
+    <AnimatePresence>
+      {!introSeen && !improveMode && (
+        <PreQuizModal language={language} onStart={handleIntroStart} />
+      )}
+    </AnimatePresence>
     <div className="min-h-[calc(100vh-56px)] bg-gray-50 flex flex-col">
       {/* Top progress bar */}
       <div className="bg-white border-b border-gray-100 px-4 py-3 sticky top-14 z-30">
@@ -169,5 +186,6 @@ export default function Questionnaire() {
         </div>
       </div>
     </div>
+    </>
   );
 }
