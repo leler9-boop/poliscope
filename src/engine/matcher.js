@@ -1,4 +1,4 @@
-// POLISCOPE — Matching Engine
+// POLISCOP — Matching Engine
 // Calculates alignment scores between a user profile and candidates/figures.
 
 import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';

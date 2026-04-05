@@ -1,4 +1,4 @@
-// POLISCOPE — Deterministic Profile Summary Generator
+// POLISCOP — Deterministic Profile Summary Generator
 // Generates a 3–4 sentence neutral description of the user's political tendencies.
 // No AI, no external calls — fully deterministic based on theme scores.
 

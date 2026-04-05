@@ -212,14 +212,14 @@ export default function Landing() {
         </section>
 
         {/* ══════════════════════════════════
-            WHY POLISCOPE
+            WHY POLISCOP
         ══════════════════════════════════ */}
         <section className="pb-20 sm:pb-24">
           <motion.p
             className="text-xs font-semibold text-gray-400 uppercase tracking-widest text-center mb-12"
             {...scrollReveal()}
           >
-            {language === 'fr' ? 'Pourquoi Poliscope' : 'Why Poliscope'}
+            {language === 'fr' ? 'Pourquoi Poliscop' : 'Why Poliscop'}
           </motion.p>
 
           <div className="grid sm:grid-cols-3 gap-5">
@@ -297,8 +297,8 @@ export default function Landing() {
 
           <p className="text-center text-xs text-gray-400 mt-8 max-w-lg mx-auto leading-relaxed">
             {language === 'fr'
-              ? 'Poliscope est un outil analytique et éducatif. Il ne constitue pas une recommandation de vote. Les profils des candidats et figures historiques sont des approximations analytiques.'
-              : 'Poliscope is an analytical and educational tool. It does not constitute a voting recommendation. Candidate and historical figure profiles are analytical approximations.'}
+              ? 'Poliscop est un outil analytique et éducatif. Il ne constitue pas une recommandation de vote. Les profils des candidats et figures historiques sont des approximations analytiques.'
+              : 'Poliscop is an analytical and educational tool. It does not constitute a voting recommendation. Candidate and historical figure profiles are analytical approximations.'}
           </p>
         </section>
 

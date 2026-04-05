@@ -1,5 +1,5 @@
-// Poliscope Service Worker — Cache-first for assets, network-first for pages
-const CACHE_NAME = 'poliscope-v1';
+// Poliscop Service Worker — Cache-first for assets, network-first for pages
+const CACHE_NAME = 'poliscop-v1';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

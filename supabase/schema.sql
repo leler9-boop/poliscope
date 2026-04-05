@@ -1,4 +1,4 @@
--- Poliscope — Supabase Schema
+-- Poliscop — Supabase Schema
 -- Run this in: Supabase Dashboard → SQL Editor → New Query
 
 -- ── Helper: auto-update updated_at ───────────────────────────────────────────
@@ -118,6 +118,72 @@ CREATE TRIGGER set_user_demographics_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 CREATE INDEX IF NOT EXISTS user_demographics_user_id_idx ON public.user_demographics (user_id);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- anonymous_sessions: one row per anonymous visitor
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.anonymous_sessions (
+  id           text PRIMARY KEY,
+  last_seen_at timestamptz NOT NULL DEFAULT now(),
+  device       text,
+  lang         text,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.anonymous_sessions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "anonymous_sessions: insert/update own row"
+  ON public.anonymous_sessions FOR ALL
+  USING (true)
+  WITH CHECK (true);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- anonymous_answers: answers saved before login — merged on sign-in
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.anonymous_answers (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  anonymous_id text NOT NULL,
+  question_id  text NOT NULL,
+  answer_value smallint NOT NULL,
+  updated_at   timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT anonymous_answers_anon_question_unique UNIQUE (anonymous_id, question_id)
+);
+
+ALTER TABLE public.anonymous_answers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "anonymous_answers: open insert/update"
+  ON public.anonymous_answers FOR ALL
+  USING (true)
+  WITH CHECK (true);
+
+DROP TRIGGER IF EXISTS set_anonymous_answers_updated_at ON public.anonymous_answers;
+CREATE TRIGGER set_anonymous_answers_updated_at
+  BEFORE UPDATE ON public.anonymous_answers
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE INDEX IF NOT EXISTS anonymous_answers_anon_id_idx ON public.anonymous_answers (anonymous_id);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- events: generic event tracking (anonymous and logged-in)
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.events (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  anonymous_id text,
+  user_id      uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  event_name   text NOT NULL,
+  props        jsonb,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "events: open insert"
+  ON public.events FOR INSERT
+  WITH CHECK (true);
+
+CREATE INDEX IF NOT EXISTS events_anonymous_id_idx ON public.events (anonymous_id);
+CREATE INDEX IF NOT EXISTS events_user_id_idx ON public.events (user_id);
+CREATE INDEX IF NOT EXISTS events_event_name_idx ON public.events (event_name);
 
 -- ── Notes ─────────────────────────────────────────────────────────────────────
 -- user_answers.answer_value : 1–5 (Likert scale)

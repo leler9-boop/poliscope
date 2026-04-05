@@ -53,7 +53,7 @@ const content = {
     s4_label: 'Privacy',
     s4_heading: 'What we collect — and what we do not',
     s4_items: [
-      { heading: 'No personal data collected', body: 'Poliscope does not ask for your name, address, age, or any other identifying information. None is required to use the tool.' },
+      { heading: 'No personal data collected', body: 'Poliscop does not ask for your name, address, age, or any other identifying information. None is required to use the tool.' },
       { heading: 'Your answers stay on your device', body: 'Your responses are stored in your browser\'s local storage. They do not leave your device unless you choose to create an account. If you do create an account, your profile is saved to allow you to return to it — but it is never shared, sold, or used for any purpose other than your own convenience.' },
       { heading: 'No data sold, ever', body: 'We do not sell user data. We do not share it with advertisers, political parties, research institutions, or any third party.' },
       { heading: 'Purpose: education, not influence', body: 'This project exists to support civic understanding. It is not a tool for political influence, commercial exploitation, or behavioural targeting. The goal is simply to help people think more clearly about where they stand.' },
@@ -111,7 +111,7 @@ const content = {
     s4_label: "Vie privée",
     s4_heading: "Ce que nous collectons — et ce que nous ne collectons pas",
     s4_items: [
-      { heading: "Aucune donnée personnelle collectée", body: "Poliscope ne demande pas votre nom, adresse, âge ou toute autre information d'identification. Rien de tout cela n'est nécessaire pour utiliser l'outil." },
+      { heading: "Aucune donnée personnelle collectée", body: "Poliscop ne demande pas votre nom, adresse, âge ou toute autre information d'identification. Rien de tout cela n'est nécessaire pour utiliser l'outil." },
       { heading: "Vos réponses restent sur votre appareil", body: "Vos réponses sont stockées dans la mémoire locale de votre navigateur. Elles ne quittent pas votre appareil sauf si vous choisissez de créer un compte. Si vous créez un compte, votre profil est sauvegardé pour vous permettre d'y revenir — mais il n'est jamais partagé, vendu ou utilisé à d'autres fins." },
       { heading: "Aucune vente de données, jamais", body: "Nous ne vendons pas de données utilisateurs. Nous ne les partageons pas avec des annonceurs, des partis politiques, des institutions de recherche ou des tiers." },
       { heading: "Objectif : éducation, pas influence", body: "Ce projet existe pour soutenir la compréhension civique. Ce n'est pas un outil d'influence politique, d'exploitation commerciale ou de ciblage comportemental. Le but est simplement d'aider les gens à réfléchir plus clairement à leur positionnement." },

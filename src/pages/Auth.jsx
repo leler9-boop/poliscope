@@ -30,8 +30,8 @@ export default function Auth() {
           </p>
           <p className="text-amber-700 text-sm mb-4">
             {fr
-              ? 'La connexion Supabase n\'est pas configurée. Vous pouvez utiliser Poliscope en mode invité sans vous connecter.'
-              : 'Supabase connection is not configured. You can use Poliscope as a guest without signing in.'}
+              ? 'La connexion Supabase n\'est pas configurée. Vous pouvez utiliser Poliscop en mode invité sans vous connecter.'
+              : 'Supabase connection is not configured. You can use Poliscop as a guest without signing in.'}
           </p>
           <button
             onClick={() => navigate('landing')}

@@ -60,7 +60,7 @@ export default function Header() {
                 <path d="M5 2v6M2 5h6" stroke="#111827" strokeWidth="1.2" strokeLinecap="round"/>
               </svg>
             </div>
-            <span className="font-bold text-base tracking-tight text-gray-900">Poliscope</span>
+            <span className="font-bold text-base tracking-tight text-gray-900">Poliscop</span>
           </button>
 
           {/* Desktop nav */}

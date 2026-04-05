@@ -1,9 +1,9 @@
-// POLISCOPE — Translations (EN / FR)
+// POLISCOP — Translations (EN / FR)
 
 export const translations = {
   en: {
     // ── App chrome ──
-    app_name: `Poliscope`,
+    app_name: `Poliscop`,
     tagline: `Your political profile, mapped.`,
     lang_switch: `Français`,
 
@@ -19,7 +19,7 @@ export const translations = {
 
     // ── Landing page ──
     landing_hero_title: `Understand your political beliefs`,
-    landing_hero_subtitle: `Poliscope is a multi-dimensional political profiling tool. Answer a series of structured questions, discover your ideological profile, and see how you align with candidates, parties, and historical figures.`,
+    landing_hero_subtitle: `Poliscop is a multi-dimensional political profiling tool. Answer a series of structured questions, discover your ideological profile, and see how you align with candidates, parties, and historical figures.`,
     landing_cta_primary: `Build my political profile`,
     landing_cta_elections: `Explore elections`,
     landing_cta_figures: `Historical figures`,
@@ -158,7 +158,7 @@ export const translations = {
 
     // ── Trust & transparency ──
     trust_data: `Your data belongs to you.`,
-    trust_no_sell: `Poliscope never sells personal data.`,
+    trust_no_sell: `Poliscop never sells personal data.`,
     trust_anonymous: `You can explore politics anonymously.`,
     trust_educational: `These comparisons are educational, based on simplified modeling of political positions.`,
 
@@ -174,7 +174,7 @@ export const translations = {
 
   fr: {
     // ── App chrome ──
-    app_name: `Poliscope`,
+    app_name: `Poliscop`,
     tagline: `Votre profil politique, cartographié.`,
     lang_switch: `English`,
 
@@ -190,7 +190,7 @@ export const translations = {
 
     // ── Landing page ──
     landing_hero_title: `Comprenez vos convictions politiques`,
-    landing_hero_subtitle: `Poliscope est un outil de profilage politique multidimensionnel. Répondez à une série de questions structurées, découvrez votre profil idéologique et voyez comment vous vous alignez avec des candidats, des partis et des figures historiques.`,
+    landing_hero_subtitle: `Poliscop est un outil de profilage politique multidimensionnel. Répondez à une série de questions structurées, découvrez votre profil idéologique et voyez comment vous vous alignez avec des candidats, des partis et des figures historiques.`,
     landing_cta_primary: `Construire mon profil politique`,
     landing_cta_elections: `Explorer les élections`,
     landing_cta_figures: `Figures historiques`,
@@ -329,7 +329,7 @@ export const translations = {
 
     // ── Trust & transparency ──
     trust_data: `Vos données vous appartiennent.`,
-    trust_no_sell: `Poliscope ne vend jamais de données personnelles.`,
+    trust_no_sell: `Poliscop ne vend jamais de données personnelles.`,
     trust_anonymous: `Vous pouvez explorer la politique anonymement.`,
     trust_educational: `Ces comparaisons sont éducatives, basées sur une modélisation simplifiée des positions politiques.`,
 

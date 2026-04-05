@@ -1,4 +1,4 @@
-// POLISCOPE — French Political Figures
+// POLISCOP — French Political Figures
 // 28 figures active in the last 5 years (2021–2026)
 // Profile scores 0–100 per theme (see questions.js for scale definitions)
 

@@ -1,4 +1,4 @@
-// POLISCOPE — Historical Figures (expanded)
+// POLISCOP — Historical Figures (expanded)
 // 40 figures with 8-theme ideological profiles
 // Profile scores 0–100 per theme (see questions.js for scale definitions)
 

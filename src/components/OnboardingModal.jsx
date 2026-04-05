@@ -51,8 +51,8 @@ export default function OnboardingModal() {
         </h2>
         <p className="text-sm text-gray-500 mb-5">
           {fr
-            ? `Ces informations sont optionnelles et nous aident à améliorer Poliscope.`
-            : `These details are optional and help us improve Poliscope.`}
+            ? `Ces informations sont optionnelles et nous aident à améliorer Poliscop.`
+            : `These details are optional and help us improve Poliscop.`}
         </p>
 
         <div className="space-y-4">

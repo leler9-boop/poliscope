@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase.js';
 import { useStore } from '../store/useStore.js';
+import { initAnonymousSession, mergeAnonymousAnswers } from './anonymous.js';
 
 const AuthContext = createContext(null);
 
@@ -34,7 +35,7 @@ export function AuthProvider({ children }) {
       .maybeSingle();
 
     if (profileError) {
-      console.error('[Poliscope] smartSync profile fetch error:', profileError.message);
+      console.error('[Poliscop] smartSync profile fetch error:', profileError.message);
       return;
     }
 
@@ -85,7 +86,7 @@ export function AuthProvider({ children }) {
       .eq('user_id', userId);
 
     if (error) {
-      console.error('[Poliscope] Failed to load cloud answers:', error.message);
+      console.error('[Poliscop] Failed to load cloud answers:', error.message);
       return;
     }
 
@@ -105,7 +106,7 @@ export function AuthProvider({ children }) {
       .from('user_answers')
       .upsert(rows, { onConflict: 'user_id,question_id' })
       .then(({ error }) => {
-        if (error) console.error('[Poliscope] Sync upload error:', error.message);
+        if (error) console.error('[Poliscop] Sync upload error:', error.message);
       });
   }
 
@@ -114,6 +115,9 @@ export function AuthProvider({ children }) {
       setLoading(false);
       return;
     }
+
+    // Initialize anonymous session (fire-and-forget)
+    initAnonymousSession();
 
     // Get initial session and sync answers
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -133,6 +137,7 @@ export function AuthProvider({ children }) {
       useStore.getState().setAuthUser(u);
 
       if (event === 'SIGNED_IN' && u) {
+        await mergeAnonymousAnswers(u.id);
         await smartSync(u.id);
 
         // Show onboarding if user has never filled in demographics
@@ -250,7 +255,7 @@ export function AuthProvider({ children }) {
         { user_id: user.id, age_range: age_range ?? null, education_level: education_level ?? null, postal_code: postal_code ?? null },
         { onConflict: 'user_id' }
       );
-    if (error) console.error('[Poliscope] Demographics save error:', error.message);
+    if (error) console.error('[Poliscop] Demographics save error:', error.message);
     return { error };
   }
 

@@ -130,17 +130,17 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
   const reliabilityLabel = getReliabilityLabel(reliabilityPct, lang);
 
   const shareText = lang === 'fr'
-    ? `Je viens de cartographier mon profil politique sur Poliscope. Curieux(se) de savoir où tu te situes ? Essaie ici → https://poliscope.app`
-    : `I just mapped my political profile on Poliscope. Curious where you stand? Try it → https://poliscope.app`;
+    ? `Je viens de cartographier mon profil politique sur Poliscop. Curieux(se) de savoir où tu te situes ? Essaie ici → https://poliscop.org`
+    : `I just mapped my political profile on Poliscop. Curious where you stand? Try it → https://poliscop.org`;
 
   const handleNativeShare = async () => {
     if (!canNativeShare) return;
     setShareStatus('sharing');
     try {
       await navigator.share({
-        title: lang === 'fr' ? 'Mon profil politique – Poliscope' : 'My political profile – Poliscope',
+        title: lang === 'fr' ? 'Mon profil politique – Poliscop' : 'My political profile – Poliscop',
         text:  shareText,
-        url:   'https://poliscope.app',
+        url:   'https://poliscop.org',
       });
       setShareStatus('done');
       setTimeout(() => setShareStatus(null), 2500);
@@ -164,7 +164,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
         backgroundColor: '#0f172a',
       });
       const link = document.createElement('a');
-      link.download = 'poliscope-profile.png';
+      link.download = 'poliscop-profile.png';
       link.href = dataUrl;
       link.click();
       setDownloadStatus('done');
@@ -270,7 +270,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
 
             {/* Brand row */}
             <div style={card.brandRow}>
-              <span style={card.brandName}>POLISCOPE</span>
+              <span style={card.brandName}>POLISCOP</span>
               <span style={card.brandSub}>{lang === 'fr' ? 'profil politique' : 'political profile'}</span>
             </div>
 
@@ -368,7 +368,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
             {/* Footer */}
             <div style={card.footer}>
               <span style={card.footerCta}>{lang === 'fr' ? 'Et toi ?' : 'What about you?'}</span>
-              <span style={card.footerUrl}>poliscope.app</span>
+              <span style={card.footerUrl}>poliscop.org</span>
             </div>
 
           </div>

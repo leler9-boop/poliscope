@@ -1,4 +1,4 @@
-// POLISCOPE — Election & Candidate Data
+// POLISCOP — Election & Candidate Data
 // Profile scores represent each candidate/party's position on each theme (0–100).
 // Theme scale:
 //   ECONOMY:         0 = far left / statist,         100 = far right / market

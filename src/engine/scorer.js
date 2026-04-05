@@ -1,4 +1,4 @@
-// POLISCOPE — Scoring Engine
+// POLISCOP — Scoring Engine
 // Converts question answers into a multi-dimensional political profile.
 
 import { THEMES, THEMES_ORDER, questions as allQuestions } from '../data/questions.js';

@@ -1,4 +1,4 @@
-// POLISCOPE — Extended candidate profiles
+// POLISCOP — Extended candidate profiles
 // Indexed by candidate ID. For variant IDs (lepen_2027, melenchon_2027, hidalgo_paris),
 // CandidateProfile falls back to the base key automatically.
 

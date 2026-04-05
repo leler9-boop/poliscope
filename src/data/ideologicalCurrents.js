@@ -1,4 +1,4 @@
-// POLISCOPE — Ideological Currents
+// POLISCOP — Ideological Currents
 // Each current has a profile on the same 8-theme scale as candidates/figures.
 // Used to match the user's ideological profile to major political traditions.
 

@@ -113,7 +113,7 @@ function AppInner() {
       </main>
       <footer className="border-t border-gray-200 py-8 text-center bg-white">
         <p className="text-xs text-gray-400 tracking-wide">
-          Poliscope
+          Poliscop
           <span className="mx-2 text-gray-300">·</span>
           {language === 'fr'
             ? 'Outil analytique et éducatif. Pas une recommandation de vote.'

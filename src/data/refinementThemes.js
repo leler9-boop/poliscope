@@ -1,4 +1,4 @@
-// POLISCOPE — Profile Refinement Themes
+// POLISCOP — Profile Refinement Themes
 //
 // Structure: each main theme has 3–4 subthemes.
 // Each subtheme maps a slider position (-2 to +2) to theme score adjustments.

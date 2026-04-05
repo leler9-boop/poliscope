@@ -1,6 +1,6 @@
 {
-  "name": "Poliscope — Political Profile",
-  "short_name": "Poliscope",
+  "name": "Poliscop — Political Profile",
+  "short_name": "Poliscop",
   "description": "Discover your political profile and see how you align with historical figures.",
   "start_url": "/",
   "display": "standalone",
