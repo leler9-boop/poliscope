@@ -23,6 +23,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
   const reportOptions = REPORT_OPTIONS[language] ?? REPORT_OPTIONS.en;
   const themeLabel = THEME_LABELS[language]?.[question.theme] ?? question.theme;
   const themeColor = THEME_COLORS[question.theme] ?? '#6b7280';
+  const hasInfo = Boolean(question.info?.fr || question.info?.en || (typeof question.info === 'string' && question.info));
 
   const handleReportSubmit = () => {
     // UI only — no data sent
@@ -57,38 +58,39 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
         {/* Question text + info button */}
         <div className="flex items-start gap-3 mb-8">
           <p className="text-lg sm:text-xl font-medium text-gray-900 leading-relaxed flex-1">
-            {question.text[language]}
+            {typeof question.text === 'string' ? question.text : (question.text[language] ?? question.text.fr ?? question.text.en)}
           </p>
 
-          {/* Info button — delayed fade-in + single pulse */}
-          <div className="relative flex-shrink-0">
-            <motion.button
-              key={question.id} // reset animation on each new question
-              onClick={() => setShowInfo(!showInfo)}
-              className="relative w-7 h-7 rounded-full border flex items-center justify-center text-sm font-bold transition-colors"
-              style={{
-                borderColor: showInfo ? '#93c5fd' : '#d1d5db',
-                color: showInfo ? '#2563eb' : '#9ca3af',
-                backgroundColor: showInfo ? '#eff6ff' : 'transparent',
-              }}
-              title={language === 'fr' ? 'En savoir plus' : 'Learn more'}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: showInfo ? 1 : 0.7, scale: 1 }}
-              transition={{ duration: 0.35, delay: 0.4, ease: 'easeOut' }}
-              whileHover={{ scale: 1.18, opacity: 1, transition: { duration: 0.15 } }}
-              whileTap={{ scale: 0.92 }}
-            >
-              i
-              {/* Single outward pulse ring — fires once after appearing */}
-              <motion.span
-                key={`pulse-${question.id}`}
-                className="absolute inset-0 rounded-full border border-blue-400 pointer-events-none"
-                initial={{ scale: 1, opacity: 0.5 }}
-                animate={{ scale: 1.7, opacity: 0 }}
-                transition={{ duration: 0.65, delay: 0.75, ease: 'easeOut' }}
-              />
-            </motion.button>
-          </div>
+          {/* Info button — only shown when info exists */}
+          {hasInfo && (
+            <div className="relative flex-shrink-0">
+              <motion.button
+                key={question.id}
+                onClick={() => setShowInfo(!showInfo)}
+                className="relative w-7 h-7 rounded-full border flex items-center justify-center text-sm font-bold transition-colors"
+                style={{
+                  borderColor: showInfo ? '#93c5fd' : '#d1d5db',
+                  color: showInfo ? '#2563eb' : '#9ca3af',
+                  backgroundColor: showInfo ? '#eff6ff' : 'transparent',
+                }}
+                title={language === 'fr' ? 'En savoir plus' : 'Learn more'}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: showInfo ? 1 : 0.7, scale: 1 }}
+                transition={{ duration: 0.35, delay: 0.4, ease: 'easeOut' }}
+                whileHover={{ scale: 1.18, opacity: 1, transition: { duration: 0.15 } }}
+                whileTap={{ scale: 0.92 }}
+              >
+                i
+                <motion.span
+                  key={`pulse-${question.id}`}
+                  className="absolute inset-0 rounded-full border border-blue-400 pointer-events-none"
+                  initial={{ scale: 1, opacity: 0.5 }}
+                  animate={{ scale: 1.7, opacity: 0 }}
+                  transition={{ duration: 0.65, delay: 0.75, ease: 'easeOut' }}
+                />
+              </motion.button>
+            </div>
+          )}
         </div>
 
         {/* Info tooltip */}
@@ -105,7 +107,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
                 <svg className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                 </svg>
-                <p>{question.info[language]}</p>
+                <p>{typeof question.info === 'string' ? question.info : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}</p>
               </div>
               <button
                 onClick={() => setShowInfo(false)}

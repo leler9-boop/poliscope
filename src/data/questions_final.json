@@ -1,0 +1,1486 @@
+[
+  {
+    "id": "ECO_1",
+    "text": "Les impôts sur les plus hauts revenus doivent augmenter.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "income redistribution"
+  },
+  {
+    "id": "ECO_2",
+    "text": "Le SMIC doit augmenter significativement.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_3",
+    "text": "Les impôts sur les entreprises doivent baisser pour attirer les investissements.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "corporate taxes"
+  },
+  {
+    "id": "ECO_4",
+    "text": "Un impôt sur la fortune doit être introduit ou étendu.",
+    "axis": "economic",
+    "weight": 4,
+    "status": "PRIMARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_5",
+    "text": "L'État doit réduire ses dépenses pour diminuer les déficits.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_6",
+    "text": "Les syndicats et la négociation collective doivent être renforcés.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_7",
+    "text": "Le libre-échange est bon pour la France.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_8",
+    "text": "L'État doit nationaliser l'énergie, les chemins de fer et les secteurs clés.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "public ownership"
+  },
+  {
+    "id": "ECO_9",
+    "text": "La Bourse et les banques doivent être strictement réglementées.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_10",
+    "text": "Un revenu de base doit remplacer les allocations actuelles.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "social safety net"
+  },
+  {
+    "id": "ECO_11",
+    "text": "Réduire la dette française doit être la priorité budgétaire.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_12",
+    "text": "Les géants de la tech (Google, Amazon) doivent être démantélés.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "corporate taxes"
+  },
+  {
+    "id": "ECO_13",
+    "text": "Uber, Deliveroo et l'économie des plateformes doivent être peu réglementées.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_14",
+    "text": "L'impôt sur les successions doit augmenter fortement.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_15",
+    "text": "Les entreprises publiques doivent être privatisées.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_16",
+    "text": "L'État doit redistribuer les richesses agressivement.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_17",
+    "text": "Le commerce international aide les salariés et consommateurs français.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_18",
+    "text": "Les grandes entreprises dominent trop la politique française.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_19",
+    "text": "La semaine de 4 jours doit être imposée par la loi.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_20",
+    "text": "La Banque Centrale Européenne doit être plus contrôlée par les parlements.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco"
+  },
+  {
+    "id": "ECO_21",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eco",
+    "isDuplicate": true,
+    "duplicateOf": "ECO_14"
+  },
+  {
+    "id": "ECO_22",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "public ownership",
+    "isDuplicate": true,
+    "duplicateOf": "ECO_8"
+  },
+  {
+    "id": "ECO_23",
+    "text": "La croissance économique doit primer sur l'égalité.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "growth vs equality"
+  },
+  {
+    "id": "SOC_1",
+    "text": "Le mariage homosexuel et l'adoption doivent être identiques au mariage hétéro.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_2",
+    "text": "L'avortement doit rester entièrement accessible et gratuit.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "abortion rights"
+  },
+  {
+    "id": "SOC_3",
+    "text": "Le cannabis doit être entièrement légalisé comme au Luxembourg.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_4",
+    "text": "Les politiques d'aide aux groupes discriminés sont justifiées.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_5",
+    "text": "La religion doit influencer plus les lois françaises.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "religion in politics"
+  },
+  {
+    "id": "SOC_6",
+    "text": "Les trans doivent pouvoir changer de genre sans suivi médical obligatoire.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_7",
+    "text": "L'État doit promouvoir la famille traditionnelle hétéro.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "traditional values"
+  },
+  {
+    "id": "SOC_8",
+    "text": "Les lois contre les discours haineux doivent être renforcées.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "religious expression"
+  },
+  {
+    "id": "SOC_9",
+    "text": "",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc",
+    "isDuplicate": true,
+    "duplicateOf": "SOC_20"
+  },
+  {
+    "id": "SOC_10",
+    "text": "L'euthanasie doit être légale pour les malades terminaux qui le demandent.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_11",
+    "text": "Les contrôles d'armes doivent être renforcés pour la sécurité.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "religion in politics"
+  },
+  {
+    "id": "SOC_12",
+    "text": "Écoles et universités doivent adopter un langage neutre en genre.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_13",
+    "text": "La peine de mort doit rester abolie.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_14",
+    "text": "La pornographie doit être strictement régulée et vérifiée par âge.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_15",
+    "text": "Les réseaux sociaux doivent être responsables légalement du contenu dangereux.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_16",
+    "text": "Le voile, les croix et symboles religieux doivent être autorisés partout.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "religious expression"
+  },
+  {
+    "id": "SOC_17",
+    "text": "",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc",
+    "isDuplicate": true,
+    "duplicateOf": "SOC_4"
+  },
+  {
+    "id": "SOC_18",
+    "text": "",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc",
+    "isDuplicate": true,
+    "duplicateOf": "SOC_10"
+  },
+  {
+    "id": "SOC_19",
+    "text": "Le genre est déterminé biologiquement et ne peut pas être changé.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "gender/biology"
+  },
+  {
+    "id": "SOC_20",
+    "text": "Le travail du sexe entre adultes consentants doit être décriminalisé.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_21",
+    "text": "La possession de drogue pour soi doit être dépénalisée (santé, non prison).",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_22",
+    "text": "La libre expression prime sur la protection des sentiments religieux.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "SOC_23",
+    "text": "L'école doit enseigner une éducation sexuelle scientifique et complète.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "soc"
+  },
+  {
+    "id": "IMM_1",
+    "text": "L'immigration en France doit baisser sensiblement.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "immigration volume"
+  },
+  {
+    "id": "IMM_2",
+    "text": "Réfugiés et demandeurs d'asile doivent avoir tous les droits sociaux immédiatement.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_3",
+    "text": "Les migrants sans papiers depuis longtemps doivent obtenir la citoyenneté.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_4",
+    "text": "La France doit cibler les immigrés hautement qualifiés.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_5",
+    "text": "Les frontières Schengen doivent avoir des contrôles stricts.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_6",
+    "text": "Les immigrés doivent prouver leur intégration culturelle pour rester.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_7",
+    "text": "L'État doit promouvoir activement le multiculturalisme.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "multiculturalism"
+  },
+  {
+    "id": "IMM_8",
+    "text": "Les migrants qui travaillent et paient les impôts doivent avoir les mêmes droits.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_9",
+    "text": "La France doit accueillir plus de réfugiés climatiques.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_10",
+    "text": "Les centre de rétention des migrants doivent fermer.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_11",
+    "text": "Les immigrés apportent des bénéfices économiques importants.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_12",
+    "text": "Les étrangers condamnés pour crimes graves doivent être expulsés.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_13",
+    "text": "Les enfants d'immigrés doivent s'identifier à la France d'abord.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_14",
+    "text": "Les demandes d'asile doivent être traitées hors de France.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_15",
+    "text": "Les tests de langue et d'intégration sont discriminatoires et doivent être supprimés.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_16",
+    "text": "La France doit accueillir tous les réfugiés de guerre, peu importe le nombre.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_17",
+    "text": "L'immigration renforce l'économie et culture françaises.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_18",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm",
+    "isDuplicate": true,
+    "duplicateOf": "IMM_3"
+  },
+  {
+    "id": "IMM_19",
+    "text": "L'immigration doit privilégier la compatibilité culturelle avec la France.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_20",
+    "text": "Les immigrants doivent apprendre le français pour résider en France.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_21",
+    "text": "L'UE doit créer une politique d'asile commune et contraignante.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "IMM_22",
+    "text": "Les contrôles de frontière strict sont nécessaires.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "imm"
+  },
+  {
+    "id": "SEC_1",
+    "text": "La surveillance de masse des communications doit être arrêtée.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "privacy/surveillance"
+  },
+  {
+    "id": "SEC_2",
+    "text": "La police doit avoir plus de pouvoirs et de budgets.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_3",
+    "text": "Les lois antiterroristes qui limitent les libertés sont justifiées.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "security/liberty"
+  },
+  {
+    "id": "SEC_4",
+    "text": "La reconnaissance faciale par la police doit être interdite.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_5",
+    "text": "Les peines de prison doivent augmenter et être plus strictes.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_6",
+    "text": "La justice doit se concentrer sur la réinsertion, pas la punition.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_7",
+    "text": "Les dépenses militaires doivent augmenter fortement.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_8",
+    "text": "Les services secrets doivent être plus contrôlés par le parlement.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_9",
+    "text": "La drogue pour usage personnel doit être dépénalisée.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_10",
+    "text": "Diffuser de fausses infos en ligne doit avoir des conséquences légales.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_11",
+    "text": "L'État doit pouvoir retirer la nationalité aux terroristes.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_12",
+    "text": "Les services secrets doivent accéder aux messages chiffrés des suspects.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_13",
+    "text": "Les policiers doivent porter des caméras corporelles en permanence.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_14",
+    "text": "Les jeunes délinquants doivent être jugés moins sévèrement.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_15",
+    "text": "",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec",
+    "isDuplicate": true,
+    "duplicateOf": "SEC_18"
+  },
+  {
+    "id": "SEC_16",
+    "text": "La surveillance de masse est acceptable pour combattre le terrorisme.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "privacy/surveillance"
+  },
+  {
+    "id": "SEC_17",
+    "text": "La peine de mort doit rester interdite.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_18",
+    "text": "Le droit aux armes à feu doit être protégé, pas restreint.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_19",
+    "text": "Les terroristes doivent rester détenus longtemps après leur peine.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_20",
+    "text": "Police doit avoir plus de pouvoirs de contrôle et fouille.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec"
+  },
+  {
+    "id": "SEC_21",
+    "text": "Les lanceurs d'alerte doivent être protégés légalement.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "whistleblower protection"
+  },
+  {
+    "id": "SEC_22",
+    "text": "",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sec",
+    "isDuplicate": true,
+    "duplicateOf": "SEC_7"
+  },
+  {
+    "id": "ENV_1",
+    "text": "Le changement climatique est d'origine humaine et demande une action urgente.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "climate urgency"
+  },
+  {
+    "id": "ENV_2",
+    "text": "Le nucléaire doit être développé pour réduire les émissions.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_3",
+    "text": "Une taxe carbone importante doit être mise en place.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_4",
+    "text": "Les règlements environnementaux stricts sont plus importants que les emplois.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_5",
+    "text": "La transition énergétique doit être rapide, même à coût économique.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_6",
+    "text": "L'agriculture intensive doit être fortement réglementée.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_7",
+    "text": "Les voitures thermiques doivent être interdites avant 2035.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_8",
+    "text": "Croissance économique et environnement sont incompatibles.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_9",
+    "text": "La viande doit être taxée pour son impact environnemental.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_10",
+    "text": "Les pays riches doivent payer les pays pauvres pour les dommages climatiques.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_11",
+    "text": "Les militants écologistes en désobéissance civile ne doivent pas être poursuivis.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_12",
+    "text": "L'environnement doit primer sur le développement économique.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_13",
+    "text": "Les traités écologiques doivent pouvoir forcer les États à agir.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_14",
+    "text": "La géo-ingénierie doit être étudiée comme solution climatique.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_15",
+    "text": "Les plastiques à usage unique doivent être complètement interdits.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_16",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env",
+    "isDuplicate": true,
+    "duplicateOf": "ENV_12"
+  },
+  {
+    "id": "ENV_17",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env",
+    "isDuplicate": true,
+    "duplicateOf": "ENV_2"
+  },
+  {
+    "id": "ENV_18",
+    "text": "La taxe carbone est l'outil le plus efficace contre les émissions.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_19",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env",
+    "isDuplicate": true,
+    "duplicateOf": "ENV_9"
+  },
+  {
+    "id": "ENV_20",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env",
+    "isDuplicate": true,
+    "duplicateOf": "ENV_10"
+  },
+  {
+    "id": "ENV_21",
+    "text": "La biodiversité doit avoir la même urgence que le climat.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_22",
+    "text": "Les voitures privées doivent être découragées pour privilégier les transports publics.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "ENV_23",
+    "text": "La décroissance économique est nécessaire pour la durabilité.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "env"
+  },
+  {
+    "id": "DEM_1",
+    "text": "Le vote doit être obligatoire pour tous.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_2",
+    "text": "Les réseaux sociaux ont trop de pouvoir politique.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_3",
+    "text": "Les citoyens doivent pouvoir voter par référendum sur les grandes décisions.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_4",
+    "text": "Les juges doivent être totalement indépendants de la politique.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_5",
+    "text": "Le système électoral doit utiliser la proportionnelle.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_6",
+    "text": "L'âge du vote doit être abaissé à 16 ans.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_7",
+    "text": "Les politiciens qui mentent doivent être punis ou révoqués.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_8",
+    "text": "Les dons politiques des entreprises et riches doivent être interdits.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "campaign finance"
+  },
+  {
+    "id": "DEM_9",
+    "text": "Les chambres hautes non élues doivent être abolies ou élues.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_10",
+    "text": "Les pouvoirs d'urgence doivent expirer automatiquement après 30 jours.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_11",
+    "text": "Les mandats politiques doivent être limités en durée.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_12",
+    "text": "Les citoyens doivent pouvoir révoquer leurs élus avant la fin du mandat.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_13",
+    "text": "Les médias doivent être régulés pour garantir un équilibre politique.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_14",
+    "text": "Les immunités parlementaires doivent être réduites.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_15",
+    "text": "Le lobbying d'entreprises doit être strictement régulé et transparent.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "campaign finance"
+  },
+  {
+    "id": "DEM_16",
+    "text": "Les juges doivent pouvoir annuler les lois du parlement.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_17",
+    "text": "",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem",
+    "isDuplicate": true,
+    "duplicateOf": "DEM_1"
+  },
+  {
+    "id": "DEM_18",
+    "text": "",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem",
+    "isDuplicate": true,
+    "duplicateOf": "DEM_3"
+  },
+  {
+    "id": "DEM_19",
+    "text": "Les partis politiques doivent être financés publiquement.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_20",
+    "text": "",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem",
+    "isDuplicate": true,
+    "duplicateOf": "DEM_2"
+  },
+  {
+    "id": "DEM_21",
+    "text": "Les gouvernements doivent pouvoir révoquer les juges.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_22",
+    "text": "Les réseaux sociaux sont responsables du contenu qu'ils amplifient.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "DEM_23",
+    "text": "Les institutions internationales doivent pouvoir forcer les États à agir.",
+    "axis": "authority",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "dem"
+  },
+  {
+    "id": "GLO_1",
+    "text": "L'intérêt national doit primer sur les engagements internationaux.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "nationalism"
+  },
+  {
+    "id": "GLO_2",
+    "text": "Les institutions mondiales (ONU, OMC, FMI) ont trop de pouvoir.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_3",
+    "text": "L'OTAN et les alliances militaires sont essentielles.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_4",
+    "text": "La France doit augmenter son aide étrangère.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_5",
+    "text": "Souveraineté nationale > traités internationaux sur les droits.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_6",
+    "text": "Le protectionnisme est légitime pour protéger l'industrie française.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_7",
+    "text": "Les sanctions économiques contre les régimes autoritaires sont efficaces.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_8",
+    "text": "L'UE doit approfondir l'intégration politique et fiscale.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "eu integration"
+  },
+  {
+    "id": "GLO_9",
+    "text": "L'américanisation culturelle est une menace.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_10",
+    "text": "Les multinationales doivent payer un impôt minimum mondial.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_11",
+    "text": "La France doit réduire sa dépendance à la Chine.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_12",
+    "text": "Les pays colonisateurs doivent des réparations aux anciennes colonies.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_13",
+    "text": "Les tribunaux internationaux (CPI) doivent juger les crimes de guerre.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_14",
+    "text": "Les pays doivent restreindre la propriété étrangère des secteurs stratégiques.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_15",
+    "text": "Les nations riches doivent intervenir militairement pour les génocides.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_16",
+    "text": "La France doit être autosuffisante en alimentation, énergie, santé.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_17",
+    "text": "La France doit réduire les alliances militaires et être neutre.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_18",
+    "text": "Les pays doivent intervenir militairement pour les droits humains ailleurs.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_19",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo",
+    "isDuplicate": true,
+    "duplicateOf": "GLO_4"
+  },
+  {
+    "id": "GLO_20",
+    "text": "Les pays doivent sanctionner les violations de droits humains.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "GLO_21",
+    "text": "",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "eu integration",
+    "isDuplicate": true,
+    "duplicateOf": "GLO_8"
+  },
+  {
+    "id": "GLO_22",
+    "text": "Cultures et traditions nationales doivent être protégées.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "glo"
+  },
+  {
+    "id": "PUB_1",
+    "text": "L'État doit fournir une santé universelle et gratuite.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "public healthcare"
+  },
+  {
+    "id": "PUB_2",
+    "text": "Les écoles publiques doivent recevoir beaucoup plus de financement.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_3",
+    "text": "Entreprises privées doivent pouvoir concurrencer santé et éducation publiques.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_4",
+    "text": "Le système de retraite par répartition doit être renforcé.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_5",
+    "text": "L'université doit être gratuite ou largement subventionnée.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_6",
+    "text": "Le logement social doit être massiv étendu.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_7",
+    "text": "Un revenu de base doit remplacer les allocations actuelles.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_8",
+    "text": "Bibliothèques et institutions culturelles doivent avoir un financement garanti.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_9",
+    "text": "La garde d'enfants doit être universellement gratuite et publique.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_10",
+    "text": "La santé mentale doit recevoir autant de financement que le physique.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_11",
+    "text": "L'État doit plafonner les loyers dans les grandes villes.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_12",
+    "text": "Les transports en commun doivent être gratuits ou fortement subventionnés.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_13",
+    "text": "L'État-providence est trop grand et doit être réformé.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_14",
+    "text": "L'État doit garantir un emploi à qui veut travailler.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_15",
+    "text": "Limiter l'accès aux soins coûteux est acceptable pour les finances publiques.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_16",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub",
+    "isDuplicate": true,
+    "duplicateOf": "PUB_7"
+  },
+  {
+    "id": "PUB_17",
+    "text": "Entreprises privées ne doivent pas profiter de services publics essentiels.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_18",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub",
+    "isDuplicate": true,
+    "duplicateOf": "PUB_5"
+  },
+  {
+    "id": "PUB_19",
+    "text": "Les pensions de retraite ne doivent pas être réduites.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub"
+  },
+  {
+    "id": "PUB_20",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub",
+    "isDuplicate": true,
+    "duplicateOf": "PUB_6"
+  },
+  {
+    "id": "PUB_21",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub",
+    "isDuplicate": true,
+    "duplicateOf": "PUB_10"
+  },
+  {
+    "id": "PUB_22",
+    "text": "",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "pub",
+    "isDuplicate": true,
+    "duplicateOf": "PUB_9"
+  }
+]

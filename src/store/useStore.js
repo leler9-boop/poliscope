@@ -1,4 +1,4 @@
-// POLISCOPE — Zustand Store
+// POLISCOP — Zustand Store
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { calculateProfile } from '../engine/scorer.js';
@@ -6,6 +6,7 @@ import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../da
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
+import { getOrCreateAnonymousId } from '../lib/anonymous.js';
 
 /**
  * Pick the next question for improve mode.
@@ -20,11 +21,19 @@ function pickNextQuestion(answers, recentThemes = []) {
   return source[Math.floor(Math.random() * source.length)];
 }
 
-const STORAGE_KEY = 'poliscope_state';
+const OLD_STORAGE_KEY = 'poliscope_state';
+const STORAGE_KEY = 'poliscop_state';
+
+// Migrate localStorage data from old key to new key (runs once)
+if (typeof localStorage !== 'undefined') {
+  if (localStorage.getItem(OLD_STORAGE_KEY) && !localStorage.getItem(STORAGE_KEY)) {
+    localStorage.setItem(STORAGE_KEY, localStorage.getItem(OLD_STORAGE_KEY));
+  }
+  localStorage.removeItem(OLD_STORAGE_KEY);
+}
 
 function detectLanguage() {
-  const lang = navigator.language?.slice(0, 2);
-  return lang === 'fr' ? 'fr' : 'en';
+  return 'fr';
 }
 
 export const useStore = create(
@@ -214,8 +223,20 @@ export const useStore = create(
         const now = new Date().toISOString();
         set({ answers: newAnswers, profile, profileLastUpdated: now });
 
-        // Immediately persist to Supabase for logged-in users
+        // Persist to Supabase — logged-in or anonymous
         const { userId } = get();
+        if (isSupabaseEnabled && supabase && !userId) {
+          // Anonymous user → save to anonymous_answers
+          supabase
+            .from('anonymous_answers')
+            .upsert(
+              { anonymous_id: getOrCreateAnonymousId(), question_id: questionId, answer_value: value },
+              { onConflict: 'anonymous_id,question_id' }
+            )
+            .then(({ error }) => {
+              if (error) console.error('[Poliscop] Anonymous answer save error:', error.message);
+            });
+        }
         if (isSupabaseEnabled && supabase && userId) {
           // Save individual answer
           supabase
@@ -225,7 +246,7 @@ export const useStore = create(
               { onConflict: 'user_id,question_id' }
             )
             .then(({ error }) => {
-              if (error) console.error('[Poliscope] Supabase answer save error:', error.message);
+              if (error) console.error('[Poliscop] Supabase answer save error:', error.message);
             });
           // Save profile snapshot (answered_count used for cross-device sync)
           supabase
@@ -242,7 +263,7 @@ export const useStore = create(
               { onConflict: 'user_id' }
             )
             .then(({ error }) => {
-              if (error) console.error('[Poliscope] Supabase profile snapshot error:', error.message);
+              if (error) console.error('[Poliscop] Supabase profile snapshot error:', error.message);
             });
         }
       },
@@ -313,7 +334,7 @@ export const useStore = create(
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `poliscope-profile-${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `poliscop-profile-${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
       },
