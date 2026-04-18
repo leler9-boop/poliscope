@@ -39,7 +39,21 @@
       "Read(//opt/homebrew/bin/**)",
       "Read(//usr/local/**)",
       "Bash(pyenv versions)",
-      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1)"
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1)",
+      "Bash(cd notebooklm-py && pip3 install httpx click rich 2>&1 | tail -5)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/Poliscope/Poliscop/g' src/pages/Transparency.jsx && grep -n \"Poliscop\" src/pages/Transparency.jsx)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/Poliscope/Poliscop/g' src/pages/Auth.jsx && grep -n \"Poliscop\" src/pages/Auth.jsx)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/Poliscope/Poliscop/g' src/pages/Beginner.jsx && grep -n \"Poliscop\" src/pages/Beginner.jsx)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' \"s/\\\\[Poliscope\\\\]/[Poliscop]/g\" src/store/useStore.js src/lib/auth.jsx && sed -i '' \"s/poliscope-profile-/poliscop-profile-/g\" src/store/useStore.js && grep -n \"Poliscop\\\\|poliscop\" src/store/useStore.js src/lib/auth.jsx)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/Poliscope/Poliscop/g' src/components/OnboardingModal.jsx supabase/schema.sql && grep -n \"Poliscop\" src/components/OnboardingModal.jsx supabase/schema.sql)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/Poliscope/Poliscop/g; s/poliscope/poliscop/g' knowledge-base/vision.md knowledge-base/questions.md knowledge-base/concepts.md knowledge-base/personnalites.md knowledge-base/definitions.md)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/\\\\/\\\\/ POLISCOPE —/\\\\/\\\\/ POLISCOP —/g' src/i18n/translations.js src/data/refinementThemes.js src/data/questions.js src/data/frenchFigures.js src/data/historicalFigures.js src/data/candidateDetails.js src/data/ideologicalCurrents.js src/data/elections.js src/engine/matcher.js src/engine/scorer.js src/engine/profileSummary.js src/store/useStore.js && sed -i '' 's/WHY POLISCOPE/WHY POLISCOP/g' src/pages/Landing.jsx && grep -rn \"POLISCOPE\\\\|Poliscope\" src public knowledge-base supabase index.html 2>/dev/null | grep -v node_modules)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1 | tail -15)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && sed -i '' 's/poliscop\\\\.app/poliscop.org/g' src/components/ProfileShareModal.jsx && grep -n \"poliscop\\\\.org\\\\|poliscop\\\\.app\" src/components/ProfileShareModal.jsx)",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1 | tail -5)",
+      "Bash(cat \"/Users/arnaudlery/Desktop/poliscope copy/questions_final.json\" | python3 -c \"\nimport json,sys,re\ndata=json.load\\(sys.stdin\\)\ndups=[q for q in data if q.get\\('text',''\\).startswith\\('DUPLICATE'\\)]\nfor d in dups:\n    m=re.match\\(r'DUPLICATE of \\(\\\\w+\\)', d['text']\\)\n    if m:\n        d['isDuplicate']=True\n        d['duplicateOf']=m.group\\(1\\)\n        d['text']=''\n    \nprint\\(json.dumps\\(data[:5], ensure_ascii=False, indent=2\\)\\)\nprint\\(f'Total dups: {len\\(dups\\)}'\\)\n\")",
+      "Bash(cd \"/Users/arnaudlery/Desktop/poliscope copy\" && node_modules/.bin/vite build 2>&1 | tail -5; echo \"EXIT: $?\")",
+      "Bash(python3 << 'EOF'\nimport re\n\nwith open\\('/tmp/questions_old.js', 'r'\\) as f:\n    content = f.read\\(\\)\n\n# Extract all question blocks\npattern = re.compile\\(\n    r'\\\\{\\\\s*id:\\\\s*`\\([^`]+\\)`.*?text:\\\\s*\\\\{.*?fr:\\\\s*`\\([^`]+\\)`.*?\\\\}.*?direction:.*?info:\\\\s*\\\\{.*?fr:\\\\s*`\\([^`]+\\)`.*?\\\\}\\\\s*\\\\}',\n    re.DOTALL\n\\)\n\nmatches = pattern.findall\\(content\\)\nprint\\(f\"Found: {len\\(matches\\)} questions\"\\)\nfor m in matches[:3]:\n    print\\(m[0], '|', m[1][:50], '|', m[2][:50]\\)\nEOF)"
     ]
   }
 }

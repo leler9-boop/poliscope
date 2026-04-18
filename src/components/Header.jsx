@@ -54,12 +54,19 @@ export default function Header() {
             onClick={() => navigate('landing')}
             className="flex items-center gap-2.5 hover:opacity-70 transition-opacity"
           >
-            <div className="w-6 h-6 rounded-full border-2 border-gray-900 flex items-center justify-center flex-shrink-0">
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <circle cx="5" cy="5" r="4" stroke="#111827" strokeWidth="1.2"/>
-                <path d="M5 2v6M2 5h6" stroke="#111827" strokeWidth="1.2" strokeLinecap="round"/>
-              </svg>
-            </div>
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+              <circle cx="16" cy="16" r="15" fill="#111827"/>
+              <path d="M16 16 L16 2 A14 14 0 0 1 25.9 6.1 Z" fill="#f59e0b" opacity="0.9"/>
+              <path d="M16 16 L25.9 6.1 A14 14 0 0 1 30 16 Z" fill="#8b5cf6" opacity="0.9"/>
+              <path d="M16 16 L30 16 A14 14 0 0 1 25.9 25.9 Z" fill="#ef4444" opacity="0.9"/>
+              <path d="M16 16 L25.9 25.9 A14 14 0 0 1 16 30 Z" fill="#6b7280" opacity="0.9"/>
+              <path d="M16 16 L16 30 A14 14 0 0 1 6.1 25.9 Z" fill="#10b981" opacity="0.9"/>
+              <path d="M16 16 L6.1 25.9 A14 14 0 0 1 2 16 Z" fill="#3b82f6" opacity="0.9"/>
+              <path d="M16 16 L2 16 A14 14 0 0 1 6.1 6.1 Z" fill="#06b6d4" opacity="0.9"/>
+              <path d="M16 16 L6.1 6.1 A14 14 0 0 1 16 2 Z" fill="#f97316" opacity="0.9"/>
+              <circle cx="16" cy="16" r="5" fill="white"/>
+              <circle cx="16" cy="16" r="2" fill="#111827"/>
+            </svg>
             <span className="font-bold text-base tracking-tight text-gray-900">Poliscop</span>
           </button>
 

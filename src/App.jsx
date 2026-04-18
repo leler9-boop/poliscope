@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from './store/useStore.js';
 import { createTranslator } from './i18n/translations.js';
@@ -7,6 +7,7 @@ import { setRouterNavigate } from './lib/router.js';
 import Header from './components/Header.jsx';
 import OnboardingModal from './components/OnboardingModal.jsx';
 import SyncConflictModal from './components/SyncConflictModal.jsx';
+import Toast from './components/Toast.jsx';
 
 // Eager — core quiz flow
 import Landing from './pages/Landing.jsx';
@@ -73,12 +74,20 @@ function AppInner() {
 
   const { saveUserProfile, isAuthenticated } = useAuth();
   const saveTimer = useRef(null);
+  const [toast, setToast] = useState(null);
 
   // Debounced profile save to Supabase
   useEffect(() => {
     if (!isAuthenticated || !profile) return;
     clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => { saveUserProfile(profile); }, 3000);
+    saveTimer.current = setTimeout(async () => {
+      const { error } = await saveUserProfile(profile);
+      if (error) {
+        setToast({ message: '⚠️ Sauvegarde échouée', type: 'error' });
+      } else {
+        setToast({ message: '✓ Profil sauvegardé', type: 'success' });
+      }
+    }, 3000);
     return () => clearTimeout(saveTimer.current);
   }, [answers]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -89,6 +98,7 @@ function AppInner() {
       <Header t={t} />
       {syncConflict && <SyncConflictModal />}
       {needsOnboarding && !syncConflict && <OnboardingModal />}
+      {toast && <Toast message={toast.message} type={toast.type} onDone={() => setToast(null)} />}
       <main className="flex-1">
         <Suspense fallback={<PageLoader />}>
           <Routes>

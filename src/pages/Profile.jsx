@@ -209,13 +209,12 @@ export default function Profile() {
   const answeredTotal = Object.keys(answers).length;
   const unansweredCount = totalQuestions - answeredTotal;
 
-  // Confidence bar color
+  // Confidence bar color — neutral/positive palette only (no red for low scores)
   const confBarColor =
     confidenceScore >= 80 ? '#059669' :  // emerald-600
     confidenceScore >= 60 ? '#16a34a' :  // green-600
     confidenceScore >= 40 ? '#2563eb' :  // blue-600
-    confidenceScore >= 20 ? '#d97706' :  // amber-600
-    '#ef4444';                           // red-500
+    '#9ca3af';                           // gray-400 (neutre, pas alarmant)
 
   const handleImport = (e) => {
     const file = e.target.files?.[0];
@@ -389,14 +388,32 @@ export default function Profile() {
               className="p-7 sm:p-10"
               style={{ background: `linear-gradient(160deg, ${accentColor}0D 0%, transparent 55%)` }}
             >
-              {/* Confidence pill — top right */}
+              {/* Confidence indicator — top right */}
               <div className="flex justify-end mb-6">
-                <span
-                  className="text-xs font-semibold px-3 py-1 rounded-full tabular-nums"
-                  style={{ backgroundColor: `${confBarColor}18`, color: confBarColor }}
-                >
-                  {language === 'fr' ? 'Fiabilité' : 'Confidence'} {confidenceScore ?? 0}%
-                </span>
+                {confidenceScore >= 40 ? (
+                  /* Profil fiable → badge positif */
+                  <span
+                    className="text-xs font-semibold px-3 py-1 rounded-full"
+                    style={{ backgroundColor: `${confBarColor}18`, color: confBarColor }}
+                  >
+                    {language === 'fr' ? '✓ Profil fiable' : '✓ Reliable profile'}
+                  </span>
+                ) : (
+                  /* Profil en cours → mini barre de progression motivante */
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-xs text-gray-400">
+                      {language === 'fr'
+                        ? `${answeredCount} question${answeredCount > 1 ? 's' : ''} · Continuez pour affiner`
+                        : `${answeredCount} question${answeredCount > 1 ? 's' : ''} · Keep going to refine`}
+                    </span>
+                    <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-blue-400 rounded-full transition-all duration-500"
+                        style={{ width: `${Math.min(100, Math.round((answeredCount / 40) * 100))}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* "You lean" label */}

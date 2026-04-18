@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
+import { questionHints } from '../data/questionHints.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -84,10 +85,23 @@ export default function Questionnaire() {
       <div className="bg-white border-b border-gray-100 px-4 py-3 sticky top-14 z-30">
         <div className="max-w-2xl mx-auto">
           {improveMode ? (
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-blue-600">{t('improve_title')}</span>
-              <span className="text-xs text-gray-400">{t('improve_progress', { n: totalAnswered })}</span>
-            </div>
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-blue-600">{t('improve_title')}</span>
+                <span className="text-xs text-gray-400">
+                  {language === 'fr'
+                    ? `${totalAnswered} réponse${totalAnswered > 1 ? 's' : ''} au total`
+                    : `${totalAnswered} answer${totalAnswered > 1 ? 's' : ''} total`}
+                </span>
+              </div>
+              {/* Barre de progression vers profil complet (objectif = 80 réponses) */}
+              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-400 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, Math.round((totalAnswered / 80) * 100))}%` }}
+                />
+              </div>
+            </>
           ) : (
             <>
               <div className="flex items-center justify-between mb-2">
@@ -111,7 +125,10 @@ export default function Questionnaire() {
       <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-24 px-4">
         {question && (
           <QuestionCard
-            question={question}
+            question={questionHints[question.id]
+              ? { ...question, info: questionHints[question.id] }
+              : question
+            }
             currentAnswer={currentAnswer}
             onAnswer={handleAnswer}
             language={language}
