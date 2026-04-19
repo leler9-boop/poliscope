@@ -1,26 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- 8 secteurs colorés formant un radar -->
-  <!-- Fond -->
-  <circle cx="16" cy="16" r="15" fill="#111827"/>
-  <!-- Secteurs (8 × 45°) en dégradé de couleurs thématiques -->
-  <!-- Économie -->
-  <path d="M16 16 L16 2 A14 14 0 0 1 25.9 6.1 Z" fill="#f59e0b" opacity="0.9"/>
-  <!-- Social -->
-  <path d="M16 16 L25.9 6.1 A14 14 0 0 1 30 16 Z" fill="#8b5cf6" opacity="0.9"/>
-  <!-- Immigration -->
-  <path d="M16 16 L30 16 A14 14 0 0 1 25.9 25.9 Z" fill="#ef4444" opacity="0.9"/>
-  <!-- Sécurité -->
-  <path d="M16 16 L25.9 25.9 A14 14 0 0 1 16 30 Z" fill="#6b7280" opacity="0.9"/>
-  <!-- Environnement -->
-  <path d="M16 16 L16 30 A14 14 0 0 1 6.1 25.9 Z" fill="#10b981" opacity="0.9"/>
-  <!-- Démocratie -->
-  <path d="M16 16 L6.1 25.9 A14 14 0 0 1 2 16 Z" fill="#3b82f6" opacity="0.9"/>
-  <!-- Mondialisation -->
-  <path d="M16 16 L2 16 A14 14 0 0 1 6.1 6.1 Z" fill="#06b6d4" opacity="0.9"/>
-  <!-- Services publics -->
-  <path d="M16 16 L6.1 6.1 A14 14 0 0 1 16 2 Z" fill="#f97316" opacity="0.9"/>
-  <!-- Cercle central blanc -->
-  <circle cx="16" cy="16" r="5" fill="white"/>
-  <!-- Point central noir -->
-  <circle cx="16" cy="16" r="2" fill="#111827"/>
+  <!--
+    Poliscop favicon — "p" lettermark simplifié pour petite taille
+    Rendu net à 16, 32, 48px
+  -->
+  <!-- Fond rond blanc (optionnel, commenté — le fond est transparent par défaut) -->
+  <!-- <circle cx="16" cy="16" r="16" fill="white"/> -->
+
+  <!-- Stem -->
+  <rect x="3" y="4" width="7" height="24" rx="2" fill="#5270A0"/>
+  <!-- Ribbon -->
+  <polygon points="3,28 10,28 6.5,32" fill="#5270A0"/>
+  <!-- Bowl -->
+  <circle cx="17" cy="13" r="12" fill="#5270A0"/>
+  <!-- White counter -->
+  <circle cx="18" cy="12" r="7.5" fill="white"/>
+  <!-- Inner mark -->
+  <circle cx="18" cy="12" r="3.8" fill="#5270A0"/>
 </svg>

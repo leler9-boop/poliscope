@@ -12,21 +12,30 @@ const REPORT_OPTIONS = {
   fr: ['Pas claire', 'Pas pertinente', 'Biaisée'],
 };
 
-export default function QuestionCard({ question, currentAnswer, onAnswer, language = 'en' }) {
-  const [showInfo,    setShowInfo]    = useState(false);
-  const [reportOpen,  setReportOpen]  = useState(false);
-  const [reportChoice, setReportChoice] = useState(null);
-  const [reportText,  setReportText]  = useState('');
-  const [reportSent,  setReportSent]  = useState(false);
+/* Valeur 1–5 → label court pour mobile */
+const SHORT_LABELS = {
+  en: ['No', '–', '~', '+', 'Yes'],
+  fr: ['Non', '–', '~', '+', 'Oui'],
+};
 
-  const labels = LIKERT_LABELS[language] ?? LIKERT_LABELS.en;
+export default function QuestionCard({ question, currentAnswer, onAnswer, language = 'en' }) {
+  const [showInfo,     setShowInfo]     = useState(false);
+  const [reportOpen,   setReportOpen]   = useState(false);
+  const [reportChoice, setReportChoice] = useState(null);
+  const [reportText,   setReportText]   = useState('');
+  const [reportSent,   setReportSent]   = useState(false);
+
+  const labels      = LIKERT_LABELS[language]  ?? LIKERT_LABELS.en;
+  const shortLabels = SHORT_LABELS[language]    ?? SHORT_LABELS.en;
   const reportOptions = REPORT_OPTIONS[language] ?? REPORT_OPTIONS.en;
-  const themeLabel = THEME_LABELS[language]?.[question.theme] ?? question.theme;
-  const themeColor = THEME_COLORS[question.theme] ?? '#6b7280';
-  const hasInfo = Boolean(question.info?.fr || question.info?.en || (typeof question.info === 'string' && question.info));
+  const themeLabel  = THEME_LABELS[language]?.[question.theme] ?? question.theme;
+  const themeColor  = THEME_COLORS[question.theme] ?? '#64748B';
+  const hasInfo     = Boolean(question.info?.fr || question.info?.en || (typeof question.info === 'string' && question.info));
+  const questionText = typeof question.text === 'string'
+    ? question.text
+    : (question.text[language] ?? question.text.fr ?? question.text.en);
 
   const handleReportSubmit = () => {
-    // UI only — no data sent
     setReportSent(true);
     setTimeout(() => {
       setReportOpen(false);
@@ -45,73 +54,68 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8 max-w-2xl mx-auto w-full">
+      {/* ═══ CARD ═══ */}
+      <div
+        className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 max-w-2xl mx-auto w-full"
+        style={{ boxShadow: '0 1px 3px 0 rgba(15,23,42,0.06), 0 1px 2px -1px rgba(15,23,42,0.04)' }}
+      >
 
-        {/* Theme badge */}
-        <div className="flex items-center gap-2 mb-5">
-          <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: themeColor }} />
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-            {language === 'fr' ? 'Thème : ' : 'Theme: '}{themeLabel}
-          </span>
-        </div>
+        {/* ── Thème badge ── */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: themeColor }}
+            />
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              {themeLabel}
+            </span>
+          </div>
 
-        {/* Question text + info button */}
-        <div className="flex items-start gap-3 mb-8">
-          <p className="text-lg sm:text-xl font-medium text-gray-900 leading-relaxed flex-1">
-            {typeof question.text === 'string' ? question.text : (question.text[language] ?? question.text.fr ?? question.text.en)}
-          </p>
-
-          {/* Info button — only shown when info exists */}
+          {/* Info button */}
           {hasInfo && (
-            <div className="relative flex-shrink-0">
-              <motion.button
-                key={question.id}
-                onClick={() => setShowInfo(!showInfo)}
-                className="relative w-7 h-7 rounded-full border flex items-center justify-center text-sm font-bold transition-colors"
-                style={{
-                  borderColor: showInfo ? '#93c5fd' : '#d1d5db',
-                  color: showInfo ? '#2563eb' : '#9ca3af',
-                  backgroundColor: showInfo ? '#eff6ff' : 'transparent',
-                }}
-                title={language === 'fr' ? 'En savoir plus' : 'Learn more'}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: showInfo ? 1 : 0.7, scale: 1 }}
-                transition={{ duration: 0.35, delay: 0.4, ease: 'easeOut' }}
-                whileHover={{ scale: 1.18, opacity: 1, transition: { duration: 0.15 } }}
-                whileTap={{ scale: 0.92 }}
-              >
-                i
-                <motion.span
-                  key={`pulse-${question.id}`}
-                  className="absolute inset-0 rounded-full border border-blue-400 pointer-events-none"
-                  initial={{ scale: 1, opacity: 0.5 }}
-                  animate={{ scale: 1.7, opacity: 0 }}
-                  transition={{ duration: 0.65, delay: 0.75, ease: 'easeOut' }}
-                />
-              </motion.button>
-            </div>
+            <motion.button
+              key={question.id}
+              onClick={() => setShowInfo(!showInfo)}
+              className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border transition-colors"
+              style={{
+                borderColor:     showInfo ? '#BFDBFE' : '#E2E8F0',
+                color:           showInfo ? '#2563EB' : '#94A3B8',
+                backgroundColor: showInfo ? '#EFF6FF' : 'transparent',
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.3 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              title={language === 'fr' ? 'En savoir plus' : 'Learn more'}
+            >
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M6 0a6 6 0 100 12A6 6 0 006 0zm.75 9H5.25V5.25h1.5V9zM6 4.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/>
+              </svg>
+              {language === 'fr' ? 'Contexte' : 'Context'}
+            </motion.button>
           )}
         </div>
 
-        {/* Info tooltip */}
+        {/* ── Info panel ── */}
         <AnimatePresence>
           {showInfo && (
             <motion.div
-              className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg text-sm text-gray-700 leading-relaxed"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="mb-6 px-4 py-3.5 bg-blue-50 border border-blue-100 rounded-xl text-sm text-slate-600 leading-relaxed"
+              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+              transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <div className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                </svg>
-                <p>{typeof question.info === 'string' ? question.info : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}</p>
-              </div>
+              <p className="mb-2">
+                {typeof question.info === 'string'
+                  ? question.info
+                  : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}
+              </p>
               <button
                 onClick={() => setShowInfo(false)}
-                className="mt-2 text-xs text-blue-500 hover:text-blue-700 font-medium transition-colors"
+                className="text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors"
               >
                 {language === 'fr' ? 'Fermer' : 'Close'}
               </button>
@@ -119,75 +123,91 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
           )}
         </AnimatePresence>
 
-        {/* Likert scale */}
-        <div className="space-y-3">
-          <div className="hidden sm:flex justify-between text-xs text-gray-400 px-1 mb-1">
+        {/* ── Question ── */}
+        <p className="text-[1.1rem] sm:text-xl font-medium text-slate-900 leading-relaxed mb-8 tracking-tight">
+          {questionText}
+        </p>
+
+        {/* ── Likert scale ── */}
+        <div>
+          {/* Labels extrêmes desktop */}
+          <div className="hidden sm:flex justify-between text-xs text-slate-400 mb-2.5 px-0.5">
             <span>{labels[0]}</span>
             <span>{labels[4]}</span>
           </div>
 
-          <div className="flex gap-2 sm:gap-3">
+          {/* Boutons */}
+          <div className="flex gap-2 sm:gap-2.5">
             {[1, 2, 3, 4, 5].map((val) => {
               const isSelected = currentAnswer === val;
-              const label = labels[val - 1];
               return (
                 <motion.button
                   key={val}
                   onClick={() => onAnswer(val)}
-                  title={label}
-                  className={`flex-1 relative flex flex-col items-center gap-2 py-3 rounded-lg border-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 ${
+                  title={labels[val - 1]}
+                  className={[
+                    'flex-1 relative flex flex-col items-center justify-center gap-1.5',
+                    'h-14 sm:h-16 rounded-xl border-2 transition-all duration-150',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-1',
+                    'cursor-pointer select-none',
                     isSelected
-                      ? 'border-blue-600 bg-blue-600 text-white shadow-md'
-                      : 'border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50'
-                  }`}
+                      ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-200'
+                      : 'border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-600',
+                  ].join(' ')}
                   whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.1 }}
+                  transition={{ duration: 0.08 }}
                 >
-                  <div className={`w-3 h-3 rounded-full border-2 transition-colors ${
-                    isSelected ? 'border-white bg-white' : 'border-gray-300 group-hover:border-blue-400'
-                  }`} />
-                  <span className="text-xs font-medium sm:hidden leading-tight text-center px-0.5">{label}</span>
+                  {/* Numéro */}
+                  <span className={`text-base font-bold leading-none ${isSelected ? 'text-white' : 'text-slate-500'}`}>
+                    {val}
+                  </span>
+                  {/* Label court mobile */}
+                  <span className={`text-[10px] font-medium leading-none sm:hidden ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                    {shortLabels[val - 1]}
+                  </span>
                 </motion.button>
               );
             })}
           </div>
 
-          <div className="hidden sm:grid grid-cols-5 gap-2 px-0">
+          {/* Labels complets desktop */}
+          <div className="hidden sm:grid grid-cols-5 gap-2 mt-2.5">
             {labels.map((label, i) => (
-              <p key={i} className="text-xs text-center text-gray-400 leading-tight">{label}</p>
+              <p key={i} className="text-[11px] text-center text-slate-400 leading-tight px-0.5">{label}</p>
             ))}
           </div>
         </div>
 
-        {/* Report link */}
-        <div className="mt-5 pt-4 border-t border-gray-100 flex justify-end">
+        {/* ── Report ── */}
+        <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
           <button
             onClick={() => setReportOpen(true)}
-            className="text-xs text-gray-300 hover:text-gray-500 transition-colors"
+            className="text-[11px] text-slate-300 hover:text-slate-500 transition-colors"
           >
             {language === 'fr' ? 'Signaler un problème' : 'Report an issue'}
           </button>
         </div>
       </div>
 
-      {/* Report modal */}
+      {/* ═══ MODAL REPORT ═══ */}
       <AnimatePresence>
         {reportOpen && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}
+            style={{ backgroundColor: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(6px)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.18 }}
             onClick={closeReport}
           >
             <motion.div
-              className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm"
-              initial={{ scale: 0.92, opacity: 0, y: 16 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.25, ease: [0.34, 1.1, 0.64, 1] }}
+              className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm"
+              style={{ boxShadow: '0 24px 48px -12px rgba(15,23,42,0.18)' }}
+              initial={{ scale: 0.94, opacity: 0, y: 12 }}
+              animate={{ scale: 1,    opacity: 1, y: 0 }}
+              exit={{   scale: 0.96,  opacity: 0 }}
+              transition={{ duration: 0.22, ease: [0.34, 1.06, 0.64, 1] }}
               onClick={e => e.stopPropagation()}
             >
               {reportSent ? (
@@ -196,24 +216,26 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <div className="text-3xl mb-3">✓</div>
-                  <p className="font-semibold text-gray-900 mb-1">
-                    {language === 'fr' ? 'Merci pour votre retour !' : 'Thanks for your feedback!'}
+                  <div className="w-10 h-10 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                  <p className="font-semibold text-slate-900 mb-1">
+                    {language === 'fr' ? 'Merci !' : 'Thanks!'}
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-slate-400">
                     {language === 'fr' ? 'Votre signalement a été pris en compte.' : 'Your report has been noted.'}
                   </p>
                 </motion.div>
               ) : (
                 <>
-                  <h3 className="font-bold text-gray-900 mb-1">
+                  <h3 className="font-bold text-slate-900 mb-1">
                     {language === 'fr' ? 'Signaler un problème' : 'Report an issue'}
                   </h3>
-                  <p className="text-xs text-gray-400 mb-5">
-                    {language === 'fr' ? 'Quel est le problème avec cette question ?' : 'What\'s the issue with this question?'}
+                  <p className="text-xs text-slate-400 mb-5">
+                    {language === 'fr' ? 'Quel problème avec cette question ?' : 'What\'s wrong with this question?'}
                   </p>
-
-                  {/* Options */}
                   <div className="space-y-2 mb-4">
                     {reportOptions.map((opt, i) => (
                       <button
@@ -221,40 +243,36 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
                         onClick={() => setReportChoice(i)}
                         className={`w-full text-left px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
                           reportChoice === i
-                            ? 'border-gray-900 bg-gray-900 text-white'
-                            : 'border-gray-200 text-gray-700 hover:border-gray-400'
+                            ? 'border-slate-900 bg-slate-900 text-white'
+                            : 'border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                       >
                         {opt}
                       </button>
                     ))}
                   </div>
-
-                  {/* Optional text */}
                   <textarea
                     value={reportText}
                     onChange={e => setReportText(e.target.value)}
                     placeholder={language === 'fr' ? 'Détails (optionnel)…' : 'Details (optional)…'}
                     rows={2}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 resize-none focus:outline-none focus:border-gray-400 mb-4 placeholder:text-gray-300"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 resize-none focus:outline-none focus:border-slate-400 mb-4 placeholder:text-slate-300 transition-colors"
                   />
-
-                  {/* Actions */}
                   <div className="flex gap-2">
                     <button
                       onClick={handleReportSubmit}
                       disabled={reportChoice === null}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                         reportChoice !== null
-                          ? 'bg-gray-900 hover:bg-black text-white'
-                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          ? 'bg-slate-900 hover:bg-black text-white'
+                          : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
                     >
                       {language === 'fr' ? 'Envoyer' : 'Send'}
                     </button>
                     <button
                       onClick={closeReport}
-                      className="px-4 py-2.5 rounded-xl text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-500 border border-slate-200 hover:bg-slate-50 transition-colors"
                     >
                       {language === 'fr' ? 'Annuler' : 'Cancel'}
                     </button>

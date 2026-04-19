@@ -56,7 +56,7 @@ function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClos
 
   return (
     <div>
-      <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+      <p className="text-xs text-slate-500 mb-4 leading-relaxed">
         {language === 'fr'
           ? 'Répartissez 100 points entre les thèmes selon leur importance pour vous. Cela pondérera votre score d\'alignement avec les candidats.'
           : 'Allocate 100 points across themes based on how much each matters to you. This weights your alignment scores with candidates and figures.'}
@@ -75,18 +75,18 @@ function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClos
           return (
             <div key={theme} className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-              <span className="text-xs text-gray-700 flex-1 min-w-0 truncate">{label}</span>
+              <span className="text-xs text-slate-700 flex-1 min-w-0 truncate">{label}</span>
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 <button
                   onClick={() => handleChange(theme, weights[theme] - 1)}
-                  className="w-6 h-6 rounded border border-gray-200 text-gray-500 hover:bg-gray-100 text-xs leading-none flex items-center justify-center transition-colors"
+                  className="w-6 h-6 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-xs leading-none flex items-center justify-center transition-colors"
                 >−</button>
-                <span className="text-sm font-bold tabular-nums w-7 text-center text-gray-800">
+                <span className="text-sm font-bold tabular-nums w-7 text-center text-slate-800">
                   {weights[theme]}
                 </span>
                 <button
                   onClick={() => handleChange(theme, weights[theme] + 1)}
-                  className="w-6 h-6 rounded border border-gray-200 text-gray-500 hover:bg-gray-100 text-xs leading-none flex items-center justify-center transition-colors"
+                  className="w-6 h-6 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-xs leading-none flex items-center justify-center transition-colors"
                 >+</button>
               </div>
             </div>
@@ -104,7 +104,7 @@ function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClos
         </button>
         <button
           onClick={onClose}
-          className="text-xs text-gray-400 hover:text-gray-600 px-3 transition-colors"
+          className="text-xs text-slate-400 hover:text-slate-600 px-3 transition-colors"
         >
           {language === 'fr' ? 'Annuler' : 'Cancel'}
         </button>
@@ -189,10 +189,10 @@ export default function Profile() {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <div className="text-5xl mb-4">📋</div>
-        <h2 className="text-xl font-bold text-gray-900 mb-3">
+        <h2 className="text-xl font-bold text-slate-900 mb-3">
           {language === 'fr' ? 'Aucun profil trouvé' : 'No profile yet'}
         </h2>
-        <p className="text-gray-500 mb-6">
+        <p className="text-slate-500 mb-6">
           {language === 'fr'
             ? 'Répondez au questionnaire pour générer votre profil politique.'
             : 'Complete the questionnaire to generate your political profile.'}
@@ -267,8 +267,8 @@ export default function Profile() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">{t('profile_title')}</h1>
-          <p className="text-gray-500 mt-1.5 text-sm">{t('profile_subtitle')}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{t('profile_title')}</h1>
+          <p className="text-slate-500 mt-1.5 text-sm">{t('profile_subtitle')}</p>
         </div>
 
         {/* Action buttons */}
@@ -316,13 +316,13 @@ export default function Profile() {
           {!isSharedView && (<>
             <button
               onClick={exportProfile}
-              className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               ↓ {t('profile_export')}
             </button>
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               ↑ {t('profile_import')}
             </button>
@@ -341,8 +341,8 @@ export default function Profile() {
       {showResetConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl">
-            <h3 className="font-bold text-gray-900 mb-2">{t('profile_reset')}</h3>
-            <p className="text-sm text-gray-500 mb-5">{t('profile_reset_confirm')}</p>
+            <h3 className="font-bold text-slate-900 mb-2">{t('profile_reset')}</h3>
+            <p className="text-sm text-slate-500 mb-5">{t('profile_reset_confirm')}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => { resetProfile(); setShowResetConfirm(false); }}
@@ -352,7 +352,7 @@ export default function Profile() {
               </button>
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                className="flex-1 border border-slate-200 text-slate-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-slate-50 transition-colors"
               >
                 {t('cancel')}
               </button>
@@ -415,7 +415,7 @@ export default function Profile() {
 
         return (
           <motion.div
-            className="relative rounded-3xl border border-gray-200 overflow-hidden mb-8"
+            className="relative rounded-3xl border border-slate-200 overflow-hidden mb-8"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -436,7 +436,7 @@ export default function Profile() {
               {/* Confidence indicator — top right */}
               <div className="flex justify-end mb-6">
                 {isSharedView ? (
-                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-500">
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-500">
                     {language === 'fr' ? 'Profil partagé' : 'Shared profile'}
                   </span>
                 ) : confidenceScore >= 40 ? (
@@ -450,12 +450,12 @@ export default function Profile() {
                 ) : confidenceScore < 40 ? (
                   /* Profil en cours → mini barre de progression motivante */
                   <div className="flex flex-col items-end gap-1">
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-slate-400">
                       {language === 'fr'
                         ? `${answeredCount} question${answeredCount > 1 ? 's' : ''} · Continuez pour affiner`
                         : `${answeredCount} question${answeredCount > 1 ? 's' : ''} · Keep going to refine`}
                     </span>
-                    <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-blue-400 rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(100, Math.round((answeredCount / 40) * 100))}%` }}
@@ -467,7 +467,7 @@ export default function Profile() {
 
               {/* "You lean" label */}
               <motion.p
-                className="text-sm font-medium text-gray-400 mb-1.5"
+                className="text-sm font-medium text-slate-400 mb-1.5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -488,7 +488,7 @@ export default function Profile() {
 
               {/* Short description */}
               <motion.p
-                className="text-sm text-gray-500 leading-relaxed max-w-lg mb-8"
+                className="text-sm text-slate-500 leading-relaxed max-w-lg mb-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.45 }}
@@ -499,7 +499,7 @@ export default function Profile() {
               {/* ── Featured economic axis ── */}
               <div>
                 <div className="flex justify-between items-center mb-2.5">
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
                     {AXES_LABELS.economic[language]?.label}
                   </span>
                   <motion.span
@@ -513,7 +513,7 @@ export default function Profile() {
                   </motion.span>
                 </div>
 
-                <div className="relative h-3 bg-gray-100 rounded-full">
+                <div className="relative h-3 bg-slate-100 rounded-full">
                   {/* Fill from center */}
                   <div
                     className="absolute top-0 h-full rounded-full"
@@ -554,22 +554,22 @@ export default function Profile() {
                 </div>
 
                 <div className="flex justify-between mt-2">
-                  <span className="text-xs text-gray-400">← {AXES_LABELS.economic[language]?.left}</span>
-                  <span className="text-xs text-gray-400">{AXES_LABELS.economic[language]?.right} →</span>
+                  <span className="text-xs text-slate-400">← {AXES_LABELS.economic[language]?.left}</span>
+                  <span className="text-xs text-slate-400">{AXES_LABELS.economic[language]?.right} →</span>
                 </div>
               </div>
 
               {/* Profile summary */}
               {profileSummary && (
                 <motion.p
-                  className="mt-7 pt-6 border-t border-gray-100 text-sm text-gray-600 leading-relaxed"
+                  className="mt-7 pt-6 border-t border-slate-100 text-sm text-slate-600 leading-relaxed"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
                 >
                   {profileSummary}
                   {hasAdjustments && (
-                    <span className="ml-2 text-xs text-gray-400 font-medium">
+                    <span className="ml-2 text-xs text-slate-400 font-medium">
                       ✎ {t('refine_active', { n: adjustmentCount })}
                     </span>
                   )}
@@ -580,7 +580,7 @@ export default function Profile() {
               {!isSharedView && (confidenceScore ?? 0) < 40 && (
                 <button
                   onClick={startImproveMode}
-                  className="mt-5 text-xs font-semibold text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="mt-5 text-xs font-semibold text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   {t('confidence_improve_cta')} →
                 </button>
@@ -606,7 +606,7 @@ export default function Profile() {
         >
           ↗ {language === 'fr' ? 'Partager mon profil' : 'Share my profile'}
         </motion.button>
-        <span className="text-xs text-gray-400">
+        <span className="text-xs text-slate-400">
           {language === 'fr' ? 'Carte visuelle à partager' : 'Visual card to share'}
         </span>
       </motion.div>
@@ -620,16 +620,16 @@ export default function Profile() {
       >
 
         {/* Radar chart */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7">
-          <h2 className="font-semibold text-gray-900 mb-5 text-sm uppercase tracking-widest text-gray-500">{t('profile_themes_title')}</h2>
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7">
+          <h2 className="font-semibold text-slate-900 mb-5 text-sm uppercase tracking-widest text-slate-500">{t('profile_themes_title')}</h2>
           <div className="flex justify-center">
             <RadarChart themes={themes} language={language} size={280} />
           </div>
         </div>
 
         {/* Theme positions */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7">
-          <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-6">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7">
+          <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-6">
             {language === 'fr' ? 'Vos positions' : 'Your positions'}
           </h2>
           <div>
@@ -663,12 +663,12 @@ export default function Profile() {
 
       {/* Ideological axes */}
       <motion.div
-        className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-7 mb-8"
+        className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 mb-8"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <h2 className="font-semibold text-sm uppercase tracking-widest text-gray-500 mb-6">{t('profile_axes_title')}</h2>
+        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-6">{t('profile_axes_title')}</h2>
         <div className="grid sm:grid-cols-3 gap-x-10">
           {axisKeys.map(axisKey => {
             const axisInfo = AXES_LABELS[axisKey]?.[language];
@@ -699,8 +699,8 @@ export default function Profile() {
         return (
           <div className="mb-6">
             <div className="mb-6">
-              <h2 className="font-bold text-gray-900 text-lg tracking-tight">{t('currents_title')}</h2>
-              <p className="text-sm text-gray-500 mt-1.5">{t('currents_subtitle')}</p>
+              <h2 className="font-bold text-slate-900 text-lg tracking-tight">{t('currents_title')}</h2>
+              <p className="text-sm text-slate-500 mt-1.5">{t('currents_subtitle')}</p>
             </div>
 
             {/* Top 3 primary currents */}
@@ -711,7 +711,7 @@ export default function Profile() {
                 return (
                   <motion.div
                     key={current.id}
-                    className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 overflow-hidden"
+                    className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 overflow-hidden"
                     style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: current.color } : {}}
                     initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -729,11 +729,11 @@ export default function Profile() {
                               {t('currents_top_match')}
                             </span>
                           )}
-                          <h3 className="font-semibold text-gray-900 text-sm">
+                          <h3 className="font-semibold text-slate-900 text-sm">
                             {current.name[language]}
                           </h3>
                         </div>
-                        <p className="text-xs text-gray-500 leading-relaxed mb-3">
+                        <p className="text-xs text-slate-500 leading-relaxed mb-3">
                           {current.shortDesc[language]}
                         </p>
 
@@ -750,7 +750,7 @@ export default function Profile() {
                               {alignmentWord(current.alignment, language)} ({current.alignment}%)
                             </motion.span>
                           </div>
-                          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                             <motion.div
                               className="h-full rounded-full"
                               style={{ backgroundColor: barColor }}
@@ -762,13 +762,13 @@ export default function Profile() {
                         </div>
                         {idx === 0 && current.keyBeliefs?.[language] && (
                           <div>
-                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
                               {t('currents_key_beliefs')}
                             </p>
                             <ul className="space-y-1">
                               {current.keyBeliefs[language].map((belief, bi) => (
-                                <li key={bi} className="text-xs text-gray-600 flex items-start gap-1.5">
-                                  <span className="text-gray-300 mt-0.5 flex-shrink-0">·</span>
+                                <li key={bi} className="text-xs text-slate-600 flex items-start gap-1.5">
+                                  <span className="text-slate-300 mt-0.5 flex-shrink-0">·</span>
                                   {belief}
                                 </li>
                               ))}
@@ -806,19 +806,19 @@ export default function Profile() {
                         return (
                           <motion.div
                             key={current.id}
-                            className="bg-white border border-gray-200 rounded-2xl p-4"
+                            className="bg-white border border-slate-200 rounded-2xl p-4"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: idx * 0.05 }}
                           >
                             <div className="flex items-center gap-2 mb-2.5">
                               <span className="text-base">{current.icon}</span>
-                              <span className="font-medium text-gray-900 text-sm flex-1 min-w-0 truncate">{current.name[language]}</span>
+                              <span className="font-medium text-slate-900 text-sm flex-1 min-w-0 truncate">{current.name[language]}</span>
                               <span className="text-xs font-semibold flex-shrink-0" style={{ color: barColor }}>
                                 {alignmentWord(current.alignment, language)}
                               </span>
                             </div>
-                            <div className="relative h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="relative h-1.5 bg-slate-100 rounded-full overflow-hidden">
                               <motion.div
                                 className="absolute top-0 left-0 h-full rounded-full"
                                 style={{ backgroundColor: barColor, opacity: 0.7 }}
@@ -838,8 +838,8 @@ export default function Profile() {
 
             {/* Secondary currents — "Related traditions" */}
             {secondaryCurrents.length > 0 && (
-              <div className="mt-5 border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+              <div className="mt-5 border-t border-slate-100 pt-4">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
                   {language === 'fr' ? 'Traditions apparentées' : 'Related traditions'}
                 </p>
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -849,20 +849,20 @@ export default function Profile() {
                     return (
                       <motion.div
                         key={current.id}
-                        className="bg-gray-50 border border-gray-200 rounded-2xl p-4"
+                        className="bg-slate-50 border border-slate-200 rounded-2xl p-4"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.55 + idx * 0.08 }}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-base">{current.icon}</span>
-                          <span className="font-medium text-gray-700 text-sm">{current.name[language]}</span>
+                          <span className="font-medium text-slate-700 text-sm">{current.name[language]}</span>
                           <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
                             {current.alignment}%
                           </span>
                         </div>
-                        <p className="text-xs text-gray-400 leading-relaxed mb-2">{current.shortDesc[language]}</p>
-                        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <p className="text-xs text-slate-400 leading-relaxed mb-2">{current.shortDesc[language]}</p>
+                        <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                           <motion.div
                             className="h-full rounded-full"
                             style={{ backgroundColor: barColor }}
@@ -882,14 +882,14 @@ export default function Profile() {
       })()}
 
       {/* Profile Refinement */}
-      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-8">
         <button
           onClick={() => { setRefineOpen(!refineOpen); setRefineStep(1); setSelectedRefinementTheme(null); setSelectedSubtheme(null); setSliderValue(0); }}
-          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors"
         >
           <div>
-            <p className="font-semibold text-gray-800 text-sm">{t('refine_title')}</p>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="font-semibold text-slate-800 text-sm">{t('refine_title')}</p>
+            <p className="text-xs text-slate-400 mt-0.5">
               {language === 'fr'
                 ? 'Faites de légers ajustements si certains résultats ne vous semblent pas tout à fait justes.'
                 : 'Make small tweaks if any part of your profile doesn\'t feel quite right.'}
@@ -901,22 +901,22 @@ export default function Profile() {
                 {t('refine_adjusted_badge')} · {adjustmentCount}
               </span>
             )}
-            <span className="text-gray-400 text-lg leading-none">{refineOpen ? '−' : '+'}</span>
+            <span className="text-slate-400 text-lg leading-none">{refineOpen ? '−' : '+'}</span>
           </div>
         </button>
 
         {refineOpen && (
-          <div className="border-t border-gray-100 px-5 py-5">
+          <div className="border-t border-slate-100 px-5 py-5">
 
             {/* Step 1: Choose theme */}
             {refineStep === 1 && (
               <div>
-                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                <p className="text-xs text-slate-500 mb-3 leading-relaxed">
                   {language === 'fr'
                     ? 'Ces ajustements sont légers — ils ne remplacent pas vos réponses, ils les nuancent. Choisissez un domaine à affiner.'
                     : 'These are light adjustments — they don\'t replace your answers, they add nuance. Pick a topic to fine-tune.'}
                 </p>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
                   {t('refine_step1')}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -924,11 +924,11 @@ export default function Profile() {
                     <button
                       key={rt.id}
                       onClick={() => { setSelectedRefinementTheme(rt); setRefineStep(2); }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-center"
                     >
                       <span className="text-xl">{rt.emoji}</span>
-                      <span className="text-xs font-semibold text-gray-800">{rt.label[language]}</span>
-                      <span className="text-gray-400 leading-snug" style={{ fontSize: '10px' }}>{rt.desc[language]}</span>
+                      <span className="text-xs font-semibold text-slate-800">{rt.label[language]}</span>
+                      <span className="text-slate-400 leading-snug" style={{ fontSize: '10px' }}>{rt.desc[language]}</span>
                     </button>
                   ))}
                 </div>
@@ -948,24 +948,24 @@ export default function Profile() {
               <div>
                 <button
                   onClick={() => setRefineStep(1)}
-                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 mb-4 transition-colors"
+                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 mb-4 transition-colors"
                 >
                   ← {t('refine_back')}
                 </button>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">
                   {selectedRefinementTheme.emoji} {selectedRefinementTheme.label[language]}
                 </p>
-                <p className="text-xs text-gray-400 mb-4">{t('refine_step2')}</p>
+                <p className="text-xs text-slate-400 mb-4">{t('refine_step2')}</p>
                 <div className="space-y-2">
                   {selectedRefinementTheme.subthemes.map(sub => (
                     <button
                       key={sub.id}
                       onClick={() => { setSelectedSubtheme(sub); setSliderValue(0); setRefineStep(3); }}
-                      className="w-full flex items-start gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-400 hover:bg-gray-50 text-left transition-all"
+                      className="w-full flex items-start gap-3 px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-left transition-all"
                     >
                       <div>
-                        <p className="text-sm font-semibold text-gray-800">{sub.label[language]}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{sub.desc[language]}</p>
+                        <p className="text-sm font-semibold text-slate-800">{sub.label[language]}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">{sub.desc[language]}</p>
                       </div>
                     </button>
                   ))}
@@ -978,18 +978,18 @@ export default function Profile() {
               <div>
                 <button
                   onClick={() => setRefineStep(2)}
-                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 mb-4 transition-colors"
+                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 mb-4 transition-colors"
                 >
                   ← {t('refine_back')}
                 </button>
-                <p className="text-sm font-semibold text-gray-800 mb-1">{selectedSubtheme.label[language]}</p>
-                <p className="text-xs text-gray-500 mb-5">{selectedSubtheme.desc[language]}</p>
+                <p className="text-sm font-semibold text-slate-800 mb-1">{selectedSubtheme.label[language]}</p>
+                <p className="text-xs text-slate-500 mb-5">{selectedSubtheme.desc[language]}</p>
 
                 {/* Slider */}
                 <div className="mb-5">
-                  <div className="flex justify-between text-xs text-gray-400 mb-2">
+                  <div className="flex justify-between text-xs text-slate-400 mb-2">
                     <span>{selectedSubtheme.lessLabel[language]}</span>
-                    <span className="font-semibold text-gray-700">
+                    <span className="font-semibold text-slate-700">
                       {sliderValue === 0 ? t('refine_neutral') :
                        sliderValue > 0 ? `+${sliderValue}` : `${sliderValue}`}
                     </span>
@@ -1006,7 +1006,7 @@ export default function Profile() {
                   />
                   <div className="flex justify-between mt-1">
                     {[-2, -1, 0, 1, 2].map(v => (
-                      <span key={v} className={`text-center flex-1 text-xs transition-colors ${sliderValue === v ? 'text-gray-900 font-bold' : 'text-gray-300'}`}>
+                      <span key={v} className={`text-center flex-1 text-xs transition-colors ${sliderValue === v ? 'text-slate-900 font-bold' : 'text-slate-300'}`}>
                         {v === -2 ? '−−' : v === -1 ? '−' : v === 0 ? '○' : v === 1 ? '+' : '++'}
                       </span>
                     ))}
@@ -1041,17 +1041,17 @@ export default function Profile() {
       {/* Refine + explore */}
       <div className="grid sm:grid-cols-2 gap-4 mb-8">
         {/* Refine profile */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">{t('profile_refine')}</h3>
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+          <h3 className="font-semibold text-slate-900 mb-3 text-sm">{t('profile_refine')}</h3>
 
           {!weightEditorOpen ? (
             <div className="space-y-4">
               {/* Option 1: Answer more questions */}
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-2">
+                <p className="text-xs font-semibold text-slate-500 mb-2">
                   {language === 'fr' ? '1. Répondre à plus de questions' : '1. Answer more questions'}
                 </p>
-                <p className="text-xs text-gray-400 mb-2">
+                <p className="text-xs text-slate-400 mb-2">
                   {language === 'fr'
                     ? `${unansweredCount} questions non répondues restantes`
                     : `${unansweredCount} unanswered questions remaining`}
@@ -1083,18 +1083,18 @@ export default function Profile() {
               </div>
 
               {/* Option 2: Define priorities */}
-              <div className="border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 mb-1">
+              <div className="border-t border-slate-100 pt-4">
+                <p className="text-xs font-semibold text-slate-500 mb-1">
                   {language === 'fr' ? '2. Définir mes priorités politiques' : '2. Define my political priorities'}
                 </p>
-                <p className="text-xs text-gray-400 mb-2 leading-relaxed">
+                <p className="text-xs text-slate-400 mb-2 leading-relaxed">
                   {language === 'fr'
                     ? 'Pondérez les thèmes selon leur importance pour vous.'
                     : 'Weight themes by how much they matter to you.'}
                 </p>
                 <button
                   onClick={() => setWeightEditorOpen(true)}
-                  className="flex items-center gap-1.5 text-xs font-medium text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-1.5 text-xs font-medium text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   ⚖ {themeWeights
                     ? (language === 'fr' ? 'Modifier les priorités' : 'Edit priorities')
@@ -1117,20 +1117,20 @@ export default function Profile() {
         </div>
 
         {/* Quick navigation */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+          <h3 className="font-semibold text-slate-900 mb-3 text-sm">
             {language === 'fr' ? 'Explorer vos correspondances' : 'Explore your matches'}
           </h3>
           <div className="flex flex-col gap-2">
             <button
               onClick={() => navigate('elections')}
-              className="flex items-center gap-2 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-4 py-2.5 rounded-lg transition-colors text-left"
+              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-lg transition-colors text-left"
             >
               🗳️ {t('profile_view_elections')}
             </button>
             <button
               onClick={() => navigate('figures')}
-              className="flex items-center gap-2 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-4 py-2.5 rounded-lg transition-colors text-left"
+              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-lg transition-colors text-left"
             >
               🏛️ {t('profile_view_figures')}
             </button>
@@ -1139,7 +1139,7 @@ export default function Profile() {
       </div>
 
       {/* Methodology note */}
-      <p className="text-xs text-gray-400 text-center leading-relaxed">
+      <p className="text-xs text-slate-400 text-center leading-relaxed">
         {language === 'fr'
           ? 'Les scores représentent vos positions sur des spectres thématiques, pas des verdicts moraux. Une valeur de 50 est neutre/centrale.'
           : 'Scores represent your position on thematic spectrums, not moral verdicts. A value of 50 is neutral/centrist.'}

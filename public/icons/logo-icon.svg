@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none">
+  <!--
+    Poliscop "p" lettermark
+    Bowl: large circle upper area
+    Stem: left vertical bar descending with ribbon tab
+    Counter: white circle inside bowl
+    Inner mark: small filled circle
+  -->
+
+  <!-- Stem (descender) — behind everything -->
+  <rect x="10" y="14" width="23" height="82" rx="5" fill="#5270A0"/>
+  <!-- Ribbon/bookmark tail -->
+  <polygon points="10,96 33,96 21.5,112" fill="#5270A0"/>
+
+  <!-- Bowl — large circle overlapping the stem -->
+  <circle cx="54" cy="46" r="40" fill="#5270A0"/>
+
+  <!-- White counter -->
+  <circle cx="56" cy="44" r="26" fill="white"/>
+
+  <!-- Inner filled circle (secondary counter mark) -->
+  <circle cx="56" cy="44" r="13" fill="#5270A0"/>
+</svg>

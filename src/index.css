@@ -2,66 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────
+   DESIGN TOKENS — Poliscop
+   Style: Minimal · Trust · Civic
+   Inspiration: Apple / Linear / Notion
+───────────────────────────────────────── */
 :root {
-  --color-primary: #1e3a5f;
-  --color-accent: #2563eb;
-  --color-surface: #f8f9fa;
-  --color-border: #e5e7eb;
+  /* Brand */
+  --color-primary:      #1D4ED8; /* blue-700  — authority */
+  --color-primary-hover:#1E40AF; /* blue-800  — deeper */
+  --color-accent:       #2563EB; /* blue-600  — interactive */
+
+  /* Neutrals */
+  --color-bg:           #F8FAFC; /* slate-50  — page background */
+  --color-surface:      #FFFFFF; /* card/panel surface */
+  --color-border:       #E2E8F0; /* slate-200 — subtle borders */
+  --color-border-focus: #93C5FD; /* blue-300  — focus ring */
+
+  /* Text */
+  --color-text:         #0F172A; /* slate-900 — primary text */
+  --color-text-muted:   #64748B; /* slate-500 — secondary */
+  --color-text-subtle:  #94A3B8; /* slate-400 — disabled/placeholder */
+
+  /* Feedback */
+  --color-success:      #059669; /* emerald-600 */
+  --color-warning:      #D97706; /* amber-600 */
+  --color-error:        #DC2626; /* red-600 */
+
+  /* Shadows */
+  --shadow-sm:   0 1px 2px 0 rgba(15, 23, 42, 0.06);
+  --shadow-md:   0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg:   0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+
+  /* Radius */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   18px;
+
+  /* Transitions */
+  --transition-fast:   120ms ease;
+  --transition-normal: 200ms ease;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ─── Base ─── */
+html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f7f7f5;
-  color: #111827;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.011em;
+  line-height: 1.6;
+  font-size: 15px;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+/* ─── Scrollbar — subtil ─── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ─── Typography scale ─── */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-text);
 }
 
-/* Likert scale button styles */
-.likert-btn {
-  @apply relative flex flex-col items-center gap-1 cursor-pointer;
+/* ─── Focus visible — accessible ─── */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }
 
-.likert-btn input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* Smooth transitions */
+/* ─── Smooth page transition ─── */
 .page-transition {
-  animation: fadeIn 0.2s ease-out;
+  animation: poliscop-fade-up 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+@keyframes poliscop-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Tooltip */
+/* ─── Likert scale ─── */
+.likert-btn {
+  @apply relative flex flex-col items-center gap-1 cursor-pointer;
+}
+.likert-btn input[type="radio"] {
+  position: absolute; opacity: 0; width: 0; height: 0;
+}
+
+/* ─── Tooltip ─── */
 .tooltip-content {
   @apply absolute z-50 bg-gray-900 text-white text-sm rounded-lg p-3 shadow-xl;
   max-width: 280px;
@@ -69,43 +110,50 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-
 .tooltip-content::after {
   content: '';
   position: absolute;
-  top: 100%;
-  left: 50%;
+  top: 100%; left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: #111827;
+  border: 5px solid transparent;
+  border-top-color: #0F172A;
 }
 
-/* Priority drag handle */
+/* ─── Priority drag ─── */
 .priority-item {
   @apply flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-4 mb-2;
-  transition: box-shadow 0.15s ease;
+  transition: box-shadow var(--transition-fast);
 }
+.priority-item:hover { box-shadow: var(--shadow-sm); }
 
-.priority-item:hover {
-  @apply shadow-sm;
-}
-
-/* Match bars */
+/* ─── Match bars ─── */
 .match-bar-fill {
-  transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: width 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Profile radar */
+/* ─── Profile radar ─── */
 .radar-area {
-  fill-opacity: 0.18;
+  fill-opacity: 0.15;
   transition: fill-opacity 0.2s;
 }
-.radar-area:hover {
-  fill-opacity: 0.3;
+.radar-area:hover { fill-opacity: 0.28; }
+
+/* ─── Pulse animation (hero badge) ─── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
-/* Print styles */
+/* ─── Print ─── */
 @media print {
   header, footer, .no-print { display: none !important; }
   .print-full { width: 100% !important; }
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

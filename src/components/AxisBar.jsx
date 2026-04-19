@@ -1,73 +1,76 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-/** Returns a short readable label for a score on a named axis. */
 function interpLabel(score, leftLabel, rightLabel, language) {
   const s = score ?? 50;
   const ll = leftLabel?.toLowerCase() ?? '';
   const rl = rightLabel?.toLowerCase() ?? '';
-  if (s <= 20) return language === 'fr' ? `Très ${ll}` : `Very ${ll}`;
-  if (s <= 38) return language === 'fr' ? `Plutôt ${ll}` : `Rather ${ll}`;
-  if (s <= 62) return language === 'fr' ? 'Modéré' : 'Moderate';
-  if (s <= 80) return language === 'fr' ? `Plutôt ${rl}` : `Rather ${rl}`;
-  return language === 'fr' ? `Très ${rl}` : `Very ${rl}`;
+  if (s <= 20) return language === 'fr' ? `Très ${ll}`    : `Very ${ll}`;
+  if (s <= 38) return language === 'fr' ? `Plutôt ${ll}`  : `Rather ${ll}`;
+  if (s <= 62) return language === 'fr' ? 'Modéré'        : 'Moderate';
+  if (s <= 80) return language === 'fr' ? `Plutôt ${rl}`  : `Rather ${rl}`;
+  return              language === 'fr' ? `Très ${rl}`    : `Very ${rl}`;
 }
 
 /**
- * Horizontal axis bar showing ideological position.
+ * Horizontal axis bar — ideological position.
  * score: 0–100 (0 = leftLabel, 100 = rightLabel)
- * Marker animates from center to position on mount.
- * Props: label, score, leftLabel, rightLabel, color (optional), language
  */
 export default function AxisBar({ label, score, leftLabel, rightLabel, color, language = 'en', delay = 0 }) {
-  const clampedScore = Math.max(0, Math.min(100, score ?? 50));
-  const isRight = clampedScore >= 50;
-  const dotColor = color ?? (isRight ? '#2563eb' : '#6b7280');
-  const interp = interpLabel(clampedScore, leftLabel, rightLabel, language);
+  const s        = Math.max(0, Math.min(100, score ?? 50));
+  const isRight  = s >= 50;
+  const dotColor = color ?? (isRight ? '#2563EB' : '#64748B');
+  const interp   = interpLabel(s, leftLabel, rightLabel, language);
 
   const fillStyle = {
-    left:            isRight ? '50%' : `${clampedScore}%`,
-    right:           isRight ? `${100 - clampedScore}%` : '50%',
+    left:            isRight ? '50%' : `${s}%`,
+    right:           isRight ? `${100 - s}%` : '50%',
     backgroundColor: dotColor,
-    opacity:         0.18,
+    opacity:         0.14,
   };
 
   return (
     <div className="mb-6 last:mb-0">
-      {/* Axis name */}
-      <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest block mb-3">
+      {/* Label axe */}
+      <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest block mb-3">
         {label}
       </span>
 
-      {/* Track */}
-      <div className="relative h-2 rounded-full bg-gray-100">
-        {/* Directional fill from center */}
-        <div className="absolute top-0 h-full rounded-full" style={fillStyle} />
-        {/* Center tick */}
-        <div className="absolute top-1/2 -translate-y-1/2 w-px h-4 bg-gray-200" style={{ left: '50%' }} />
-        {/* Animated dot */}
+      {/* Piste */}
+      <div className="relative h-1.5 rounded-full bg-slate-100">
+        {/* Fill directionnel depuis le centre */}
+        <div className="absolute top-0 h-full rounded-full transition-all" style={fillStyle} />
+        {/* Tick central */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-px h-3 bg-slate-200"
+          style={{ left: '50%' }}
+        />
+        {/* Marqueur animé */}
         <motion.div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-md border-[2.5px]"
-          style={{ borderColor: dotColor }}
-          initial={{ left: 'calc(50% - 8px)' }}
-          animate={{ left: `calc(${clampedScore}% - 8px)` }}
-          transition={{ duration: 1.1, delay, ease: [0.34, 1.15, 0.64, 1] }}
+          className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2"
+          style={{
+            borderColor: dotColor,
+            boxShadow: `0 1px 3px rgba(15,23,42,0.12)`,
+          }}
+          initial={{ left: 'calc(50% - 7px)' }}
+          animate={{ left: `calc(${s}% - 7px)` }}
+          transition={{ duration: 1.0, delay, ease: [0.34, 1.12, 0.64, 1] }}
         />
       </div>
 
-      {/* Pole labels */}
+      {/* Pôles */}
       <div className="flex justify-between mt-1.5">
-        <span className="text-xs text-gray-400">{leftLabel}</span>
-        <span className="text-xs text-gray-400">{rightLabel}</span>
+        <span className="text-[11px] text-slate-400">{leftLabel}</span>
+        <span className="text-[11px] text-slate-400">{rightLabel}</span>
       </div>
 
-      {/* Interpretation label */}
+      {/* Interprétation */}
       <motion.p
-        className="text-xs font-medium mt-1 capitalize"
+        className="text-xs font-semibold mt-1 capitalize"
         style={{ color: dotColor }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: delay + 0.6 }}
+        transition={{ duration: 0.35, delay: delay + 0.55 }}
       >
         {interp}
       </motion.p>

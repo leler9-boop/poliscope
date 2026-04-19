@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
@@ -34,22 +34,26 @@ export default function Questionnaire() {
   if (!questionsQueue || questionsQueue.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500 mb-4">
+        <p className="text-slate-500 mb-4">
           {language === 'fr' ? 'Aucune question disponible.' : 'No questions available.'}
         </p>
-        <button onClick={() => navigate('landing')} className="text-blue-600 font-medium">
+        <button onClick={() => navigate('landing')} className="text-blue-600 font-medium hover:text-blue-700">
           ← {t('back')}
         </button>
       </div>
     );
   }
 
-  const total        = questionsQueue.length;
-  const question     = questionsQueue[currentIndex];
+  const total         = questionsQueue.length;
+  const question      = questionsQueue[currentIndex];
   const currentAnswer = question ? answers[question.id] : null;
-  const progress     = total > 0 ? ((currentIndex) / total) * 100 : 0;
-  const isLast       = currentIndex === total - 1;
-  const hasAnswer    = currentAnswer != null;
+  const isLast        = currentIndex === total - 1;
+  const hasAnswer     = currentAnswer != null;
+
+  /* Progression en segments (inspired by 21st.dev segmented steps) */
+  const progressPct = total > 0
+    ? Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)
+    : 0;
 
   const handleAnswer = (val) => {
     if (question) answerQuestion(question.id, val);
@@ -66,143 +70,171 @@ export default function Questionnaire() {
   };
 
   const handleSkip = () => {
-    if (isLast) {
-      finishQuestionnaire();
-    } else {
-      nextQuestion();
-    }
+    if (isLast) finishQuestionnaire();
+    else nextQuestion();
   };
 
   return (
     <>
-    <AnimatePresence>
-      {!introSeen && !improveMode && (
-        <PreQuizModal language={language} onStart={handleIntroStart} />
-      )}
-    </AnimatePresence>
-    <div className="min-h-[calc(100vh-56px)] bg-gray-50 flex flex-col">
-      {/* Top progress bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 sticky top-14 z-30">
-        <div className="max-w-2xl mx-auto">
-          {improveMode ? (
-            <>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-blue-600">{t('improve_title')}</span>
-                <span className="text-xs text-gray-400">
-                  {language === 'fr'
-                    ? `${totalAnswered} réponse${totalAnswered > 1 ? 's' : ''} au total`
-                    : `${totalAnswered} answer${totalAnswered > 1 ? 's' : ''} total`}
-                </span>
-              </div>
-              {/* Barre de progression vers profil complet (objectif = 80 réponses) */}
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-400 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(100, Math.round((totalAnswered / 80) * 100))}%` }}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-gray-500">
-                  {t('q_progress', { current: currentIndex + 1, total })}
-                </span>
-                <span className="text-xs text-gray-400">{Math.round(progress)}%</span>
-              </div>
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-500 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)}%` }}
-                />
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Question */}
-      <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-24 px-4">
-        {question && (
-          <QuestionCard
-            question={questionHints[question.id]
-              ? { ...question, info: questionHints[question.id] }
-              : question
-            }
-            currentAnswer={currentAnswer}
-            onAnswer={handleAnswer}
-            language={language}
-          />
+      <AnimatePresence>
+        {!introSeen && !improveMode && (
+          <PreQuizModal language={language} onStart={handleIntroStart} />
         )}
-      </div>
+      </AnimatePresence>
 
-      {/* Bottom nav — sticky */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-30">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          {improveMode ? (
-            <>
-              {/* Stop */}
-              <button
-                onClick={stopImproveMode}
-                className="px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-              >
-                {t('improve_stop')}
-              </button>
-              {/* Next question */}
-              <button
-                onClick={handleNext}
-                disabled={!hasAnswer}
-                className={`ml-auto px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-                  hasAnswer
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {t('improve_next')} →
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Back */}
-              <button
-                onClick={prevQuestion}
-                disabled={currentIndex === 0}
-                className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
-                  currentIndex === 0
-                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
-                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                ← {t('q_prev')}
-              </button>
+      <div className="min-h-[calc(100vh-56px)] bg-slate-50 flex flex-col">
 
-              {/* Skip */}
-              <button
-                onClick={handleSkip}
-                className="text-sm text-gray-400 hover:text-gray-600 font-medium px-2"
-              >
-                {t('q_skip')}
-              </button>
+        {/* ── Barre de progression sticky ── */}
+        <div className="bg-white border-b border-slate-200 px-4 py-3 sticky top-14 z-30">
+          <div className="max-w-2xl mx-auto">
+            {improveMode ? (
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs font-semibold text-blue-600 shrink-0">{t('improve_title')}</span>
+                </div>
+                <span className="text-xs text-slate-400 tabular-nums shrink-0">
+                  {language === 'fr'
+                    ? `${totalAnswered} réponse${totalAnswered > 1 ? 's' : ''}`
+                    : `${totalAnswered} answer${totalAnswered !== 1 ? 's' : ''}`}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                {/* Numéro question */}
+                <span className="text-xs font-semibold text-slate-500 tabular-nums w-16 shrink-0">
+                  {currentIndex + 1} / {total}
+                </span>
 
-              {/* Next / Finish */}
-              <button
-                onClick={handleNext}
-                disabled={!hasAnswer}
-                className={`ml-auto px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-                  hasAnswer
-                    ? isLast
-                      ? 'bg-green-600 hover:bg-green-700 text-white'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {isLast ? t('q_finish') : `${t('q_next')} →`}
-              </button>
-            </>
+                {/* Barre segmentée — 10 segments visuels */}
+                <div className="flex-1 flex gap-0.5 h-1.5">
+                  {Array.from({ length: 10 }).map((_, i) => {
+                    const segThreshold = ((i + 1) / 10) * 100;
+                    const isFilled = progressPct >= segThreshold;
+                    const isCurrent = !isFilled && progressPct >= (i / 10) * 100;
+                    return (
+                      <div
+                        key={i}
+                        className="flex-1 rounded-full transition-all duration-300"
+                        style={{
+                          backgroundColor: isFilled
+                            ? '#2563EB'
+                            : isCurrent
+                            ? '#BFDBFE'
+                            : '#E2E8F0',
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Pourcentage */}
+                <span className="text-xs font-medium text-slate-400 tabular-nums w-9 text-right shrink-0">
+                  {progressPct}%
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Question card ── */}
+        <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-28 px-4">
+          {question && (
+            <QuestionCard
+              question={questionHints[question.id]
+                ? { ...question, info: questionHints[question.id] }
+                : question
+              }
+              currentAnswer={currentAnswer}
+              onAnswer={handleAnswer}
+              language={language}
+            />
           )}
         </div>
+
+        {/* ── Navigation bas ── */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 px-4 py-3 z-30">
+          <div className="max-w-2xl mx-auto flex items-center gap-2.5">
+            {improveMode ? (
+              <>
+                <button
+                  onClick={stopImproveMode}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  {t('improve_stop')}
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!hasAnswer}
+                  className={`ml-auto px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+                    hasAnswer
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  }`}
+                >
+                  {t('improve_next')} →
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Retour */}
+                <button
+                  onClick={prevQuestion}
+                  disabled={currentIndex === 0}
+                  className={`p-2.5 rounded-xl border text-sm font-medium transition-colors flex items-center gap-1 ${
+                    currentIndex === 0
+                      ? 'border-slate-100 text-slate-300 cursor-not-allowed bg-white'
+                      : 'border-slate-200 text-slate-600 hover:bg-slate-50 bg-white'
+                  }`}
+                  title={t('q_prev')}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="hidden sm:inline">{t('q_prev')}</span>
+                </button>
+
+                {/* Passer */}
+                <button
+                  onClick={handleSkip}
+                  className="text-sm text-slate-400 hover:text-slate-600 font-medium px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors"
+                >
+                  {t('q_skip')}
+                </button>
+
+                {/* Suivant / Terminer */}
+                <button
+                  onClick={handleNext}
+                  disabled={!hasAnswer}
+                  className={`ml-auto px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-1.5 ${
+                    hasAnswer
+                      ? isLast
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-200'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200'
+                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  }`}
+                >
+                  {isLast ? (
+                    <>
+                      {t('q_finish')}
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </>
+                  ) : (
+                    <>
+                      {t('q_next')}
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
       </div>
-    </div>
     </>
   );
 }

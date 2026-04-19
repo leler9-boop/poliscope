@@ -26,9 +26,9 @@ export default function MatchCard({
   return (
     <motion.div
       className={`bg-white rounded-2xl border overflow-hidden ${
-        isTopMatch     ? 'border-gray-200 shadow-md'  :
-        isHighlighted  ? 'border-gray-200 shadow-sm'  :
-                         'border-gray-100'
+        isTopMatch     ? 'border-slate-200 shadow-md'  :
+        isHighlighted  ? 'border-slate-200 shadow-sm'  :
+                         'border-slate-100'
       }`}
       style={isTopMatch ? { borderLeftWidth: 3, borderLeftColor: barColor } : {}}
       whileHover={{
@@ -79,20 +79,20 @@ export default function MatchCard({
               {color && !target.emoji && (
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
               )}
-              <h3 className={`font-semibold truncate ${isTopMatch ? 'text-gray-900 text-base' : 'text-gray-900 text-sm'}`}>
+              <h3 className={`font-semibold truncate ${isTopMatch ? 'text-slate-900 text-base' : 'text-slate-900 text-sm'}`}>
                 {name}
               </h3>
               {target.flag && <span className="text-sm leading-none flex-shrink-0">{target.flag}</span>}
             </div>
             {target.party && (
-              <p className="text-xs text-gray-400 mb-0.5">
+              <p className="text-xs text-slate-400 mb-0.5">
                 {typeof target.party === 'object' ? target.party[language] : target.party}
               </p>
             )}
             {target.role && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-slate-400">
                 {typeof target.role === 'object' ? target.role[language] : target.role}
-                {target.years && <span className="ml-1 text-gray-300">· {target.years}</span>}
+                {target.years && <span className="ml-1 text-slate-300">· {target.years}</span>}
               </p>
             )}
             {context && (
@@ -112,13 +112,13 @@ export default function MatchCard({
             >
               {alignment}%
             </motion.div>
-            <div className="text-xs text-gray-400 mt-0.5">{language === 'fr' ? 'compat.' : 'match'}</div>
+            <div className="text-xs text-slate-400 mt-0.5">{language === 'fr' ? 'compat.' : 'match'}</div>
           </div>
         </div>
 
         {/* Alignment bar */}
         <div className="mt-4">
-          <div className={`rounded-full overflow-hidden ${isTopMatch ? 'h-1.5' : 'h-1'} bg-gray-100`}>
+          <div className={`rounded-full overflow-hidden ${isTopMatch ? 'h-1.5' : 'h-1'} bg-slate-100`}>
             <motion.div
               className="h-full rounded-full"
               style={{ backgroundColor: barColor }}
@@ -127,21 +127,21 @@ export default function MatchCard({
               transition={{ duration: 0.85, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             />
           </div>
-          <p className="text-xs text-gray-400 mt-1.5">{label}</p>
+          <p className="text-xs text-slate-400 mt-1.5">{label}</p>
         </div>
 
         {/* Why match */}
         {whyMatch && (
-          <p className="mt-3 text-xs text-gray-500 leading-relaxed italic">{whyMatch}</p>
+          <p className="mt-3 text-xs text-slate-500 leading-relaxed italic">{whyMatch}</p>
         )}
 
         {/* Toggle biography */}
         {showDetails && (bio || disc) && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="mt-4 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1.5"
+            className="mt-4 text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1.5"
           >
-            <span className="text-gray-300 text-[10px]">{expanded ? '▲' : '▼'}</span>
+            <span className="text-slate-300 text-[10px]">{expanded ? '▲' : '▼'}</span>
             <span>{expanded
               ? (language === 'fr' ? 'Masquer' : 'Hide details')
               : (language === 'fr' ? 'Biographie' : 'Biography')}</span>
@@ -151,15 +151,15 @@ export default function MatchCard({
         <AnimatePresence>
           {expanded && (
             <motion.div
-              className="mt-3 pt-3 border-t border-gray-100 space-y-3 overflow-hidden"
+              className="mt-3 pt-3 border-t border-slate-100 space-y-3 overflow-hidden"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              {bio && <p className="text-sm text-gray-600 leading-relaxed">{bio}</p>}
+              {bio && <p className="text-sm text-slate-600 leading-relaxed">{bio}</p>}
               {disc && (
-                <p className="text-xs text-gray-400 leading-relaxed border-l-2 border-gray-200 pl-3">
+                <p className="text-xs text-slate-400 leading-relaxed border-l-2 border-slate-200 pl-3">
                   {disc}
                 </p>
               )}
