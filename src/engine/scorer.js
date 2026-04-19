@@ -8,6 +8,18 @@ import { THEMES, THEMES_ORDER, questions as allQuestions } from '../data/questio
  * @param {Object} answers - { questionId: answerValue (1–5) }
  * @returns {Object} { themes: { ECONOMY: 0–100, … }, confidence, answeredCount }
  */
+/**
+ * Push scores away from 50 to produce more extreme, differentiated profiles.
+ * 60 → ~65, 70 → ~77, 80 → ~86, 90 → ~93
+ * Center (50) stays at 50; edges stay near 0/100.
+ */
+function stretchScore(score) {
+  const centered = score - 50;
+  if (centered === 0) return 50;
+  const sign = centered > 0 ? 1 : -1;
+  return Math.round(50 + sign * Math.pow(Math.abs(centered) / 50, 0.75) * 50);
+}
+
 export function calculateProfile(answers) {
   const themeData = {};
   THEMES_ORDER.forEach(theme => {
@@ -30,14 +42,16 @@ export function calculateProfile(answers) {
     themeData[q.theme].totalWeight += w;
   });
 
-  // Build theme scores (0–100) using weighted average
+  // Build theme scores (0–100) using weighted average, then stretch away from center
+  // to produce more differentiated profiles
   const themes = {};
   THEMES_ORDER.forEach(theme => {
     const d = themeData[theme];
     if (d.totalWeight === 0) {
       themes[theme] = 50; // default to center when no data
     } else {
-      themes[theme] = Math.round((d.weightedSum / d.totalWeight) * 100);
+      const raw = Math.round((d.weightedSum / d.totalWeight) * 100);
+      themes[theme] = stretchScore(raw);
     }
   });
 

@@ -107,7 +107,7 @@ function getReliabilityLabel(pct, lang) {
   return lang === 'fr' ? 'Encore en construction — mais déjà révélateur.' : 'Still in progress — but already revealing.';
 }
 
-export default function ProfileShareModal({ themes, rankedCurrents, language, answeredCount = 0, totalCount = 120, onClose }) {
+export default function ProfileShareModal({ themes, rankedCurrents, language, answeredCount = 0, totalCount = 120, shareUrl, onClose }) {
   const cardRef = useRef(null);
   const [copyStatus,     setCopyStatus]     = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(null);
@@ -129,9 +129,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
   const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
   const reliabilityLabel = getReliabilityLabel(reliabilityPct, lang);
 
-  const shareText = lang === 'fr'
-    ? `Je viens de cartographier mon profil politique sur Poliscop. Curieux(se) de savoir où tu te situes ? Essaie ici → https://poliscop.org`
-    : `I just mapped my political profile on Poliscop. Curious where you stand? Try it → https://poliscop.org`;
+  const resolvedShareUrl = shareUrl ?? 'https://poliscop.org';
 
   const handleNativeShare = async () => {
     if (!canNativeShare) return;
@@ -139,8 +137,8 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
     try {
       await navigator.share({
         title: lang === 'fr' ? 'Mon profil politique – Poliscop' : 'My political profile – Poliscop',
-        text:  shareText,
-        url:   'https://poliscop.org',
+        text:  lang === 'fr' ? 'Découvre mon profil politique →' : 'Check out my political profile →',
+        url:   resolvedShareUrl,
       });
       setShareStatus('done');
       setTimeout(() => setShareStatus(null), 2500);
@@ -148,7 +146,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
   };
 
   const handleCopyLink = async () => {
-    try { await navigator.clipboard.writeText(shareText); } catch { /* silent */ }
+    try { await navigator.clipboard.writeText(resolvedShareUrl); } catch { /* silent */ }
     setCopyStatus('copied');
     setTimeout(() => setCopyStatus(null), 2500);
   };
@@ -398,8 +396,8 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
             >
               {copyStatus === 'copied' ? '✓' : '🔗'}
               {copyStatus === 'copied'
-                ? (lang === 'fr' ? 'Texte copié !' : 'Text copied!')
-                : (lang === 'fr' ? 'Copier le message' : 'Copy share text')}
+                ? (lang === 'fr' ? 'Lien copié !' : 'Link copied!')
+                : (lang === 'fr' ? 'Copier le lien' : 'Copy link')}
             </motion.button>
           )}
 
@@ -430,7 +428,7 @@ export default function ProfileShareModal({ themes, rankedCurrents, language, an
               >
                 {copyStatus === 'copied' ? '✓' : '🔗'}
                 {copyStatus === 'copied'
-                  ? (lang === 'fr' ? 'Copié !'        : 'Copied!')
+                  ? (lang === 'fr' ? 'Lien copié !' : 'Link copied!')
                   : (lang === 'fr' ? 'Copier le lien' : 'Copy link')}
               </motion.button>
             )}

@@ -54,23 +54,30 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
 
   const meanDistance = weightedDistanceSum / totalWeight; // 0–1
 
-  // Extreme-disagreement penalty: themes where distance > 0.38 receive extra weight.
-  // Threshold lowered from 0.5 → 0.38 and coefficient raised 0.18 → 0.25 for
-  // a more realistic, polarised score distribution.
-  let extremePenalty = 0;
-  THEMES_ORDER.forEach(theme => {
-    const d = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50)) / 100;
-    if (d > 0.38) extremePenalty += (d - 0.38) * 0.25;
-  });
-  const adjustedDistance = Math.min(1, meanDistance + extremePenalty);
-
   // Power 2.8: produces a sharper, more realistic spread.
   // d=0.05 → 86%  (very similar)
   // d=0.15 → 64%  (moderate overlap)
   // d=0.25 → 44%  (clear disagreement)
   // d=0.35 → 28%  (weak alignment)
   // d=0.50 → 14%  (opposing)
-  const alignment = Math.round(Math.pow(1 - adjustedDistance, 2.8) * 100);
+  const baseAlignment = Math.round(Math.pow(1 - meanDistance, 2.8) * 100);
+
+  // Multiplicative veto: on 4 clivant themes, a large distance crushes the score.
+  // This models the "dealbreaker" effect — e.g. a user strongly opposed to immigration
+  // restriction will never align with a far-right candidate, even if they agree on economy.
+  const VETO_THEMES = {
+    IMMIGRATION: { threshold: 45, penalty: 0.55 },
+    ECONOMY:     { threshold: 50, penalty: 0.70 },
+    SOCIAL:      { threshold: 50, penalty: 0.75 },
+    SECURITY:    { threshold: 50, penalty: 0.75 },
+  };
+  let vetoMultiplier = 1.0;
+  Object.entries(VETO_THEMES).forEach(([theme, config]) => {
+    const dist = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50));
+    if (dist > config.threshold) vetoMultiplier *= config.penalty;
+  });
+
+  const alignment = Math.round(baseAlignment * vetoMultiplier);
   return Math.max(0, Math.min(100, alignment));
 }
 

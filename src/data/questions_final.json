@@ -515,13 +515,11 @@
   },
   {
     "id": "IMM_18",
-    "text": "",
+    "text": "La France doit renforcer le contrôle de ses frontières pour limiter les entrées irrégulières.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
-    "cluster": "imm",
-    "isDuplicate": true,
-    "duplicateOf": "IMM_3"
+    "cluster": "imm"
   },
   {
     "id": "IMM_19",
@@ -1482,5 +1480,93 @@
     "cluster": "pub",
     "isDuplicate": true,
     "duplicateOf": "PUB_9"
+  },
+  {
+    "id": "PUB_23",
+    "text": "Les universités doivent être totalement gratuites pour tous les étudiants français.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "education"
+  },
+  {
+    "id": "ECO_24",
+    "text": "Un impôt mondial minimum sur les multinationales est nécessaire pour financer les États.",
+    "axis": "economic",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "corporate taxes"
+  },
+  {
+    "id": "ECO_25",
+    "text": "Le partage obligatoire des bénéfices avec les salariés doit être imposé aux grandes entreprises.",
+    "axis": "economic",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "income redistribution"
+  },
+  {
+    "id": "SOC_24",
+    "text": "L'avortement doit rester un droit fondamental garanti par la loi, sans restrictions supplémentaires.",
+    "axis": "cultural",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "social rights"
+  },
+  {
+    "id": "SOC_25",
+    "text": "La PMA doit être accessible à toutes les familles, y compris les couples homosexuels.",
+    "axis": "cultural",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "social rights"
+  },
+  {
+    "id": "IMM_23",
+    "text": "Les enfants nés en France de parents étrangers doivent automatiquement être citoyens français.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "citizenship"
+  },
+  {
+    "id": "SEC_23",
+    "text": "La police doit avoir plus de pouvoirs pour maintenir l'ordre dans les quartiers difficiles.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "law and order"
+  },
+  {
+    "id": "ENV_24",
+    "text": "La France doit sortir du nucléaire dans les vingt prochaines années.",
+    "axis": "global",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "energy transition"
+  },
+  {
+    "id": "DEM_24",
+    "text": "Le référendum d'initiative citoyenne (RIC) doit être introduit dans la Constitution française.",
+    "axis": "authority",
+    "weight": 5,
+    "status": "CORE",
+    "cluster": "direct democracy"
+  },
+  {
+    "id": "GLO_23",
+    "text": "La France doit quitter le commandement intégré de l'OTAN pour préserver sa souveraineté.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "sovereignty"
+  },
+  {
+    "id": "GLO_24",
+    "text": "L'Union européenne doit avoir plus de pouvoirs et de ressources propres face aux États membres.",
+    "axis": "global",
+    "weight": 3,
+    "status": "SECONDARY",
+    "cluster": "EU federalism"
   }
 ]

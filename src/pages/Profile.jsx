@@ -1,4 +1,5 @@
 import React, { useRef, useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
@@ -131,6 +132,17 @@ function buildAdjustedThemes(themes, adjustments) {
   return result;
 }
 
+const SHARE_THEME_ORDER = ['ECONOMY','SOCIAL','IMMIGRATION','SECURITY','ENVIRONMENT','DEMOCRACY','GLOBAL','PUBLIC_SERVICES'];
+
+/** Parse & validate a ?s= share param → theme scores object, or null if invalid. */
+function parseShareParam(param) {
+  if (!param) return null;
+  const vals = param.split(',').map(Number);
+  if (vals.length !== 8) return null;
+  if (vals.some(v => isNaN(v) || v < 0 || v > 100)) return null;
+  return Object.fromEntries(SHARE_THEME_ORDER.map((t, i) => [t, vals[i]]));
+}
+
 export default function Profile() {
   const language           = useStore(s => s.language);
   const profile            = useStore(s => s.profile);
@@ -150,6 +162,12 @@ export default function Profile() {
   const pendingMigration   = useStore(s => s.pendingMigration);
   const setPendingMigration = useStore(s => s.setPendingMigration);
   const t = createTranslator(language);
+
+  // ── Shared profile via URL ─────────────────────────────────────────────────
+  const [searchParams] = useSearchParams();
+  const parsedSharedScores = useMemo(() => parseShareParam(searchParams.get('s')), [searchParams]);
+  const isSharedView = Boolean(parsedSharedScores);
+
   const fileRef = useRef(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
@@ -167,7 +185,7 @@ export default function Profile() {
 
   const { user, saveAnswers, saveUserProfile } = useAuth();
 
-  if (!profile) {
+  if (!profile && !isSharedView) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <div className="text-5xl mb-4">📋</div>
@@ -189,12 +207,22 @@ export default function Profile() {
     );
   }
 
-  const { themes: rawThemes, axes, confidence, confidenceScore, answeredCount, totalQuestions } = profile;
+  const { themes: rawThemes = {}, axes = {}, confidence = 'very_low', confidenceScore = 0, answeredCount = 0, totalQuestions = 120 } = profile ?? {};
   const themes = useMemo(
-    () => buildAdjustedThemes(rawThemes, profileAdjustments),
-    [rawThemes, profileAdjustments]
+    () => isSharedView ? parsedSharedScores : buildAdjustedThemes(rawThemes, profileAdjustments),
+    [isSharedView, parsedSharedScores, rawThemes, profileAdjustments]
   );
-  const adjustedProfile = useMemo(() => ({ ...profile, themes }), [profile, themes]);
+  const adjustedProfile = useMemo(
+    () => isSharedView ? { themes } : { ...profile, themes },
+    [isSharedView, profile, themes]
+  );
+
+  // Shareable URL encoding current profile scores
+  const shareUrl = useMemo(() => {
+    if (!themes) return 'https://poliscop.org';
+    const scores = SHARE_THEME_ORDER.map(k => Math.round(themes[k] ?? 50)).join(',');
+    return `${window.location.origin}/profile?s=${scores}`;
+  }, [themes]);
   const confMeta = getConfidenceMeta(confidence, language);
   const rankedCurrents = useMemo(
     () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder, themeWeights),
@@ -245,8 +273,8 @@ export default function Profile() {
 
         {/* Action buttons */}
         <div className="flex gap-2 flex-wrap">
-          {/* Cloud save — shown when Supabase is configured */}
-          {isSupabaseEnabled && (
+          {/* Cloud save — hidden in shared view */}
+          {!isSharedView && isSupabaseEnabled && (
             user ? (
               <button
                 onClick={async () => {
@@ -285,25 +313,27 @@ export default function Profile() {
           >
             ↗ {language === 'fr' ? 'Partager' : 'Share'}
           </button>
-          <button
-            onClick={exportProfile}
-            className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            ↓ {t('profile_export')}
-          </button>
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            ↑ {t('profile_import')}
-          </button>
-          <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
-          <button
-            onClick={() => setShowResetConfirm(true)}
-            className="flex items-center gap-1.5 text-xs font-medium text-red-500 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
-          >
-            ✕ {t('profile_reset')}
-          </button>
+          {!isSharedView && (<>
+            <button
+              onClick={exportProfile}
+              className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              ↓ {t('profile_export')}
+            </button>
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              ↑ {t('profile_import')}
+            </button>
+            <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+            <button
+              onClick={() => setShowResetConfirm(true)}
+              className="flex items-center gap-1.5 text-xs font-medium text-red-500 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
+            >
+              ✕ {t('profile_reset')}
+            </button>
+          </>)}
         </div>
       </motion.div>
 
@@ -361,6 +391,21 @@ export default function Profile() {
         </div>
       )}
 
+      {/* Shared view banner */}
+      {isSharedView && (
+        <div className="mb-6 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-sm text-blue-800 font-medium">
+            {language === 'fr' ? '👀 Profil partagé — lecture seule' : '👀 Shared profile — read only'}
+          </p>
+          <button
+            onClick={() => navigate('selectTest')}
+            className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap flex-shrink-0"
+          >
+            {language === 'fr' ? 'Créer le mien →' : 'Create mine →'}
+          </button>
+        </div>
+      )}
+
       {/* ═══ HERO ═══ */}
       {(() => {
         const topCurrent = rankedCurrents[0];
@@ -390,7 +435,11 @@ export default function Profile() {
             >
               {/* Confidence indicator — top right */}
               <div className="flex justify-end mb-6">
-                {confidenceScore >= 40 ? (
+                {isSharedView ? (
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-500">
+                    {language === 'fr' ? 'Profil partagé' : 'Shared profile'}
+                  </span>
+                ) : confidenceScore >= 40 ? (
                   /* Profil fiable → badge positif */
                   <span
                     className="text-xs font-semibold px-3 py-1 rounded-full"
@@ -398,7 +447,7 @@ export default function Profile() {
                   >
                     {language === 'fr' ? '✓ Profil fiable' : '✓ Reliable profile'}
                   </span>
-                ) : (
+                ) : confidenceScore < 40 ? (
                   /* Profil en cours → mini barre de progression motivante */
                   <div className="flex flex-col items-end gap-1">
                     <span className="text-xs text-gray-400">
@@ -413,7 +462,7 @@ export default function Profile() {
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* "You lean" label */}
@@ -527,8 +576,8 @@ export default function Profile() {
                 </motion.p>
               )}
 
-              {/* Low-confidence CTA */}
-              {(confidenceScore ?? 0) < 40 && (
+              {/* Low-confidence CTA — hidden in shared view */}
+              {!isSharedView && (confidenceScore ?? 0) < 40 && (
                 <button
                   onClick={startImproveMode}
                   className="mt-5 text-xs font-semibold text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
@@ -1105,6 +1154,7 @@ export default function Profile() {
             language={language}
             answeredCount={Object.keys(answers).length}
             totalCount={questions.length}
+            shareUrl={shareUrl}
             onClose={() => setShowShareModal(false)}
           />
         )}
