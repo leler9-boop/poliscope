@@ -152,20 +152,20 @@ export default function Questionnaire() {
         </div>
 
         {/* ── Navigation bas ── */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 px-4 py-3 z-30">
-          <div className="max-w-2xl mx-auto flex items-center gap-2.5">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 px-4 py-2 z-30">
+          <div className="max-w-2xl mx-auto flex items-center gap-2">
             {improveMode ? (
               <>
                 <button
                   onClick={stopImproveMode}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="min-h-[56px] px-4 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
                 >
                   {t('improve_stop')}
                 </button>
                 <button
                   onClick={handleNext}
                   disabled={!hasAnswer}
-                  className={`ml-auto px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+                  className={`ml-auto min-h-[56px] px-6 rounded-xl font-semibold text-sm transition-colors ${
                     hasAnswer
                       ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : 'bg-slate-100 text-slate-400 cursor-not-allowed'
@@ -180,23 +180,22 @@ export default function Questionnaire() {
                 <button
                   onClick={prevQuestion}
                   disabled={currentIndex === 0}
-                  className={`p-2.5 rounded-xl border text-sm font-medium transition-colors flex items-center gap-1 ${
+                  className={`min-h-[56px] min-w-[56px] rounded-xl border text-sm font-medium transition-colors flex items-center justify-center ${
                     currentIndex === 0
                       ? 'border-slate-100 text-slate-300 cursor-not-allowed bg-white'
                       : 'border-slate-200 text-slate-600 hover:bg-slate-50 bg-white'
                   }`}
-                  title={t('q_prev')}
+                  aria-label={t('q_prev')}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
                     <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <span className="hidden sm:inline">{t('q_prev')}</span>
                 </button>
 
                 {/* Passer */}
                 <button
                   onClick={handleSkip}
-                  className="text-sm text-slate-400 hover:text-slate-600 font-medium px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors"
+                  className="min-h-[56px] px-4 text-sm text-slate-400 hover:text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors"
                 >
                   {t('q_skip')}
                 </button>
@@ -205,7 +204,7 @@ export default function Questionnaire() {
                 <button
                   onClick={handleNext}
                   disabled={!hasAnswer}
-                  className={`ml-auto px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-1.5 ${
+                  className={`ml-auto min-h-[56px] px-6 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
                     hasAnswer
                       ? isLast
                         ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-200'
@@ -216,14 +215,14 @@ export default function Questionnaire() {
                   {isLast ? (
                     <>
                       {t('q_finish')}
-                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </>
                   ) : (
                     <>
                       {t('q_next')}
-                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </>

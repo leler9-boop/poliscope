@@ -7,6 +7,7 @@ import { elections } from '../data/elections.js';
 import { candidateDetails } from '../data/candidateDetails.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
+import { CandidateAvatar } from '../components/LazyImage.jsx';
 
 // Pole labels for each theme (0 = left pole, 100 = right pole)
 const THEME_AXES = {
@@ -347,23 +348,16 @@ export default function CandidateProfile() {
           <div className="flex flex-wrap gap-2">
             {election.candidates
               .filter(c => c.id !== candidate.id)
-              .map(c => {
-                const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-                return (
+              .map(c => (
                   <button
                     key={c.id}
                     onClick={() => startCompare(candidate.id, c.id)}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-800 hover:text-gray-900 bg-white transition-all"
                   >
-                    {c.image ? (
-                      <img src={c.image} alt={c.name} width={18} height={18} className="rounded-full object-cover flex-shrink-0" style={{ width: 18, height: 18 }} />
-                    ) : (
-                      <span className="rounded-full flex-shrink-0 flex items-center justify-center text-white" style={{ width: 18, height: 18, backgroundColor: c.color ?? '#374151', fontSize: 8 }}>{initials}</span>
-                    )}
+                    <CandidateAvatar src={c.image} name={c.name} size={18} />
                     vs {c.name}
                   </button>
-                );
-              })}
+                ))}
           </div>
         </section>
       )}

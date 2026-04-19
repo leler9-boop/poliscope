@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
+import LazyImage from '../components/LazyImage.jsx';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 16 },
@@ -74,11 +75,10 @@ export default function Elections() {
               {/* Banner image */}
               {election.image ? (
                 <div className="relative h-44 overflow-hidden bg-gray-950">
-                  <img
+                  <LazyImage
                     src={election.image}
                     alt={election.title[language]}
                     className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700"
-                    loading="lazy"
                   />
                   {/* Base tint */}
                   <div className="absolute inset-0 bg-black/15" />

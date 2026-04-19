@@ -30,14 +30,25 @@ export default function AxisBar({ label, score, leftLabel, rightLabel, color, la
   };
 
   return (
-    <div className="mb-6 last:mb-0">
-      {/* Label axe */}
-      <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest block mb-3">
-        {label}
-      </span>
+    <div className="mb-5 last:mb-0">
+      {/* Label axe + interp on one line for mobile density */}
+      <div className="flex items-baseline justify-between mb-2">
+        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+          {label}
+        </span>
+        <motion.span
+          className="text-[11px] font-semibold capitalize"
+          style={{ color: dotColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.35, delay: delay + 0.55 }}
+        >
+          {interp}
+        </motion.span>
+      </div>
 
       {/* Piste */}
-      <div className="relative h-1.5 rounded-full bg-slate-100">
+      <div className="relative h-2 rounded-full bg-slate-100">
         {/* Fill directionnel depuis le centre */}
         <div className="absolute top-0 h-full rounded-full transition-all" style={fillStyle} />
         {/* Tick central */}
@@ -60,20 +71,9 @@ export default function AxisBar({ label, score, leftLabel, rightLabel, color, la
 
       {/* Pôles */}
       <div className="flex justify-between mt-1.5">
-        <span className="text-[11px] text-slate-400">{leftLabel}</span>
-        <span className="text-[11px] text-slate-400">{rightLabel}</span>
+        <span className="text-[10px] text-slate-400">{leftLabel}</span>
+        <span className="text-[10px] text-slate-400">{rightLabel}</span>
       </div>
-
-      {/* Interprétation */}
-      <motion.p
-        className="text-xs font-semibold mt-1 capitalize"
-        style={{ color: dotColor }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.35, delay: delay + 0.55 }}
-      >
-        {interp}
-      </motion.p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { calculateAlignment, alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
+import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -197,11 +198,10 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
       {/* Election image header */}
       {election.image ? (
         <div className="relative -mx-4 sm:-mx-6 h-56 sm:h-72 overflow-hidden bg-gray-950 mb-10">
-          <img
+          <LazyImage
             src={election.image}
             alt={election.title[language]}
             className="w-full h-full object-cover object-center"
-            loading="lazy"
           />
           {/* Base tint */}
           <div className="absolute inset-0 bg-black/20" />
@@ -739,7 +739,6 @@ function ComparePanel({ candidates, userThemes, language }) {
         <div className="flex flex-wrap gap-2">
           {candidates.map(c => {
             const isSelected = selectedIds.includes(c.id);
-            const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
             return (
               <button
                 key={c.id}
@@ -750,11 +749,7 @@ function ComparePanel({ candidates, userThemes, language }) {
                     : 'border-gray-200 text-gray-600 hover:border-gray-400 bg-white'
                 }`}
               >
-                {c.image ? (
-                  <img src={c.image} alt={c.name} width={18} height={18} className="rounded-full object-cover flex-shrink-0" style={{ width: 18, height: 18 }} />
-                ) : (
-                  <span className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-white flex-shrink-0" style={{ width: 18, height: 18, backgroundColor: c.color ?? '#374151', fontSize: 8 }}>{initials}</span>
-                )}
+                <CandidateAvatar src={c.image} name={c.name} size={18} />
                 {c.name}
               </button>
             );
@@ -774,20 +769,13 @@ function ComparePanel({ candidates, userThemes, language }) {
           {/* Candidate headers */}
           <div className="grid gap-3 mb-5" style={{ gridTemplateColumns: '110px 1fr 1fr' }}>
             <div />
-            {selected.map(c => {
-              const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-              return (
+            {selected.map(c => (
                 <div key={c.id} className="flex flex-col items-center gap-1">
-                  {c.image ? (
-                    <img src={c.image} alt={c.name} width={36} height={36} className="rounded-full object-cover" style={{ width: 36, height: 36 }} />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: c.color ?? '#374151' }}>{initials}</div>
-                  )}
+                  <CandidateAvatar src={c.image} name={c.name} size={36} />
                   <p className="text-xs font-semibold text-gray-800 text-center leading-tight">{c.name}</p>
                   <p className="text-xs text-gray-400">{c.alignment}%</p>
                 </div>
-              );
-            })}
+              ))}
           </div>
 
           {/* Theme comparison rows */}
@@ -852,31 +840,7 @@ function ComparePanel({ candidates, userThemes, language }) {
 }
 
 function CandidatePortrait({ candidate, size = 48 }) {
-  const [imgError, setImgError] = React.useState(false);
-  if (candidate.image && !imgError) {
-    return (
-      <img
-        src={candidate.image}
-        alt={candidate.name}
-        width={size}
-        height={size}
-        loading="lazy"
-        onError={() => setImgError(true)}
-        className="rounded-full object-cover flex-shrink-0"
-        style={{ width: size, height: size }}
-      />
-    );
-  }
-  // Fallback: initials circle
-  const initials = candidate.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  return (
-    <div
-      className="rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
-      style={{ width: size, height: size, backgroundColor: candidate.color ?? '#374151' }}
-    >
-      {initials}
-    </div>
-  );
+  return <CandidateAvatar src={candidate.image} name={candidate.name} size={size} />;
 }
 
 function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnswers, questions, expanded, onToggle, globalProfile }) {

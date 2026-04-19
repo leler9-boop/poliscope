@@ -175,6 +175,7 @@ export default function Profile() {
   const [showAllCurrents, setShowAllCurrents] = useState(false);
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showRadar, setShowRadar] = useState(false);
 
   // Refinement UI state
   const [refineOpen, setRefineOpen] = useState(false);
@@ -258,22 +259,22 @@ export default function Profile() {
   const axisKeys = ['social', 'institutional', 'international'];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-16">
       {/* Header */}
       <motion.div
-        className="flex items-start justify-between mb-10 flex-wrap gap-4"
+        className="flex items-center justify-between mb-6 sm:mb-10 gap-3"
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{t('profile_title')}</h1>
-          <p className="text-slate-500 mt-1.5 text-sm">{t('profile_subtitle')}</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">{t('profile_title')}</h1>
+          <p className="text-slate-400 mt-0.5 text-xs sm:text-sm hidden sm:block">{t('profile_subtitle')}</p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex gap-2 flex-wrap">
-          {/* Cloud save — hidden in shared view */}
+        {/* Action buttons — Share prominent, rest in overflow on mobile */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Cloud save — hidden in shared view, hidden on mobile (in secondary menu) */}
           {!isSharedView && isSupabaseEnabled && (
             user ? (
               <button
@@ -284,7 +285,7 @@ export default function Profile() {
                   setTimeout(() => setSaveStatus(null), 3000);
                 }}
                 disabled={saveStatus === 'saving'}
-                className={`flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border transition-colors ${
+                className={`hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border transition-colors ${
                   saveStatus === 'saved'  ? 'border-green-300 bg-green-50 text-green-700' :
                   saveStatus === 'error'  ? 'border-red-300 bg-red-50 text-red-700' :
                   saveStatus === 'saving' ? 'border-blue-200 bg-blue-50 text-blue-600 opacity-70' :
@@ -295,43 +296,47 @@ export default function Profile() {
                 {saveStatus === 'saved'  ? (language === 'fr' ? 'Enregistré' : 'Saved') :
                  saveStatus === 'error'  ? (language === 'fr' ? 'Erreur' : 'Error') :
                  saveStatus === 'saving' ? (language === 'fr' ? 'Enregistrement…' : 'Saving…') :
-                 (language === 'fr' ? 'Enregistrer' : 'Save to cloud')}
+                 (language === 'fr' ? 'Enregistrer' : 'Save')}
               </button>
             ) : (
               <button
                 onClick={() => navigate('auth')}
-                className="flex items-center gap-1.5 text-xs font-medium text-blue-600 border border-blue-200 px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-blue-600 border border-blue-200 px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors"
               >
-                ☁ {language === 'fr' ? 'Connexion pour sauvegarder' : 'Sign in to save'}
+                ☁ {language === 'fr' ? 'Connexion' : 'Sign in'}
               </button>
             )
           )}
 
+          {/* Share — always visible */}
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black border border-gray-900 px-3 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black px-3 py-2.5 rounded-xl transition-colors"
           >
             ↗ {language === 'fr' ? 'Partager' : 'Share'}
           </button>
+
+          {/* Secondary actions — desktop only */}
           {!isSharedView && (<>
             <button
               onClick={exportProfile}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               ↓ {t('profile_export')}
             </button>
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               ↑ {t('profile_import')}
             </button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="flex items-center gap-1.5 text-xs font-medium text-red-500 border border-red-200 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-red-400 border border-red-100 px-2.5 py-2.5 rounded-xl hover:bg-red-50 transition-colors"
+              title={t('profile_reset')}
             >
-              ✕ {t('profile_reset')}
+              ✕
             </button>
           </>)}
         </div>
@@ -430,11 +435,11 @@ export default function Profile() {
             />
 
             <div
-              className="p-7 sm:p-10"
+              className="p-5 sm:p-10"
               style={{ background: `linear-gradient(160deg, ${accentColor}0D 0%, transparent 55%)` }}
             >
               {/* Confidence indicator — top right */}
-              <div className="flex justify-end mb-6">
+              <div className="flex justify-end mb-4 sm:mb-6">
                 {isSharedView ? (
                   <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-500">
                     {language === 'fr' ? 'Profil partagé' : 'Shared profile'}
@@ -590,9 +595,9 @@ export default function Profile() {
         );
       })()}
 
-      {/* ── Share CTA — prominent, below hero ── */}
+      {/* ── Share CTA — desktop only (mobile has it in header) ── */}
       <motion.div
-        className="flex items-center gap-3 mb-8"
+        className="hidden sm:flex items-center gap-3 mb-8"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -613,23 +618,15 @@ export default function Profile() {
 
       {/* Main grid */}
       <motion.div
-        className="grid sm:grid-cols-2 gap-5 mb-8"
+        className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
 
-        {/* Radar chart */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7">
-          <h2 className="font-semibold text-slate-900 mb-5 text-sm uppercase tracking-widest text-slate-500">{t('profile_themes_title')}</h2>
-          <div className="flex justify-center">
-            <RadarChart themes={themes} language={language} size={280} />
-          </div>
-        </div>
-
-        {/* Theme positions */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7">
-          <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-6">
+        {/* Theme positions — first on mobile for immediate readability */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 order-first sm:order-last">
+          <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5">
             {language === 'fr' ? 'Vos positions' : 'Your positions'}
           </h2>
           <div>
@@ -659,16 +656,39 @@ export default function Profile() {
             })}
           </div>
         </div>
+
+        {/* Radar chart — collapsible on mobile */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden order-last sm:order-first">
+          {/* Toggle header — only shown on mobile */}
+          <button
+            className="sm:hidden w-full flex items-center justify-between px-5 py-4 text-left"
+            onClick={() => setShowRadar(!showRadar)}
+          >
+            <span className="font-semibold text-sm uppercase tracking-widest text-slate-500">
+              {t('profile_themes_title')}
+            </span>
+            <span className="text-slate-400 text-lg leading-none">{showRadar ? '−' : '+'}</span>
+          </button>
+          {/* Radar — always visible on desktop, toggle on mobile */}
+          <div className={`p-5 sm:p-7 ${showRadar ? 'block' : 'hidden sm:block'}`}>
+            <h2 className="hidden sm:block font-semibold text-slate-900 mb-5 text-sm uppercase tracking-widest text-slate-500">
+              {t('profile_themes_title')}
+            </h2>
+            <div className="flex justify-center">
+              <RadarChart themes={themes} language={language} size={240} />
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Ideological axes */}
       <motion.div
-        className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 mb-8"
+        className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 mb-5 sm:mb-8"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-6">{t('profile_axes_title')}</h2>
+        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5 sm:mb-6">{t('profile_axes_title')}</h2>
         <div className="grid sm:grid-cols-3 gap-x-10">
           {axisKeys.map(axisKey => {
             const axisInfo = AXES_LABELS[axisKey]?.[language];
@@ -711,7 +731,7 @@ export default function Profile() {
                 return (
                   <motion.div
                     key={current.id}
-                    className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 overflow-hidden"
+                    className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 overflow-hidden"
                     style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: current.color } : {}}
                     initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}

@@ -53,23 +53,23 @@ export default function SelectTest() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
       <button
         onClick={() => navigate('landing')}
-        className="text-sm text-gray-400 hover:text-gray-600 mb-6 flex items-center gap-1"
+        className="min-h-[44px] text-sm text-gray-400 hover:text-gray-600 mb-5 flex items-center gap-1"
       >
         ← {t('back')}
       </button>
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{t('select_test')}</h1>
-      <p className="text-gray-500 mb-8">{t('test_note')}</p>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1.5">{t('select_test')}</h1>
+      <p className="text-gray-500 mb-6 text-sm">{t('test_note')}</p>
 
-      <div className="space-y-4 mb-8">
+      <div className="space-y-3 mb-6">
         {MODES.map(mode => (
           <button
             key={mode.id}
             onClick={() => setSelected(mode.id)}
-            className={`w-full text-left bg-white rounded-xl border-2 p-5 transition-all ${mode.color} ${
+            className={`w-full text-left bg-white rounded-2xl border-2 p-5 transition-all ${mode.color} ${
               selected === mode.id ? 'border-blue-500 shadow-md ring-2 ring-blue-100' : ''
             }`}
           >
@@ -104,7 +104,7 @@ export default function SelectTest() {
           useStore.setState({ testMode: selected });
           handleStart();
         }}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-lg transition-colors text-base"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold min-h-[56px] rounded-2xl transition-colors text-base"
       >
         {t('test_start')} →
       </button>
