@@ -92,15 +92,17 @@ function calculateAxes(themes) {
   );
 
   // Institutional axis: 0 = authoritarian/populist, 100 = democratic/rule of law
+  // GLOBAL: high = pro-mondialisation → contributes positively to institutional openness
   const institutional = Math.round(
     themes.DEMOCRACY * 0.6 +
     (100 - themes.SECURITY) * 0.25 +
-    (100 - themes.GLOBAL) * 0.15
+    themes.GLOBAL * 0.15
   );
 
   // International axis: 0 = nationalist/sovereignist, 100 = globalist/internationalist
+  // GLOBAL: high = pro-mondialisation → contributes positively to international axis
   const international = Math.round(
-    (100 - themes.GLOBAL) * 0.55 +
+    themes.GLOBAL * 0.55 +
     (100 - themes.IMMIGRATION) * 0.25 +
     themes.DEMOCRACY * 0.2
   );

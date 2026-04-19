@@ -100,9 +100,10 @@ const DIRECTION_MAP = {
   DEM_8:  1, DEM_9:  1, DEM_10: 1, DEM_11: 1, DEM_12: 1, DEM_13: 1, DEM_14: 1, DEM_15: 1,
   DEM_16: 1, DEM_17: 1, DEM_18: 1, DEM_19: 1, DEM_20:-1, DEM_21:-1, DEM_22: 1, DEM_23: 1,
 
-  GLO_1:  1, GLO_2:  1, GLO_3: -1, GLO_4: -1, GLO_5:  1, GLO_6:  1, GLO_7: -1,
-  GLO_8: -1, GLO_9:  1, GLO_10:-1, GLO_11: 1, GLO_12:-1, GLO_13:-1, GLO_14: 1, GLO_15:-1,
-  GLO_16: 1, GLO_17: 1, GLO_18:-1, GLO_19:-1, GLO_20:-1, GLO_21:-1, GLO_22: 1,
+  // GLO: HIGH = pro-mondialisation/pro-UE (direction inversée par rapport à v1)
+  GLO_1: -1, GLO_2: -1, GLO_3:  1, GLO_4:  1, GLO_5: -1, GLO_6: -1, GLO_7:  1,
+  GLO_8:  1, GLO_9: -1, GLO_10: 1, GLO_11:-1, GLO_12: 1, GLO_13: 1, GLO_14:-1, GLO_15: 1,
+  GLO_16:-1, GLO_17:-1, GLO_18: 1, GLO_19: 1, GLO_20: 1, GLO_21: 1, GLO_22:-1,
 
   PUB_1:  1, PUB_2:  1, PUB_3: -1, PUB_4:  1, PUB_5:  1, PUB_6:  1, PUB_7:  1,
   PUB_8:  1, PUB_9:  1, PUB_10: 1, PUB_11: 1, PUB_12: 1, PUB_13:-1, PUB_14: 1, PUB_15:-1,
@@ -115,7 +116,7 @@ const DIRECTION_MAP = {
   SEC_23: 1,
   ENV_24: 1,
   DEM_24: 1,
-  GLO_23: 1, GLO_24:-1,
+  GLO_23:-1, GLO_24: 1,  // inversé: quitter OTAN = anti-mondialiste = -1, UE fédérale = mondialiste = +1
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────

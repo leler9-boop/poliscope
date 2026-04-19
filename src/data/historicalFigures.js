@@ -21,7 +21,7 @@ export const historicalFigures = [
       SECURITY: 60,
       ENVIRONMENT: 60,
       DEMOCRACY: 75,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 85,
     },
     description: {
@@ -49,7 +49,7 @@ export const historicalFigures = [
       SECURITY: 80,
       ENVIRONMENT: 30,
       DEMOCRACY: 65,
-      GLOBAL: 60,
+      GLOBAL: 40,
       PUBLIC_SERVICES: 15,
     },
     description: {
@@ -77,7 +77,7 @@ export const historicalFigures = [
       SECURITY: 55,
       ENVIRONMENT: 75,
       DEMOCRACY: 80,
-      GLOBAL: 25,
+      GLOBAL: 75,
       PUBLIC_SERVICES: 65,
     },
     description: {
@@ -105,7 +105,7 @@ export const historicalFigures = [
       SECURITY: 75,
       ENVIRONMENT: 40,
       DEMOCRACY: 55,
-      GLOBAL: 70,
+      GLOBAL: 30,
       PUBLIC_SERVICES: 60,
     },
     description: {
@@ -133,7 +133,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 35,
       DEMOCRACY: 65,
-      GLOBAL: 55,
+      GLOBAL: 45,
       PUBLIC_SERVICES: 35,
     },
     description: {
@@ -161,7 +161,7 @@ export const historicalFigures = [
       SECURITY: 35,
       ENVIRONMENT: 55,
       DEMOCRACY: 95,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 75,
     },
     description: {
@@ -189,7 +189,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 20,
       DEMOCRACY: 60,
-      GLOBAL: 55,
+      GLOBAL: 45,
       PUBLIC_SERVICES: 15,
     },
     description: {
@@ -217,7 +217,7 @@ export const historicalFigures = [
       SECURITY: 5,
       ENVIRONMENT: 80,
       DEMOCRACY: 85,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 60,
     },
     description: {
@@ -247,7 +247,7 @@ export const historicalFigures = [
       SECURITY: 70,
       ENVIRONMENT: 45,
       DEMOCRACY: 85,
-      GLOBAL: 65,
+      GLOBAL: 35,
       PUBLIC_SERVICES: 55,
     },
     description: {
@@ -275,7 +275,7 @@ export const historicalFigures = [
       SECURITY: 60,
       ENVIRONMENT: 55,
       DEMOCRACY: 75,
-      GLOBAL: 35,
+      GLOBAL: 65,
       PUBLIC_SERVICES: 60,
     },
     description: {
@@ -303,7 +303,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 65,
       DEMOCRACY: 80,
-      GLOBAL: 40,
+      GLOBAL: 60,
       PUBLIC_SERVICES: 90,
     },
     description: {
@@ -359,7 +359,7 @@ export const historicalFigures = [
       SECURITY: 60,
       ENVIRONMENT: 60,
       DEMOCRACY: 65,
-      GLOBAL: 25,
+      GLOBAL: 75,
       PUBLIC_SERVICES: 50,
     },
     description: {
@@ -415,7 +415,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 5,
       DEMOCRACY: 20,
-      GLOBAL: 90,
+      GLOBAL: 10,
       PUBLIC_SERVICES: 20,
     },
     description: {
@@ -443,7 +443,7 @@ export const historicalFigures = [
       SECURITY: 25,
       ENVIRONMENT: 90,
       DEMOCRACY: 85,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 95,
     },
     description: {
@@ -473,7 +473,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 60,
       DEMOCRACY: 65,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 65,
     },
     description: {
@@ -501,7 +501,7 @@ export const historicalFigures = [
       SECURITY: 60,
       ENVIRONMENT: 60,
       DEMOCRACY: 80,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 60,
     },
     description: {
@@ -529,7 +529,7 @@ export const historicalFigures = [
       SECURITY: 45,
       ENVIRONMENT: 55,
       DEMOCRACY: 70,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 80,
     },
     description: {
@@ -557,7 +557,7 @@ export const historicalFigures = [
       SECURITY: 88,
       ENVIRONMENT: 28,
       DEMOCRACY: 52,
-      GLOBAL: 62,
+      GLOBAL: 38,
       PUBLIC_SERVICES: 28,
     },
     description: {
@@ -585,7 +585,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 55,
       DEMOCRACY: 68,
-      GLOBAL: 18,
+      GLOBAL: 82,
       PUBLIC_SERVICES: 42,
     },
     description: {
@@ -613,7 +613,7 @@ export const historicalFigures = [
       SECURITY: 92,
       ENVIRONMENT: 22,
       DEMOCRACY: 32,
-      GLOBAL: 88,
+      GLOBAL: 12,
       PUBLIC_SERVICES: 58,
     },
     description: {
@@ -641,7 +641,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 20,
       DEMOCRACY: 15,
-      GLOBAL: 85,
+      GLOBAL: 15,
       PUBLIC_SERVICES: 45,
     },
     description: {
@@ -669,7 +669,7 @@ export const historicalFigures = [
       SECURITY: 30,
       ENVIRONMENT: 70,
       DEMOCRACY: 80,
-      GLOBAL: 35,
+      GLOBAL: 65,
       PUBLIC_SERVICES: 90,
     },
     description: {
@@ -699,7 +699,7 @@ export const historicalFigures = [
       SECURITY: 95,
       ENVIRONMENT: 10,
       DEMOCRACY: 5,
-      GLOBAL: 90,
+      GLOBAL: 10,
       PUBLIC_SERVICES: 40,
     },
     description: {
@@ -727,7 +727,7 @@ export const historicalFigures = [
       SECURITY: 80,
       ENVIRONMENT: 55,
       DEMOCRACY: 5,
-      GLOBAL: 70,
+      GLOBAL: 30,
       PUBLIC_SERVICES: 85,
     },
     description: {
@@ -755,7 +755,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 40,
       DEMOCRACY: 35,
-      GLOBAL: 70,
+      GLOBAL: 30,
       PUBLIC_SERVICES: 90,
     },
     description: {
@@ -783,7 +783,7 @@ export const historicalFigures = [
       SECURITY: 40,
       ENVIRONMENT: 70,
       DEMOCRACY: 80,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 85,
     },
     description: {
@@ -811,7 +811,7 @@ export const historicalFigures = [
       SECURITY: 90,
       ENVIRONMENT: 5,
       DEMOCRACY: 20,
-      GLOBAL: 75,
+      GLOBAL: 25,
       PUBLIC_SERVICES: 25,
     },
     description: {
@@ -839,7 +839,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 25,
       DEMOCRACY: 20,
-      GLOBAL: 65,
+      GLOBAL: 35,
       PUBLIC_SERVICES: 55,
     },
     description: {
@@ -867,7 +867,7 @@ export const historicalFigures = [
       SECURITY: 80,
       ENVIRONMENT: 60,
       DEMOCRACY: 30,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 65,
     },
     description: {
@@ -895,7 +895,7 @@ export const historicalFigures = [
       SECURITY: 30,
       ENVIRONMENT: 85,
       DEMOCRACY: 90,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 80,
     },
     description: {
@@ -951,7 +951,7 @@ export const historicalFigures = [
       SECURITY: 80,
       ENVIRONMENT: 50,
       DEMOCRACY: 35,
-      GLOBAL: 60,
+      GLOBAL: 40,
       PUBLIC_SERVICES: 50,
     },
     description: {
@@ -979,7 +979,7 @@ export const historicalFigures = [
       SECURITY: 70,
       ENVIRONMENT: 35,
       DEMOCRACY: 35,
-      GLOBAL: 60,
+      GLOBAL: 40,
       PUBLIC_SERVICES: 80,
     },
     description: {
@@ -1007,7 +1007,7 @@ export const historicalFigures = [
       SECURITY: 45,
       ENVIRONMENT: 50,
       DEMOCRACY: 80,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 75,
     },
     description: {
@@ -1037,7 +1037,7 @@ export const historicalFigures = [
       SECURITY: 20,
       ENVIRONMENT: 50,
       DEMOCRACY: 55,
-      GLOBAL: 5,
+      GLOBAL: 95,
       PUBLIC_SERVICES: 98,
     },
     description: {
@@ -1065,7 +1065,7 @@ export const historicalFigures = [
       SECURITY: 40,
       ENVIRONMENT: 15,
       DEMOCRACY: 60,
-      GLOBAL: 10,
+      GLOBAL: 90,
       PUBLIC_SERVICES: 5,
     },
     description: {
@@ -1093,7 +1093,7 @@ export const historicalFigures = [
       SECURITY: 40,
       ENVIRONMENT: 20,
       DEMOCRACY: 55,
-      GLOBAL: 15,
+      GLOBAL: 85,
       PUBLIC_SERVICES: 8,
     },
     description: {
@@ -1121,7 +1121,7 @@ export const historicalFigures = [
       SECURITY: 10,
       ENVIRONMENT: 60,
       DEMOCRACY: 80,
-      GLOBAL: 5,
+      GLOBAL: 95,
       PUBLIC_SERVICES: 95,
     },
     description: {
@@ -1152,7 +1152,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 50,
       DEMOCRACY: 68,
-      GLOBAL: 45,
+      GLOBAL: 55,
       PUBLIC_SERVICES: 58,
     },
     description: {
@@ -1181,7 +1181,7 @@ export const historicalFigures = [
       SECURITY: 15,
       ENVIRONMENT: 88,
       DEMOCRACY: 62,
-      GLOBAL: 72,
+      GLOBAL: 28,
       PUBLIC_SERVICES: 95,
     },
     description: {
@@ -1210,7 +1210,7 @@ export const historicalFigures = [
       SECURITY: 45,
       ENVIRONMENT: 65,
       DEMOCRACY: 85,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 65,
     },
     description: {
@@ -1239,7 +1239,7 @@ export const historicalFigures = [
       SECURITY: 15,
       ENVIRONMENT: 50,
       DEMOCRACY: 90,
-      GLOBAL: 10,
+      GLOBAL: 90,
       PUBLIC_SERVICES: 90,
     },
     description: {
@@ -1268,7 +1268,7 @@ export const historicalFigures = [
       SECURITY: 25,
       ENVIRONMENT: 50,
       DEMOCRACY: 85,
-      GLOBAL: 15,
+      GLOBAL: 85,
       PUBLIC_SERVICES: 88,
     },
     description: {
@@ -1297,7 +1297,7 @@ export const historicalFigures = [
       SECURITY: 20,
       ENVIRONMENT: 55,
       DEMOCRACY: 88,
-      GLOBAL: 12,
+      GLOBAL: 88,
       PUBLIC_SERVICES: 75,
     },
     description: {
@@ -1326,7 +1326,7 @@ export const historicalFigures = [
       SECURITY: 72,
       ENVIRONMENT: 40,
       DEMOCRACY: 70,
-      GLOBAL: 60,
+      GLOBAL: 40,
       PUBLIC_SERVICES: 55,
     },
     description: {
@@ -1355,7 +1355,7 @@ export const historicalFigures = [
       SECURITY: 35,
       ENVIRONMENT: 58,
       DEMOCRACY: 82,
-      GLOBAL: 20,
+      GLOBAL: 80,
       PUBLIC_SERVICES: 72,
     },
     description: {
@@ -1384,7 +1384,7 @@ export const historicalFigures = [
       SECURITY: 45,
       ENVIRONMENT: 40,
       DEMOCRACY: 82,
-      GLOBAL: 35,
+      GLOBAL: 65,
       PUBLIC_SERVICES: 40,
     },
     description: {
@@ -1413,7 +1413,7 @@ export const historicalFigures = [
       SECURITY: 65,
       ENVIRONMENT: 40,
       DEMOCRACY: 72,
-      GLOBAL: 60,
+      GLOBAL: 40,
       PUBLIC_SERVICES: 35,
     },
     description: {
@@ -1442,7 +1442,7 @@ export const historicalFigures = [
       SECURITY: 30,
       ENVIRONMENT: 55,
       DEMOCRACY: 78,
-      GLOBAL: 55,
+      GLOBAL: 45,
       PUBLIC_SERVICES: 20,
     },
     description: {
@@ -1471,7 +1471,7 @@ export const historicalFigures = [
       SECURITY: 68,
       ENVIRONMENT: 35,
       DEMOCRACY: 62,
-      GLOBAL: 45,
+      GLOBAL: 55,
       PUBLIC_SERVICES: 55,
     },
     description: {
@@ -1500,7 +1500,7 @@ export const historicalFigures = [
       SECURITY: 58,
       ENVIRONMENT: 68,
       DEMOCRACY: 78,
-      GLOBAL: 22,
+      GLOBAL: 78,
       PUBLIC_SERVICES: 65,
     },
     description: {
@@ -1529,7 +1529,7 @@ export const historicalFigures = [
       SECURITY: 82,
       ENVIRONMENT: 25,
       DEMOCRACY: 28,
-      GLOBAL: 65,
+      GLOBAL: 35,
       PUBLIC_SERVICES: 58,
     },
     description: {
@@ -1558,7 +1558,7 @@ export const historicalFigures = [
       SECURITY: 85,
       ENVIRONMENT: 20,
       DEMOCRACY: 10,
-      GLOBAL: 42,
+      GLOBAL: 58,
       PUBLIC_SERVICES: 50,
     },
     description: {
@@ -1587,7 +1587,7 @@ export const historicalFigures = [
       SECURITY: 78,
       ENVIRONMENT: 35,
       DEMOCRACY: 38,
-      GLOBAL: 55,
+      GLOBAL: 45,
       PUBLIC_SERVICES: 60,
     },
     description: {
@@ -1616,7 +1616,7 @@ export const historicalFigures = [
       SECURITY: 58,
       ENVIRONMENT: 42,
       DEMOCRACY: 80,
-      GLOBAL: 30,
+      GLOBAL: 70,
       PUBLIC_SERVICES: 48,
     },
     description: {
@@ -1645,7 +1645,7 @@ export const historicalFigures = [
       SECURITY: 42,
       ENVIRONMENT: 60,
       DEMOCRACY: 72,
-      GLOBAL: 18,
+      GLOBAL: 82,
       PUBLIC_SERVICES: 68,
     },
     description: {
@@ -1674,7 +1674,7 @@ export const historicalFigures = [
       SECURITY: 12,
       ENVIRONMENT: 58,
       DEMOCRACY: 90,
-      GLOBAL: 12,
+      GLOBAL: 88,
       PUBLIC_SERVICES: 85,
     },
     description: {
@@ -1703,7 +1703,7 @@ export const historicalFigures = [
       SECURITY: 70,
       ENVIRONMENT: 40,
       DEMOCRACY: 55,
-      GLOBAL: 25,
+      GLOBAL: 75,
       PUBLIC_SERVICES: 80,
     },
     description: {
