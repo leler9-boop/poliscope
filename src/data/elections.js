@@ -835,7 +835,7 @@ export const elections = [
   // ── fr_2027 ─────────────────────────────────────────────────────────────
   {
     id: `fr_2027`,
-    image: `https://commons.wikimedia.org/wiki/Special:FilePath/Arc_de_Triomphe_de_Paris.jpg?width=1200`,
+    image: `https://images.unsplash.com/photo-1500039436846-25ae2f11882e?w=1200&auto=format&fit=crop`,
     title: { en: `French Presidential Election 2027`, fr: `Présidentielle française 2027` },
     country: `France`,
     flag: `🇫🇷`,
@@ -1064,7 +1064,7 @@ export const elections = [
   // ── paris_2026 ───────────────────────────────────────────────────────────
   {
     id: `paris_2026`,
-    image: `https://commons.wikimedia.org/wiki/Special:FilePath/Sacre_Coeur_3.jpg?width=1200`,
+    image: `https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&auto=format&fit=crop`,
     title: { en: `Paris Municipal Election 2026`, fr: `Municipales Paris 2026` },
     country: `France`,
     flag: `🇫🇷`,
