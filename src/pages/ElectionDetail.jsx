@@ -9,6 +9,16 @@ import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
+// Veto thresholds mirror matcher.js — prevents election-specific questions
+// from inflating scores for fundamentally incompatible candidates.
+const BLEND_VETO = {
+  IMMIGRATION:     { t: 30, p: 0.62 },
+  ECONOMY:         { t: 30, p: 0.72 },
+  SOCIAL:          { t: 42, p: 0.78 },
+  SECURITY:        { t: 42, p: 0.78 },
+  PUBLIC_SERVICES: { t: 42, p: 0.82 },
+};
+
 function blendedAlignment(globalProfile, electionAnswers, candidate, questions, priorityOrder) {
   const globalScore = calculateAlignment(globalProfile.themes, candidate.profile, priorityOrder);
   const answered = questions.filter(
@@ -21,8 +31,18 @@ function blendedAlignment(globalProfile, electionAnswers, candidate, questions, 
       return sum + Math.abs(electionAnswers[q.id] - q.positions[candidate.id]) / 4;
     }, 0) / answered.length;
 
-  const electionScore = Math.round(Math.pow(1 - meanDist, 2.2) * 100);
-  return Math.round(globalScore * 0.65 + electionScore * 0.35);
+  const rawElectionScore = Math.round(Math.pow(1 - meanDist, 2.2) * 100);
+
+  // Apply same veto to election-specific score so specific questions cannot
+  // override fundamental profile incompatibility (e.g. centrist matching communist)
+  let vetoMult = 1.0;
+  for (const [theme, cfg] of Object.entries(BLEND_VETO)) {
+    const dist = Math.abs((globalProfile.themes[theme] ?? 50) - (candidate.profile[theme] ?? 50));
+    if (dist > cfg.t) vetoMult *= cfg.p;
+  }
+  const electionScore = Math.round(rawElectionScore * vetoMult);
+
+  return Math.max(0, Math.min(100, Math.round(globalScore * 0.65 + electionScore * 0.35)));
 }
 
 function getQuestionBreakdown(electionAnswers, candidate, questions) {
