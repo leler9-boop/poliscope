@@ -67,10 +67,11 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
   // restriction will never align with a far-right candidate, even if they agree on economy.
   // Thresholds set at 50-55 to avoid crushing moderate profiles (< 20% for too many).
   const VETO_THEMES = {
-    IMMIGRATION: { threshold: 50, penalty: 0.60 },
-    ECONOMY:     { threshold: 55, penalty: 0.75 },
-    SOCIAL:      { threshold: 55, penalty: 0.80 },
-    SECURITY:    { threshold: 55, penalty: 0.80 },
+    IMMIGRATION:     { threshold: 38, penalty: 0.62 },
+    ECONOMY:         { threshold: 42, penalty: 0.72 },
+    SOCIAL:          { threshold: 45, penalty: 0.78 },
+    SECURITY:        { threshold: 45, penalty: 0.78 },
+    PUBLIC_SERVICES: { threshold: 45, penalty: 0.82 },
   };
   let vetoMultiplier = 1.0;
   Object.entries(VETO_THEMES).forEach(([theme, config]) => {

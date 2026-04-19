@@ -7,7 +7,7 @@
 //   SECURITY:        0 = civil liberties focus,       100 = law & order focus
 //   ENVIRONMENT:     0 = growth / climate-skeptic,    100 = environmentalist
 //   DEMOCRACY:       0 = anti-democratic / populist,  100 = pro-democratic
-//   GLOBAL:          0 = globalist / pro-EU,          100 = nationalist / sovereignist
+//   GLOBAL:          0 = nationalist / sovereignist,  100 = globalist / pro-EU
 //   PUBLIC_SERVICES: 0 = minimal state,               100 = strong welfare state
 //
 // specificQuestions.positions: candidate stance on each question (1–5 scale)
@@ -378,7 +378,7 @@ export const elections = [
         result: { en: `Winner (58.5% — 2nd round)`, fr: `Élu (58,5% — 2e tour)` },
         profile: {
           ECONOMY: 68, SOCIAL: 72, IMMIGRATION: 45, SECURITY: 58,
-          ENVIRONMENT: 58, DEMOCRACY: 82, GLOBAL: 22, PUBLIC_SERVICES: 48,
+          ENVIRONMENT: 58, DEMOCRACY: 82, GLOBAL: 78, PUBLIC_SERVICES: 48,
         },
         description: {
           en: `Centrist liberal reformer. Pro-EU, economically liberal, socially progressive, moderate on immigration.`,
@@ -394,7 +394,7 @@ export const elections = [
         result: { en: `41.5% — 2nd round`, fr: `41,5% — 2e tour` },
         profile: {
           ECONOMY: 42, SOCIAL: 15, IMMIGRATION: 92, SECURITY: 85,
-          ENVIRONMENT: 30, DEMOCRACY: 44, GLOBAL: 82, PUBLIC_SERVICES: 58,
+          ENVIRONMENT: 30, DEMOCRACY: 44, GLOBAL: 18, PUBLIC_SERVICES: 58,
         },
         description: {
           en: `Economic nationalist, very anti-immigration, socially conservative, sovereignist.`,
@@ -410,7 +410,7 @@ export const elections = [
         result: { en: `21.95% — 1st round`, fr: `21,95% — 1er tour` },
         profile: {
           ECONOMY: 12, SOCIAL: 88, IMMIGRATION: 12, SECURITY: 24,
-          ENVIRONMENT: 82, DEMOCRACY: 62, GLOBAL: 45, PUBLIC_SERVICES: 90,
+          ENVIRONMENT: 82, DEMOCRACY: 62, GLOBAL: 32, PUBLIC_SERVICES: 90,
         },
         description: {
           en: `Radical left. Strong welfare state, very pro-immigration, very progressive, environmentalist.`,
@@ -426,7 +426,7 @@ export const elections = [
         result: { en: `7.07% — 1st round`, fr: `7,07% — 1er tour` },
         profile: {
           ECONOMY: 55, SOCIAL: 8, IMMIGRATION: 97, SECURITY: 90,
-          ENVIRONMENT: 18, DEMOCRACY: 38, GLOBAL: 88, PUBLIC_SERVICES: 38,
+          ENVIRONMENT: 18, DEMOCRACY: 38, GLOBAL: 12, PUBLIC_SERVICES: 38,
         },
         description: {
           en: `Far-right. Extremely anti-immigration, very conservative socially, nationalist.`,
@@ -442,7 +442,7 @@ export const elections = [
         result: { en: `4.63% — 1st round`, fr: `4,63% — 1er tour` },
         profile: {
           ECONOMY: 28, SOCIAL: 85, IMMIGRATION: 12, SECURITY: 28,
-          ENVIRONMENT: 96, DEMOCRACY: 88, GLOBAL: 18, PUBLIC_SERVICES: 68,
+          ENVIRONMENT: 96, DEMOCRACY: 88, GLOBAL: 82, PUBLIC_SERVICES: 68,
         },
         description: {
           en: `Green/ecological. Strong climate action, pro-immigration, very progressive, pro-EU.`,
@@ -458,7 +458,7 @@ export const elections = [
         result: { en: `1.75% — 1st round`, fr: `1,75% — 1er tour` },
         profile: {
           ECONOMY: 22, SOCIAL: 85, IMMIGRATION: 15, SECURITY: 32,
-          ENVIRONMENT: 72, DEMOCRACY: 82, GLOBAL: 20, PUBLIC_SERVICES: 84,
+          ENVIRONMENT: 72, DEMOCRACY: 82, GLOBAL: 80, PUBLIC_SERVICES: 84,
         },
         description: {
           en: `Socialist. Strong public services, pro-immigration, very progressive, environmentalist.`,
@@ -473,8 +473,8 @@ export const elections = [
         color: `#0066CC`,
         result: { en: `4.78% — 1st round`, fr: `4,78% — 1er tour` },
         profile: {
-          ECONOMY: 72, SOCIAL: 35, IMMIGRATION: 68, SECURITY: 75,
-          ENVIRONMENT: 48, DEMOCRACY: 74, GLOBAL: 42, PUBLIC_SERVICES: 38,
+          ECONOMY: 80, SOCIAL: 22, IMMIGRATION: 80, SECURITY: 82,
+          ENVIRONMENT: 42, DEMOCRACY: 72, GLOBAL: 55, PUBLIC_SERVICES: 32,
         },
         description: {
           en: `Conservative right. Economically liberal, tough on immigration, traditional social values.`,
@@ -490,7 +490,7 @@ export const elections = [
         result: { en: `2.28% — 1st round`, fr: `2,28% — 1er tour` },
         profile: {
           ECONOMY: 8, SOCIAL: 75, IMMIGRATION: 10, SECURITY: 38,
-          ENVIRONMENT: 62, DEMOCRACY: 68, GLOBAL: 52, PUBLIC_SERVICES: 95,
+          ENVIRONMENT: 62, DEMOCRACY: 68, GLOBAL: 38, PUBLIC_SERVICES: 95,
         },
         description: {
           en: `Communist. Maximum welfare state, very pro-immigration, progressive, strongly statist economy.`,
@@ -806,7 +806,7 @@ export const elections = [
         result: { en: `Winner — 306 electoral votes`, fr: `Élu — 306 grands électeurs` },
         profile: {
           ECONOMY: 40, SOCIAL: 78, IMMIGRATION: 28, SECURITY: 52,
-          ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 20, PUBLIC_SERVICES: 65,
+          ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 80, PUBLIC_SERVICES: 65,
         },
         description: {
           en: `Center-left Democrat. Moderate on economy, progressive on social issues, strongly pro-multilateralism.`,
@@ -822,7 +822,7 @@ export const elections = [
         result: { en: `232 electoral votes`, fr: `232 grands électeurs` },
         profile: {
           ECONOMY: 62, SOCIAL: 18, IMMIGRATION: 90, SECURITY: 85,
-          ENVIRONMENT: 15, DEMOCRACY: 35, GLOBAL: 88, PUBLIC_SERVICES: 28,
+          ENVIRONMENT: 15, DEMOCRACY: 35, GLOBAL: 12, PUBLIC_SERVICES: 28,
         },
         description: {
           en: `Economic nationalist. Very anti-immigration, climate-skeptic, culturally conservative, sovereignist.`,
@@ -995,7 +995,7 @@ export const elections = [
         party: { en: `Rassemblement National`, fr: `Rassemblement National` },
         color: `#003189`,
         result: { en: `Projected candidate`, fr: `Candidate pressentie` },
-        profile: { ECONOMY: 42, SOCIAL: 12, IMMIGRATION: 95, SECURITY: 88, ENVIRONMENT: 25, DEMOCRACY: 40, GLOBAL: 85, PUBLIC_SERVICES: 55 },
+        profile: { ECONOMY: 42, SOCIAL: 12, IMMIGRATION: 95, SECURITY: 88, ENVIRONMENT: 25, DEMOCRACY: 40, GLOBAL: 15, PUBLIC_SERVICES: 55 },
         description: { en: `Far-right nationalist. Very anti-immigration, socially conservative, economically statist on purchasing power.`, fr: `Nationaliste d'extrême droite. Très anti-immigration, conservatrice socialement, statiste sur le pouvoir d'achat.` },
       },
       {
@@ -1005,7 +1005,7 @@ export const elections = [
         party: { en: `Horizons`, fr: `Horizons` },
         color: `#1a3d7c`,
         result: { en: `Projected candidate`, fr: `Candidat pressenti` },
-        profile: { ECONOMY: 68, SOCIAL: 58, IMMIGRATION: 48, SECURITY: 62, ENVIRONMENT: 55, DEMOCRACY: 78, GLOBAL: 28, PUBLIC_SERVICES: 45 },
+        profile: { ECONOMY: 68, SOCIAL: 58, IMMIGRATION: 48, SECURITY: 62, ENVIRONMENT: 55, DEMOCRACY: 78, GLOBAL: 72, PUBLIC_SERVICES: 45 },
         description: { en: `Centre-right liberal. Pro-EU, fiscally conservative, moderate on immigration, pragmatic reformer.`, fr: `Libéral de centre-droit. Pro-UE, conservateur sur les finances publiques, modéré sur l'immigration, réformiste pragmatique.` },
       },
       {
@@ -1015,7 +1015,7 @@ export const elections = [
         party: { en: `Renaissance`, fr: `Renaissance` },
         color: `#a08500`,
         result: { en: `Projected candidate`, fr: `Candidat pressenti` },
-        profile: { ECONOMY: 65, SOCIAL: 65, IMMIGRATION: 45, SECURITY: 60, ENVIRONMENT: 58, DEMOCRACY: 80, GLOBAL: 25, PUBLIC_SERVICES: 48 },
+        profile: { ECONOMY: 65, SOCIAL: 65, IMMIGRATION: 45, SECURITY: 60, ENVIRONMENT: 58, DEMOCRACY: 80, GLOBAL: 75, PUBLIC_SERVICES: 48 },
         description: { en: `Centrist liberal. Macron's political heir, pro-EU, socially progressive, economically liberal.`, fr: `Libéral centriste. Héritier politique de Macron, pro-UE, progressiste socialement, libéral économiquement.` },
       },
       {
@@ -1025,7 +1025,7 @@ export const elections = [
         party: { en: `La France Insoumise`, fr: `La France Insoumise` },
         color: `#CC0000`,
         result: { en: `Projected candidate`, fr: `Candidat pressenti` },
-        profile: { ECONOMY: 12, SOCIAL: 88, IMMIGRATION: 12, SECURITY: 24, ENVIRONMENT: 82, DEMOCRACY: 62, GLOBAL: 45, PUBLIC_SERVICES: 90 },
+        profile: { ECONOMY: 12, SOCIAL: 88, IMMIGRATION: 12, SECURITY: 24, ENVIRONMENT: 82, DEMOCRACY: 62, GLOBAL: 32, PUBLIC_SERVICES: 90 },
         description: { en: `Radical left. Maximum welfare state, very pro-immigration, environmentalist, sovereignist left.`, fr: `Gauche radicale. État social maximal, très pro-immigration, écologiste, souverainisme de gauche.` },
       },
       {
@@ -1035,7 +1035,7 @@ export const elections = [
         party: { en: `Parti Socialiste / Place Publique`, fr: `Parti Socialiste / Place Publique` },
         color: `#E75480`,
         result: { en: `Projected candidate`, fr: `Candidat pressenti` },
-        profile: { ECONOMY: 28, SOCIAL: 82, IMMIGRATION: 18, SECURITY: 38, ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 22, PUBLIC_SERVICES: 78 },
+        profile: { ECONOMY: 28, SOCIAL: 82, IMMIGRATION: 18, SECURITY: 38, ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 78, PUBLIC_SERVICES: 78 },
         description: { en: `Social democrat. Pro-EU, strong social protection, progressive, firm supporter of Ukraine.`, fr: `Social-démocrate. Pro-UE, forte protection sociale, progressiste, ferme soutien de l'Ukraine.` },
       },
       {
@@ -1045,7 +1045,7 @@ export const elections = [
         party: { en: `Les Écologistes (EELV)`, fr: `Les Écologistes (EELV)` },
         color: `#00A550`,
         result: { en: `Projected candidate`, fr: `Candidate pressentie` },
-        profile: { ECONOMY: 22, SOCIAL: 88, IMMIGRATION: 15, SECURITY: 28, ENVIRONMENT: 94, DEMOCRACY: 85, GLOBAL: 20, PUBLIC_SERVICES: 72 },
+        profile: { ECONOMY: 22, SOCIAL: 88, IMMIGRATION: 15, SECURITY: 28, ENVIRONMENT: 94, DEMOCRACY: 85, GLOBAL: 80, PUBLIC_SERVICES: 72 },
         description: { en: `Green ecologist. Strong climate action, pro-immigration, very progressive, anti-nuclear.`, fr: `Écologiste verte. Action climatique forte, pro-immigration, très progressiste, antinucléaire.` },
       },
       {
@@ -1055,7 +1055,7 @@ export const elections = [
         party: { en: `Les Républicains`, fr: `Les Républicains` },
         color: `#0066CC`,
         result: { en: `Projected candidate`, fr: `Candidat pressenti` },
-        profile: { ECONOMY: 72, SOCIAL: 28, IMMIGRATION: 78, SECURITY: 80, ENVIRONMENT: 42, DEMOCRACY: 68, GLOBAL: 52, PUBLIC_SERVICES: 38 },
+        profile: { ECONOMY: 72, SOCIAL: 28, IMMIGRATION: 78, SECURITY: 80, ENVIRONMENT: 42, DEMOCRACY: 68, GLOBAL: 48, PUBLIC_SERVICES: 38 },
         description: { en: `Conservative right. Tough on immigration, economically liberal, traditional social values.`, fr: `Droite conservatrice. Ferme sur l'immigration, libéral économiquement, valeurs sociales traditionnelles.` },
       },
     ],
@@ -1161,7 +1161,7 @@ export const elections = [
         party: { en: `PS + EELV + PCF (Union de la Gauche)`, fr: `PS + EELV + PCF (Union de la Gauche)` },
         color: `#E75480`,
         result: { en: `Head of the PS+EELV+PCF coalition list`, fr: `Tête de liste PS+EELV+PCF` },
-        profile: { ECONOMY: 28, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 40, ENVIRONMENT: 70, DEMOCRACY: 80, GLOBAL: 22, PUBLIC_SERVICES: 80 },
+        profile: { ECONOMY: 28, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 40, ENVIRONMENT: 70, DEMOCRACY: 80, GLOBAL: 78, PUBLIC_SERVICES: 80 },
         description: { en: `First Deputy Mayor under Hidalgo 2014–2026. Leads a unified PS+Greens+PCF list. Pledges 30,000 new social housing units, maintains the cycling agenda, and promises improvements on cleanliness.`, fr: `Premier adjoint d'Hidalgo de 2014 à 2026. Conduit une liste d'union PS+Verts+PCF. Promet 30 000 nouveaux logements sociaux, maintient l'agenda vélo et s'engage sur la propreté.` },
       },
       {
@@ -1171,7 +1171,7 @@ export const elections = [
         party: { en: `Les Républicains`, fr: `Les Républicains` },
         color: `#0066CC`,
         result: { en: `LR candidate, Mayor of the 7th arrondissement since 2008`, fr: `Candidate LR, maire du 7e arrondissement depuis 2008` },
-        profile: { ECONOMY: 65, SOCIAL: 38, IMMIGRATION: 62, SECURITY: 78, ENVIRONMENT: 38, DEMOCRACY: 70, GLOBAL: 40, PUBLIC_SERVICES: 40 },
+        profile: { ECONOMY: 65, SOCIAL: 38, IMMIGRATION: 62, SECURITY: 78, ENVIRONMENT: 38, DEMOCRACY: 70, GLOBAL: 60, PUBLIC_SERVICES: 40 },
         description: { en: `Mayor of the 7th arrondissement since 2008, former Justice Minister. Conservative platform: expand the municipal police, restore parking, reduce municipal debt, revise car restrictions.`, fr: `Maire du 7e arrondissement depuis 2008, ancienne ministre de la Justice. Programme conservateur : développer la police municipale, rétablir des places de stationnement, réduire la dette, réviser les restrictions de circulation.` },
       },
       {
@@ -1181,7 +1181,7 @@ export const elections = [
         party: { en: `La France Insoumise`, fr: `La France Insoumise` },
         color: `#CC2200`,
         result: { en: `LFI candidate`, fr: `Candidate LFI` },
-        profile: { ECONOMY: 15, SOCIAL: 92, IMMIGRATION: 12, SECURITY: 20, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 18, PUBLIC_SERVICES: 90 },
+        profile: { ECONOMY: 15, SOCIAL: 92, IMMIGRATION: 12, SECURITY: 20, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 82, PUBLIC_SERVICES: 90 },
         description: { en: `LFI campaign director and close Mélenchon ally. Platform centred on housing rights, requisitioning vacant properties, anti-gentrification, and expanding free public services.`, fr: `Directrice de campagne de LFI et proche de Mélenchon. Programme centré sur le droit au logement, la réquisition des logements vacants, l'anti-gentrification et l'expansion des services publics gratuits.` },
       },
     ],
@@ -1280,7 +1280,7 @@ export const elections = [
         party: { en: `Parti Socialiste`, fr: `Parti Socialiste` },
         color: `#E75480`,
         result: { en: `PS candidate, former Mayor of Strasbourg (1989–2001)`, fr: `Candidate PS, ancienne maire de Strasbourg (1989–2001)` },
-        profile: { ECONOMY: 30, SOCIAL: 80, IMMIGRATION: 25, SECURITY: 45, ENVIRONMENT: 60, DEMOCRACY: 78, GLOBAL: 18, PUBLIC_SERVICES: 78 },
+        profile: { ECONOMY: 30, SOCIAL: 80, IMMIGRATION: 25, SECURITY: 45, ENVIRONMENT: 60, DEMOCRACY: 78, GLOBAL: 82, PUBLIC_SERVICES: 78 },
         description: { en: `Former Mayor of Strasbourg (1989–2001) and MEP. Centre-left platform: defend the European Parliament seat, targeted policing combined with social investment, phased tram extension, pragmatic housing policy.`, fr: `Ancienne maire de Strasbourg (1989–2001) et eurodéputée. Programme centre-gauche : défendre le siège du Parlement européen, police ciblée couplée à l'investissement social, prolongement progressif du tram, politique du logement pragmatique.` },
       },
       {
@@ -1290,7 +1290,7 @@ export const elections = [
         party: { en: `Les Républicains / UDI`, fr: `Les Républicains / UDI` },
         color: `#0066CC`,
         result: { en: `LR/UDI candidate`, fr: `Candidat LR/UDI` },
-        profile: { ECONOMY: 65, SOCIAL: 35, IMMIGRATION: 60, SECURITY: 78, ENVIRONMENT: 38, DEMOCRACY: 68, GLOBAL: 35, PUBLIC_SERVICES: 40 },
+        profile: { ECONOMY: 65, SOCIAL: 35, IMMIGRATION: 60, SECURITY: 78, ENVIRONMENT: 38, DEMOCRACY: 68, GLOBAL: 65, PUBLIC_SERVICES: 40 },
         description: { en: `Conservative right-of-centre. Platform focused on public safety, debt reduction, restoring city-centre parking, and private-sector economic development. Opposed the tram nord extension pending fiscal consolidation.`, fr: `Droite conservatrice. Programme centré sur la sécurité publique, la réduction de la dette, le rétablissement du stationnement en centre-ville et le développement économique privé. Opposé à l'extension du tram nord avant l'assainissement des finances.` },
       },
       {
@@ -1300,7 +1300,7 @@ export const elections = [
         party: { en: `Les Écologistes (EELV)`, fr: `Les Écologistes (EELV)` },
         color: `#00A550`,
         result: { en: `Incumbent mayor (elected 2020)`, fr: `Maire sortante (élue en 2020)` },
-        profile: { ECONOMY: 22, SOCIAL: 82, IMMIGRATION: 20, SECURITY: 28, ENVIRONMENT: 90, DEMOCRACY: 82, GLOBAL: 20, PUBLIC_SERVICES: 75 },
+        profile: { ECONOMY: 22, SOCIAL: 82, IMMIGRATION: 20, SECURITY: 28, ENVIRONMENT: 90, DEMOCRACY: 82, GLOBAL: 80, PUBLIC_SERVICES: 75 },
         description: { en: `Incumbent mayor (2020–present). Green ecologist. Reduced city-centre parking, expanded cycling infrastructure, increased social housing construction, and championed Strasbourg's European identity.`, fr: `Maire sortante (depuis 2020). Écologiste. A réduit le stationnement en centre-ville, développé les pistes cyclables, augmenté la construction de logements sociaux et renforcé l'identité européenne de Strasbourg.` },
       },
       {
@@ -1310,7 +1310,7 @@ export const elections = [
         party: { en: `La France Insoumise`, fr: `La France Insoumise` },
         color: `#CC2200`,
         result: { en: `LFI candidate`, fr: `Candidat LFI` },
-        profile: { ECONOMY: 15, SOCIAL: 90, IMMIGRATION: 15, SECURITY: 20, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 20, PUBLIC_SERVICES: 90 },
+        profile: { ECONOMY: 15, SOCIAL: 90, IMMIGRATION: 15, SECURITY: 20, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 80, PUBLIC_SERVICES: 90 },
         description: { en: `LFI candidate. Platform: expand public services, oppose austerity, prioritise social and student housing, strengthen residents' rights against rising rents.`, fr: `Candidat LFI. Programme : développer les services publics, s'opposer à l'austérité, prioriser le logement social et étudiant, renforcer les droits des locataires face à la hausse des loyers.` },
       },
     ],
@@ -1430,7 +1430,7 @@ export const elections = [
         party: { en: `European People's Party`, fr: `Parti populaire européen` },
         color: `#1a3080`,
         result: { en: `188 seats (largest group)`, fr: `188 sièges (premier groupe)` },
-        profile: { ECONOMY: 68, SOCIAL: 42, IMMIGRATION: 58, SECURITY: 62, ENVIRONMENT: 52, DEMOCRACY: 75, GLOBAL: 28, PUBLIC_SERVICES: 48 },
+        profile: { ECONOMY: 68, SOCIAL: 42, IMMIGRATION: 58, SECURITY: 62, ENVIRONMENT: 52, DEMOCRACY: 75, GLOBAL: 72, PUBLIC_SERVICES: 48 },
         description: { en: `Centre-right. Christian-democratic, pro-EU integration, economically liberal, moderate climate action.`, fr: `Centre-droit. Chrétien-démocrate, pro-intégration européenne, libéral économiquement, action climatique modérée.` },
       },
       {
@@ -1440,7 +1440,7 @@ export const elections = [
         party: { en: `Progressive Alliance of Socialists and Democrats`, fr: `Alliance progressiste des socialistes et démocrates` },
         color: `#CC0000`,
         result: { en: `136 seats`, fr: `136 sièges` },
-        profile: { ECONOMY: 28, SOCIAL: 78, IMMIGRATION: 22, SECURITY: 42, ENVIRONMENT: 72, DEMOCRACY: 82, GLOBAL: 22, PUBLIC_SERVICES: 78 },
+        profile: { ECONOMY: 28, SOCIAL: 78, IMMIGRATION: 22, SECURITY: 42, ENVIRONMENT: 72, DEMOCRACY: 82, GLOBAL: 78, PUBLIC_SERVICES: 78 },
         description: { en: `Centre-left. Social democratic, strong welfare, pro-EU, progressive on social issues and climate.`, fr: `Centre-gauche. Social-démocrate, welfare fort, pro-UE, progressiste sur le social et le climat.` },
       },
       {
@@ -1450,7 +1450,7 @@ export const elections = [
         party: { en: `Renew Europe`, fr: `Renew Europe` },
         color: `#c4950a`,
         result: { en: `77 seats`, fr: `77 sièges` },
-        profile: { ECONOMY: 65, SOCIAL: 68, IMMIGRATION: 32, SECURITY: 52, ENVIRONMENT: 62, DEMOCRACY: 82, GLOBAL: 18, PUBLIC_SERVICES: 52 },
+        profile: { ECONOMY: 65, SOCIAL: 68, IMMIGRATION: 32, SECURITY: 52, ENVIRONMENT: 62, DEMOCRACY: 82, GLOBAL: 82, PUBLIC_SERVICES: 52 },
         description: { en: `Liberal. Pro-EU federalism, economically liberal, socially progressive, pro-Ukraine.`, fr: `Libéral. Pro-fédéralisme européen, libéral économiquement, progressiste socialement, pro-Ukraine.` },
       },
       {
@@ -1460,7 +1460,7 @@ export const elections = [
         party: { en: `Greens–European Free Alliance`, fr: `Verts/Alliance libre européenne` },
         color: `#009900`,
         result: { en: `53 seats (heavy losses)`, fr: `53 sièges (lourdes pertes)` },
-        profile: { ECONOMY: 25, SOCIAL: 85, IMMIGRATION: 15, SECURITY: 30, ENVIRONMENT: 94, DEMOCRACY: 85, GLOBAL: 20, PUBLIC_SERVICES: 68 },
+        profile: { ECONOMY: 25, SOCIAL: 85, IMMIGRATION: 15, SECURITY: 30, ENVIRONMENT: 94, DEMOCRACY: 85, GLOBAL: 80, PUBLIC_SERVICES: 68 },
         description: { en: `Green/left. Radical climate action, pro-immigration, federalist, civil liberties.`, fr: `Vert/gauche. Action climatique radicale, pro-immigration, fédéraliste, libertés civiles.` },
       },
       {
@@ -1470,7 +1470,7 @@ export const elections = [
         party: { en: `European Conservatives and Reformists`, fr: `Conservateurs et réformistes européens` },
         color: `#1a2d50`,
         result: { en: `78 seats`, fr: `78 sièges` },
-        profile: { ECONOMY: 65, SOCIAL: 28, IMMIGRATION: 78, SECURITY: 72, ENVIRONMENT: 32, DEMOCRACY: 52, GLOBAL: 68, PUBLIC_SERVICES: 38 },
+        profile: { ECONOMY: 65, SOCIAL: 28, IMMIGRATION: 78, SECURITY: 72, ENVIRONMENT: 32, DEMOCRACY: 52, GLOBAL: 32, PUBLIC_SERVICES: 38 },
         description: { en: `National-conservative. Eurosceptic, anti-immigration, socially conservative, anti-Green Deal.`, fr: `National-conservateur. Eurosceptique, anti-immigration, conservateur socialement, anti-Pacte vert.` },
       },
       {
@@ -1480,7 +1480,7 @@ export const elections = [
         party: { en: `Patriots for Europe`, fr: `Patriotes pour l'Europe` },
         color: `#002288`,
         result: { en: `84 seats`, fr: `84 sièges` },
-        profile: { ECONOMY: 45, SOCIAL: 15, IMMIGRATION: 92, SECURITY: 82, ENVIRONMENT: 22, DEMOCRACY: 35, GLOBAL: 85, PUBLIC_SERVICES: 52 },
+        profile: { ECONOMY: 45, SOCIAL: 15, IMMIGRATION: 92, SECURITY: 82, ENVIRONMENT: 22, DEMOCRACY: 35, GLOBAL: 15, PUBLIC_SERVICES: 52 },
         description: { en: `Far-right nationalist. Very anti-immigration, sovereignist, Eurosceptic, populist.`, fr: `Nationaliste d'extrême droite. Très anti-immigration, souverainiste, eurosceptique, populiste.` },
       },
     ],
@@ -1600,7 +1600,7 @@ export const elections = [
         party: { en: `CDU/CSU`, fr: `CDU/CSU` },
         color: `#1a1a1a`,
         result: { en: `Winner — ~29% (CDU/CSU)`, fr: `Vainqueur — ~29 % (CDU/CSU)` },
-        profile: { ECONOMY: 72, SOCIAL: 35, IMMIGRATION: 68, SECURITY: 68, ENVIRONMENT: 48, DEMOCRACY: 78, GLOBAL: 35, PUBLIC_SERVICES: 42 },
+        profile: { ECONOMY: 72, SOCIAL: 35, IMMIGRATION: 68, SECURITY: 68, ENVIRONMENT: 48, DEMOCRACY: 78, GLOBAL: 65, PUBLIC_SERVICES: 42 },
         description: { en: `Conservative. Pro-business, fiscally strict, tough on migration, pro-NATO, traditionalist.`, fr: `Conservateur. Pro-entreprises, rigueur budgétaire, ferme sur la migration, pro-OTAN, traditionaliste.` },
       },
       {
@@ -1610,7 +1610,7 @@ export const elections = [
         party: { en: `SPD`, fr: `SPD` },
         color: `#CC0000`,
         result: { en: `~16% (SPD) — coalition junior partner`, fr: `~16 % (SPD) — partenaire junior de coalition` },
-        profile: { ECONOMY: 38, SOCIAL: 72, IMMIGRATION: 38, SECURITY: 52, ENVIRONMENT: 65, DEMOCRACY: 80, GLOBAL: 25, PUBLIC_SERVICES: 68 },
+        profile: { ECONOMY: 38, SOCIAL: 72, IMMIGRATION: 38, SECURITY: 52, ENVIRONMENT: 65, DEMOCRACY: 80, GLOBAL: 75, PUBLIC_SERVICES: 68 },
         description: { en: `Social democrat. Pro-minimum wage, welfare expansion, moderate climate action, pro-NATO.`, fr: `Social-démocrate. Pro-salaire minimum, expansion du welfare, action climatique modérée, pro-OTAN.` },
       },
       {
@@ -1620,7 +1620,7 @@ export const elections = [
         party: { en: `AfD`, fr: `AfD` },
         color: `#009EE0`,
         result: { en: `~20% (AfD)`, fr: `~20 % (AfD)` },
-        profile: { ECONOMY: 55, SOCIAL: 15, IMMIGRATION: 95, SECURITY: 85, ENVIRONMENT: 18, DEMOCRACY: 32, GLOBAL: 82, PUBLIC_SERVICES: 45 },
+        profile: { ECONOMY: 55, SOCIAL: 15, IMMIGRATION: 95, SECURITY: 85, ENVIRONMENT: 18, DEMOCRACY: 32, GLOBAL: 18, PUBLIC_SERVICES: 45 },
         description: { en: `Far-right. Extremely anti-immigration, Eurosceptic, climate-sceptic, soft on Russia.`, fr: `Extrême droite. Extrêmement anti-immigration, eurosceptique, climatosceptique, douce envers la Russie.` },
       },
       {
@@ -1630,7 +1630,7 @@ export const elections = [
         party: { en: `Greens (Bündnis 90/Die Grünen)`, fr: `Les Verts (Bündnis 90/Die Grünen)` },
         color: `#46962B`,
         result: { en: `~11.6% (Greens)`, fr: `~11,6 % (Verts)` },
-        profile: { ECONOMY: 32, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 38, ENVIRONMENT: 92, DEMOCRACY: 85, GLOBAL: 22, PUBLIC_SERVICES: 68 },
+        profile: { ECONOMY: 32, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 38, ENVIRONMENT: 92, DEMOCRACY: 85, GLOBAL: 78, PUBLIC_SERVICES: 68 },
         description: { en: `Green. Radical climate transition, pro-immigration, socially progressive, pro-EU, pro-Ukraine.`, fr: `Vert. Transition climatique radicale, pro-immigration, progressiste, pro-UE, pro-Ukraine.` },
       },
       {
@@ -1640,7 +1640,7 @@ export const elections = [
         party: { en: `FDP`, fr: `FDP` },
         color: `#c4b000`,
         result: { en: `~4.3% (FDP — below threshold)`, fr: `~4,3 % (FDP — sous le seuil)` },
-        profile: { ECONOMY: 82, SOCIAL: 62, IMMIGRATION: 45, SECURITY: 52, ENVIRONMENT: 45, DEMOCRACY: 80, GLOBAL: 28, PUBLIC_SERVICES: 28 },
+        profile: { ECONOMY: 82, SOCIAL: 62, IMMIGRATION: 45, SECURITY: 52, ENVIRONMENT: 45, DEMOCRACY: 80, GLOBAL: 72, PUBLIC_SERVICES: 28 },
         description: { en: `Free-market liberal. Fiscal orthodoxy, deregulation, individual liberty, pro-EU, anti-debt.`, fr: `Libéral de marché. Orthodoxie budgétaire, déréglementation, liberté individuelle, pro-UE, anti-dette.` },
       },
       {
@@ -1650,7 +1650,7 @@ export const elections = [
         party: { en: `BSW (Sahra Wagenknecht Alliance)`, fr: `BSW (Alliance Sahra Wagenknecht)` },
         color: `#7C1D6F`,
         result: { en: `~4.97% (BSW — narrowly missed threshold)`, fr: `~4,97 % (BSW — seuil manqué de peu)` },
-        profile: { ECONOMY: 18, SOCIAL: 45, IMMIGRATION: 65, SECURITY: 52, ENVIRONMENT: 55, DEMOCRACY: 55, GLOBAL: 72, PUBLIC_SERVICES: 82 },
+        profile: { ECONOMY: 18, SOCIAL: 45, IMMIGRATION: 65, SECURITY: 52, ENVIRONMENT: 55, DEMOCRACY: 55, GLOBAL: 28, PUBLIC_SERVICES: 82 },
         description: { en: `Left-nationalist. Strong welfare, anti-NATO, anti-Ukraine support, anti-immigration, anti-sanctions on Russia.`, fr: `Gauche nationaliste. Welfare fort, anti-OTAN, contre le soutien à l'Ukraine, anti-immigration, anti-sanctions contre la Russie.` },
       },
     ],
@@ -1756,7 +1756,7 @@ export const elections = [
         party: { en: `Fratelli d'Italia`, fr: `Fratelli d'Italia` },
         color: `#2B3D8B`,
         result: { en: `Winner — 26% (FdI)`, fr: `Gagnante — 26 % (FdI)` },
-        profile: { ECONOMY: 55, SOCIAL: 18, IMMIGRATION: 88, SECURITY: 82, ENVIRONMENT: 28, DEMOCRACY: 48, GLOBAL: 72, PUBLIC_SERVICES: 42 },
+        profile: { ECONOMY: 55, SOCIAL: 18, IMMIGRATION: 88, SECURITY: 82, ENVIRONMENT: 28, DEMOCRACY: 48, GLOBAL: 28, PUBLIC_SERVICES: 42 },
         description: { en: `National-conservative. Anti-immigration, traditional social values, pro-NATO, anti-Green Deal.`, fr: `National-conservatrice. Anti-immigration, valeurs sociales traditionnelles, pro-OTAN, anti-Pacte vert.` },
       },
       {
@@ -1766,7 +1766,7 @@ export const elections = [
         party: { en: `Partito Democratico`, fr: `Partito Democratico` },
         color: `#CC0000`,
         result: { en: `19% (PD)`, fr: `19 % (PD)` },
-        profile: { ECONOMY: 38, SOCIAL: 78, IMMIGRATION: 22, SECURITY: 42, ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 18, PUBLIC_SERVICES: 72 },
+        profile: { ECONOMY: 38, SOCIAL: 78, IMMIGRATION: 22, SECURITY: 42, ENVIRONMENT: 72, DEMOCRACY: 85, GLOBAL: 82, PUBLIC_SERVICES: 72 },
         description: { en: `Centre-left. Pro-EU, social democratic, progressive on social issues, pro-climate.`, fr: `Centre-gauche. Pro-UE, social-démocrate, progressiste socialement, pro-climat.` },
       },
       {
@@ -1776,7 +1776,7 @@ export const elections = [
         party: { en: `Movimento 5 Stelle`, fr: `Movimento 5 Stelle` },
         color: `#EEA800`,
         result: { en: `15% (M5S)`, fr: `15 % (M5S)` },
-        profile: { ECONOMY: 28, SOCIAL: 62, IMMIGRATION: 38, SECURITY: 48, ENVIRONMENT: 65, DEMOCRACY: 68, GLOBAL: 48, PUBLIC_SERVICES: 78 },
+        profile: { ECONOMY: 28, SOCIAL: 62, IMMIGRATION: 38, SECURITY: 48, ENVIRONMENT: 65, DEMOCRACY: 68, GLOBAL: 52, PUBLIC_SERVICES: 78 },
         description: { en: `Anti-establishment populist. Strong welfare, anti-corruption, cautious on Ukraine support.`, fr: `Populiste anti-système. Welfare fort, anti-corruption, prudent sur le soutien à l'Ukraine.` },
       },
       {
@@ -1786,7 +1786,7 @@ export const elections = [
         party: { en: `Lega`, fr: `Lega` },
         color: `#00A550`,
         result: { en: `8.9% (Lega)`, fr: `8,9 % (Lega)` },
-        profile: { ECONOMY: 52, SOCIAL: 22, IMMIGRATION: 92, SECURITY: 85, ENVIRONMENT: 22, DEMOCRACY: 45, GLOBAL: 78, PUBLIC_SERVICES: 48 },
+        profile: { ECONOMY: 52, SOCIAL: 22, IMMIGRATION: 92, SECURITY: 85, ENVIRONMENT: 22, DEMOCRACY: 45, GLOBAL: 22, PUBLIC_SERVICES: 48 },
         description: { en: `Populist right. Very anti-immigration, Eurosceptic, law and order, soft on Russia.`, fr: `Droite populiste. Très anti-immigration, eurosceptique, ordre public, douce envers la Russie.` },
       },
       {
@@ -1796,7 +1796,7 @@ export const elections = [
         party: { en: `Forza Italia`, fr: `Forza Italia` },
         color: `#0066CC`,
         result: { en: `8.1% (Forza Italia)`, fr: `8,1 % (Forza Italia)` },
-        profile: { ECONOMY: 72, SOCIAL: 35, IMMIGRATION: 68, SECURITY: 65, ENVIRONMENT: 38, DEMOCRACY: 55, GLOBAL: 38, PUBLIC_SERVICES: 38 },
+        profile: { ECONOMY: 72, SOCIAL: 35, IMMIGRATION: 68, SECURITY: 65, ENVIRONMENT: 38, DEMOCRACY: 55, GLOBAL: 62, PUBLIC_SERVICES: 38 },
         description: { en: `Centre-right. Pro-business, moderately Europhile, traditional social values.`, fr: `Centre-droit. Pro-entreprises, modérément europhile, valeurs sociales traditionnelles.` },
       },
     ],
@@ -1902,7 +1902,7 @@ export const elections = [
         party: { en: `PSOE`, fr: `PSOE` },
         color: `#CC0000`,
         result: { en: `Winner (coalition) — PSOE 121 seats`, fr: `Gagnant (coalition) — PSOE 121 sièges` },
-        profile: { ECONOMY: 32, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 40, ENVIRONMENT: 72, DEMOCRACY: 80, GLOBAL: 20, PUBLIC_SERVICES: 78 },
+        profile: { ECONOMY: 32, SOCIAL: 82, IMMIGRATION: 22, SECURITY: 40, ENVIRONMENT: 72, DEMOCRACY: 80, GLOBAL: 80, PUBLIC_SERVICES: 78 },
         description: { en: `Social democrat. Pro-EU, pro-renewable energy, labour rights, negotiations with regionalists.`, fr: `Social-démocrate. Pro-UE, pro-énergies renouvelables, droits du travail, négociations avec les régionalistes.` },
       },
       {
@@ -1912,7 +1912,7 @@ export const elections = [
         party: { en: `Partido Popular`, fr: `Partido Popular` },
         color: `#0066CC`,
         result: { en: `PP 137 seats (largest party, no majority)`, fr: `PP 137 sièges (premier parti, sans majorité)` },
-        profile: { ECONOMY: 68, SOCIAL: 42, IMMIGRATION: 58, SECURITY: 68, ENVIRONMENT: 48, DEMOCRACY: 72, GLOBAL: 35, PUBLIC_SERVICES: 45 },
+        profile: { ECONOMY: 68, SOCIAL: 42, IMMIGRATION: 58, SECURITY: 68, ENVIRONMENT: 48, DEMOCRACY: 72, GLOBAL: 65, PUBLIC_SERVICES: 45 },
         description: { en: `Conservative. Pro-business, Europhile, moderate on social issues, centralised state.`, fr: `Conservateur. Pro-entreprises, europhile, modéré socialement, État centralisé.` },
       },
       {
@@ -1922,7 +1922,7 @@ export const elections = [
         party: { en: `Vox`, fr: `Vox` },
         color: `#63BE21`,
         result: { en: `Vox 33 seats`, fr: `Vox 33 sièges` },
-        profile: { ECONOMY: 58, SOCIAL: 12, IMMIGRATION: 92, SECURITY: 88, ENVIRONMENT: 18, DEMOCRACY: 38, GLOBAL: 82, PUBLIC_SERVICES: 32 },
+        profile: { ECONOMY: 58, SOCIAL: 12, IMMIGRATION: 92, SECURITY: 88, ENVIRONMENT: 18, DEMOCRACY: 38, GLOBAL: 18, PUBLIC_SERVICES: 32 },
         description: { en: `Far-right nationalist. Against Catalan autonomy, very anti-immigration, very conservative socially.`, fr: `Nationaliste d'extrême droite. Contre l'autonomie catalane, très anti-immigration, très conservateur socialement.` },
       },
       {
@@ -1932,7 +1932,7 @@ export const elections = [
         party: { en: `Sumar`, fr: `Sumar` },
         color: `#AC145A`,
         result: { en: `Sumar 31 seats`, fr: `Sumar 31 sièges` },
-        profile: { ECONOMY: 18, SOCIAL: 88, IMMIGRATION: 15, SECURITY: 28, ENVIRONMENT: 82, DEMOCRACY: 82, GLOBAL: 22, PUBLIC_SERVICES: 88 },
+        profile: { ECONOMY: 18, SOCIAL: 88, IMMIGRATION: 15, SECURITY: 28, ENVIRONMENT: 82, DEMOCRACY: 82, GLOBAL: 78, PUBLIC_SERVICES: 88 },
         description: { en: `Left-wing feminist. Strong welfare, workers' rights, green transition, feminist, pro-immigration.`, fr: `Gauche féministe. Welfare fort, droits des travailleurs, transition verte, féministe, pro-immigration.` },
       },
     ],
@@ -2052,7 +2052,7 @@ export const elections = [
         party: { en: `Labour Party`, fr: `Parti travailliste` },
         color: `#E4003B`,
         result: { en: `Winner — Labour 412 seats`, fr: `Gagnant — Labour 412 sièges` },
-        profile: { ECONOMY: 38, SOCIAL: 78, IMMIGRATION: 45, SECURITY: 52, ENVIRONMENT: 72, DEMOCRACY: 78, GLOBAL: 28, PUBLIC_SERVICES: 72 },
+        profile: { ECONOMY: 38, SOCIAL: 78, IMMIGRATION: 45, SECURITY: 52, ENVIRONMENT: 72, DEMOCRACY: 78, GLOBAL: 72, PUBLIC_SERVICES: 72 },
         description: { en: `Centre-left. NHS investment, workers' rights, closer EU ties, clean energy, moderate immigration.`, fr: `Centre-gauche. Investissement dans le NHS, droits des travailleurs, liens UE plus étroits, énergie propre, immigration modérée.` },
       },
       {
@@ -2062,7 +2062,7 @@ export const elections = [
         party: { en: `Conservative Party`, fr: `Parti conservateur` },
         color: `#003087`,
         result: { en: `Conservatives 121 seats (historic defeat)`, fr: `Conservateurs 121 sièges (défaite historique)` },
-        profile: { ECONOMY: 72, SOCIAL: 42, IMMIGRATION: 62, SECURITY: 68, ENVIRONMENT: 50, DEMOCRACY: 65, GLOBAL: 40, PUBLIC_SERVICES: 38 },
+        profile: { ECONOMY: 72, SOCIAL: 42, IMMIGRATION: 62, SECURITY: 68, ENVIRONMENT: 50, DEMOCRACY: 65, GLOBAL: 60, PUBLIC_SERVICES: 38 },
         description: { en: `Conservative. Pro-business, fiscal conservatism, tough on immigration, post-Brexit sovereignty.`, fr: `Conservateur. Pro-entreprises, conservatisme fiscal, ferme sur l'immigration, souveraineté post-Brexit.` },
       },
       {
@@ -2072,7 +2072,7 @@ export const elections = [
         party: { en: `Liberal Democrats`, fr: `Libéraux-démocrates` },
         color: `#FAA61A`,
         result: { en: `Lib Dems 72 seats (major surge)`, fr: `Lib Dems 72 sièges (forte progression)` },
-        profile: { ECONOMY: 55, SOCIAL: 78, IMMIGRATION: 28, SECURITY: 45, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 18, PUBLIC_SERVICES: 62 },
+        profile: { ECONOMY: 55, SOCIAL: 78, IMMIGRATION: 28, SECURITY: 45, ENVIRONMENT: 78, DEMOCRACY: 88, GLOBAL: 82, PUBLIC_SERVICES: 62 },
         description: { en: `Social-liberal. Pro-EU alignment, NHS, proportional representation, climate ambition, civil liberties.`, fr: `Social-libéral. Alignement pro-UE, NHS, représentation proportionnelle, ambition climatique, libertés civiles.` },
       },
       {
@@ -2082,7 +2082,7 @@ export const elections = [
         party: { en: `Reform UK`, fr: `Reform UK` },
         color: `#12B6CF`,
         result: { en: `Reform UK 4 seats (14% of votes)`, fr: `Reform UK 4 sièges (14 % des voix)` },
-        profile: { ECONOMY: 60, SOCIAL: 22, IMMIGRATION: 92, SECURITY: 80, ENVIRONMENT: 18, DEMOCRACY: 45, GLOBAL: 88, PUBLIC_SERVICES: 32 },
+        profile: { ECONOMY: 60, SOCIAL: 22, IMMIGRATION: 92, SECURITY: 80, ENVIRONMENT: 18, DEMOCRACY: 45, GLOBAL: 12, PUBLIC_SERVICES: 32 },
         description: { en: `Hard-right populist. Anti-immigration, anti-net zero, Eurosceptic, anti-establishment.`, fr: `Populiste de droite dure. Anti-immigration, anti-zéro net, eurosceptique, anti-establishment.` },
       },
     ],
