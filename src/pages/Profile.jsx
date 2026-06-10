@@ -27,9 +27,10 @@ function alignmentWord(score, language) {
   return language === 'fr' ? 'Éloigné' : 'Distant';
 }
 import { ideologicalCurrents } from '../data/ideologicalCurrents.js';
+import { elections } from '../data/elections.js';
 import { generateProfileSummary } from '../engine/profileSummary.js';
 import { refinementThemes } from '../data/refinementThemes.js';
-import RadarChart from '../components/RadarChart.jsx';
+import { getArchetype, getTopTraits } from '../engine/archetypeEngine.js';
 import AxisBar from '../components/AxisBar.jsx';
 import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import { useAuth } from '../lib/auth.jsx';
@@ -79,14 +80,14 @@ function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClos
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 <button
                   onClick={() => handleChange(theme, weights[theme] - 1)}
-                  className="w-6 h-6 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-xs leading-none flex items-center justify-center transition-colors"
+                  className="w-11 h-11 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-sm leading-none flex items-center justify-center transition-colors"
                 >−</button>
                 <span className="text-sm font-bold tabular-nums w-7 text-center text-slate-800">
                   {weights[theme]}
                 </span>
                 <button
                   onClick={() => handleChange(theme, weights[theme] + 1)}
-                  className="w-6 h-6 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-xs leading-none flex items-center justify-center transition-colors"
+                  className="w-11 h-11 rounded border border-slate-200 text-slate-500 hover:bg-slate-100 text-sm leading-none flex items-center justify-center transition-colors"
                 >+</button>
               </div>
             </div>
@@ -175,7 +176,7 @@ export default function Profile() {
   const [showAllCurrents, setShowAllCurrents] = useState(false);
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showRadar, setShowRadar] = useState(false);
+
 
   // Refinement UI state
   const [refineOpen, setRefineOpen] = useState(false);
@@ -208,7 +209,7 @@ export default function Profile() {
     );
   }
 
-  const { themes: rawThemes = {}, axes = {}, confidence = 'very_low', confidenceScore = 0, answeredCount = 0, totalQuestions = 120 } = profile ?? {};
+  const { themes: rawThemes = {}, axes = {}, confidence = 'very_low', confidenceScore = 0, answeredCount = 0, totalQuestions = 162 } = profile ?? {};
   const themes = useMemo(
     () => isSharedView ? parsedSharedScores : buildAdjustedThemes(rawThemes, profileAdjustments),
     [isSharedView, parsedSharedScores, rawThemes, profileAdjustments]
@@ -229,6 +230,23 @@ export default function Profile() {
     () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder, themeWeights),
     [adjustedProfile, priorityOrder, themeWeights]
   );
+  const topArchetype = useMemo(
+    () => themes ? getArchetype(themes, priorityOrder) : null,
+    [themes, priorityOrder]
+  );
+
+  // fr_2027 candidates, excluding variants (bardella → variantOf lepen_2027)
+  const fr2027Candidates = useMemo(() => {
+    const election = elections.find(e => e.id === 'fr_2027');
+    if (!election) return [];
+    return election.candidates.filter(c => !c.variantOf);
+  }, []);
+
+  const rankedCandidates = useMemo(() => {
+    if (!themes || fr2027Candidates.length === 0) return [];
+    return rankByAlignment({ themes }, fr2027Candidates, priorityOrder ?? [], themeWeights ?? null);
+  }, [themes, fr2027Candidates, priorityOrder, themeWeights]);
+
   const profileSummary = useMemo(
     () => generateProfileSummary(themes, rankedCurrents, language),
     [themes, rankedCurrents, language]
@@ -413,10 +431,10 @@ export default function Profile() {
 
       {/* ═══ HERO ═══ */}
       {(() => {
-        const topCurrent = rankedCurrents[0];
-        const accentColor = topCurrent?.color ?? '#2563eb';
+        const accentColor = topArchetype?.color ?? '#2563eb';
         const econScore = axes?.economic ?? 50;
         const isRight = econScore >= 50;
+        const traits = topArchetype ? getTopTraits(topArchetype, language, 3) : [];
 
         return (
           <motion.div
@@ -463,24 +481,24 @@ export default function Profile() {
                     <div className="w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-blue-400 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(100, Math.round((answeredCount / 40) * 100))}%` }}
+                        style={{ width: `${Math.min(100, Math.round((answeredCount / (totalQuestions || 162)) * 100))}%` }}
                       />
                     </div>
                   </div>
                 ) : null}
               </div>
 
-              {/* "You lean" label */}
+              {/* "Votre archétype" label */}
               <motion.p
                 className="text-sm font-medium text-slate-400 mb-1.5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                {language === 'fr' ? 'Vous êtes plutôt' : 'You lean'}
+                {language === 'fr' ? 'Votre archétype politique' : 'Your political archetype'}
               </motion.p>
 
-              {/* Current name — big */}
+              {/* Archetype name — big */}
               <motion.h2
                 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2"
                 style={{ color: accentColor }}
@@ -488,18 +506,42 @@ export default function Profile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                {topCurrent?.icon} {topCurrent?.name[language]}
+                {topArchetype?.name[language] ?? (language === 'fr' ? 'Profil en cours…' : 'Profile loading…')}
               </motion.h2>
 
-              {/* Short description */}
+              {/* Description */}
               <motion.p
-                className="text-sm text-slate-500 leading-relaxed max-w-lg mb-8"
+                className="text-sm text-slate-500 leading-relaxed max-w-lg mb-5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.45 }}
               >
-                {topCurrent?.shortDesc[language]}
+                {topArchetype?.description[language]}
               </motion.p>
+
+              {/* Traits chips */}
+              {traits.length > 0 && (
+                <motion.div
+                  className="flex flex-wrap gap-2 mb-8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.52 }}
+                >
+                  {traits.map((trait, i) => (
+                    <span
+                      key={i}
+                      className="text-xs font-medium px-3 py-1.5 rounded-full border"
+                      style={{
+                        backgroundColor: `${accentColor}12`,
+                        borderColor: `${accentColor}30`,
+                        color: accentColor,
+                      }}
+                    >
+                      {trait}
+                    </span>
+                  ))}
+                </motion.div>
+              )}
 
               {/* ── Featured economic axis ── */}
               <div>
@@ -595,6 +637,17 @@ export default function Profile() {
         );
       })()}
 
+      {/* ── Mobile-only: candidates CTA — visible immediately after hero ── */}
+      {!isSharedView && (
+        <button
+          onClick={() => navigate('elections')}
+          className="sm:hidden w-full flex items-center justify-between px-4 py-3.5 mb-6 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors"
+        >
+          <span>🗳️ {language === 'fr' ? 'Voir mes compatibilités 2027' : 'See my 2027 candidate matches'}</span>
+          <span className="text-slate-400">→</span>
+        </button>
+      )}
+
       {/* ── Share CTA — desktop only (mobile has it in header) ── */}
       <motion.div
         className="hidden sm:flex items-center gap-3 mb-8"
@@ -616,68 +669,41 @@ export default function Profile() {
         </span>
       </motion.div>
 
-      {/* Main grid */}
+      {/* Theme positions — full width */}
       <motion.div
-        className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8"
+        className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 mb-6 sm:mb-8"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-
-        {/* Theme positions — first on mobile for immediate readability */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 order-first sm:order-last">
-          <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5">
-            {language === 'fr' ? 'Vos positions' : 'Your positions'}
-          </h2>
-          <div>
-            {THEMES_ORDER.map((theme, idx) => {
-              const score  = themes[theme] ?? 50;
-              const label  = THEME_LABELS[language]?.[theme] ?? theme;
-              const color  = THEME_COLORS[theme] ?? '#6b7280';
-              const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
-              return (
-                <motion.div
-                  key={theme}
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <AxisBar
-                    label={label}
-                    score={score}
-                    leftLabel={poles.left}
-                    rightLabel={poles.right}
-                    color={color}
-                    language={language}
-                    delay={0.32 + idx * 0.06}
-                  />
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Radar chart — collapsible on mobile */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden order-last sm:order-first">
-          {/* Toggle header — only shown on mobile */}
-          <button
-            className="sm:hidden w-full flex items-center justify-between px-5 py-4 text-left"
-            onClick={() => setShowRadar(!showRadar)}
-          >
-            <span className="font-semibold text-sm uppercase tracking-widest text-slate-500">
-              {t('profile_themes_title')}
-            </span>
-            <span className="text-slate-400 text-lg leading-none">{showRadar ? '−' : '+'}</span>
-          </button>
-          {/* Radar — always visible on desktop, toggle on mobile */}
-          <div className={`p-5 sm:p-7 ${showRadar ? 'block' : 'hidden sm:block'}`}>
-            <h2 className="hidden sm:block font-semibold text-slate-900 mb-5 text-sm uppercase tracking-widest text-slate-500">
-              {t('profile_themes_title')}
-            </h2>
-            <div className="flex justify-center">
-              <RadarChart themes={themes} language={language} size={240} />
-            </div>
-          </div>
+        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5">
+          {language === 'fr' ? 'Vos positions' : 'Your positions'}
+        </h2>
+        <div className="grid sm:grid-cols-2 gap-x-10">
+          {THEMES_ORDER.map((theme, idx) => {
+            const score  = themes[theme] ?? 50;
+            const label  = THEME_LABELS[language]?.[theme] ?? theme;
+            const color  = THEME_COLORS[theme] ?? '#6b7280';
+            const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
+            return (
+              <motion.div
+                key={theme}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <AxisBar
+                  label={label}
+                  score={score}
+                  leftLabel={poles.left}
+                  rightLabel={poles.right}
+                  color={color}
+                  language={language}
+                  delay={0.32 + idx * 0.06}
+                />
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
 
@@ -708,7 +734,99 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Ideological Currents */}
+      {/* ═══ CANDIDATS 2027 ═══ */}
+      {rankedCandidates.length > 0 && (
+        <motion.div
+          className="mb-6 sm:mb-8"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <div className="flex items-baseline justify-between mb-4 gap-3">
+            <div>
+              <h2 className="font-bold text-slate-900 text-lg tracking-tight">
+                {language === 'fr' ? 'Candidats 2027' : '2027 Candidates'}
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">
+                {language === 'fr' ? 'Votre compatibilité avec les candidats présentiels' : 'Your compatibility with projected candidates'}
+              </p>
+            </div>
+            {!isSharedView && (
+              <button
+                onClick={() => navigate('elections')}
+                className="flex-shrink-0 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                {language === 'fr' ? 'Voir tout →' : 'See all →'}
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-2.5">
+            {rankedCandidates.slice(0, 5).map((candidate, idx) => {
+              const barColor = alignmentBarColor(candidate.alignment);
+              return (
+                <motion.div
+                  key={candidate.id}
+                  className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5"
+                  style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: candidate.color } : {}}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.5 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: candidate.color }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2 mb-0.5">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {idx === 0 && (
+                            <span
+                              className="text-xs font-semibold px-1.5 py-0.5 rounded-full text-white flex-shrink-0"
+                              style={{ backgroundColor: candidate.color }}
+                            >
+                              {language === 'fr' ? '✓ 1er' : '✓ #1'}
+                            </span>
+                          )}
+                          <span className="font-semibold text-slate-900 text-sm truncate">{candidate.name}</span>
+                        </div>
+                        <motion.span
+                          className="text-xs font-bold tabular-nums flex-shrink-0"
+                          style={{ color: barColor }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.55 + idx * 0.07 }}
+                        >
+                          {candidate.alignment}%
+                        </motion.span>
+                      </div>
+                      <p className="text-xs text-slate-400 truncate">{candidate.party[language]}</p>
+                    </div>
+                  </div>
+                  <div className="mt-2.5 h-1 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: barColor }}
+                      initial={{ width: '0%' }}
+                      animate={{ width: `${candidate.alignment}%` }}
+                      transition={{ duration: 0.75, delay: 0.52 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {!isSharedView && (
+            <button
+              onClick={() => navigate('elections')}
+              className="mt-4 w-full flex items-center justify-center gap-2 text-sm font-semibold text-slate-600 border border-slate-200 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 px-4 py-3 rounded-2xl transition-colors"
+            >
+              🗳️ {language === 'fr' ? 'Comparer avec tous les candidats' : 'Compare with all candidates'}
+            </button>
+          )}
+        </motion.div>
+      )}
+
+      {/* ═══ COURANTS IDÉOLOGIQUES (collapsible) ═══ */}
       {(() => {
         // Split into primary and secondary, maintaining alignment order
         const primaryCurrents = rankedCurrents.filter(c => c.tier !== 'secondary');
@@ -718,10 +836,42 @@ export default function Profile() {
 
         return (
           <div className="mb-6">
-            <div className="mb-6">
-              <h2 className="font-bold text-slate-900 text-lg tracking-tight">{t('currents_title')}</h2>
-              <p className="text-sm text-slate-500 mt-1.5">{t('currents_subtitle')}</p>
-            </div>
+            {/* Collapsible header */}
+            <button
+              onClick={() => setShowAllCurrents(!showAllCurrents)}
+              className="w-full flex items-center justify-between mb-4 text-left group"
+            >
+              <div>
+                <h2 className="font-bold text-slate-900 text-lg tracking-tight">{t('currents_title')}</h2>
+                <p className="text-sm text-slate-500 mt-0.5">{t('currents_subtitle')}</p>
+              </div>
+              <span className="text-slate-400 text-lg leading-none flex-shrink-0 ml-2">{showAllCurrents ? '−' : '+'}</span>
+            </button>
+
+            {/* Collapsed summary: top current only */}
+            {!showAllCurrents && topPrimary[0] && (
+              <div
+                className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-colors"
+                onClick={() => setShowAllCurrents(true)}
+              >
+                <span className="text-xl flex-shrink-0">{topPrimary[0].icon}</span>
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold text-slate-900 text-sm block truncate">{topPrimary[0].name[language]}</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${topPrimary[0].alignment}%`, backgroundColor: alignmentBarColor(topPrimary[0].alignment) }} />
+                    </div>
+                    <span className="text-xs font-bold tabular-nums flex-shrink-0" style={{ color: alignmentBarColor(topPrimary[0].alignment) }}>
+                      {topPrimary[0].alignment}%
+                    </span>
+                  </div>
+                </div>
+                <span className="text-xs text-slate-400 flex-shrink-0">{language === 'fr' ? 'Voir plus' : 'See more'} ↓</span>
+              </div>
+            )}
+
+            {/* Expanded content */}
+            {showAllCurrents && (<div>
 
             {/* Top 3 primary currents */}
             <div className="space-y-3">
@@ -865,7 +1015,7 @@ export default function Profile() {
                 <div className="grid sm:grid-cols-2 gap-3">
                   {secondaryCurrents.map((current, idx) => {
                     const barColor = alignmentBarColor(current.alignment);
-                    const textColor = alignmentColorClass(current.alignment);
+                    const textColor = alignmentColorClass(current.alignment); // eslint-disable-line no-unused-vars
                     return (
                       <motion.div
                         key={current.id}
@@ -897,6 +1047,7 @@ export default function Profile() {
                 </div>
               </div>
             )}
+            </div>)}
           </div>
         );
       })()}
@@ -1170,7 +1321,8 @@ export default function Profile() {
         {showShareModal && (
           <ProfileShareModal
             themes={themes}
-            rankedCurrents={rankedCurrents}
+            topArchetype={topArchetype}
+            rankedCandidates={rankedCandidates}
             language={language}
             answeredCount={Object.keys(answers).length}
             totalCount={questions.length}
