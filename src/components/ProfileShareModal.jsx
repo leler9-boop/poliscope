@@ -41,7 +41,7 @@ export default function ProfileShareModal({
   const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
   const reliabilityLabel = getReliabilityLabel(reliabilityPct, lang);
 
-  const resolvedShareUrl = shareUrl ?? 'https://poliscop.fr';
+  const resolvedShareUrl = shareUrl ?? 'https://poliscop.org';
 
   const handleNativeShare = async () => {
     if (!canNativeShare) return;
@@ -289,7 +289,7 @@ export default function ProfileShareModal({
               {/* Footer */}
               <div style={c.footer}>
                 <span style={c.footerCta}>{lang === 'fr' ? 'Et toi ?' : 'What about you?'}</span>
-                <span style={c.footerUrl}>poliscop.fr</span>
+                <span style={c.footerUrl}>poliscop.org</span>
               </div>
 
             </div>

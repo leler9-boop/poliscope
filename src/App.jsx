@@ -27,6 +27,8 @@ const Transparency     = lazy(() => import('./pages/Transparency.jsx'));
 const CandidateProfile = lazy(() => import('./pages/CandidateProfile.jsx'));
 const CandidateCompare = lazy(() => import('./pages/CandidateCompare.jsx'));
 const Beginner         = lazy(() => import('./pages/Beginner.jsx'));
+const Privacy          = lazy(() => import('./pages/Privacy.jsx'));
+const Terms            = lazy(() => import('./pages/Terms.jsx'));
 
 function PageLoader() {
   return (
@@ -117,6 +119,8 @@ function AppInner() {
             <Route path="/mission"      element={<Mission />} />
             <Route path="/transparency" element={<Transparency />} />
             <Route path="/learn"        element={<Beginner />} />
+            <Route path="/privacy"      element={<Privacy />} />
+            <Route path="/terms"        element={<Terms />} />
             <Route path="*"             element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
@@ -128,6 +132,15 @@ function AppInner() {
           {language === 'fr'
             ? 'Outil analytique et éducatif. Pas une recommandation de vote.'
             : 'An analytical and educational tool. Not a voting recommendation.'}
+        </p>
+        <p className="mt-2 text-xs text-gray-300 space-x-3">
+          <a href="/privacy" className="hover:text-gray-500 transition-colors">
+            {language === 'fr' ? 'Confidentialité' : 'Privacy Policy'}
+          </a>
+          <span>·</span>
+          <a href="/terms" className="hover:text-gray-500 transition-colors">
+            {language === 'fr' ? 'CGU' : 'Terms of Service'}
+          </a>
         </p>
       </footer>
     </div>

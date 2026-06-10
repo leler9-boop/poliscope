@@ -187,6 +187,15 @@ export default function Auth() {
           >
             {fr ? 'Continuer sans compte →' : 'Continue without account →'}
           </button>
+          <div className="mt-4 flex justify-center gap-3 text-xs text-gray-300">
+            <a href="/privacy" className="hover:text-gray-500 transition-colors">
+              {fr ? 'Confidentialité' : 'Privacy Policy'}
+            </a>
+            <span>·</span>
+            <a href="/terms" className="hover:text-gray-500 transition-colors">
+              {fr ? 'CGU' : 'Terms'}
+            </a>
+          </div>
         </div>
       </div>
     </div>
