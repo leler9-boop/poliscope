@@ -25,21 +25,32 @@ export default function OnboardingModal() {
   const [educationLevel,  setEducationLevel]  = useState('');
   const [postalCode,      setPostalCode]      = useState('');
   const [saving,          setSaving]          = useState(false);
+  const [saveError,       setSaveError]       = useState(false);
 
   async function handleSave() {
     setSaving(true);
-    await saveDemographics({
+    setSaveError(false);
+    const { error } = await saveDemographics({
       age_range:       ageRange        || null,
       education_level: educationLevel  || null,
       postal_code:     postalCode      || null,
     });
     setSaving(false);
+    if (error) {
+      setSaveError(true);
+      return; // keep modal open — do not dismiss until save succeeds
+    }
     setNeedsOnboarding(false);
   }
 
   // Skip: still create a record so onboarding doesn't re-trigger on next login
   async function handleSkip() {
-    await saveDemographics({ age_range: null, education_level: null, postal_code: null });
+    setSaveError(false);
+    const { error } = await saveDemographics({ age_range: null, education_level: null, postal_code: null });
+    if (error) {
+      setSaveError(true);
+      return; // keep modal open — do not dismiss until save succeeds
+    }
     setNeedsOnboarding(false);
   }
 
@@ -113,6 +124,14 @@ export default function OnboardingModal() {
             : `Data is used in anonymized form only. No personal data is sold or shared.`}
         </p>
 
+        {saveError && (
+          <p className="mt-3 text-xs text-red-500">
+            {fr
+              ? `Une erreur est survenue. Veuillez réessayer.`
+              : `Something went wrong. Please try again.`}
+          </p>
+        )}
+
         <div className="mt-5 flex gap-3">
           <button
             onClick={handleSave}
@@ -125,7 +144,8 @@ export default function OnboardingModal() {
           </button>
           <button
             onClick={handleSkip}
-            className="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 font-medium"
+            disabled={saving}
+            className="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-40 font-medium"
           >
             {fr ? `Passer` : `Skip`}
           </button>

@@ -130,6 +130,10 @@ export function AuthProvider({ children }) {
       setLoading(false);
     });
 
+    // Prevent onboarding check from firing more than once per login cycle.
+    // SIGNED_IN can fire twice with OAuth (code exchange + session restore).
+    let onboardingChecked = false;
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       const u = session?.user ?? null;
@@ -140,16 +144,25 @@ export function AuthProvider({ children }) {
         await mergeAnonymousAnswers(u.id);
         await smartSync(u.id);
 
-        // Show onboarding if user has never filled in demographics
-        const { data: demo } = await supabase
-          .from('user_demographics')
-          .select('id')
-          .eq('user_id', u.id)
-          .maybeSingle();
+        // Show onboarding if user has never filled in demographics.
+        // Guard: only check once per login cycle, even if SIGNED_IN fires twice.
+        if (!onboardingChecked) {
+          onboardingChecked = true;
+          const { data: demo } = await supabase
+            .from('user_demographics')
+            .select('id')
+            .eq('user_id', u.id)
+            .maybeSingle();
 
-        if (!demo) {
-          useStore.getState().setNeedsOnboarding(true);
+          if (!demo) {
+            useStore.getState().setNeedsOnboarding(true);
+          }
         }
+      }
+
+      // Reset flag on sign-out so next login cycle checks again.
+      if (event === 'SIGNED_OUT') {
+        onboardingChecked = false;
       }
     });
 
