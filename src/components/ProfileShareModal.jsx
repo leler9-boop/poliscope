@@ -3,10 +3,10 @@ import { motion } from 'motion/react';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
-function getReliabilityLabel(pct, lang) {
-  if (pct >= 80) return lang === 'fr' ? 'Profil solide, peu susceptible de changer.' : 'Solid profile, unlikely to shift much.';
-  if (pct >= 50) return lang === 'fr' ? 'Profil partiel — plus de réponses affineraient les résultats.' : 'Partial profile — more answers would refine it.';
-  return lang === 'fr' ? 'Encore en construction — mais déjà révélateur.' : 'Still in progress — but already revealing.';
+function getReliabilityNudge(pct, lang) {
+  if (pct >= 80) return lang === 'fr' ? 'Profil complet ✦' : 'Full profile ✦';
+  if (pct >= 50) return lang === 'fr' ? 'Ton profil se précise. Continue →' : 'Your profile is taking shape. Keep going →';
+  return lang === 'fr' ? 'Réponds à plus de questions pour affiner ton profil' : 'Answer more questions to sharpen your profile';
 }
 
 function hexAlpha(hex, alpha) {
@@ -39,7 +39,7 @@ export default function ProfileShareModal({
   const topCandidate = rankedCandidates?.[0] ?? null;
 
   const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
-  const reliabilityLabel = getReliabilityLabel(reliabilityPct, lang);
+  const reliabilityNudge = getReliabilityNudge(reliabilityPct, lang);
 
   const resolvedShareUrl = shareUrl ?? 'https://poliscop.org';
 
@@ -89,57 +89,61 @@ export default function ProfileShareModal({
 
   const c = {
     root: {
-      background: '#0f172a',
+      background: `radial-gradient(ellipse at 105% -5%, ${hexAlpha(accentColor, 0.28)} 0%, #0f172a 58%)`,
       fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       borderRadius: 20,
       overflow: 'hidden',
       width: '100%',
     },
-    accent:  { height: 4, background: `linear-gradient(90deg, ${accentColor}, ${hexAlpha(accentColor, 0.4)})` },
-    inner:   { padding: '20px 22px 18px' },
+    accent: { height: 6, background: `linear-gradient(90deg, ${accentColor} 0%, ${hexAlpha(accentColor, 0.18)} 100%)` },
+    inner:  { padding: '18px 22px 20px' },
 
     // ── Header ─────────────────────────────────────────────────
-    brandRow:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
-    brandName: { fontSize: 11, fontWeight: 800, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' },
-    brandYear: { fontSize: 10, fontWeight: 700, color: accentColor, opacity: 0.7, letterSpacing: '0.06em' },
+    brandRow:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    brandName: { fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' },
+    brandDot:  { width: 5, height: 5, borderRadius: '50%', backgroundColor: accentColor, opacity: 0.7 },
 
-    divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', margin: '14px 0' },
+    divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', margin: '14px 0' },
 
     // ── Archetype block ────────────────────────────────────────
-    archeLabel: { fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.32)', letterSpacing: '0.06em', marginBottom: 5 },
-    archeName:  { fontSize: 24, fontWeight: 800, color: accentColor, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 14,
-                  overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
+    archeLabel: { fontSize: 10, fontWeight: 600, color: hexAlpha(accentColor, 0.75), letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 },
+    archeName:  {
+      fontSize: 36, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 14,
+      textShadow: `0 0 48px ${hexAlpha(accentColor, 0.5)}`,
+    },
 
-    // ── Traits ────────────────────────────────────────────────
-    traitRow:  { display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8 },
-    traitDash: { color: accentColor, fontSize: 13, lineHeight: 1.45, flexShrink: 0, fontWeight: 700 },
-    traitText: { fontSize: 12, color: 'rgba(255,255,255,0.68)', lineHeight: 1.45, margin: 0 },
+    // ── Trait pills ───────────────────────────────────────────
+    traitWrap: { display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 },
+    traitPill: {
+      display: 'inline-block', padding: '4px 10px', borderRadius: 99,
+      border: `1px solid ${hexAlpha(accentColor, 0.38)}`,
+      backgroundColor: hexAlpha(accentColor, 0.13),
+      fontSize: 11, fontWeight: 600,
+      color: 'rgba(255,255,255,0.80)',
+      lineHeight: 1.4,
+    },
 
     // ── Candidate row ──────────────────────────────────────────
-    candidateSection: { marginBottom: 0 },
-    candidateLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 8 },
+    candidateLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 9 },
     candidateRow: {
-      display: 'flex', alignItems: 'center', gap: 10,
-      backgroundColor: 'rgba(255,255,255,0.04)',
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 12, padding: '9px 12px',
+      display: 'flex', alignItems: 'center', gap: 11,
+      backgroundColor: 'rgba(255,255,255,0.05)',
+      border: `1px solid ${hexAlpha(accentColor, 0.22)}`,
+      borderRadius: 12, padding: '10px 13px',
     },
-    candidateDot:   { width: 8, height: 8, borderRadius: '50%', flexShrink: 0 },
+    candidateDot:   { width: 9, height: 9, borderRadius: '50%', flexShrink: 0 },
     candidateInfo:  { flex: 1, minWidth: 0 },
-    candidateName:  { fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.85)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
-    candidateParty: { fontSize: 10, color: 'rgba(255,255,255,0.3)', marginTop: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
-    candidateScore: { fontSize: 16, fontWeight: 800, color: accentColor, flexShrink: 0, letterSpacing: '-0.02em' },
+    candidateName:  { fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.90)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
+    candidateParty: { fontSize: 10, color: 'rgba(255,255,255,0.32)', marginTop: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
+    candidateScore: { fontSize: 22, fontWeight: 800, color: accentColor, flexShrink: 0, letterSpacing: '-0.03em', textShadow: `0 0 20px ${hexAlpha(accentColor, 0.6)}` },
 
-    // ── Reliability ────────────────────────────────────────────
-    reliabilityRow: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 },
-    reliabilityLbl: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: '0.12em', flex: 1 },
-    reliabilityPct: { fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)' },
-    reliabilitySub: { fontSize: 9, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic' },
+    // ── Reliability nudge ──────────────────────────────────────
+    nudgeText: { fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' },
 
     // ── Footer ────────────────────────────────────────────────
-    footer:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 10 },
-    footerCta: { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.42)', letterSpacing: '0.01em' },
-    footerUrl: { fontSize: 9,  fontWeight: 700, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+    footer:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 12 },
+    footerCta: { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.01em' },
+    footerUrl: { fontSize: 9,  fontWeight: 800, color: accentColor, opacity: 0.65, letterSpacing: '0.16em', textTransform: 'uppercase' },
   };
 
   const traits = topArchetype?.traits?.[lang] ?? topArchetype?.traits?.fr ?? [];
@@ -231,7 +235,7 @@ export default function ProfileShareModal({
           {/* ── Share card — preview ── */}
           <div ref={cardRef} style={c.root}>
 
-            {/* Gradient accent bar */}
+            {/* Accent bar */}
             <div style={c.accent} />
 
             <div style={c.inner}>
@@ -239,21 +243,18 @@ export default function ProfileShareModal({
               {/* Header */}
               <div style={c.brandRow}>
                 <span style={c.brandName}>POLISCOPE 2027</span>
-                <span style={c.brandYear}>{lang === 'fr' ? 'profil politique' : 'political profile'}</span>
+                <div style={c.brandDot} />
               </div>
 
               {/* Archetype */}
-              <p style={c.archeLabel}>{lang === 'fr' ? 'Votre archétype politique' : 'Your political archetype'}</p>
+              <p style={c.archeLabel}>{lang === 'fr' ? 'Ton archétype' : 'Your archetype'}</p>
               <p style={c.archeName}>{topArchetype?.name[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}</p>
 
-              {/* Traits */}
+              {/* Trait pills */}
               {traits.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
+                <div style={c.traitWrap}>
                   {traits.slice(0, 3).map((trait, i) => (
-                    <div key={i} style={{ ...c.traitRow, marginBottom: i < 2 ? 6 : 0 }}>
-                      <span style={c.traitDash}>·</span>
-                      <p style={c.traitText}>{trait}</p>
-                    </div>
+                    <span key={i} style={c.traitPill}>{trait}</span>
                   ))}
                 </div>
               )}
@@ -262,33 +263,27 @@ export default function ProfileShareModal({
               {topCandidate && (
                 <>
                   <div style={c.divider} />
-                  <div style={c.candidateSection}>
-                    <p style={c.candidateLabel}>
-                      {lang === 'fr' ? 'Candidat·e le plus proche 2027' : 'Closest 2027 candidate'}
-                    </p>
-                    <div style={c.candidateRow}>
-                      <div style={{ ...c.candidateDot, backgroundColor: topCandidate.color ?? accentColor }} />
-                      <div style={c.candidateInfo}>
-                        <p style={c.candidateName}>{topCandidate.name}</p>
-                        <p style={c.candidateParty}>{topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}</p>
-                      </div>
-                      <span style={c.candidateScore}>{topCandidate.alignment}%</span>
+                  <p style={c.candidateLabel}>
+                    {lang === 'fr' ? 'Ton meilleur match 2027' : 'Your best 2027 match'}
+                  </p>
+                  <div style={c.candidateRow}>
+                    <div style={{ ...c.candidateDot, backgroundColor: topCandidate.color ?? accentColor }} />
+                    <div style={c.candidateInfo}>
+                      <p style={c.candidateName}>{topCandidate.name}</p>
+                      <p style={c.candidateParty}>{topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}</p>
                     </div>
+                    <span style={c.candidateScore}>{topCandidate.alignment}%</span>
                   </div>
                 </>
               )}
 
-              {/* Reliability */}
+              {/* Nudge */}
               <div style={c.divider} />
-              <div style={c.reliabilityRow}>
-                <span style={c.reliabilityLbl}>{lang === 'fr' ? 'Fiabilité du profil' : 'Profile reliability'}</span>
-                <span style={c.reliabilityPct}>{reliabilityPct}%</span>
-              </div>
-              <p style={c.reliabilitySub}>{reliabilityLabel}</p>
+              <p style={c.nudgeText}>{reliabilityNudge}</p>
 
               {/* Footer */}
               <div style={c.footer}>
-                <span style={c.footerCta}>{lang === 'fr' ? 'Et toi ?' : 'What about you?'}</span>
+                <span style={c.footerCta}>{lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What's your archetype?'}</span>
                 <span style={c.footerUrl}>poliscop.org</span>
               </div>
 
