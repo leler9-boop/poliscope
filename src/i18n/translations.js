@@ -37,12 +37,12 @@ export const translations = {
     test_note: `Longer tests produce more accurate profiles. You can always add questions later.`,
 
     // ── Priority ranking ──
-    priorities_title: `Which issues matter most to you?`,
-    priorities_subtitle: `Rank the themes from most to least important. This affects how your profile is weighted.`,
+    priorities_title: `Which topics matter most to you?`,
+    priorities_subtitle: `Drag the themes from most to least important. This ranking doesn't change your opinions. It simply shows which topics you care about most. Themes placed higher will carry more weight in your final result.`,
     priorities_most: `Most important`,
     priorities_least: `Least important`,
     priorities_confirm: `Confirm and start`,
-    priorities_skip: `Use equal weighting`,
+    priorities_skip: `All topics matter equally to me`,
 
     // ── Questionnaire ──
     q_progress: `Question {current} of {total}`,
@@ -208,12 +208,12 @@ export const translations = {
     test_note: `Les tests plus longs produisent des profils plus précis. Vous pouvez toujours ajouter des questions plus tard.`,
 
     // ── Priority ranking ──
-    priorities_title: `Quels sujets vous tiennent le plus à cœur ?`,
-    priorities_subtitle: `Classez les thèmes du plus au moins important. Cela influence la pondération de votre profil.`,
+    priorities_title: `Quels sujets comptent le plus pour vous ?`,
+    priorities_subtitle: `Faites glisser les thèmes du plus important au moins important. Ce classement ne change pas vos opinions. Il indique simplement les sujets auxquels vous accordez le plus d'importance. Les thèmes placés en haut auront davantage de poids dans votre résultat final.`,
     priorities_most: `Le plus important`,
     priorities_least: `Le moins important`,
     priorities_confirm: `Confirmer et commencer`,
-    priorities_skip: `Pondération égale`,
+    priorities_skip: `Tous les thèmes comptent autant pour moi`,
 
     // ── Questionnaire ──
     q_progress: `Question {current} sur {total}`,

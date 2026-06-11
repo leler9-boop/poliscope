@@ -5,13 +5,13 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
   const content = {
     fr: {
       title: 'Avant de commencer',
-      text: "N'hésitez pas à passer une question si vous n'avez pas d'avis ou si le sujet ne vous concerne pas.\nRépondre au hasard peut fausser votre profil.",
-      button: 'Commencer',
+      text: "Si une question ne vous concerne pas, ou si vous n'avez tout simplement pas d'avis — passez-la. C'est normal.\n\nEn revanche, évitez de répondre au hasard : ça peut fausser votre profil.",
+      button: 'C\'est parti',
     },
     en: {
       title: 'Before you start',
-      text: "Feel free to skip any question if you don't have an opinion or if it doesn't matter to you.\nRandom answers can affect your results.",
-      button: 'Start',
+      text: "If a question doesn't apply to you, or you just don't have a view on it — skip it. That's fine.\n\nJust avoid answering randomly: it can skew your results.",
+      button: 'Let\'s go',
     },
   };
 

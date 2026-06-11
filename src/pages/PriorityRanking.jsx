@@ -4,6 +4,31 @@ import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 
+// Short descriptions shown under each theme name in the ranking list.
+// Aim: a 17-year-old immediately understands what each theme covers.
+const THEME_DESCRIPTIONS = {
+  fr: {
+    ECONOMY:         'Impôts, salaires, entreprises',
+    SOCIAL:          'Avortement, mariage, religion',
+    IMMIGRATION:     'Frontières, réfugiés, expulsions',
+    SECURITY:        'Police, prison, armée',
+    ENVIRONMENT:     'Climat, voiture, nucléaire',
+    DEMOCRACY:       'Vote, médias, justice',
+    GLOBAL:          'Europe, OTAN, commerce',
+    PUBLIC_SERVICES: 'École, hôpital, retraites',
+  },
+  en: {
+    ECONOMY:         'Taxes, wages, businesses',
+    SOCIAL:          'Abortion, marriage, religion',
+    IMMIGRATION:     'Borders, refugees, deportations',
+    SECURITY:        'Police, prison, army',
+    ENVIRONMENT:     'Climate, cars, nuclear',
+    DEMOCRACY:       'Voting, media, justice',
+    GLOBAL:          'EU, NATO, trade',
+    PUBLIC_SERVICES: 'Schools, hospitals, pensions',
+  },
+};
+
 export default function PriorityRanking() {
   const language       = useStore(s => s.language);
   const navigate       = useStore(s => s.navigate);
@@ -26,12 +51,20 @@ export default function PriorityRanking() {
   };
 
   const title = language === 'fr'
-    ? 'Quels sujets politiques comptent le plus pour vous ?'
-    : 'What political issues matter most to you?';
+    ? 'Quels sujets comptent le plus pour vous ?'
+    : 'Which topics matter most to you?';
 
-  const subtitle = language === 'fr'
-    ? 'Classez les thèmes selon leur importance dans vos choix politiques (vote, opinions, priorités publiques).'
-    : 'Rank themes by how much they matter in your political choices — votes, opinions, public priorities.';
+  const bodyLines = language === 'fr'
+    ? [
+        'Faites glisser les thèmes du plus important au moins important.',
+        'Ce classement ne change pas vos opinions. Il indique simplement les sujets auxquels vous accordez le plus d\'importance.',
+        'Les thèmes placés en haut auront davantage de poids dans votre résultat final.',
+      ]
+    : [
+        'Drag the themes from most to least important.',
+        'This ranking doesn\'t change your opinions. It simply shows which topics you care about most.',
+        'Themes placed higher will carry more weight in your final result.',
+      ];
 
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-10">
@@ -50,7 +83,11 @@ export default function PriorityRanking() {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 leading-tight">
           {title}
         </h1>
-        <p className="text-gray-500 mb-8 text-sm leading-relaxed">{subtitle}</p>
+        <div className="mb-8 space-y-2">
+          {bodyLines.map((line, i) => (
+            <p key={i} className="text-gray-500 text-sm leading-relaxed">{line}</p>
+          ))}
+        </div>
       </motion.div>
 
       {/* Drag hint */}
@@ -79,6 +116,7 @@ export default function PriorityRanking() {
       >
         {order.map((theme, idx) => {
           const label = THEME_LABELS[language]?.[theme] ?? theme;
+          const desc  = THEME_DESCRIPTIONS[language]?.[theme] ?? '';
           const color = THEME_COLORS[theme] ?? '#6b7280';
           return (
             <Reorder.Item
@@ -90,7 +128,7 @@ export default function PriorityRanking() {
                 zIndex: 10,
                 cursor: 'grabbing',
               }}
-              className="bg-white border border-gray-200 rounded-xl px-4 py-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing"
+              className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing"
               style={{ listStyle: 'none' }}
               transition={{ duration: 0.18 }}
             >
@@ -105,8 +143,11 @@ export default function PriorityRanking() {
                 style={{ backgroundColor: color }}
               />
 
-              {/* Label */}
-              <span className="text-sm font-medium text-gray-800 flex-1">{label}</span>
+              {/* Label + description */}
+              <span className="flex-1 min-w-0">
+                <span className="block text-sm font-medium text-gray-800 leading-tight">{label}</span>
+                {desc && <span className="block text-xs text-gray-400 leading-tight mt-0.5">{desc}</span>}
+              </span>
 
               {/* Rank badge */}
               <span

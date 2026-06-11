@@ -34,12 +34,16 @@ function blendedAlignment(globalProfile, electionAnswers, candidate, questions, 
 
   const rawElectionScore = Math.round(Math.pow(1 - meanDist, 2.2) * 100);
 
-  // Apply same veto to election-specific score so specific questions cannot
-  // override fundamental profile incompatibility (e.g. centrist matching communist)
+  // Apply same smooth veto to election-specific score so specific questions cannot
+  // override fundamental profile incompatibility (e.g. centrist matching communist).
+  // Penalty ramps linearly from 1.0 at threshold to full penalty at dist=100 (no cliff).
   let vetoMult = 1.0;
   for (const [theme, cfg] of Object.entries(BLEND_VETO)) {
     const dist = Math.abs((globalProfile.themes[theme] ?? 50) - (candidate.profile[theme] ?? 50));
-    if (dist > cfg.t) vetoMult *= cfg.p;
+    if (dist > cfg.t) {
+      const tRamp = (dist - cfg.t) / (100 - cfg.t);
+      vetoMult *= (1 - tRamp * (1 - cfg.p));
+    }
   }
   const electionScore = Math.round(rawElectionScore * vetoMult);
 
@@ -54,6 +58,35 @@ function getQuestionBreakdown(electionAnswers, candidate, questions) {
       distance: Math.abs(electionAnswers[q.id] - q.positions[candidate.id]),
     }))
     .sort((a, b) => a.distance - b.distance);
+}
+
+// Returns the N closest and N most distant themes between user and candidate profiles.
+// Used as fallback when no election-specific questions were answered.
+function getThemeAgreementsFallback(userThemes, candidate, language, count = 2) {
+  if (!userThemes || !candidate.profile) return { agreements: [], disagreements: [] };
+  const themeLabels = THEME_LABELS[language] ?? THEME_LABELS.en;
+  const diffs = THEMES_ORDER
+    .map(theme => ({
+      label: themeLabels[theme] ?? theme,
+      diff: Math.abs((userThemes[theme] ?? 50) - (candidate.profile[theme] ?? 50)),
+    }))
+    .sort((a, b) => a.diff - b.diff);
+  return {
+    agreements:    diffs.slice(0, count),
+    disagreements: diffs.slice(-count).reverse(),
+  };
+}
+
+// Builds the one-sentence summary shown under the match score.
+function getMatchSentence(userThemes, candidate, language) {
+  const { agreements, disagreements } = getThemeAgreementsFallback(userThemes, candidate, language, 2);
+  if (!agreements.length) return null;
+  const agreeStr    = agreements.map(a => a.label).join(' et ');
+  const disagreeStr = disagreements.map(d => d.label).join(' et ');
+  if (language === 'fr') {
+    return `Proches sur ${agreeStr}${disagreeStr ? `, plus éloignés sur ${disagreeStr}` : ''}.`;
+  }
+  return `Close on ${agreeStr}${disagreeStr ? `, further apart on ${disagreeStr}` : ''}.`;
 }
 
 // ─── Profile analysis ────────────────────────────────────────────────────────
@@ -97,25 +130,25 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
   const enviro = userThemes.ENVIRONMENT ?? 50;
 
   const econPhrase = fr
-    ? (econ   < 38 ? `des convictions solidaires sur le plan économique`
-                   : econ > 62 ? `une sensibilité libérale sur l'économie`
-                   : `une vision économique plutôt modérée`)
-    : (econ   < 38 ? `redistributive economic values`
-                   : econ > 62 ? `market-liberal economic leanings`
+    ? (econ   < 38 ? `une préférence pour davantage d'aides sociales et une économie plus encadrée`
+                   : econ > 62 ? `une préférence pour la liberté des entreprises et moins d'impôts`
+                   : `une vision économique équilibrée`)
+    : (econ   < 38 ? `a preference for public spending and social protection`
+                   : econ > 62 ? `a preference for business freedom and lower taxes`
                    : `centrist economic views`);
 
   const socialPhrase = fr
-    ? (social < 38 ? `des valeurs plus traditionnelles sur les questions de société`
-                   : social > 62 ? `des positions socialement progressistes`
-                   : `un équilibre sur les questions de société`)
-    : (social < 38 ? `socially traditional leanings`
-                   : social > 62 ? `progressive social values`
+    ? (social < 38 ? `des valeurs plutôt traditionnelles sur la famille et la religion`
+                   : social > 62 ? `des positions ouvertes sur les droits et les libertés individuelles`
+                   : `une position modérée sur les questions de société`)
+    : (social < 38 ? `traditional values on family and religion`
+                   : social > 62 ? `open views on rights and individual freedoms`
                    : `a balanced approach to social issues`);
 
   const enviroPhrase = enviro > 62
     ? (fr ? `une priorité marquée pour l'écologie` : `a clear environmental priority`)
     : enviro < 38
-    ? (fr ? `une priorité donnée à la croissance sur l'environnement` : `growth-first priorities over environmental concerns`)
+    ? (fr ? `une priorité donnée à l'économie plutôt qu'à l'environnement` : `a preference for economic growth over environmental concerns`)
     : null;
 
   // S1 — overall positioning
@@ -155,19 +188,19 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
   let s4 = '';
   if (last.id !== top.id && top.alignment - last.alignment > 30) {
     s4 = fr
-      ? `C'est avec ${lastName} que tes positions divergent le plus — un écart qui traduit des orientations fondamentalement différentes.`
-      : `Your positions diverge most from ${lastName} — a gap that reflects fundamentally different political orientations.`;
+      ? `C'est avec ${lastName} que tes positions divergent le plus — des positions très différentes sur la plupart des sujets.`
+      : `Your positions diverge most from ${lastName} — very different views on most issues.`;
   }
 
   // S5 — closing nuance
   const isCentrist = econ > 38 && econ < 62 && social > 38 && social < 62;
   const s5 = fr
     ? (isCentrist
-        ? `Globalement, ton profil se situe dans une zone de nuances qui ne se réduit pas à un seul courant — ce qui reflète une approche complexe des enjeux politiques.`
-        : `Globalement, tes positions sont assez marquées sur plusieurs axes, ce qui explique la clarté de ton classement.`)
+        ? `Globalement, ton profil est difficile à classer dans une seule case politique, ce qui traduit une vision nuancée des sujets.`
+        : `Globalement, tes positions sont assez marquées sur plusieurs sujets, ce qui explique la clarté de ton classement.`)
     : (isCentrist
-        ? `Overall, your profile occupies a nuanced space that doesn't fit neatly into one political tradition — reflecting a complex view of political issues.`
-        : `Overall, your positions are fairly pronounced on several key axes, which explains the clarity of your ranking.`);
+        ? `Overall, your profile doesn't fit neatly into a single political label, which reflects a nuanced view of politics.`
+        : `Overall, your positions are fairly clear on several issues, which explains the clarity of your ranking.`);
 
   return [s1, s2, s3, s4, s5].filter(Boolean).join(' ');
 }
@@ -454,12 +487,14 @@ function QuestionnaireStep({ election, language, t, electionAnswers, answerElect
 
 function ResultsStep({ election, language, t, globalProfile, electionAnswers, priorityOrder, onRetake, onBack }) {
   const [expandedId, setExpandedId] = useState(null);
+  const [methodOpen, setMethodOpen] = useState(false);
   const questions = election.specificQuestions ?? [];
   const thisElectionAnswers = electionAnswers[election.id] ?? {};
   const answeredCount = questions.filter(q => thisElectionAnswers[q.id] != null).length;
 
   const rankedCandidates = useMemo(() => {
     return election.candidates
+      .filter(c => !c.variantOf) // hide variant candidates (e.g. Bardella when Le Pen is the primary RN candidate)
       .map(c => ({
         ...c,
         alignment: blendedAlignment(globalProfile, thisElectionAnswers, c, questions, priorityOrder),
@@ -486,15 +521,6 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
           <h1 className="text-2xl font-bold text-gray-900">{t('election_results_title')}</h1>
         </div>
         <p className="text-sm text-gray-500">{note}</p>
-      </div>
-
-      {/* Calibration message */}
-      <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 mb-6">
-        <p className="text-xs text-blue-800 leading-relaxed">
-          {language === 'fr'
-            ? 'Votre profil politique général est ici ajusté avec les questions spécifiques à cette élection, car les enjeux varient d\'un pays et d\'une élection à l\'autre.'
-            : 'Your general political profile is adjusted here with election-specific questions, because the issues that matter vary from one country and election to another.'}
-        </p>
       </div>
 
       {/* Profile analysis */}
@@ -637,6 +663,24 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
             );
           })}
         </div>
+      </div>
+
+      {/* Collapsible methodology note */}
+      <div className="mb-4">
+        <button
+          onClick={() => setMethodOpen(o => !o)}
+          className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 transition-colors"
+        >
+          <span>{methodOpen ? '▾' : '▸'}</span>
+          {language === 'fr' ? 'Comment ce score est calculé ?' : 'How is this score calculated?'}
+        </button>
+        {methodOpen && (
+          <p className="text-xs text-gray-400 leading-relaxed mt-2 pl-3 border-l border-gray-200">
+            {language === 'fr'
+              ? 'Votre profil politique général est ajusté avec les questions spécifiques à cette élection, car les enjeux varient d\'un pays et d\'une élection à l\'autre. Le score final combine votre profil global (65 %) et vos réponses aux questions locales (35 %).'
+              : 'Your general political profile is adjusted with election-specific questions, because the issues that matter vary from one country and election to another. The final score combines your global profile (65%) and your answers to local questions (35%).'}
+          </p>
+        )}
       </div>
 
       {/* Trust note */}
@@ -903,36 +947,69 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
             <div className="h-full rounded-full match-bar-fill" style={{ width: `${alignment}%`, backgroundColor: barColor }} />
           </div>
           <p className="text-xs text-gray-400 mt-1.5">{label}</p>
+          {globalProfile?.themes && (
+            <p className="text-xs text-gray-500 leading-relaxed mt-1">
+              {getMatchSentence(globalProfile.themes, candidate, language)}
+            </p>
+          )}
         </div>
 
-        {/* Election-specific breakdown */}
-        {(expanded || isTop) && breakdown.length > 0 && (
-          <div className="mt-4 grid sm:grid-cols-2 gap-3">
-            {agreements.length > 0 && (
-              <div className="bg-green-50 border border-green-100 rounded-lg p-3">
-                <p className="text-xs font-semibold text-green-700 mb-2">✓ {t('election_agreements')}</p>
-                <ul className="space-y-1">
-                  {agreements.map(({ q }) => (
-                    <li key={q.id} className="text-xs text-green-800 leading-snug">
-                      {q.text[language]}
-                    </li>
-                  ))}
-                </ul>
+        {/* Election-specific breakdown (question-level when available, theme-level fallback) */}
+        {(expanded || isTop) && (
+          breakdown.length > 0 ? (
+            <div className="mt-4 grid sm:grid-cols-2 gap-3">
+              {agreements.length > 0 && (
+                <div className="bg-green-50 border border-green-100 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-green-700 mb-2">✓ {t('election_agreements')}</p>
+                  <ul className="space-y-1">
+                    {agreements.map(({ q }) => (
+                      <li key={q.id} className="text-xs text-green-800 leading-snug">
+                        {q.text[language]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {disagreements.length > 0 && (
+                <div className="bg-red-50 border border-red-100 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-red-700 mb-2">✗ {t('election_disagreements')}</p>
+                  <ul className="space-y-1">
+                    {disagreements.map(({ q }) => (
+                      <li key={q.id} className="text-xs text-red-800 leading-snug">
+                        {q.text[language]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : globalProfile?.themes && candidate.profile ? (() => {
+            const fb = getThemeAgreementsFallback(globalProfile.themes, candidate, language, 2);
+            return (fb.agreements.length > 0 || fb.disagreements.length > 0) ? (
+              <div className="mt-4 grid sm:grid-cols-2 gap-3">
+                {fb.agreements.length > 0 && (
+                  <div className="bg-green-50 border border-green-100 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-green-700 mb-2">✓ {t('election_agreements')}</p>
+                    <ul className="space-y-1">
+                      {fb.agreements.map(({ label: lbl }) => (
+                        <li key={lbl} className="text-xs text-green-800 leading-snug">{lbl}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {fb.disagreements.length > 0 && (
+                  <div className="bg-red-50 border border-red-100 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-red-700 mb-2">✗ {t('election_disagreements')}</p>
+                    <ul className="space-y-1">
+                      {fb.disagreements.map(({ label: lbl }) => (
+                        <li key={lbl} className="text-xs text-red-800 leading-snug">{lbl}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
-            {disagreements.length > 0 && (
-              <div className="bg-red-50 border border-red-100 rounded-lg p-3">
-                <p className="text-xs font-semibold text-red-700 mb-2">✗ {t('election_disagreements')}</p>
-                <ul className="space-y-1">
-                  {disagreements.map(({ q }) => (
-                    <li key={q.id} className="text-xs text-red-800 leading-snug">
-                      {q.text[language]}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+            ) : null;
+          })() : null
         )}
 
         {/* Bio (expanded) */}
