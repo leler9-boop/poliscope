@@ -17,7 +17,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">1. Qui sommes-nous</h2>
-            <p>Poliscope est une plateforme de positionnement politique en ligne, accessible à l'adresse <strong>poliscop.org</strong>.</p>
+            <p>Poliscop est une plateforme de positionnement politique en ligne, accessible à l'adresse <strong>poliscop.org</strong>.</p>
             <p className="mt-2">Responsable du traitement :<br />
               <strong>ALERY SASU</strong><br />
               6 Rue René Schickelé, 67000 Strasbourg<br />
@@ -126,7 +126,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">8. Cookies</h2>
-            <p className="mb-2">Poliscope n'utilise pas de cookies publicitaires ou de tracking tiers. Nous utilisons uniquement :</p>
+            <p className="mb-2">Poliscop n'utilise pas de cookies publicitaires ou de tracking tiers. Nous utilisons uniquement :</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Un cookie de session d'authentification (strictement nécessaire)</li>
               <li>Le stockage local du navigateur (localStorage) pour sauvegarder votre progression sans compte</li>
@@ -136,7 +136,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">9. Mineurs</h2>
-            <p>Poliscope n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas sciemment de données concernant des mineurs.</p>
+            <p>Poliscop n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas sciemment de données concernant des mineurs.</p>
           </section>
 
           <section>

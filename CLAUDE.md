@@ -31,7 +31,7 @@ VITE_SUPABASE_ANON_KEY=
 
 ## Architecture
 
-Poliscope is a React + Vite SPA with no router — navigation is managed entirely through a Zustand store (`currentPage` field). All state is persisted to `localStorage` via the `persist` middleware.
+Poliscop is a React + Vite SPA with no router — navigation is managed entirely through a Zustand store (`currentPage` field). All state is persisted to `localStorage` via the `persist` middleware.
 
 ### Navigation model
 

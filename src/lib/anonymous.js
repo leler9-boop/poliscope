@@ -14,9 +14,11 @@ export function getOrCreateAnonymousId() {
 export async function initAnonymousSession() {
   if (!isSupabaseEnabled || !supabase) return;
   const id = getOrCreateAnonymousId();
-  await supabase.from('anonymous_sessions').upsert(
+  // INSERT with ignoreDuplicates — avoids triggering the UPDATE path which is blocked by RLS.
+  // last_seen_at is only recorded on first visit; that's acceptable for session tracking.
+  await supabase.from('anonymous_sessions').insert(
     { id, last_seen_at: new Date().toISOString(), device: navigator.userAgent, lang: navigator.language },
-    { onConflict: 'id' }
+    { ignoreDuplicates: true }
   );
 }
 

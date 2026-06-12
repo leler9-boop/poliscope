@@ -1,8 +1,8 @@
-# Poliscope — Deployment Guide
+# Poliscop — Deployment Guide
 
 ## Overview
 
-Poliscope is a React + Vite SPA. It works entirely in guest mode without a backend. Supabase is optional and only needed for cloud profile saving.
+Poliscop is a React + Vite SPA. It works entirely in guest mode without a backend. Supabase is optional and only needed for cloud profile saving.
 
 | Part | Technology | Required |
 |------|-----------|----------|
@@ -14,15 +14,15 @@ Poliscope is a React + Vite SPA. It works entirely in guest mode without a backe
 ## Step 1 — Push to GitHub
 
 ```bash
-cd poliscope
+cd poliscop
 
 # Initialize git (if not already done)
 git init
 git add .
-git commit -m "feat: Poliscope MVP — ready for deployment"
+git commit -m "feat: Poliscop MVP — ready for deployment"
 
 # Create a new repo on github.com, then:
-git remote add origin https://github.com/YOUR_USERNAME/poliscope.git
+git remote add origin https://github.com/YOUR_USERNAME/poliscop.git
 git push -u origin main
 ```
 
@@ -33,7 +33,7 @@ git push -u origin main
 ## Step 2 — Deploy to Vercel
 
 1. Go to [vercel.com](https://vercel.com) and sign in (GitHub login recommended).
-2. Click **"Add New Project"** → Import your `poliscope` repository.
+2. Click **"Add New Project"** → Import your `poliscop` repository.
 3. Vercel auto-detects **Vite**. The defaults work as-is:
    - **Framework Preset:** Vite
    - **Build Command:** `npm run build`
@@ -41,7 +41,7 @@ git push -u origin main
    - **Install Command:** `npm install`
 4. Click **Deploy**.
 
-Your app will be live at `https://poliscope-xxx.vercel.app` within ~1 minute.
+Your app will be live at `https://poliscop-xxx.vercel.app` within ~1 minute.
 
 > The `vercel.json` in the repo already handles SPA routing (all paths → `index.html`) and caching headers for assets.
 
@@ -54,7 +54,7 @@ Skip this step if you don't need cloud profile saving. The app works fully witho
 ### 3a. Create a project
 
 1. Go to [supabase.com](https://supabase.com) → **New Project**.
-2. Choose a name (e.g. `poliscope`), a strong database password, and a region close to your users.
+2. Choose a name (e.g. `poliscop`), a strong database password, and a region close to your users.
 3. Wait ~2 minutes for the project to spin up.
 
 ### 3b. Run the schema
@@ -98,7 +98,7 @@ Once redeployed, the "Sign in" button appears in the header and users can save p
 ## Step 5 — Custom domain (optional)
 
 1. In Vercel: **Settings → Domains → Add Domain**.
-2. Enter your domain (e.g. `poliscope.yourdomain.com`).
+2. Enter your domain (e.g. `poliscop.yourdomain.com`).
 3. Add the DNS records Vercel shows you at your DNS provider.
 4. SSL is provisioned automatically.
 
@@ -128,7 +128,7 @@ npm run preview   # preview the built dist locally
 ## Architecture summary
 
 ```
-poliscope/
+poliscop/
 ├── src/
 │   ├── data/
 │   │   ├── questions.js          # 120 questions × 8 themes

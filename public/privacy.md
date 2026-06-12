@@ -1,4 +1,4 @@
-# Politique de Confidentialité — Poliscope
+# Politique de Confidentialité — Poliscop
 
 **Dernière mise à jour : 10 juin 2026**
 
@@ -6,7 +6,7 @@
 
 ## 1. Qui sommes-nous
 
-Poliscope est une plateforme de positionnement politique en ligne, accessible à l'adresse **poliscop.org**.
+Poliscop est une plateforme de positionnement politique en ligne, accessible à l'adresse **poliscop.org**.
 
 Responsable du traitement :
 **ALERY SAS**
@@ -102,7 +102,7 @@ Les données sont chiffrées en transit (HTTPS/TLS) et au repos. L'accès aux ba
 
 ## 8. Cookies
 
-Poliscope n'utilise pas de cookies publicitaires ou de tracking tiers. Nous utilisons uniquement :
+Poliscop n'utilise pas de cookies publicitaires ou de tracking tiers. Nous utilisons uniquement :
 
 - Un cookie de session d'authentification (strictement nécessaire)
 - Le stockage local du navigateur (localStorage) pour sauvegarder votre progression sans compte
@@ -113,7 +113,7 @@ Aucun bandeau de consentement aux cookies tiers n'est requis.
 
 ## 9. Mineurs
 
-Poliscope n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas sciemment de données concernant des mineurs.
+Poliscop n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas sciemment de données concernant des mineurs.
 
 ---
 

@@ -48,7 +48,7 @@ export default function ProfileShareModal({
     setShareStatus('sharing');
     try {
       await navigator.share({
-        title: lang === 'fr' ? 'Mon profil politique – Poliscope 2027' : 'My political profile – Poliscope 2027',
+        title: lang === 'fr' ? 'Mon profil politique – Poliscop 2027' : 'My political profile – Poliscop 2027',
         text:  lang === 'fr' ? 'Découvre mon profil politique →' : 'Check out my political profile →',
         url:   resolvedShareUrl,
       });
@@ -74,7 +74,7 @@ export default function ProfileShareModal({
         backgroundColor: '#0f172a',
       });
       const link = document.createElement('a');
-      link.download = 'poliscope-profil.png';
+      link.download = 'poliscop-profil.png';
       link.href = dataUrl;
       link.click();
       setDownloadStatus('done');
@@ -242,7 +242,7 @@ export default function ProfileShareModal({
 
               {/* Header */}
               <div style={c.brandRow}>
-                <span style={c.brandName}>POLISCOPE 2027</span>
+                <span style={c.brandName}>POLISCOP 2027</span>
                 <div style={c.brandDot} />
               </div>
 
