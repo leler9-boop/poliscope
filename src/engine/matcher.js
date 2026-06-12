@@ -73,10 +73,16 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
     SECURITY:        { threshold: 42, penalty: 0.78 },
     PUBLIC_SERVICES: { threshold: 42, penalty: 0.82 },
   };
+  // Smooth veto: penalty ramps linearly from 1.0 (at threshold) to full penalty (at dist=100).
+  // No cliff: a 1-point movement across the threshold produces only a tiny change.
   let vetoMultiplier = 1.0;
   Object.entries(VETO_THEMES).forEach(([theme, config]) => {
     const dist = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50));
-    if (dist > config.threshold) vetoMultiplier *= config.penalty;
+    if (dist > config.threshold) {
+      const t = (dist - config.threshold) / (100 - config.threshold); // 0 at threshold, 1 at max
+      const multiplier = 1 - t * (1 - config.penalty); // 1.0 → penalty
+      vetoMultiplier *= multiplier;
+    }
   });
 
   const alignment = Math.round(baseAlignment * vetoMultiplier);
@@ -90,8 +96,10 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
  * @param {Array}  priorityOrder - optional
  * @returns {Array} sorted targets with .alignment added, highest first
  */
-export function rankByAlignment(userProfile, targets, priorityOrder, themeWeights) {
-  const results = targets.map(target => ({
+export function rankByAlignment(userProfile, targets, priorityOrder, themeWeights, options = {}) {
+  const { hideVariants = false } = options;
+  const pool = hideVariants ? targets.filter(t => !t.variantOf) : targets;
+  const results = pool.map(target => ({
     ...target,
     alignment: calculateAlignment(userProfile.themes, target.profile, priorityOrder, themeWeights),
   }));

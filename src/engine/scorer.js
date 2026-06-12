@@ -61,12 +61,12 @@ export function calculateProfile(answers) {
   // Confidence based on number of answered questions
   const answeredCount = Object.keys(answers).length;
   const totalQuestions = allQuestions.length;
-  const confidenceScore = Math.min(100, Math.round(answeredCount / 2));
+  const confidenceScore = Math.min(100, Math.round((answeredCount / totalQuestions) * 100));
   let confidence;
-  if (answeredCount < 10)       confidence = 'very_low';
-  else if (answeredCount < 30)  confidence = 'low';
-  else if (answeredCount < 80)  confidence = 'medium';
-  else if (answeredCount < 200) confidence = 'high';
+  if (answeredCount < 8)        confidence = 'very_low';
+  else if (answeredCount < 24)  confidence = 'low';
+  else if (answeredCount < 50)  confidence = 'medium';
+  else if (answeredCount < 100) confidence = 'high';
   else                          confidence = 'very_high';
 
   return { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions };

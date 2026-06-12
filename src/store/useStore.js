@@ -25,11 +25,16 @@ const OLD_STORAGE_KEY = 'poliscope_state';
 const STORAGE_KEY = 'poliscop_state';
 
 // Migrate localStorage data from old key to new key (runs once)
-if (typeof localStorage !== 'undefined') {
-  if (localStorage.getItem(OLD_STORAGE_KEY) && !localStorage.getItem(STORAGE_KEY)) {
-    localStorage.setItem(STORAGE_KEY, localStorage.getItem(OLD_STORAGE_KEY));
+// Wrapped in try/catch: Safari private browsing throws SecurityError on any localStorage access
+try {
+  if (typeof localStorage !== 'undefined') {
+    if (localStorage.getItem(OLD_STORAGE_KEY) && !localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, localStorage.getItem(OLD_STORAGE_KEY));
+    }
+    localStorage.removeItem(OLD_STORAGE_KEY);
   }
-  localStorage.removeItem(OLD_STORAGE_KEY);
+} catch {
+  // Safari private browsing — localStorage unavailable, app runs in guest mode
 }
 
 function detectLanguage() {

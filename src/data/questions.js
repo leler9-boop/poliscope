@@ -85,8 +85,8 @@ const DIRECTION_MAP = {
   SOC_16: 1, SOC_17: 1, SOC_18: 1, SOC_19:-1, SOC_20: 1, SOC_21: 1, SOC_22: 1, SOC_23: 1,
 
   IMM_1:  1, IMM_2: -1, IMM_3: -1, IMM_4:  1, IMM_5:  1, IMM_6:  1, IMM_7: -1,
-  IMM_8: -1, IMM_9: -1, IMM_10:-1, IMM_11:-1, IMM_12: 1, IMM_13: 1, IMM_14: 1, IMM_15:-1,
-  IMM_16:-1, IMM_17:-1, IMM_18:-1, IMM_19: 1, IMM_20: 1, IMM_21:-1, IMM_22: 1,
+  IMM_8: -1, IMM_9: -1, IMM_10:-1, IMM_11:-1, IMM_12: 1, IMM_13: 1, IMM_14: 1, IMM_15: 1,
+  IMM_16: 1, IMM_17:-1, IMM_18:-1, IMM_19: 1, IMM_20: 1, IMM_21:-1, IMM_22: 1,
 
   SEC_1: -1, SEC_2:  1, SEC_3:  1, SEC_4: -1, SEC_5:  1, SEC_6: -1, SEC_7:  1,
   SEC_8: -1, SEC_9: -1, SEC_10: 1, SEC_11: 1, SEC_12: 1, SEC_13:-1, SEC_14:-1, SEC_15: 1,
@@ -114,9 +114,20 @@ const DIRECTION_MAP = {
   SOC_24: 1, SOC_25: 1,
   IMM_23:-1,
   SEC_23: 1,
-  ENV_24: 1,
+  ENV_24:-1,  // sortir du nucléaire = anti-nucléaire = scores ENVIRONMENT down (nucléaire = faibles émissions)
   DEM_24: 1,
   GLO_23:-1, GLO_24: 1,  // inversé: quitter OTAN = anti-mondialiste = -1, UE fédérale = mondialiste = +1
+
+  // Nouvelles questions clivantes v3 — 2027 landscape
+  ECO_26:-1,  // annuler réforme retraites 64 ans = gauche = ECONOMY down
+  GLO_25: 1,  // soutien Ukraine = pro-occident = GLOBAL up
+  ENV_25:-1,  // normes agricoles trop strictes = anti-environnement = ENVIRONMENT down
+  PUB_24: 1,  // médecins zones désert = interventionnisme = PUBLIC_SERVICES up
+  PUB_25: 1,  // hôpitaux investissement = pro-public = PUBLIC_SERVICES up
+  SOC_26: 1,  // réduire discriminations = progressiste = SOCIAL up
+  DEM_25: 1,  // concentration médias = pro-pluralisme = DEMOCRACY up
+  SEC_24: 1,  // banlieues police > aides = sécuritaire = SECURITY up
+  ECO_27:-1,  // protectionnisme = anti-libre-échange = ECONOMY down
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────
@@ -174,15 +185,22 @@ export function getQuestionQueue(mode, priorityOrder) {
     return a;
   }
 
-  // For medium: up to 7 per theme, CORE first
+  // Per-mode caps: quick=1/theme (8 total), medium=3/theme (24 total), full=5/theme (40 total)
+  // Matches the question counts advertised on the SelectTest screen.
+  const capPerTheme = { quick: 1, medium: 3, full: 5 };
+  const cap = capPerTheme[mode] ?? 5;
+
   THEMES_ORDER.forEach(t => {
     let pool = byTheme[t];
-    if (mode === 'medium') {
+    if (mode === 'quick') {
+      // source is already coreQuestions — cap to 1 per theme
+      pool = pool.slice(0, cap);
+    } else if (mode === 'medium') {
       const core = pool.filter(q => q.status === 'CORE');
       const rest = shuffle(pool.filter(q => q.status !== 'CORE'));
-      pool = [...core, ...rest].slice(0, 7);
+      pool = [...core, ...rest].slice(0, cap);
     } else {
-      pool = shuffle(pool);
+      pool = shuffle(pool).slice(0, cap);
     }
     byTheme[t] = pool;
   });
