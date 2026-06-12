@@ -27,10 +27,11 @@ export function AuthProvider({ children }) {
     const localAnswers  = storeState.answers;
     const localCount    = Object.keys(localAnswers).length;
 
-    // Fetch cloud profile snapshot for count + timestamp comparison
+    // Fetch cloud profile snapshot for count + timestamp comparison.
+    // user_profiles has created_at only (no updated_at column).
     const { data: cloudProfile, error: profileError } = await supabase
       .from('user_profiles')
-      .select('answered_count, updated_at')
+      .select('answered_count, created_at')
       .eq('user_id', userId)
       .maybeSingle();
 
@@ -69,8 +70,9 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    // Equal count → compare timestamps, use most recent
-    const remoteUpdated = cloudProfile?.updated_at ? new Date(cloudProfile.updated_at) : null;
+    // Equal count → compare timestamps, use most recent.
+    // Use created_at as proxy for last profile save (no updated_at on this table).
+    const remoteUpdated = cloudProfile?.created_at ? new Date(cloudProfile.created_at) : null;
     const localUpdated  = storeState.profileLastUpdated ? new Date(storeState.profileLastUpdated) : null;
 
     if (remoteUpdated && (!localUpdated || remoteUpdated > localUpdated)) {
