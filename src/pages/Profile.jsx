@@ -583,6 +583,31 @@ export default function Profile() {
                 </motion.div>
               )}
 
+              {/* ── Top 2027 match — quick preview in hero ─────────────── */}
+              {rankedCandidates?.[0] && (
+                <motion.div
+                  className="flex items-center gap-2.5 mb-5 px-3.5 py-2.5 rounded-xl border"
+                  style={{ backgroundColor: `${accentColor}08`, borderColor: `${accentColor}22` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.58 }}
+                >
+                  <span className="text-xs font-semibold text-slate-400 shrink-0">
+                    {language === 'fr' ? 'Meilleur match 2027' : 'Best 2027 match'}
+                  </span>
+                  <span className="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: rankedCandidates[0].color }} />
+                    <span className="font-semibold text-slate-900 text-sm truncate">{rankedCandidates[0].name}</span>
+                  </span>
+                  <span
+                    className="font-bold text-sm tabular-nums shrink-0"
+                    style={{ color: alignmentBarColor(rankedCandidates[0].alignment) }}
+                  >
+                    {rankedCandidates[0].alignment}%
+                  </span>
+                </motion.div>
+              )}
+
               {/* ── Methodology transparency ─────────────────────────────── */}
               <div className="mb-5">
                 <button

@@ -114,20 +114,6 @@ export default function ProfileShareModal({
       textShadow: `0 0 48px ${hexAlpha(accentColor, 0.5)}`,
     },
 
-    // ── Rarity badge ──────────────────────────────────────────
-    rarityBadge: {
-      display: 'inline-block',
-      padding: '3px 10px',
-      borderRadius: 99,
-      border: `1px solid ${hexAlpha(accentColor, 0.45)}`,
-      backgroundColor: hexAlpha(accentColor, 0.13),
-      fontSize: 10,
-      fontWeight: 700,
-      color: hexAlpha(accentColor, 0.95),
-      letterSpacing: '0.03em',
-      marginBottom: 14,
-    },
-
     // ── Trait pills ───────────────────────────────────────────
     traitWrap: { display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 },
     traitPill: {
@@ -266,11 +252,6 @@ export default function ProfileShareModal({
               <p style={c.archeLabel}>{lang === 'fr' ? 'Ton archétype' : 'Your archetype'}</p>
               <p style={c.archeName}>{topArchetype?.name[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}</p>
 
-              {/* Rarity badge */}
-              {rarityLine && (
-                <span style={c.rarityBadge}>{rarityLine}</span>
-              )}
-
               {/* Trait pills */}
               {traits.length > 0 && (
                 <div style={c.traitWrap}>
@@ -298,9 +279,9 @@ export default function ProfileShareModal({
                 </>
               )}
 
-              {/* Nudge */}
+              {/* Nudge — rarity if available, else reliability prompt */}
               <div style={c.divider} />
-              <p style={c.nudgeText}>{reliabilityNudge}</p>
+              <p style={c.nudgeText}>{rarityLine || reliabilityNudge}</p>
 
               {/* Footer */}
               <div style={c.footer}>

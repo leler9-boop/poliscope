@@ -122,7 +122,7 @@ export default function Landing() {
               style={{ animation: 'pulse 2s infinite' }}
             />
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-              {language === 'fr' ? 'Profilage politique multidimensionnel' : 'Multi-dimensional political profiling'}
+              {language === 'fr' ? 'Quel est ton archétype politique ?' : 'What is your political archetype?'}
             </span>
           </motion.div>
 

@@ -279,7 +279,7 @@ const CRISES = [
     },
     debates: {
       en: `The reform raised questions about democratic legitimacy (should major reforms be passed without a vote?), the sustainability of the welfare state, and who bears the costs of demographic change. It also revealed deep distrust between citizens and the political class.`,
-      fr: `La réforme a soulevé des questions sur la légitimité démocratique (de grandes réformes devraient-elles être adoptées sans vote ?), la soutenabilité de l'État-providence, et qui supporte les coûts du changement démographique. Elle a aussi révélé une profonde méfiance entre les citoyens et la classe politique.`,
+      fr: `La réforme a soulevé des questions sur la légitimité démocratique (de grandes réformes devraient-elles être adoptées sans vote ?), le financement des retraites à long terme, et qui supporte les coûts du vieillissement de la population. Elle a aussi révélé une profonde méfiance entre les citoyens et la classe politique.`,
     },
   },
   {

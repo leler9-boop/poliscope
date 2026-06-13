@@ -74,10 +74,12 @@ export default function ProfileReveal({
               style={{ width: 64, height: 4, background: `linear-gradient(90deg, ${color}, ${hexAlpha(color, 0.2)})` }}
             />
 
-            {/* Description */}
+            {/* Description — capped at 160 chars to avoid wall of text */}
             {topArchetype?.description?.[lang] && (
               <p className="text-slate-300 text-sm sm:text-base text-center leading-relaxed mb-6 px-2">
-                {topArchetype.description[lang]}
+                {topArchetype.description[lang].length > 160
+                  ? topArchetype.description[lang].slice(0, 157).trimEnd() + '…'
+                  : topArchetype.description[lang]}
               </p>
             )}
 
@@ -111,9 +113,9 @@ export default function ProfileReveal({
 
             <button
               onClick={onDismiss}
-              className="w-full mt-3 py-3 text-xs font-medium text-slate-500 hover:text-slate-300 transition-colors"
+              className="w-full mt-3 py-3 text-xs font-medium text-slate-600 hover:text-slate-400 transition-colors"
             >
-              {lang === 'fr' ? 'Passer directement au profil' : 'Skip to full profile'}
+              {lang === 'fr' ? 'Passer →' : 'Skip →'}
             </button>
           </motion.div>
         )}
@@ -175,10 +177,10 @@ export default function ProfileReveal({
                   </div>
                 </div>
 
-                <p className="text-slate-500 text-xs text-center mb-8 px-4">
+                <p className="text-slate-600 text-xs text-center mb-8 px-4">
                   {lang === 'fr'
-                    ? "Ces scores sont analytiques, basés sur les positions publiques. Ce n'est pas une recommandation de vote."
-                    : "Alignment scores are analytical, based on public positions. Not a voting recommendation."}
+                    ? "Score basé sur les positions publiques. Pas une recommandation de vote."
+                    : "Based on public positions. Not a voting recommendation."}
                 </p>
               </>
             ) : (
