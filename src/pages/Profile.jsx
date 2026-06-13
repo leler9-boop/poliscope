@@ -33,6 +33,7 @@ import { refinementThemes } from '../data/refinementThemes.js';
 import { getArchetype, getTopTraits } from '../engine/archetypeEngine.js';
 import AxisBar from '../components/AxisBar.jsx';
 import ProfileShareModal from '../components/ProfileShareModal.jsx';
+import ProfileReveal from '../components/ProfileReveal.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 
@@ -160,8 +161,11 @@ export default function Profile() {
   const resetProfile    = useStore(s => s.resetProfile);
   const startRefinement    = useStore(s => s.startRefinement);
   const startImproveMode   = useStore(s => s.startImproveMode);
-  const pendingMigration   = useStore(s => s.pendingMigration);
+  const pendingMigration    = useStore(s => s.pendingMigration);
   const setPendingMigration = useStore(s => s.setPendingMigration);
+  const profileRevealPending = useStore(s => s.profileRevealPending);
+  const clearRevealPending   = useStore(s => s.clearRevealPending);
+  const testMode             = useStore(s => s.testMode);
   const t = createTranslator(language);
 
   // ── Shared profile via URL ─────────────────────────────────────────────────
@@ -176,6 +180,7 @@ export default function Profile() {
   const [showAllCurrents, setShowAllCurrents] = useState(false);
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showMethodology, setShowMethodology] = useState(false);
 
 
   // Refinement UI state
@@ -278,6 +283,41 @@ export default function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-16">
+
+      {/* ── Profile reveal overlay — fires once after quiz completion ── */}
+      <AnimatePresence>
+        {profileRevealPending && !isSharedView && topArchetype && (
+          <ProfileReveal
+            topArchetype={topArchetype}
+            topCandidate={rankedCandidates?.[0] ?? null}
+            language={language}
+            answeredCount={answeredCount}
+            onDismiss={clearRevealPending}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Upgrade nudge — shown to quick-test users on first profile visit ── */}
+      {!isSharedView && testMode === 'quick' && answeredCount <= 10 && !profileRevealPending && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-5 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 flex items-center justify-between gap-3"
+        >
+          <p className="text-xs text-blue-800 font-medium">
+            {language === 'fr'
+              ? `⚡ Test rapide terminé. Passe au test standard (24 questions) pour un profil plus fiable.`
+              : `⚡ Quick test done. Try the standard test (24 questions) for a more reliable profile.`}
+          </p>
+          <button
+            onClick={() => navigate('selectTest')}
+            className="text-xs font-bold text-blue-700 border border-blue-300 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors flex-shrink-0"
+          >
+            {language === 'fr' ? 'Améliorer →' : 'Improve →'}
+          </button>
+        </motion.div>
+      )}
+
       {/* Header */}
       <motion.div
         className="flex items-center justify-between mb-6 sm:mb-10 gap-3"
@@ -542,6 +582,58 @@ export default function Profile() {
                   ))}
                 </motion.div>
               )}
+
+              {/* ── Methodology transparency ─────────────────────────────── */}
+              <div className="mb-5">
+                <button
+                  onClick={() => setShowMethodology(v => !v)}
+                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors font-medium"
+                >
+                  <span className="text-slate-300 text-base leading-none">ℹ</span>
+                  {language === 'fr' ? 'Comment ce profil est calculé ?' : 'How is this profile calculated?'}
+                  <span className="text-slate-300 text-xs">{showMethodology ? '▲' : '▼'}</span>
+                </button>
+                <AnimatePresence>
+                  {showMethodology && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.28 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 space-y-2.5 leading-relaxed">
+                        <p>
+                          {language === 'fr'
+                            ? '📊 Tes réponses à chaque question contribuent à 8 scores thématiques (0–100), puis à 4 axes idéologiques dérivés.'
+                            : '📊 Your answers contribute to 8 thematic scores (0–100), then 4 derived ideological axes.'}
+                        </p>
+                        <p>
+                          {language === 'fr'
+                            ? '🎯 L\'archétype est déterminé par comparaison de tes scores thématiques avec les profils de 18 archétypes politiques français — en tenant compte de l\'ordre de priorité que tu as choisi.'
+                            : '🎯 Your archetype is found by comparing your theme scores to 18 French political archetype profiles — weighted by the priority order you chose.'}
+                        </p>
+                        <p>
+                          {language === 'fr'
+                            ? '📏 Les scores des candidats sont calculés de la même façon : distance pondérée entre tes scores et leurs positions publiques documentées.'
+                            : '📏 Candidate scores use the same method: weighted distance between your scores and their documented public positions.'}
+                        </p>
+                        <p>
+                          {language === 'fr'
+                            ? '⚡ Chaque nouvelle réponse recalcule ton profil en temps réel.'
+                            : '⚡ Every new answer instantly recalculates your profile.'}
+                        </p>
+                        <button
+                          onClick={() => navigate('beginner')}
+                          className="text-blue-600 font-semibold hover:text-blue-800 transition-colors mt-1"
+                        >
+                          {language === 'fr' ? 'En savoir plus sur les thèmes →' : 'Learn more about the themes →'}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* ── Featured economic axis ── */}
               <div>

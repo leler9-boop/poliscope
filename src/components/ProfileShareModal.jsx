@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
+import { getRarityLine } from '../data/archetypeRarity.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
@@ -37,6 +38,7 @@ export default function ProfileShareModal({
   const lang         = language === 'fr' ? 'fr' : 'en';
   const accentColor  = topArchetype?.color ?? '#2563eb';
   const topCandidate = rankedCandidates?.[0] ?? null;
+  const rarityLine   = topArchetype?.id ? getRarityLine(topArchetype.id, lang) : '';
 
   const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
   const reliabilityNudge = getReliabilityNudge(reliabilityPct, lang);
@@ -110,6 +112,20 @@ export default function ProfileShareModal({
     archeName:  {
       fontSize: 36, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 14,
       textShadow: `0 0 48px ${hexAlpha(accentColor, 0.5)}`,
+    },
+
+    // ── Rarity badge ──────────────────────────────────────────
+    rarityBadge: {
+      display: 'inline-block',
+      padding: '3px 10px',
+      borderRadius: 99,
+      border: `1px solid ${hexAlpha(accentColor, 0.45)}`,
+      backgroundColor: hexAlpha(accentColor, 0.13),
+      fontSize: 10,
+      fontWeight: 700,
+      color: hexAlpha(accentColor, 0.95),
+      letterSpacing: '0.03em',
+      marginBottom: 14,
     },
 
     // ── Trait pills ───────────────────────────────────────────
@@ -249,6 +265,11 @@ export default function ProfileShareModal({
               {/* Archetype */}
               <p style={c.archeLabel}>{lang === 'fr' ? 'Ton archétype' : 'Your archetype'}</p>
               <p style={c.archeName}>{topArchetype?.name[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}</p>
+
+              {/* Rarity badge */}
+              {rarityLine && (
+                <span style={c.rarityBadge}>{rarityLine}</span>
+              )}
 
               {/* Trait pills */}
               {traits.length > 0 && (

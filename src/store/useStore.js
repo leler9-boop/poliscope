@@ -72,6 +72,9 @@ export const useStore = create(
       // ── Onboarding (session-only) ──
       needsOnboarding: false,
 
+      // ── Profile reveal (session-only) — true once after quiz completion ──
+      profileRevealPending: false,
+
       // ── Sync conflict (session-only): set when local > remote on login ──
       // null | { remoteAnswers, remoteCount, localCount, userId }
       syncConflict: null,
@@ -305,9 +308,11 @@ export const useStore = create(
       finishQuestionnaire: () => {
         const { answers } = get();
         const profile = calculateProfile(answers);
-        set({ profile, currentPage: 'profile' });
+        set({ profile, currentPage: 'profile', profileRevealPending: true });
         routerNavigate('/profile');
       },
+
+      clearRevealPending: () => set({ profileRevealPending: false }),
 
       resetProfile: () => {
         set({
