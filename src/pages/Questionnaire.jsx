@@ -140,9 +140,12 @@ export default function Questionnaire() {
         <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-28 px-4">
           {question && (
             <QuestionCard
-              question={questionHints[question.id]
-                ? { ...question, info: questionHints[question.id] }
-                : question
+              question={
+                questionHints[question.id]
+                  ? { ...question, info: questionHints[question.id] }
+                  : question.explanation
+                  ? { ...question, info: question.explanation }
+                  : question
               }
               currentAnswer={currentAnswer}
               onAnswer={handleAnswer}

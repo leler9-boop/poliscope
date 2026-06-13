@@ -147,8 +147,9 @@ function processQuestion(raw) {
     cluster:     raw.cluster,
     theme:       PREFIX_TO_THEME[prefix] ?? THEMES.ECONOMY,
     direction:   DIRECTION_MAP[raw.id] ?? 1,
-    isDuplicate: raw.isDuplicate ?? false,
-    duplicateOf: raw.duplicateOf ?? null,
+    isDuplicate:  raw.isDuplicate ?? false,
+    duplicateOf:  raw.duplicateOf ?? null,
+    explanation:  raw.explanation ?? null,
   };
 }
 

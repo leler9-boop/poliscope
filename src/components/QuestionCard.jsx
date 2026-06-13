@@ -61,42 +61,43 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
       >
 
         {/* ── Thème badge ── */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: themeColor }}
-            />
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
-              {themeLabel}
-            </span>
-          </div>
-
-          {/* Info button */}
-          {hasInfo && (
-            <motion.button
-              key={question.id}
-              onClick={() => setShowInfo(!showInfo)}
-              className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border transition-colors"
-              style={{
-                borderColor:     showInfo ? '#BFDBFE' : '#E2E8F0',
-                color:           showInfo ? '#2563EB' : '#94A3B8',
-                backgroundColor: showInfo ? '#EFF6FF' : 'transparent',
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              title={language === 'fr' ? 'En savoir plus' : 'Learn more'}
-            >
-              <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor">
-                <path d="M6 0a6 6 0 100 12A6 6 0 006 0zm.75 9H5.25V5.25h1.5V9zM6 4.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/>
-              </svg>
-              {language === 'fr' ? 'Contexte' : 'Context'}
-            </motion.button>
-          )}
+        <div className="flex items-center mb-6">
+          <span
+            className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+            style={{ backgroundColor: themeColor }}
+          />
+          <span className="ml-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
+            {themeLabel}
+          </span>
         </div>
+
+        {/* ── Question ── */}
+        <p className="text-[1.1rem] sm:text-xl font-medium text-slate-900 leading-relaxed mb-4 tracking-tight">
+          {questionText}
+        </p>
+
+        {/* ── Contexte trigger — below question so user sees it after reading ── */}
+        {hasInfo && (
+          <motion.button
+            key={`info-${question.id}`}
+            onClick={() => setShowInfo(!showInfo)}
+            className="flex items-center gap-1.5 mb-5 text-xs font-medium transition-colors"
+            style={{ color: showInfo ? '#2563EB' : '#94A3B8' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.25 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style={{ flexShrink: 0 }}>
+              <path d="M6 0a6 6 0 100 12A6 6 0 006 0zm.75 9H5.25V5.25h1.5V9zM6 4.5a.75.75 0 110-1.5.75.75 0 010 1.5z"/>
+            </svg>
+            <span className="underline underline-offset-2 decoration-dotted">
+              {showInfo
+                ? (language === 'fr' ? 'Masquer le contexte' : 'Hide context')
+                : (language === 'fr' ? 'Je ne connais pas ce sujet' : 'I need more context')}
+            </span>
+          </motion.button>
+        )}
 
         {/* ── Info panel ── */}
         <AnimatePresence>
@@ -108,25 +109,12 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <p className="mb-2">
-                {typeof question.info === 'string'
-                  ? question.info
-                  : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}
-              </p>
-              <button
-                onClick={() => setShowInfo(false)}
-                className="text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors"
-              >
-                {language === 'fr' ? 'Fermer' : 'Close'}
-              </button>
+              {typeof question.info === 'string'
+                ? question.info
+                : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* ── Question ── */}
-        <p className="text-[1.1rem] sm:text-xl font-medium text-slate-900 leading-relaxed mb-8 tracking-tight">
-          {questionText}
-        </p>
 
         {/* ── Likert scale ── */}
         <div>

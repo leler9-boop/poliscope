@@ -42,52 +42,64 @@ export default function ProfileReveal({
     >
       <AnimatePresence mode="wait">
 
-        {/* ── Step 1 — Archetype ──────────────────────────────────────────── */}
+        {/* ── Step 1 — Archetype reveal ───────────────────────────────────── */}
         {step === 1 && (
           <motion.div
             key="step1"
             className="w-full max-w-md"
-            initial={{ opacity: 0, y: 32, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -24, scale: 0.97 }}
-            transition={{ duration: 0.45, ease: [0.34, 1.08, 0.64, 1] }}
+            exit={{ opacity: 0, y: -20, scale: 0.97 }}
+            transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            {/* Eyebrow */}
-            <p
-              className="text-xs font-bold tracking-widest uppercase mb-5 text-center"
-              style={{ color: hexAlpha(color, 0.85) }}
+            {/* Eyebrow — first signal */}
+            <motion.p
+              className="text-xs font-bold tracking-widest uppercase mb-6 text-center"
+              style={{ color: hexAlpha(color, 0.8) }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
             >
               {lang === 'fr' ? 'Votre archétype politique' : 'Your political archetype'}
-            </p>
+            </motion.p>
 
-            {/* Archetype name */}
-            <h1
-              className="text-4xl sm:text-5xl font-black text-white text-center leading-tight mb-5"
-              style={{ textShadow: `0 0 60px ${hexAlpha(color, 0.6)}` }}
-            >
-              {topArchetype?.name?.[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile forming…')}
-            </h1>
-
-            {/* Accent line */}
-            <div
-              className="mx-auto rounded-full mb-6"
-              style={{ width: 64, height: 4, background: `linear-gradient(90deg, ${color}, ${hexAlpha(color, 0.2)})` }}
+            {/* Accent line — draws in, builds anticipation */}
+            <motion.div
+              className="mx-auto rounded-full mb-7"
+              style={{ height: 3, background: `linear-gradient(90deg, ${color}, ${hexAlpha(color, 0.2)})` }}
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 56, opacity: 1 }}
+              transition={{ duration: 0.55, delay: 0.55, ease: [0.34, 1.08, 0.64, 1] }}
             />
 
-            {/* Description — capped at 160 chars to avoid wall of text */}
+            {/* Archetype name — the reveal, springs in */}
+            <motion.h1
+              className="text-4xl sm:text-5xl font-black text-white text-center leading-tight mb-7"
+              style={{ textShadow: `0 0 64px ${hexAlpha(color, 0.65)}` }}
+              initial={{ opacity: 0, scale: 0.80, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.88, ease: [0.34, 1.12, 0.64, 1] }}
+            >
+              {topArchetype?.name?.[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile forming…')}
+            </motion.h1>
+
+            {/* Description */}
             {topArchetype?.description?.[lang] && (
-              <p className="text-slate-300 text-sm sm:text-base text-center leading-relaxed mb-6 px-2">
+              <motion.p
+                className="text-slate-300 text-sm sm:text-base text-center leading-relaxed mb-6 px-2"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.42 }}
+              >
                 {topArchetype.description[lang].length > 160
                   ? topArchetype.description[lang].slice(0, 157).trimEnd() + '…'
                   : topArchetype.description[lang]}
-              </p>
+              </motion.p>
             )}
 
-            {/* Trait pills */}
+            {/* Trait pills — staggered entry */}
             {traits.length > 0 && (
               <div className="flex flex-wrap justify-center gap-2 mb-8">
                 {traits.slice(0, 3).map((trait, i) => (
-                  <span
+                  <motion.span
                     key={i}
                     className="text-xs font-semibold px-3 py-1.5 rounded-full"
                     style={{
@@ -95,28 +107,38 @@ export default function ProfileReveal({
                       backgroundColor: hexAlpha(color, 0.15),
                       color: 'rgba(255,255,255,0.85)',
                     }}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 1.62 + i * 0.1 }}
                   >
                     {trait}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             )}
 
-            {/* CTA */}
-            <button
+            {/* CTA — last to appear */}
+            <motion.button
               onClick={() => setStep(2)}
               className="w-full py-4 rounded-2xl font-bold text-white text-base transition-all active:scale-95"
               style={{ background: `linear-gradient(135deg, ${color} 0%, ${hexAlpha(color, 0.75)} 100%)` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 2.0 }}
+              whileTap={{ scale: 0.97 }}
             >
               {lang === 'fr' ? 'Voir mon meilleur match 2027 →' : 'See my best 2027 match →'}
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               onClick={onDismiss}
               className="w-full mt-3 py-3 text-xs font-medium text-slate-600 hover:text-slate-400 transition-colors"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 2.2 }}
             >
               {lang === 'fr' ? 'Passer →' : 'Skip →'}
-            </button>
+            </motion.button>
           </motion.div>
         )}
 
@@ -125,22 +147,28 @@ export default function ProfileReveal({
           <motion.div
             key="step2"
             className="w-full max-w-md"
-            initial={{ opacity: 0, y: 32, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -24, scale: 0.97 }}
-            transition={{ duration: 0.45, ease: [0.34, 1.08, 0.64, 1] }}
+            exit={{ opacity: 0, y: -20, scale: 0.97 }}
+            transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             {/* Eyebrow */}
-            <p className="text-xs font-bold tracking-widest uppercase mb-5 text-center text-slate-400">
+            <motion.p
+              className="text-xs font-bold tracking-widest uppercase mb-5 text-center text-slate-400"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
               {lang === 'fr' ? 'Votre meilleur match 2027' : 'Your best 2027 match'}
-            </p>
+            </motion.p>
 
             {topCandidate ? (
               <>
-                {/* Alignment score — big number */}
-                <div
+                {/* Alignment score — springs in as the reveal */}
+                <motion.div
                   className="text-center mb-3"
                   style={{ color: topCandidate.color ?? color }}
+                  initial={{ opacity: 0, scale: 0.72, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.35, ease: [0.34, 1.12, 0.64, 1] }}
                 >
                   <span
                     className="text-7xl font-black tabular-nums"
@@ -149,19 +177,27 @@ export default function ProfileReveal({
                     {topCandidate.alignment}
                   </span>
                   <span className="text-4xl font-black" style={{ opacity: 0.7 }}>%</span>
-                </div>
+                </motion.div>
 
-                <p className="text-slate-400 text-xs text-center mb-6">
+                <motion.p
+                  className="text-slate-400 text-xs text-center mb-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.35, delay: 0.85 }}
+                >
                   {lang === 'fr' ? "de compatibilité avec" : "alignment with"}
-                </p>
+                </motion.p>
 
                 {/* Candidate card */}
-                <div
+                <motion.div
                   className="rounded-2xl p-5 mb-6"
                   style={{
                     backgroundColor: 'rgba(255,255,255,0.06)',
                     border: `1px solid ${hexAlpha(topCandidate.color ?? color, 0.3)}`,
                   }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 1.0 }}
                 >
                   <div className="flex items-center gap-3">
                     <div
@@ -175,13 +211,18 @@ export default function ProfileReveal({
                       </p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <p className="text-slate-600 text-xs text-center mb-8 px-4">
+                <motion.p
+                  className="text-slate-600 text-xs text-center mb-8 px-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 1.25 }}
+                >
                   {lang === 'fr'
                     ? "Score basé sur les positions publiques. Pas une recommandation de vote."
                     : "Based on public positions. Not a voting recommendation."}
-                </p>
+                </motion.p>
               </>
             ) : (
               <p className="text-slate-400 text-center mb-8">
@@ -190,12 +231,16 @@ export default function ProfileReveal({
             )}
 
             {/* CTA — dismiss to full profile */}
-            <button
+            <motion.button
               onClick={onDismiss}
               className="w-full py-4 rounded-2xl font-bold text-white text-base bg-slate-700 hover:bg-slate-600 transition-all active:scale-95"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: topCandidate ? 1.45 : 0.4 }}
+              whileTap={{ scale: 0.97 }}
             >
               {lang === 'fr' ? 'Découvrir mon profil complet →' : 'Explore my full profile →'}
-            </button>
+            </motion.button>
           </motion.div>
         )}
 

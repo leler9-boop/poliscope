@@ -21,3 +21,4 @@ yarn-debug.log*
 
 # Vite
 *.local
+vite.config.js.timestamp*
