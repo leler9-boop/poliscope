@@ -35,9 +35,10 @@ export default function ProfileReveal({
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(12px)' }}
+      style={{ backgroundColor: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.35 }}
     >
       <AnimatePresence mode="wait">
@@ -73,10 +74,10 @@ export default function ProfileReveal({
             {/* Archetype name — the reveal, at 1.25s — name lives alone until 2.28s */}
             <motion.h1
               className="text-4xl sm:text-5xl font-black text-white text-center leading-tight mb-7"
-              style={{ textShadow: `0 0 64px ${hexAlpha(color, 0.65)}` }}
-              initial={{ opacity: 0, scale: 0.80, y: 12 }}
+              style={{ textShadow: `0 0 120px ${hexAlpha(color, 0.75)}, 0 0 36px ${hexAlpha(color, 0.45)}` }}
+              initial={{ opacity: 0, scale: 0.75, y: 14 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 1.25, ease: [0.34, 1.12, 0.64, 1] }}
+              transition={{ duration: 0.7, delay: 1.25, ease: [0.34, 1.14, 0.64, 1] }}
             >
               {topArchetype?.name?.[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile forming…')}
             </motion.h1>

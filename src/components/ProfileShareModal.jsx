@@ -91,61 +91,79 @@ export default function ProfileShareModal({
 
   const c = {
     root: {
-      background: `radial-gradient(ellipse at 105% -5%, ${hexAlpha(accentColor, 0.28)} 0%, #0f172a 58%)`,
+      // Centred radial spotlight sits at ~36% down — right where the name lives
+      background: `radial-gradient(ellipse at 52% 36%, ${hexAlpha(accentColor, 0.22)} 0%, transparent 62%), #07111e`,
       fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       borderRadius: 20,
       overflow: 'hidden',
       width: '100%',
     },
-    accent: { height: 6, background: `linear-gradient(90deg, ${accentColor} 0%, ${hexAlpha(accentColor, 0.18)} 100%)` },
+    // 4px solid stripe — confident, not decorative
+    accent: { height: 4, background: accentColor },
     inner:  { padding: '18px 22px 20px' },
 
-    // ── Header ─────────────────────────────────────────────────
-    brandRow:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-    brandName: { fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' },
-    brandDot:  { width: 5, height: 5, borderRadius: '50%', backgroundColor: accentColor, opacity: 0.7 },
+    // ── Header — micro brand ────────────────────────────────────
+    brandRow:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+    brandName: { fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase' },
+    brandYear: { fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: hexAlpha(accentColor, 0.5) },
 
-    divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', margin: '14px 0' },
-
-    // ── Archetype block ────────────────────────────────────────
-    archeLabel: { fontSize: 10, fontWeight: 600, color: hexAlpha(accentColor, 0.75), letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 },
-    archeName:  {
-      fontSize: 36, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 14,
-      textShadow: `0 0 48px ${hexAlpha(accentColor, 0.5)}`,
+    // ── Identity hero ───────────────────────────────────────────
+    youAre: {
+      fontSize: 10, fontWeight: 700, color: hexAlpha(accentColor, 0.9),
+      textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 9,
+    },
+    archeName: {
+      fontSize: 44, fontWeight: 900, color: '#ffffff',
+      letterSpacing: '-0.028em', lineHeight: 1.06, marginBottom: 16,
+      textShadow: `0 0 100px ${hexAlpha(accentColor, 0.7)}, 0 0 32px ${hexAlpha(accentColor, 0.38)}`,
+    },
+    heroLine: {
+      width: 40, height: 3, borderRadius: 99,
+      background: accentColor, marginBottom: 14,
     },
 
-    // ── Trait pills ───────────────────────────────────────────
-    traitWrap: { display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 },
-    traitPill: {
-      display: 'inline-block', padding: '4px 10px', borderRadius: 99,
-      border: `1px solid ${hexAlpha(accentColor, 0.38)}`,
-      backgroundColor: hexAlpha(accentColor, 0.13),
-      fontSize: 11, fontWeight: 600,
-      color: 'rgba(255,255,255,0.80)',
-      lineHeight: 1.4,
+    // ── Traits — editorial, dot-separated ─────────────────────
+    traitLine: {
+      fontSize: 11, fontWeight: 500,
+      color: 'rgba(255,255,255,0.40)',
+      letterSpacing: '0.02em', marginBottom: 0,
     },
 
-    // ── Candidate row ──────────────────────────────────────────
-    candidateLabel: { fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 9 },
-    candidateRow: {
-      display: 'flex', alignItems: 'center', gap: 11,
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      border: `1px solid ${hexAlpha(accentColor, 0.22)}`,
-      borderRadius: 12, padding: '10px 13px',
+    // ── Rarity (optional) ───────────────────────────────────────
+    rarityText: {
+      fontSize: 10, fontWeight: 600,
+      color: hexAlpha(accentColor, 0.72),
+      fontStyle: 'italic', marginTop: 8,
     },
-    candidateDot:   { width: 9, height: 9, borderRadius: '50%', flexShrink: 0 },
-    candidateInfo:  { flex: 1, minWidth: 0 },
-    candidateName:  { fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.90)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
-    candidateParty: { fontSize: 10, color: 'rgba(255,255,255,0.32)', marginTop: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
-    candidateScore: { fontSize: 22, fontWeight: 800, color: accentColor, flexShrink: 0, letterSpacing: '-0.03em', textShadow: `0 0 20px ${hexAlpha(accentColor, 0.6)}` },
 
-    // ── Reliability nudge ──────────────────────────────────────
-    nudgeText: { fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' },
+    // ── Section divider ─────────────────────────────────────────
+    sectionDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', margin: '16px 0' },
+
+    // ── Match section ───────────────────────────────────────────
+    matchLabel: {
+      fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)',
+      textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10,
+    },
+    matchRow: {
+      display: 'flex', alignItems: 'center', gap: 14,
+      backgroundColor: 'rgba(255,255,255,0.04)',
+      border: '1px solid rgba(255,255,255,0.09)',
+      borderRadius: 12, padding: '10px 14px', marginBottom: 16,
+    },
+    matchPct: {
+      fontSize: 28, fontWeight: 900, color: accentColor,
+      letterSpacing: '-0.03em', flexShrink: 0, lineHeight: 1,
+      textShadow: `0 0 24px ${hexAlpha(accentColor, 0.55)}`,
+    },
+    matchDivLine: { width: 1, height: 26, backgroundColor: 'rgba(255,255,255,0.10)', flexShrink: 0 },
+    matchInfo:   { flex: 1, minWidth: 0 },
+    matchName:   { fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.88)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', marginBottom: 2 },
+    matchParty:  { fontSize: 10, color: 'rgba(255,255,255,0.30)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
 
     // ── Footer ────────────────────────────────────────────────
-    footer:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 12 },
-    footerCta: { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.01em' },
-    footerUrl: { fontSize: 9,  fontWeight: 800, color: accentColor, opacity: 0.65, letterSpacing: '0.16em', textTransform: 'uppercase' },
+    footer:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.07)' },
+    footerCta: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.48)', letterSpacing: '0.01em' },
+    footerUrl: { fontSize: 9,  fontWeight: 800, color: accentColor, opacity: 0.55, letterSpacing: '0.16em', textTransform: 'uppercase' },
   };
 
   const traits = topArchetype?.traits?.[lang] ?? topArchetype?.traits?.fr ?? [];
@@ -237,55 +255,53 @@ export default function ProfileShareModal({
           {/* ── Share card — preview ── */}
           <div ref={cardRef} style={c.root}>
 
-            {/* Accent bar */}
+            {/* Solid accent stripe */}
             <div style={c.accent} />
 
             <div style={c.inner}>
 
-              {/* Header */}
+              {/* Micro brand */}
               <div style={c.brandRow}>
-                <span style={c.brandName}>POLISCOP 2027</span>
-                <div style={c.brandDot} />
+                <span style={c.brandName}>POLISCOP</span>
+                <span style={c.brandYear}>2027</span>
               </div>
 
-              {/* Archetype */}
-              <p style={c.archeLabel}>{lang === 'fr' ? 'Ton archétype' : 'Your archetype'}</p>
-              <p style={c.archeName}>{topArchetype?.name[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}</p>
+              {/* Identity hero */}
+              <p style={c.youAre}>{lang === 'fr' ? 'Vous êtes' : 'You are'}</p>
+              <p style={c.archeName}>
+                {topArchetype?.name?.[lang] ?? topArchetype?.name?.fr ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}
+              </p>
+              <div style={c.heroLine} />
 
-              {/* Trait pills */}
+              {/* Traits — editorial, not pills */}
               {traits.length > 0 && (
-                <div style={c.traitWrap}>
-                  {traits.slice(0, 3).map((trait, i) => (
-                    <span key={i} style={c.traitPill}>{trait}</span>
-                  ))}
-                </div>
+                <p style={c.traitLine}>{traits.slice(0, 3).join(' · ')}</p>
               )}
 
-              {/* Candidate */}
+              {/* Rarity — only if available */}
+              {rarityLine ? <p style={c.rarityText}>{rarityLine}</p> : null}
+
+              {/* Candidate match */}
               {topCandidate && (
                 <>
-                  <div style={c.divider} />
-                  <p style={c.candidateLabel}>
-                    {lang === 'fr' ? 'Ton meilleur match 2027' : 'Your best 2027 match'}
+                  <div style={c.sectionDivider} />
+                  <p style={c.matchLabel}>
+                    {lang === 'fr' ? 'Match 2027' : '2027 Match'}
                   </p>
-                  <div style={c.candidateRow}>
-                    <div style={{ ...c.candidateDot, backgroundColor: topCandidate.color ?? accentColor }} />
-                    <div style={c.candidateInfo}>
-                      <p style={c.candidateName}>{topCandidate.name}</p>
-                      <p style={c.candidateParty}>{topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}</p>
+                  <div style={c.matchRow}>
+                    <span style={c.matchPct}>{topCandidate.alignment}%</span>
+                    <div style={c.matchDivLine} />
+                    <div style={c.matchInfo}>
+                      <p style={c.matchName}>{topCandidate.name}</p>
+                      <p style={c.matchParty}>{topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}</p>
                     </div>
-                    <span style={c.candidateScore}>{topCandidate.alignment}%</span>
                   </div>
                 </>
               )}
 
-              {/* Nudge — rarity if available, else reliability prompt */}
-              <div style={c.divider} />
-              <p style={c.nudgeText}>{rarityLine || reliabilityNudge}</p>
-
               {/* Footer */}
               <div style={c.footer}>
-                <span style={c.footerCta}>{lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What's your archetype?'}</span>
+                <span style={c.footerCta}>{lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What’s your archetype?'}</span>
                 <span style={c.footerUrl}>poliscop.org</span>
               </div>
 
