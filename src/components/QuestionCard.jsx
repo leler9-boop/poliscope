@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { CONCEPTS } from '../data/conceptMap.js';
 
 const LIKERT_LABELS = {
   en: ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'],
@@ -18,7 +19,7 @@ const SHORT_LABELS = {
   fr: ['Non', '–', '~', '+', 'Oui'],
 };
 
-export default function QuestionCard({ question, currentAnswer, onAnswer, language = 'en' }) {
+export default function QuestionCard({ question, currentAnswer, onAnswer, language = 'en', concepts = [], onConceptClick }) {
   const [showInfo,     setShowInfo]     = useState(false);
   const [reportOpen,   setReportOpen]   = useState(false);
   const [reportChoice, setReportChoice] = useState(null);
@@ -115,6 +116,32 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ── Concept pills ── */}
+        {concepts.length > 0 && onConceptClick && (
+          <div className="mb-5">
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2">
+              {language === 'fr' ? 'En savoir plus' : 'Learn more'}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {concepts.map((key) => {
+                const concept = CONCEPTS[key];
+                if (!concept) return null;
+                const label = concept.label?.[language] ?? concept.label?.fr ?? key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => onConceptClick(key)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-600 text-xs font-medium transition-all"
+                  >
+                    <span>{concept.icon}</span>
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── Likert scale ── */}
         <div>

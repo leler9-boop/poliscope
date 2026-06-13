@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { AnimatePresence } from 'motion/react';
+import React, { useState, useRef, useEffect } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
+import ConceptModal from '../components/ConceptModal.jsx';
 import { questionHints } from '../data/questionHints.js';
+import { QUESTION_CONCEPTS, THEME_INTROS } from '../data/conceptMap.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -26,10 +28,36 @@ export default function Questionnaire() {
     try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
   });
 
+  // ── Concept modal ──
+  const [activeConceptKey, setActiveConceptKey] = useState(null);
+
+  // ── Theme transition banner ──
+  const prevThemeRef = useRef(null);
+  const [themeIntro, setThemeIntro] = useState(null); // { theme, icon, text }
+
   const handleIntroStart = () => {
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
     setIntroSeen(true);
   };
+
+  // Detect theme change and show brief orientation banner
+  // Must be before early return to satisfy Rules of Hooks
+  const currentQuestion = (questionsQueue && questionsQueue.length > 0) ? questionsQueue[currentIndex] : null;
+  useEffect(() => {
+    if (!currentQuestion) return;
+    const currentTheme = currentQuestion.theme;
+    if (prevThemeRef.current !== null && prevThemeRef.current !== currentTheme) {
+      const intro = THEME_INTROS[currentTheme];
+      if (intro) {
+        setThemeIntro({ theme: currentTheme, icon: intro.icon, text: intro[language] ?? intro.fr });
+        const timer = setTimeout(() => setThemeIntro(null), 3000);
+        prevThemeRef.current = currentTheme;
+        return () => clearTimeout(timer);
+      }
+    }
+    prevThemeRef.current = currentTheme;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestion?.id]);
 
   if (!questionsQueue || questionsQueue.length === 0) {
     return (
@@ -79,6 +107,22 @@ export default function Questionnaire() {
       <AnimatePresence>
         {!introSeen && !improveMode && (
           <PreQuizModal language={language} onStart={handleIntroStart} />
+        )}
+      </AnimatePresence>
+
+      {/* ── Concept modal ── */}
+      <AnimatePresence>
+        {activeConceptKey && (
+          <ConceptModal
+            key={activeConceptKey}
+            conceptKey={activeConceptKey}
+            language={language}
+            onClose={() => setActiveConceptKey(null)}
+            onGoToArticle={() => {
+              setActiveConceptKey(null);
+              navigate('beginner');
+            }}
+          />
         )}
       </AnimatePresence>
 
@@ -136,6 +180,30 @@ export default function Questionnaire() {
           </div>
         </div>
 
+        {/* ── Theme transition banner ── */}
+        <AnimatePresence>
+          {themeIntro && (
+            <motion.div
+              className="mx-4 mt-4 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: -8, height: 0 }}
+              animate={{ opacity: 1, y: 0,  height: 'auto' }}
+              exit={{    opacity: 0, y: -4,  height: 0 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <div
+                className="flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100 bg-blue-50 cursor-pointer"
+                onClick={() => setThemeIntro(null)}
+              >
+                <span className="text-lg flex-shrink-0">{themeIntro.icon}</span>
+                <p className="text-sm text-blue-800 leading-snug flex-1">{themeIntro.text}</p>
+                <button className="text-blue-400 hover:text-blue-600 transition-colors text-xs font-medium flex-shrink-0">
+                  ✕
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ── Question card ── */}
         <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-28 px-4">
           {question && (
@@ -150,6 +218,8 @@ export default function Questionnaire() {
               currentAnswer={currentAnswer}
               onAnswer={handleAnswer}
               language={language}
+              concepts={QUESTION_CONCEPTS[question.id] ?? []}
+              onConceptClick={setActiveConceptKey}
             />
           )}
         </div>
