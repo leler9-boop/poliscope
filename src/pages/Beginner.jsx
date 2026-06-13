@@ -245,6 +245,164 @@ const TOPICS = [
   },
 ];
 
+// ─── Deep dives ───────────────────────────────────────────────────────────────
+
+const DEEP_DIVES = [
+  {
+    id: 'retraites',
+    icon: '🧓',
+    badge: { fr: 'Dossier', en: 'Feature' },
+    title: { fr: 'Les retraites', en: 'Pensions' },
+    subtitle: { fr: 'LE sujet économique de la présidentielle 2027', en: 'THE economic issue of the 2027 election' },
+    levels: [
+      {
+        label: { fr: 'Niveau 1', en: 'Level 1' },
+        title: { fr: '30 secondes — le principe', en: '30 seconds — the principle' },
+        type: 'text',
+        content: {
+          fr: `Les actifs (ceux qui travaillent) paient des cotisations qui financent directement les retraites des retraités. C'est le système par répartition : chaque génération paye pour la précédente.\n\nLe problème : il y a de plus en plus de retraités. Et proportionnellement de moins en moins d'actifs. En 1960, 4 actifs pour 1 retraité. Aujourd'hui, 1,7 actif pour 1 retraité. D'ici 2050, ce sera environ 1,4.\n\nRésultat : le système coûte chaque année un peu plus cher. Et ce débat revient à chaque élection.`,
+          en: `Workers pay contributions that fund retirees' pensions directly. This is the "pay-as-you-go" system: each generation funds the previous one.\n\nThe problem: there are more and more retirees. And proportionally fewer and fewer workers. In 1960, 4 workers per retiree. Today, 1.7. By 2050, about 1.4.\n\nResult: the system costs a little more each year. And this debate returns with every election.`,
+        },
+      },
+      {
+        label: { fr: 'Niveau 2', en: 'Level 2' },
+        title: { fr: '2 minutes — les mots clés', en: '2 minutes — key concepts' },
+        type: 'glossary',
+        terms: [
+          {
+            name: { fr: 'Répartition', en: 'Pay-as-you-go' },
+            def: {
+              fr: `Les cotisations payées aujourd'hui financent les retraites d'aujourd'hui — il n'y a pas d'épargne individuelle. C'est l'opposé de la capitalisation, où chacun épargne pour soi.`,
+              en: `Contributions paid today fund today's pensions — there is no individual savings set aside. The opposite is funded systems, where each person saves for themselves.`,
+            },
+          },
+          {
+            name: { fr: 'Cotisations retraite', en: 'Pension contributions' },
+            def: {
+              fr: `Les prélèvements sur les salaires qui financent le système. En France, environ 28 % du salaire brut est prélevé (part salarié + part employeur). L'une des cotisations les plus élevées d'Europe.`,
+              en: `The deductions from wages that fund the system. In France, about 28% of gross salary is deducted (employee + employer share). One of the highest rates in Europe.`,
+            },
+          },
+          {
+            name: { fr: 'Âge légal de départ', en: 'Legal retirement age' },
+            def: {
+              fr: `L'âge à partir duquel on peut légalement partir à la retraite. 60 ans avant 2010, 62 ans après la réforme Sarkozy, 64 ans depuis la réforme Macron de 2023.`,
+              en: `The age from which you can legally retire. 60 before 2010, 62 after the Sarkozy reform, 64 since Macron's 2023 reform.`,
+            },
+          },
+          {
+            name: { fr: 'Durée de cotisation', en: 'Contribution period' },
+            def: {
+              fr: `Le nombre de trimestres qu'il faut avoir travaillé pour toucher une retraite à taux plein. Depuis 2023 : 172 trimestres (43 ans). En dessous, la pension est réduite (décote).`,
+              en: `The number of quarters you need to have worked for a full pension. Since 2023: 172 quarters (43 years). Below this, the pension is reduced.`,
+            },
+          },
+          {
+            name: { fr: 'Pension', en: 'Pension amount' },
+            def: {
+              fr: `Le montant mensuel versé au retraité. Calculé à partir des revenus des meilleures années de carrière et de la durée de cotisation. Pension moyenne en France : environ 1 500 € brut/mois.`,
+              en: `The monthly amount paid to the retiree. Calculated from best career years' earnings and contribution period. Average French pension: around €1,500 gross/month.`,
+            },
+          },
+        ],
+      },
+      {
+        label: { fr: 'Niveau 3', en: 'Level 3' },
+        title: { fr: '5 minutes — pourquoi le débat revient sans cesse', en: '5 minutes — why the debate keeps coming back' },
+        type: 'text',
+        content: {
+          fr: `Le vieillissement démographique n'est pas une projection : c'est déjà en cours. En 2000, 12 millions de retraités en France. En 2024, plus de 17 millions. D'ici 2040, environ 20 millions. La hausse est mécanique et inévitable.\n\nLe déficit projeté du système est de l'ordre de 0,4 % à 0,8 % du PIB selon les scénarios économiques, soit entre 10 et 20 milliards d'euros par an dans les décennies à venir. Pas une catastrophe immédiate — mais une pression structurelle permanente.\n\nLa dette publique française dépasse déjà 3 000 milliards d'euros. Financer les retraites par l'emprunt revient à en faire payer le coût aux générations futures.\n\nPourquoi ça revient à chaque élection ? Parce que chaque gouvernement fait face à la même arithmétique : plus de retraités, moins d'actifs, un système sous tension. Et parce que les solutions sont toutes politiquement douloureuses — travailler plus longtemps, cotiser plus, recevoir moins, ou financer autrement.`,
+          en: `Demographic ageing is not a projection: it's already happening. In 2000, France had 12 million retirees. In 2024, over 17 million. By 2040, around 20 million. The rise is mechanical and inevitable.\n\nThe projected deficit is around 0.4% to 0.8% of GDP depending on economic scenarios — between €10–20 billion per year in coming decades. Not an immediate catastrophe, but a permanent structural pressure.\n\nFrance's public debt already exceeds €3,000 billion. Funding pensions by borrowing means passing the cost onto future generations.\n\nWhy does it return every election? Because every government faces the same arithmetic: more retirees, fewer workers, a system under structural pressure. And because every solution is politically painful — work longer, pay more, receive less, or find alternative funding.`,
+        },
+      },
+      {
+        label: { fr: 'Niveau 4', en: 'Level 4' },
+        title: { fr: 'Comparaison internationale', en: 'International comparison' },
+        type: 'comparison',
+        rows: [
+          {
+            country: { fr: '🇫🇷 France', en: '🇫🇷 France' },
+            age: '64 ans',
+            desc: {
+              fr: 'Système par répartition quasi-pur. Forte résistance syndicale aux réformes. Parmi les départs les plus précoces d\'Europe malgré la réforme 2023.',
+              en: 'Near-pure pay-as-you-go. Strong union resistance to reform. Among the earliest retirement ages in Europe despite the 2023 reform.',
+            },
+          },
+          {
+            country: { fr: '🇩🇪 Allemagne', en: '🇩🇪 Germany' },
+            age: '67 ans',
+            desc: {
+              fr: 'Répartition + cotisation plus élevée. L\'Allemagne a progressivement relevé l\'âge jusqu\'à 67 ans, sans les violences sociales observées en France.',
+              en: 'Pay-as-you-go + higher contributions. Germany gradually raised the age to 67, without the social conflict seen in France.',
+            },
+          },
+          {
+            country: { fr: '🇩🇰 Danemark', en: '🇩🇰 Denmark' },
+            age: '67 ans → 68',
+            desc: {
+              fr: 'Pension universelle de base + retraite professionnelle quasi-obligatoire. L\'âge est automatiquement indexé sur l\'espérance de vie.',
+              en: 'Universal basic pension + quasi-mandatory occupational pension. Retirement age is automatically indexed to life expectancy.',
+            },
+          },
+          {
+            country: { fr: '🇸🇪 Suède', en: '🇸🇪 Sweden' },
+            age: '62–68 ans',
+            desc: {
+              fr: 'Comptes notionnels : chaque cotisation est inscrite sur un compte individuel virtuel. La pension dépend directement de ce qu\'on a versé. Plus lisible, plus flexible.',
+              en: 'Notional accounts: each contribution is recorded in a virtual individual account. Pension directly depends on what you paid in. More transparent and flexible.',
+            },
+          },
+          {
+            country: { fr: '🇨🇦 Canada', en: '🇨🇦 Canada' },
+            age: '65 ans',
+            desc: {
+              fr: 'Mixte : RPC (répartition, pension de base) + REER (épargne individuelle fiscalement encouragée). Moins de résistance aux ajustements.',
+              en: 'Mixed: CPP (pay-as-you-go basic pension) + RRSP (individually encouraged tax-advantaged savings). Less resistance to adjustments.',
+            },
+          },
+        ],
+      },
+      {
+        label: { fr: 'Niveau 5', en: 'Level 5' },
+        title: { fr: 'Gauche vs droite — pourquoi ils ne s\'accordent pas', en: 'Left vs right — why they can\'t agree' },
+        type: 'visions',
+        visions: [
+          {
+            label: { fr: 'Vision A — gauche, syndicats', en: 'Vision A — left, unions' },
+            bg: '#eff6ff',
+            border: '#bfdbfe',
+            color: '#1d4ed8',
+            content: {
+              fr: `On peut financer autrement, sans travailler plus longtemps. Augmenter les cotisations sur les hauts salaires et le capital. Lutter contre le chômage (plus d'actifs = plus de cotisations). Supprimer les exonérations de charges accordées aux entreprises. L'âge de 64 ans pénalise les travailleurs des métiers physiques qui n'arrivent souvent pas en bonne santé à cet âge.`,
+              en: `Alternative funding is possible — without working longer. Raise contributions on high salaries and capital income. Fight unemployment (more workers = more contributions). Remove corporate payroll tax exemptions. Age 64 penalises workers in physical jobs who often don't reach this age in good health.`,
+            },
+          },
+          {
+            label: { fr: 'Vision B — droite, macronistes', en: 'Vision B — right, centrists' },
+            bg: '#faf5ff',
+            border: '#e9d5ff',
+            color: '#7c3aed',
+            content: {
+              fr: `La démographie ne ment pas : il faut travailler plus longtemps. La France part à la retraite plus tôt que ses voisins. Le financement alternatif ne suffirait pas à combler le déficit. Sans réforme, c'est la dette qui finance les retraites — au détriment des générations futures. Reculer l'âge légal est la solution la plus équitable sur le long terme.`,
+              en: `Demography doesn't lie: we need to work longer. France retires earlier than its neighbours. Alternative funding alone wouldn't close the deficit. Without reform, it's debt that funds pensions — at future generations' expense. Raising the legal age is the most equitable long-term solution.`,
+            },
+          },
+          {
+            label: { fr: 'Vision C — libéraux, droite modérée', en: 'Vision C — liberals, moderate right' },
+            bg: '#f0fdf4',
+            border: '#bbf7d0',
+            color: '#15803d',
+            content: {
+              fr: `Développer l'épargne retraite individuelle et complémentaire. Le système par répartition ne peut pas tout porter seul. Le PER (Plan d'Épargne Retraite) existe déjà — il faut l'encourager davantage. Un système mixte (comme au Canada ou en Suède) est plus robuste face aux chocs démographiques. Moins de dépendance à l'État, plus de liberté individuelle.`,
+              en: `Develop individual and supplementary pension savings. The pay-as-you-go system can't carry everything alone. The PER (Retirement Savings Plan) already exists — it should be expanded. A mixed system (like Canada or Sweden) is more robust against demographic shocks. Less state dependency, more individual freedom.`,
+            },
+          },
+        ],
+      },
+    ],
+  },
+];
+
 // ─── Crises ───────────────────────────────────────────────────────────────────
 
 const CRISES = [
@@ -915,6 +1073,166 @@ function TopicCard({ topic, language, onCTA, delay }) {
   );
 }
 
+// ─── Deep-dive card ───────────────────────────────────────────────────────────
+
+function DeepDiveCard({ dive, language, onCTA, delay }) {
+  const [open, setOpen] = useState(false);
+  const [unlockedLevel, setUnlockedLevel] = useState(1);
+
+  const lang = language === 'fr' ? 'fr' : 'en';
+  const t = (obj) => obj?.[lang] ?? obj?.fr ?? '';
+
+  return (
+    <motion.div
+      className="bg-white border-2 border-amber-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
+      {...fadeUp(delay)}
+    >
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-amber-50/40 transition-colors"
+      >
+        <span className="text-2xl flex-shrink-0 w-9 text-center">{dive.icon}</span>
+        <div className="flex-1 min-w-0">
+          <span className="text-[10px] font-bold tracking-widest uppercase text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+            {t(dive.badge)} · 5 {lang === 'fr' ? 'niveaux' : 'levels'}
+          </span>
+          <p className="font-bold text-gray-900 text-base leading-snug mt-1.5">{t(dive.title)}</p>
+          <p className="text-xs text-amber-700 font-medium mt-0.5">{t(dive.subtitle)}</p>
+        </div>
+        <span className="text-gray-300 text-xl leading-none flex-shrink-0 w-5 text-center">
+          {open ? '−' : '+'}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6 pt-2 border-t border-amber-50 space-y-5">
+
+              {/* Level progress pills */}
+              <div className="flex gap-1.5 flex-wrap pt-1">
+                {dive.levels.map((level, i) => (
+                  <span
+                    key={i}
+                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+                      i < unlockedLevel
+                        ? 'bg-amber-500 text-white border-amber-500'
+                        : 'bg-gray-50 text-gray-300 border-gray-100'
+                    }`}
+                  >
+                    {t(level.label)}
+                  </span>
+                ))}
+              </div>
+
+              {/* Unlocked level content */}
+              {dive.levels.slice(0, unlockedLevel).map((level, i) => (
+                <motion.div
+                  key={i}
+                  initial={i === unlockedLevel - 1 ? { opacity: 0, y: 8 } : false}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                >
+                  {i > 0 && <div className="h-px bg-amber-50 mb-5" />}
+
+                  <p className="text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-3">
+                    {t(level.title)}
+                  </p>
+
+                  {level.type === 'text' && (
+                    <div className="space-y-2.5">
+                      {t(level.content).split('\n\n').map((para, j) => (
+                        <p key={j} className="text-sm text-gray-700 leading-relaxed">{para}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {level.type === 'glossary' && (
+                    <div className="space-y-2">
+                      {level.terms.map((term, j) => (
+                        <div key={j} className="bg-gray-50 rounded-xl px-4 py-3">
+                          <p className="text-xs font-bold text-gray-900 mb-1">{t(term.name)}</p>
+                          <p className="text-sm text-gray-600 leading-relaxed">{t(term.def)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {level.type === 'comparison' && (
+                    <div className="divide-y divide-gray-50">
+                      {level.rows.map((row, j) => (
+                        <div key={j} className="grid grid-cols-[110px_1fr] gap-3 items-start py-3 first:pt-0 last:pb-0">
+                          <div>
+                            <p className="text-sm font-bold text-gray-900">{t(row.country)}</p>
+                            <p className="text-[11px] text-amber-600 font-semibold mt-0.5">{row.age}</p>
+                          </div>
+                          <p className="text-xs text-gray-600 leading-relaxed">{t(row.desc)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {level.type === 'visions' && (
+                    <div className="space-y-2.5">
+                      {level.visions.map((vision, j) => (
+                        <div
+                          key={j}
+                          className="rounded-xl px-4 py-3.5 border"
+                          style={{ backgroundColor: vision.bg, borderColor: vision.border }}
+                        >
+                          <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: vision.color }}>
+                            {t(vision.label)}
+                          </p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{t(vision.content)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+
+              {/* Unlock next level / final CTA */}
+              {unlockedLevel < dive.levels.length ? (
+                <button
+                  onClick={() => setUnlockedLevel(l => l + 1)}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-amber-50 border border-amber-200 hover:bg-amber-100 hover:border-amber-300 transition-all"
+                >
+                  <span className="text-sm font-semibold text-amber-800">
+                    {lang === 'fr' ? 'Niveau suivant →' : 'Next level →'}
+                  </span>
+                  <span className="text-xs text-amber-600 font-medium truncate ml-3">
+                    {t(dive.levels[unlockedLevel].title)}
+                  </span>
+                </button>
+              ) : (
+                <button
+                  onClick={onCTA}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all group"
+                >
+                  <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900 transition-colors">
+                    {lang === 'fr' ? 'Voir où je me situe →' : 'See where I stand →'}
+                  </span>
+                  <span className="text-xs text-gray-400 group-hover:text-gray-600 transition-colors">
+                    {lang === 'fr' ? 'Faire le test' : 'Take the quiz'}
+                  </span>
+                </button>
+              )}
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 // ─── Crisis card ──────────────────────────────────────────────────────────────
 
 function CrisisCard({ crisis, language, delay }) {
@@ -1131,6 +1449,34 @@ export default function Beginner() {
             topic={topic}
             language={language}
             delay={0.04 + idx * 0.03}
+            onCTA={() => navigate('selectTest')}
+          />
+        ))}
+      </div>
+
+      {/* Deep-dive section */}
+      <motion.div className="mb-6" {...fadeUp(0.18)}>
+        <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+          <span>📚</span>
+          {language === 'fr' ? 'Dossiers approfondis' : 'Deep dives'}
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-2">
+          {language === 'fr' ? 'J\'y connais rien — édition spéciale' : 'Know nothing — special edition'}
+        </h2>
+        <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
+          {language === 'fr'
+            ? `Les sujets les plus complexes, décomposés niveau par niveau. Commence à 30 secondes. Va aussi loin que tu veux.`
+            : `The most complex topics, broken down level by level. Start with 30 seconds. Go as deep as you want.`}
+        </p>
+      </motion.div>
+
+      <div className="space-y-3 mb-14">
+        {DEEP_DIVES.map((dive, idx) => (
+          <DeepDiveCard
+            key={dive.id}
+            dive={dive}
+            language={language}
+            delay={0.2 + idx * 0.04}
             onCTA={() => navigate('selectTest')}
           />
         ))}
