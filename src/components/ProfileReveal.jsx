@@ -56,38 +56,38 @@ export default function ProfileReveal({
               style={{ color: hexAlpha(color, 0.8) }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
+              transition={{ duration: 0.5, delay: 0.45 }}
             >
               {lang === 'fr' ? 'Votre archétype politique' : 'Your political archetype'}
             </motion.p>
 
-            {/* Accent line — draws in, builds anticipation */}
+            {/* Accent line — draws in at 0.88s, builds anticipation before name */}
             <motion.div
               className="mx-auto rounded-full mb-7"
               style={{ height: 3, background: `linear-gradient(90deg, ${color}, ${hexAlpha(color, 0.2)})` }}
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 56, opacity: 1 }}
-              transition={{ duration: 0.55, delay: 0.55, ease: [0.34, 1.08, 0.64, 1] }}
+              transition={{ duration: 0.55, delay: 0.88, ease: [0.34, 1.08, 0.64, 1] }}
             />
 
-            {/* Archetype name — the reveal, springs in */}
+            {/* Archetype name — the reveal, at 1.25s — name lives alone until 2.28s */}
             <motion.h1
               className="text-4xl sm:text-5xl font-black text-white text-center leading-tight mb-7"
               style={{ textShadow: `0 0 64px ${hexAlpha(color, 0.65)}` }}
               initial={{ opacity: 0, scale: 0.80, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.88, ease: [0.34, 1.12, 0.64, 1] }}
+              transition={{ duration: 0.65, delay: 1.25, ease: [0.34, 1.12, 0.64, 1] }}
             >
               {topArchetype?.name?.[lang] ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile forming…')}
             </motion.h1>
 
-            {/* Description */}
+            {/* Description — 1.03s after name so it gets to breathe alone */}
             {topArchetype?.description?.[lang] && (
               <motion.p
                 className="text-slate-300 text-sm sm:text-base text-center leading-relaxed mb-6 px-2"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 1.42 }}
+                transition={{ duration: 0.4, delay: 2.28 }}
               >
                 {topArchetype.description[lang].length > 160
                   ? topArchetype.description[lang].slice(0, 157).trimEnd() + '…'
@@ -95,7 +95,7 @@ export default function ProfileReveal({
               </motion.p>
             )}
 
-            {/* Trait pills — staggered entry */}
+            {/* Trait pills — staggered */}
             {traits.length > 0 && (
               <div className="flex flex-wrap justify-center gap-2 mb-8">
                 {traits.slice(0, 3).map((trait, i) => (
@@ -109,7 +109,7 @@ export default function ProfileReveal({
                     }}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 1.62 + i * 0.1 }}
+                    transition={{ duration: 0.3, delay: 2.5 + i * 0.12 }}
                   >
                     {trait}
                   </motion.span>
@@ -117,14 +117,14 @@ export default function ProfileReveal({
               </div>
             )}
 
-            {/* CTA — last to appear */}
+            {/* CTA — appears at 3.05s, after user has absorbed their archetype */}
             <motion.button
               onClick={() => setStep(2)}
               className="w-full py-4 rounded-2xl font-bold text-white text-base transition-all active:scale-95"
               style={{ background: `linear-gradient(135deg, ${color} 0%, ${hexAlpha(color, 0.75)} 100%)` }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 2.0 }}
+              transition={{ duration: 0.4, delay: 3.05 }}
               whileTap={{ scale: 0.97 }}
             >
               {lang === 'fr' ? 'Voir mon meilleur match 2027 →' : 'See my best 2027 match →'}
@@ -135,7 +135,7 @@ export default function ProfileReveal({
               className="w-full mt-3 py-3 text-xs font-medium text-slate-600 hover:text-slate-400 transition-colors"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 2.2 }}
+              transition={{ duration: 0.3, delay: 3.3 }}
             >
               {lang === 'fr' ? 'Passer →' : 'Skip →'}
             </motion.button>
