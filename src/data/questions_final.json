@@ -19,7 +19,7 @@
   },
   {
     "id": "ECO_3",
-    "text": "Les impôts sur les entreprises doivent baisser pour attirer les investissements.",
+    "text": "Les impôts sur les bénéfices des entreprises doivent baisser.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -28,7 +28,7 @@
   },
   {
     "id": "ECO_4",
-    "text": "Un impôt sur la fortune doit être introduit ou étendu.",
+    "text": "L'impôt sur la fortune doit être élargi aux placements financiers, et pas seulement à l'immobilier.",
     "axis": "economic",
     "weight": 4,
     "status": "PRIMARY",
@@ -37,7 +37,7 @@
   },
   {
     "id": "ECO_5",
-    "text": "L'État doit réduire ses dépenses pour diminuer les déficits.",
+    "text": "L'État doit réduire ses dépenses publiques.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -64,7 +64,7 @@
   },
   {
     "id": "ECO_8",
-    "text": "L'État doit nationaliser l'énergie, les chemins de fer et les secteurs clés.",
+    "text": "L'État doit nationaliser les secteurs stratégiques comme l'énergie et les transports.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -82,7 +82,7 @@
   },
   {
     "id": "ECO_10",
-    "text": "Un revenu de base doit remplacer les allocations actuelles.",
+    "text": "Un revenu universel de base doit être versé à tous les citoyens, sans conditions.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -109,7 +109,7 @@
   },
   {
     "id": "ECO_13",
-    "text": "Uber, Deliveroo et l'économie des plateformes doivent être peu réglementées.",
+    "text": "L'économie des plateformes (Uber, Deliveroo...) ne doit pas être soumise à des réglementations supplémentaires.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -146,7 +146,7 @@
   },
   {
     "id": "ECO_17",
-    "text": "Le commerce international aide les salariés et consommateurs français.",
+    "text": "Dans l'ensemble, le commerce international est bénéfique pour la France.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -202,7 +202,7 @@
   },
   {
     "id": "ECO_23",
-    "text": "La croissance économique doit primer sur l'égalité.",
+    "text": "La priorité économique doit être la croissance, même si elle creuse les inégalités.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -231,7 +231,7 @@
   },
   {
     "id": "SOC_3",
-    "text": "Le cannabis doit être entièrement légalisé comme au Luxembourg.",
+    "text": "Le cannabis doit être légalisé et encadré par l'État.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -258,7 +258,7 @@
   },
   {
     "id": "SOC_6",
-    "text": "Les trans doivent pouvoir changer de genre sans suivi médical obligatoire.",
+    "text": "Les personnes transgenres doivent pouvoir modifier leur identité de genre à l'état civil sans passer par un suivi médical obligatoire.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -333,7 +333,7 @@
   },
   {
     "id": "SOC_14",
-    "text": "La pornographie doit être strictement régulée et soumise à une vérification de l'âge.",
+    "text": "L'accès aux sites pornographiques doit être soumis à une vérification obligatoire de l'âge.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -351,7 +351,7 @@
   },
   {
     "id": "SOC_16",
-    "text": "Le voile, les croix et les symboles religieux doivent être autorisés partout.",
+    "text": "Le port de signes religieux doit être autorisé dans tous les espaces publics, y compris les écoles et les administrations.",
     "axis": "cultural",
     "weight": 5,
     "status": "CORE",
@@ -380,7 +380,7 @@
   },
   {
     "id": "SOC_19",
-    "text": "Le genre est déterminé biologiquement et ne peut pas être changé.",
+    "text": "Le genre d'une personne est uniquement déterminé par sa biologie et ne peut pas être modifié.",
     "axis": "cultural",
     "weight": 5,
     "status": "CORE",
@@ -398,7 +398,7 @@
   },
   {
     "id": "SOC_21",
-    "text": "La possession de drogue pour usage personnel doit être dépénalisée (approche santé publique, pas pénale).",
+    "text": "La possession de drogues pour usage personnel ne doit pas constituer un délit.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -416,7 +416,7 @@
   },
   {
     "id": "SOC_23",
-    "text": "L'école doit enseigner une éducation sexuelle scientifique et complète.",
+    "text": "L'école doit enseigner une éducation à la sexualité complète, incluant le consentement, la contraception et les relations saines.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -434,7 +434,7 @@
   },
   {
     "id": "IMM_2",
-    "text": "Les réfugiés et demandeurs d'asile doivent avoir tous les droits sociaux dès leur arrivée.",
+    "text": "Les demandeurs d'asile doivent avoir le droit de travailler et d'accéder aux services sociaux dès le dépôt de leur dossier.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -443,7 +443,7 @@
   },
   {
     "id": "IMM_3",
-    "text": "Les migrants sans papiers depuis longtemps doivent obtenir la citoyenneté.",
+    "text": "Les étrangers en situation irrégulière installés depuis de nombreuses années en France doivent pouvoir être régularisés.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -461,7 +461,7 @@
   },
   {
     "id": "IMM_5",
-    "text": "Les frontières Schengen doivent avoir des contrôles stricts.",
+    "text": "La France doit rétablir des contrôles systématiques à ses frontières pour réguler les entrées.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -470,7 +470,7 @@
   },
   {
     "id": "IMM_6",
-    "text": "Les immigrés doivent prouver leur intégration culturelle pour rester.",
+    "text": "L'obtention ou le renouvellement d'un titre de séjour doit être conditionné à une évaluation de l'intégration.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -479,7 +479,7 @@
   },
   {
     "id": "IMM_7",
-    "text": "L'État doit promouvoir activement le multiculturalisme.",
+    "text": "L'État doit valoriser et préserver les cultures d'origine des immigrés installés en France.",
     "axis": "global",
     "weight": 5,
     "status": "CORE",
@@ -488,7 +488,7 @@
   },
   {
     "id": "IMM_8",
-    "text": "Les migrants qui travaillent et paient les impôts doivent avoir les mêmes droits.",
+    "text": "Les étrangers en situation régulière qui travaillent et cotisent en France doivent avoir les mêmes droits sociaux que les citoyens.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -830,7 +830,7 @@
   },
   {
     "id": "ENV_1",
-    "text": "Le changement climatique est d'origine humaine et demande une action urgente.",
+    "text": "Lutter contre le changement climatique doit être une priorité absolue pour le gouvernement.",
     "axis": "economic",
     "weight": 5,
     "status": "SECONDARY",
@@ -839,7 +839,7 @@
   },
   {
     "id": "ENV_2",
-    "text": "Le nucléaire doit être développé pour réduire les émissions.",
+    "text": "La France doit construire de nouveaux réacteurs nucléaires.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -848,7 +848,7 @@
   },
   {
     "id": "ENV_3",
-    "text": "Une taxe carbone importante doit être mise en place.",
+    "text": "Une taxe sur les émissions de CO₂ doit être mise en place pour décourager l'usage des carburants fossiles.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -857,7 +857,7 @@
   },
   {
     "id": "ENV_4",
-    "text": "Les règlements environnementaux stricts sont plus importants que les emplois.",
+    "text": "Des réglementations environnementales strictes doivent être maintenues, même si elles entraînent des pertes d'emplois dans certains secteurs.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -894,7 +894,7 @@
   },
   {
     "id": "ENV_8",
-    "text": "La croissance économique et l'environnement sont incompatibles.",
+    "text": "Pour vraiment protéger l'environnement, il faut accepter de réduire la croissance économique.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -921,7 +921,7 @@
   },
   {
     "id": "ENV_11",
-    "text": "Les militants écologistes en désobéissance civile ne doivent pas être poursuivis.",
+    "text": "Des militants qui bloquent des routes ou s'enchaînent à des machines pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -1026,7 +1026,7 @@
   },
   {
     "id": "ENV_22",
-    "text": "Les voitures privées doivent être découragées pour privilégier les transports publics.",
+    "text": "L'usage des voitures personnelles en ville doit être limité pour favoriser les transports en commun.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -1035,7 +1035,7 @@
   },
   {
     "id": "ENV_23",
-    "text": "La décroissance économique est nécessaire pour la durabilité.",
+    "text": "Une réduction volontaire de la production et de la consommation est nécessaire pour respecter les limites de la planète.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -1062,7 +1062,7 @@
   },
   {
     "id": "DEM_3",
-    "text": "Les citoyens doivent pouvoir voter par référendum sur les grandes décisions.",
+    "text": "Les citoyens doivent pouvoir déclencher un référendum sur n'importe quelle loi par voie de pétition.",
     "axis": "authority",
     "weight": 3,
     "status": "SECONDARY",
@@ -1098,7 +1098,7 @@
   },
   {
     "id": "DEM_7",
-    "text": "Les politiciens qui mentent doivent être punis ou révoqués.",
+    "text": "Un élu qui ment délibérément à ses concitoyens sur un sujet important doit pouvoir être révoqué.",
     "axis": "authority",
     "weight": 3,
     "status": "SECONDARY",
@@ -1107,7 +1107,7 @@
   },
   {
     "id": "DEM_8",
-    "text": "Les dons politiques des entreprises et des riches doivent être interdits.",
+    "text": "Les dons privés importants aux partis politiques doivent être interdits.",
     "axis": "authority",
     "weight": 5,
     "status": "CORE",
@@ -1116,7 +1116,7 @@
   },
   {
     "id": "DEM_9",
-    "text": "Les chambres hautes non élues doivent être abolies ou élues.",
+    "text": "Le Sénat doit être profondément réformé pour être plus représentatif des citoyens.",
     "axis": "authority",
     "weight": 3,
     "status": "SECONDARY",
@@ -1273,7 +1273,7 @@
   },
   {
     "id": "GLO_3",
-    "text": "L'OTAN et les alliances militaires sont essentielles.",
+    "text": "L'OTAN est une alliance militaire essentielle pour la sécurité de la France.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1282,7 +1282,7 @@
   },
   {
     "id": "GLO_4",
-    "text": "La France doit augmenter son aide étrangère.",
+    "text": "La France doit augmenter son aide publique au développement versée aux pays en développement.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1300,7 +1300,7 @@
   },
   {
     "id": "GLO_6",
-    "text": "Le protectionnisme est légitime pour protéger l'industrie française.",
+    "text": "La France doit utiliser des barrières douanières pour protéger ses industries, même au risque de tensions commerciales.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1309,7 +1309,7 @@
   },
   {
     "id": "GLO_7",
-    "text": "Les sanctions économiques contre les régimes autoritaires sont efficaces.",
+    "text": "La France et ses alliés doivent imposer des sanctions économiques aux régimes autoritaires.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1318,7 +1318,7 @@
   },
   {
     "id": "GLO_8",
-    "text": "L'UE doit approfondir l'intégration politique et fiscale.",
+    "text": "L'Union européenne doit renforcer son intégration politique, même si cela réduit les pouvoirs des États membres.",
     "axis": "global",
     "weight": 5,
     "status": "CORE",
@@ -1327,7 +1327,7 @@
   },
   {
     "id": "GLO_9",
-    "text": "L'américanisation culturelle est une menace.",
+    "text": "La domination culturelle américaine (films, séries, réseaux sociaux) menace la culture française.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1381,7 +1381,7 @@
   },
   {
     "id": "GLO_15",
-    "text": "Les nations riches doivent intervenir militairement pour les génocides.",
+    "text": "La communauté internationale doit intervenir militairement pour stopper un génocide, même sans mandat de l'ONU.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1390,7 +1390,7 @@
   },
   {
     "id": "GLO_16",
-    "text": "La France doit être autosuffisante en alimentation, énergie, santé.",
+    "text": "La France doit réduire ses dépendances stratégiques en produisant davantage localement, notamment en alimentation et en énergie.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1399,7 +1399,7 @@
   },
   {
     "id": "GLO_17",
-    "text": "La France doit réduire les alliances militaires et être neutre.",
+    "text": "La France doit adopter une politique étrangère plus neutre et réduire ses engagements militaires à l'étranger.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1447,7 +1447,7 @@
   },
   {
     "id": "GLO_22",
-    "text": "Les cultures et traditions nationales doivent être protégées.",
+    "text": "L'État doit financer activement la préservation de la culture et des traditions françaises.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1456,7 +1456,7 @@
   },
   {
     "id": "PUB_1",
-    "text": "L'État doit fournir une santé universelle et gratuite.",
+    "text": "L'État doit garantir un accès aux soins gratuit et de qualité égale pour tous.",
     "axis": "economic",
     "weight": 5,
     "status": "SECONDARY",
@@ -1492,7 +1492,7 @@
   },
   {
     "id": "PUB_5",
-    "text": "L'université doit être gratuite ou largement subventionnée.",
+    "text": "Les frais d'inscription à l'université doivent être supprimés ou très fortement réduits.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1519,7 +1519,7 @@
   },
   {
     "id": "PUB_8",
-    "text": "Les bibliothèques et institutions culturelles doivent avoir un financement garanti.",
+    "text": "L'État doit maintenir et augmenter ses subventions aux bibliothèques, musées et théâtres publics.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1528,7 +1528,7 @@
   },
   {
     "id": "PUB_9",
-    "text": "La garde d'enfants doit être universellement gratuite et publique.",
+    "text": "La garde d'enfants doit être gratuite et accessible à toutes les familles.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1555,7 +1555,7 @@
   },
   {
     "id": "PUB_12",
-    "text": "Les transports en commun doivent être gratuits ou fortement subventionnés.",
+    "text": "Les transports en commun doivent être gratuits ou quasi-gratuits pour les usagers.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1564,7 +1564,7 @@
   },
   {
     "id": "PUB_13",
-    "text": "L'État-providence est trop grand et doit être réformé.",
+    "text": "Le système de protection sociale français est trop coûteux et doit être réduit.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1601,7 +1601,7 @@
   },
   {
     "id": "PUB_17",
-    "text": "Les entreprises privées ne doivent pas profiter de services publics essentiels.",
+    "text": "Les services publics essentiels comme l'eau, l'électricité et la santé ne doivent pas être gérés par des entreprises privées à but lucratif.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1620,7 +1620,7 @@
   },
   {
     "id": "PUB_19",
-    "text": "Les pensions de retraite ne doivent pas être réduites.",
+    "text": "Garantir le niveau des pensions de retraite doit être une priorité, même si cela implique d'augmenter les cotisations.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1668,7 +1668,7 @@
   },
   {
     "id": "ECO_24",
-    "text": "Un impôt mondial minimum sur les multinationales est nécessaire pour financer les États.",
+    "text": "Un impôt mondial minimum sur les bénéfices des multinationales doit être instauré.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -1686,7 +1686,7 @@
   },
   {
     "id": "SOC_24",
-    "text": "L'avortement doit rester un droit fondamental garanti par la loi, sans restrictions supplémentaires.",
+    "text": "Le droit à l'avortement doit être garanti et accessible à toutes les femmes sur tout le territoire.",
     "axis": "cultural",
     "weight": 5,
     "status": "CORE",
@@ -1695,7 +1695,7 @@
   },
   {
     "id": "SOC_25",
-    "text": "La PMA doit être accessible à toutes les familles, y compris les couples homosexuels.",
+    "text": "La procréation médicalement assistée (PMA) doit être accessible aux couples de femmes et aux femmes seules.",
     "axis": "cultural",
     "weight": 3,
     "status": "SECONDARY",
@@ -1704,7 +1704,7 @@
   },
   {
     "id": "IMM_23",
-    "text": "Les enfants nés en France de parents étrangers doivent automatiquement être citoyens français.",
+    "text": "Tout enfant né en France doit pouvoir obtenir la nationalité française, quelle que soit l'origine de ses parents.",
     "axis": "global",
     "weight": 5,
     "status": "CORE",
@@ -1740,7 +1740,7 @@
   },
   {
     "id": "GLO_23",
-    "text": "La France doit quitter le commandement intégré de l'OTAN pour préserver sa souveraineté.",
+    "text": "La France doit quitter le commandement militaire intégré de l'OTAN.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -1749,7 +1749,7 @@
   },
   {
     "id": "GLO_24",
-    "text": "L'Union européenne doit avoir plus de pouvoirs et de ressources propres face aux États membres.",
+    "text": "L'Union européenne doit avoir davantage de compétences et de budget pour agir au-delà des capacités individuelles des États membres.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
@@ -1758,7 +1758,7 @@
   },
   {
     "id": "ECO_26",
-    "text": "La réforme des retraites qui a repoussé l'âge légal à 64 ans doit être annulée.",
+    "text": "L'âge légal de départ à la retraite à 64 ans est trop élevé et doit être abaissé.",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -1794,7 +1794,7 @@
   },
   {
     "id": "PUB_25",
-    "text": "Les hôpitaux publics manquent de moyens : l'État doit investir massivement dans les urgences et les lits.",
+    "text": "L'État doit investir massivement dans les hôpitaux publics, notamment aux urgences et dans les lits d'hospitalisation.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1812,7 +1812,7 @@
   },
   {
     "id": "DEM_25",
-    "text": "La concentration des médias dans les mains de quelques milliardaires est un danger pour la démocratie française.",
+    "text": "La détention de nombreux médias par quelques grandes fortunes nuit à la pluralité de l'information en France.",
     "axis": "authority",
     "weight": 3,
     "status": "SECONDARY",
@@ -1830,7 +1830,7 @@
   },
   {
     "id": "ECO_27",
-    "text": "La France doit protéger ses industries avec des droits de douane et limiter les importations qui détruisent des emplois.",
+    "text": "La France doit imposer des droits de douane sur les importations pour protéger ses industries.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
