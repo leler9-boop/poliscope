@@ -1,12 +1,19 @@
 /**
- * ProfileShareModal — Share Card V3
+ * ProfileShareModal — Share Card V4
  *
  * Design principles:
  *  - Treat the card as a SOCIAL OBJECT, not a UI component
  *  - Spotify Wrapped × Apple Design: premium, modern, youth-first
- *  - 3-second rule: WHO AM I → HOW RARE → WHO AM I CLOSE TO → MY DNA
- *  - Viral hooks: rarity badge, huge match %, political DNA fingerprint
+ *  - 3-second rule: WHO AM I → HOW RELIABLE → HOW RARE → WHO AM I CLOSE TO → MY DNA
+ *  - Viral hooks: rarity badge, huge match %, political signature, confidence signal
  *  - Dual-color system: archetype color (identity) + candidate color (match)
+ *
+ * V4 changes vs V3:
+ *  1. Confidence/reliability module — signal-strength bars + label + answer count
+ *  2. DNA labels — readable abbreviations instead of cryptic É S I Sé Ec D M P
+ *  3. DNA section header — "TA SIGNATURE POLITIQUE" with flanking decorative lines
+ *  4. Match % untouched — still 64px, 900w, candidateColor glow
+ *  5. Rarity block — "PROFIL RARE" pill + "Seulement X% des Français" detail line
  */
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -39,20 +46,43 @@ function lightenHex(hex, ratio) {
   return `#${R.toString(16).padStart(2, '0')}${G.toString(16).padStart(2, '0')}${B.toString(16).padStart(2, '0')}`;
 }
 
-// ── Viral data helpers ──────────────────────────────────────────────────────
+// ── Theme label helpers ─────────────────────────────────────────────────────
+// V4: readable 3–4 char abbreviations replace single cryptic initials (É S I Sé Ec D M P)
 
-/**
- * Return ultra-short single-char labels for the DNA bars.
- * Using initials only — at 7px they're decorative anyway.
- */
-const THEME_INITIAL = {
-  ECONOMY: 'É', SOCIAL: 'S', IMMIGRATION: 'I', SECURITY: 'Sé',
-  ENVIRONMENT: 'Ec', DEMOCRACY: 'D', GLOBAL: 'M', PUBLIC_SERVICES: 'P',
+const THEME_ABBR_FR = {
+  ECONOMY:        'Éco',
+  SOCIAL:         'Soc',
+  IMMIGRATION:    'Imm',
+  SECURITY:       'Séc',
+  ENVIRONMENT:    'Écol',
+  DEMOCRACY:      'Dém',
+  GLOBAL:         'Dipl',
+  PUBLIC_SERVICES:'Prot',
 };
-const THEME_INITIAL_EN = {
-  ECONOMY: 'Ec', SOCIAL: 'So', IMMIGRATION: 'Im', SECURITY: 'Se',
-  ENVIRONMENT: 'En', DEMOCRACY: 'De', GLOBAL: 'Gl', PUBLIC_SERVICES: 'Ps',
+const THEME_ABBR_EN = {
+  ECONOMY:        'Eco',
+  SOCIAL:         'Soc',
+  IMMIGRATION:    'Imm',
+  SECURITY:       'Sec',
+  ENVIRONMENT:    'Ecol',
+  DEMOCRACY:      'Dem',
+  GLOBAL:         'Dipl',
+  PUBLIC_SERVICES:'Prot',
 };
+
+// ── Confidence helpers ──────────────────────────────────────────────────────
+// V4 NEW: wire up the answeredCount prop that V3 received but never displayed
+
+function getConfidenceLevel(answeredCount, lang) {
+  const n = answeredCount ?? 0;
+  if (n >= 90) return { label: lang === 'fr' ? 'Profil consolidé'  : 'Consolidated profile', bars: 5 };
+  if (n >= 60) return { label: lang === 'fr' ? 'Fiabilité élevée'  : 'High reliability',     bars: 4 };
+  if (n >= 35) return { label: lang === 'fr' ? 'Fiabilité modérée' : 'Moderate reliability', bars: 3 };
+  if (n >= 15) return { label: lang === 'fr' ? 'Profil partiel'    : 'Partial profile',      bars: 2 };
+  return               { label: lang === 'fr' ? 'Profil en cours'  : 'Profile in progress',  bars: 1 };
+}
+
+// ── Viral data helpers ──────────────────────────────────────────────────────
 
 /**
  * Find the theme where the user has the strongest position (furthest from 50).
@@ -117,16 +147,19 @@ export default function ProfileShareModal({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const lang          = language === 'fr' ? 'fr' : 'en';
-  const accentColor   = topArchetype?.color ?? '#2563eb';
-  const topCandidate  = rankedCandidates?.[0] ?? null;
+  const lang           = language === 'fr' ? 'fr' : 'en';
+  const accentColor    = topArchetype?.color ?? '#2563eb';
+  const topCandidate   = rankedCandidates?.[0] ?? null;
   const candidateColor = topCandidate?.color ?? accentColor;
 
   // Rarity
-  const rarityLine = topArchetype?.id ? getRarityLine(topArchetype.id, lang) : '';
-  const rarityPct  = topArchetype?.id ? (ARCHETYPE_RARITY[topArchetype.id] ?? null) : null;
+  const rarityLine  = topArchetype?.id ? getRarityLine(topArchetype.id, lang) : '';
+  const rarityPct   = topArchetype?.id ? (ARCHETYPE_RARITY[topArchetype.id] ?? null) : null;
   const isUltraRare = rarityPct != null && rarityPct <= 2;
   const isRare      = rarityPct != null && rarityPct <= 5;
+
+  // Confidence (V4 NEW — answers answeredCount prop that was previously unused)
+  const confidenceLevel = getConfidenceLevel(answeredCount, lang);
 
   // Signature position
   const signature = getSignaturePosition(themes, lang);
@@ -137,6 +170,9 @@ export default function ProfileShareModal({
   const traits = topArchetype?.traits?.[lang] ?? topArchetype?.traits?.fr ?? [];
 
   const resolvedShareUrl = shareUrl ?? 'https://poliscop.org';
+
+  // V4: readable abbreviations for DNA labels
+  const themeAbbr = lang === 'fr' ? THEME_ABBR_FR : THEME_ABBR_EN;
 
   // ── Handlers ─────────────────────────────────────────────────────────────
 
@@ -217,13 +253,7 @@ export default function ProfileShareModal({
   const accentStripe = `linear-gradient(90deg, ${accentColor} 0%, ${lightenHex(candidateColor, 0.1)} 100%)`;
 
   // ── DNA bars data ─────────────────────────────────────────────────────────
-  //
-  // 8 vertical bars, one per theme, height = score/100 of max bar height.
-  // Each bar is a colored column rising from a dark baseline.
-  // Visually: like a music equalizer — each person's bars are unique.
-
   const DNA_HEIGHT = 52;   // px, max bar height
-  const themeInitials = lang === 'fr' ? THEME_INITIAL : THEME_INITIAL_EN;
 
   return (
     <motion.div
@@ -317,7 +347,7 @@ export default function ProfileShareModal({
           </div>
 
           {/* ══════════════════════════════════════════════════════════════
-              SHARE CARD V3 — social object
+              SHARE CARD V4 — social object
               All styles are inline (required for html-to-image compatibility).
               No Tailwind classes inside cardRef.
           ══════════════════════════════════════════════════════════════ */}
@@ -367,7 +397,7 @@ export default function ProfileShareModal({
                 {lang === 'fr' ? 'Tu es' : 'You are'}
               </p>
 
-              {/* Archetype name — the identity hero */}
+              {/* Archetype name — the identity hero, untouched from V3 */}
               <p style={{
                 fontSize: 42, fontWeight: 900, color: '#ffffff',
                 letterSpacing: '-0.030em', lineHeight: 1.04,
@@ -393,27 +423,96 @@ export default function ProfileShareModal({
                 </p>
               )}
 
-              {/* Rarity badge — status signal */}
-              {rarityLine ? (
+              {/* ══ [V4 NEW] Confidence / reliability module ══════════════
+                  V3 received answeredCount as a prop but never showed it.
+                  V4 surfaces it as a compact signal-strength indicator.
+                  Design: 5 ascending bars (like iPhone signal) + label + count.
+                  Hidden entirely when answeredCount = 0 (profile not started).
+              ═════════════════════════════════════════════════════════════ */}
+              {answeredCount > 0 && (
                 <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  backgroundColor: isRare ? hexAlpha(accentColor, 0.16) : 'rgba(255,255,255,0.06)',
-                  border: `1px solid ${isRare ? hexAlpha(accentColor, 0.38) : 'rgba(255,255,255,0.10)'}`,
-                  borderRadius: 99, padding: '5px 11px', marginBottom: 18,
+                  display: 'flex', alignItems: 'center', gap: 9,
+                  marginBottom: 12,
+                  padding: '6px 10px',
+                  borderRadius: 8,
+                  backgroundColor: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                 }}>
-                  {isUltraRare && (
-                    <span style={{ fontSize: 8, color: accentColor, letterSpacing: '0.1em' }}>◆◆</span>
-                  )}
-                  {isRare && !isUltraRare && (
-                    <span style={{ fontSize: 8, color: accentColor }}>◆</span>
-                  )}
-                  <span style={{
-                    fontSize: 10, fontWeight: 600,
-                    color: isRare ? hexAlpha(accentColor, 0.95) : 'rgba(255,255,255,0.40)',
-                    letterSpacing: '0.01em',
+                  {/* Ascending signal bars */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexShrink: 0 }}>
+                    {[7, 10, 13, 16, 19].map((h, i) => (
+                      <div key={i} style={{
+                        width: 3,
+                        height: h,
+                        borderRadius: 2,
+                        backgroundColor: i < confidenceLevel.bars
+                          ? hexAlpha(accentColor, 0.85)
+                          : 'rgba(255,255,255,0.14)',
+                      }} />
+                    ))}
+                  </div>
+                  {/* Label + count */}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700,
+                      color: 'rgba(255,255,255,0.70)',
+                      letterSpacing: '0.01em',
+                    }}>
+                      {confidenceLevel.label}
+                    </span>
+                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.28)' }}>
+                      · {answeredCount} {lang === 'fr' ? 'rép.' : 'ans.'}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* ══ [V4 IMPROVED] Rarity block ════════════════════════════
+                  V3: single small pill showing rarityLine text, grayed out.
+                  V4: for rare profiles → "PROFIL RARE" uppercase pill
+                  + separate "Seulement X% des Français" below.
+                  Makes rarity feel like a status signal, not a footnote.
+              ═════════════════════════════════════════════════════════════ */}
+              {rarityLine ? (
+                <div style={{ marginBottom: 18 }}>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    backgroundColor: isRare ? hexAlpha(accentColor, 0.14) : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${isRare ? hexAlpha(accentColor, 0.30) : 'rgba(255,255,255,0.09)'}`,
+                    borderRadius: 99, padding: '4px 11px',
+                    marginBottom: (isRare && rarityPct != null) ? 5 : 0,
                   }}>
-                    {rarityLine}
-                  </span>
+                    {isUltraRare && (
+                      <span style={{ fontSize: 8, color: accentColor, letterSpacing: '0.1em' }}>◆◆</span>
+                    )}
+                    {isRare && !isUltraRare && (
+                      <span style={{ fontSize: 8, color: accentColor }}>◆</span>
+                    )}
+                    <span style={{
+                      fontSize: 10, fontWeight: 700,
+                      color: isRare ? hexAlpha(accentColor, 0.95) : 'rgba(255,255,255,0.38)',
+                      letterSpacing: isRare ? '0.07em' : '0.01em',
+                      textTransform: isRare ? 'uppercase' : 'none',
+                    }}>
+                      {isUltraRare
+                        ? (lang === 'fr' ? 'Profil ultra-rare' : 'Ultra-rare profile')
+                        : isRare
+                        ? (lang === 'fr' ? 'Profil rare' : 'Rare profile')
+                        : rarityLine}
+                    </span>
+                  </div>
+                  {/* % detail — only when we have a real number to show */}
+                  {isRare && rarityPct != null && (
+                    <p style={{
+                      fontSize: 11, fontWeight: 600,
+                      color: 'rgba(255,255,255,0.38)',
+                      letterSpacing: '0.005em',
+                    }}>
+                      {lang === 'fr'
+                        ? `Seulement ${rarityPct}% des Français`
+                        : `Only ${rarityPct}% of people`}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div style={{ marginBottom: 18 }} />
@@ -422,7 +521,10 @@ export default function ProfileShareModal({
               {/* ── Divider ── */}
               <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 18 }} />
 
-              {/* ══ ZONE 2: MATCH — the BIG NUMBER ═══════════════════════ */}
+              {/* ══ ZONE 2: MATCH — the BIG NUMBER ═══════════════════════
+                  Untouched from V3. 64px 900w candidateColor glow.
+                  This is the most shareable element — do not touch.
+              ═════════════════════════════════════════════════════════════ */}
 
               {topCandidate ? (
                 <div style={{ marginBottom: 18 }}>
@@ -491,32 +593,42 @@ export default function ProfileShareModal({
               {/* ── Divider ── */}
               <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 16 }} />
 
-              {/* ══ ZONE 3: DNA FINGERPRINT ═══════════════════════════════
-                  8 vertical bars — one per political theme.
-                  Each person's bar pattern is unique — like a fingerprint.
-                  Colors = theme colors. Height = user's score on that theme.
-              ════════════════════════════════════════════════════════════ */}
+              {/* ══ ZONE 3: SIGNATURE POLITIQUE ═══════════════════════════
+                  V3 problems:
+                    - Header "Ton ADN politique" at 9px / 25% opacity = invisible
+                    - Labels "É S I Sé Ec D M P" at 7px = unreadable decoration
+                  V4 fixes:
+                    - Header → "TA SIGNATURE POLITIQUE" flanked by decorative lines
+                    - Labels → readable 3-4 char abbreviations at 7.5px / 72% opacity
+              ═════════════════════════════════════════════════════════════ */}
               {themes && (
                 <div style={{ marginBottom: 16 }}>
-                  <p style={{
-                    fontSize: 9, fontWeight: 700,
-                    color: 'rgba(255,255,255,0.25)',
-                    textTransform: 'uppercase', letterSpacing: '0.16em',
-                    marginBottom: 10,
-                  }}>
-                    {lang === 'fr' ? 'Ton ADN politique' : 'Your political DNA'}
-                  </p>
 
-                  {/* The equalizer bars */}
+                  {/* [V4] Section header — flanking lines create chapter-heading feel */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 8, marginBottom: 11,
+                  }}>
+                    <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.10)' }} />
+                    <span style={{
+                      fontSize: 8, fontWeight: 800, letterSpacing: '0.20em',
+                      color: 'rgba(255,255,255,0.48)', textTransform: 'uppercase',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {lang === 'fr' ? 'TA SIGNATURE POLITIQUE' : 'YOUR POLITICAL DNA'}
+                    </span>
+                    <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.10)' }} />
+                  </div>
+
+                  {/* The equalizer bars — unchanged from V3 */}
                   <div style={{
                     display: 'flex', alignItems: 'flex-end',
                     gap: 5, height: DNA_HEIGHT,
                   }}>
                     {THEMES_ORDER.map(theme => {
-                      const score = themes[theme] ?? 50;
-                      const barH  = Math.max(3, Math.round((score / 100) * DNA_HEIGHT));
+                      const score  = themes[theme] ?? 50;
+                      const barH   = Math.max(3, Math.round((score / 100) * DNA_HEIGHT));
                       const emptyH = DNA_HEIGHT - barH;
-                      const color = THEME_COLORS[theme] ?? '#6b7280';
+                      const color  = THEME_COLORS[theme] ?? '#6b7280';
 
                       return (
                         <div
@@ -549,16 +661,19 @@ export default function ProfileShareModal({
                   {/* Bar baseline */}
                   <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.14)', marginBottom: 5 }} />
 
-                  {/* Theme initial labels */}
+                  {/* [V4] Readable abbreviated labels — replaces É S I Sé Ec D M P */}
                   <div style={{ display: 'flex', gap: 5 }}>
                     {THEMES_ORDER.map(theme => (
-                      <div key={theme} style={{ flex: 1, textAlign: 'center' }}>
+                      <div key={theme} style={{ flex: 1, textAlign: 'center', overflow: 'hidden' }}>
                         <span style={{
-                          fontSize: 7, fontWeight: 600,
-                          color: hexAlpha(THEME_COLORS[theme] ?? '#6b7280', 0.65),
-                          display: 'block', letterSpacing: '-0.02em',
+                          fontSize: 7.5, fontWeight: 600,
+                          color: hexAlpha(THEME_COLORS[theme] ?? '#6b7280', 0.72),
+                          display: 'block',
+                          letterSpacing: '-0.02em',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
                         }}>
-                          {themeInitials[theme] ?? '?'}
+                          {themeAbbr[theme] ?? '?'}
                         </span>
                       </div>
                     ))}
