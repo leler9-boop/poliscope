@@ -22,20 +22,10 @@ const DASHBOARD_PIN = 'poliscop2027';
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
-async function sql(query) {
+async function rpc(name, args = {}) {
   if (!isSupabaseEnabled || !supabase) return { data: null, error: 'Supabase non configuré' };
-  const { data, error } = await supabase.rpc('exec_sql_for_founder', { query_text: query });
-  // fallback: try direct table access if RPC not available
+  const { data, error } = await supabase.rpc(name, args);
   return { data, error: error?.message ?? null };
-}
-
-async function query(table, options = {}) {
-  if (!isSupabaseEnabled || !supabase) return { data: null, error: 'Supabase non configuré' };
-  let q = supabase.from(table).select(options.select ?? '*');
-  if (options.order)  q = q.order(options.order, { ascending: options.asc ?? false });
-  if (options.limit)  q = q.limit(options.limit);
-  if (options.filter) q = q.filter(...options.filter);
-  return q;
 }
 
 function fmt(n, decimals = 0) {
@@ -167,239 +157,95 @@ function Dashboard() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   // ── Croissance ──────────────────────────────────────────────────────────────
+  // RPC: founder_get_growth() — bypasses RLS via SECURITY DEFINER
   const growth = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return { data: null, error: 'Supabase non configuré' };
-
-    const [profilesRes, eventsRes, demoRes] = await Promise.all([
-      supabase.from('user_profiles').select('created_at', { count: 'exact', head: false }),
-      supabase.from('events').select('created_at', { count: 'exact', head: true }),
-      supabase.from('user_demographics').select('id', { count: 'exact', head: true }),
-    ]);
-
-    const now = new Date();
-    const day7ago = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const day30ago = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const yesterday = new Date(now - 24 * 60 * 60 * 1000).toISOString();
-
-    const allProfiles = profilesRes.data ?? [];
-    const totalProfiles = allProfiles.length;
-    const last7d = allProfiles.filter(p => p.created_at >= day7ago).length;
-    const last30d = allProfiles.filter(p => p.created_at >= day30ago).length;
-    const today = allProfiles.filter(p => p.created_at >= yesterday).length;
-
+    const { data, error } = await rpc('founder_get_growth');
+    if (error) return { error };
+    if (!data) return { error: 'Aucune donnée' };
     return {
-      totalProfiles,
-      last7d,
-      last30d,
-      today,
-      totalEvents: eventsRes.count ?? 0,
-      totalDemographics: demoRes.count ?? 0,
-      demographicsRate: totalProfiles > 0
-        ? ((demoRes.count ?? 0) / totalProfiles * 100).toFixed(1)
+      totalProfiles:    data.total_profiles,
+      last7d:           data.profiles_7d,
+      last30d:          data.profiles_30d,
+      today:            data.profiles_24h,
+      totalEvents:      data.total_events,
+      totalDemographics: data.total_demographics,
+      demographicsRate: data.total_profiles > 0
+        ? ((data.total_demographics / data.total_profiles) * 100).toFixed(1)
         : 0,
     };
   });
 
   // ── Politique — candidats ──────────────────────────────────────────────────
   const candidates = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return { data: null };
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('top_candidate_id, top_candidate_alignment')
-      .not('top_candidate_id', 'is', null);
-
-    if (!data) return { data: [] };
-
-    const counts = {};
-    const aligns = {};
-    data.forEach(({ top_candidate_id, top_candidate_alignment }) => {
-      counts[top_candidate_id] = (counts[top_candidate_id] || 0) + 1;
-      aligns[top_candidate_id] = aligns[top_candidate_id] || [];
-      if (top_candidate_alignment) aligns[top_candidate_id].push(top_candidate_alignment);
-    });
-
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([id, n]) => {
-        const avg = aligns[id].length
-          ? aligns[id].reduce((s, v) => s + v, 0) / aligns[id].length
-          : 0;
-        const pctTotal = ((n / data.length) * 100).toFixed(1);
-        return { id, n, avg: avg.toFixed(1), pctTotal };
-      });
+    const { data, error } = await rpc('founder_get_candidates');
+    if (error) return { error };
+    // data is an array of {id, count, avg_alignment, pct}
+    return (data ?? []).map(c => ({
+      id:  c.id,
+      n:   c.count,
+      avg: c.avg_alignment,
+      pctTotal: c.pct,
+    }));
   });
 
   // ── Archétypes ────────────────────────────────────────────────────────────
   const archetypes = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return { data: null };
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('archetype_id')
-      .not('archetype_id', 'is', null);
-
-    if (!data) return [];
-    const counts = {};
-    data.forEach(({ archetype_id }) => {
-      counts[archetype_id] = (counts[archetype_id] || 0) + 1;
-    });
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([id, n]) => ({ id, n, pct: ((n / data.length) * 100).toFixed(1) }));
+    const { data, error } = await rpc('founder_get_archetypes');
+    if (error) return { error };
+    return (data ?? []).map(a => ({ id: a.id, n: a.count, pct: a.pct }));
   });
 
   // ── Boussole politique ────────────────────────────────────────────────────
   const compass = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return null;
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('axes')
-      .not('axes', 'is', null);
-
-    if (!data || data.length === 0) return null;
-
-    let sumEco = 0, sumSoc = 0, n = 0;
-    data.forEach(({ axes }) => {
-      if (axes?.economic != null && axes?.social != null) {
-        sumEco += Number(axes.economic);
-        sumSoc += Number(axes.social);
-        n++;
-      }
-    });
-    if (n === 0) return null;
+    const { data, error } = await rpc('founder_get_compass');
+    if (error) return { error };
+    if (!data || !data.n) return null;
     return {
-      avgEconomic: (sumEco / n).toFixed(1),
-      avgSocial:   (sumSoc / n).toFixed(1),
-      n,
+      avgEconomic: data.avg_economic,
+      avgSocial:   data.avg_social,
+      n:           data.n,
     };
   });
 
   // ── Sociologie — scores par genre ─────────────────────────────────────────
   const byGender = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return null;
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('user_id, theme_scores, axes')
-      .not('theme_scores', 'is', null);
-
-    if (!data || data.length === 0) return null;
-
-    const { data: demos } = await supabase
-      .from('user_demographics')
-      .select('user_id, gender')
-      .in('gender', ['homme', 'femme']);
-
-    if (!demos) return null;
-
-    const demoMap = {};
-    demos.forEach(d => { demoMap[d.user_id] = d.gender; });
-
-    const groups = { homme: { SOCIAL: [], IMMIGRATION: [], GLOBAL: [], ENVIRONMENT: [], n: 0 },
-                     femme:  { SOCIAL: [], IMMIGRATION: [], GLOBAL: [], ENVIRONMENT: [], n: 0 } };
-
-    data.forEach(({ user_id, theme_scores }) => {
-      const g = demoMap[user_id];
-      if (!g || !groups[g] || !theme_scores) return;
-      groups[g].SOCIAL.push(Number(theme_scores.SOCIAL ?? 50));
-      groups[g].IMMIGRATION.push(Number(theme_scores.IMMIGRATION ?? 50));
-      groups[g].GLOBAL.push(Number(theme_scores.GLOBAL ?? 50));
-      groups[g].ENVIRONMENT.push(Number(theme_scores.ENVIRONMENT ?? 50));
-      groups[g].n++;
-    });
-
-    const avg = arr => arr.length ? (arr.reduce((s, v) => s + v, 0) / arr.length).toFixed(1) : '–';
-
-    return Object.entries(groups).map(([genre, scores]) => ({
-      genre,
-      n: scores.n,
-      social:       avg(scores.SOCIAL),
-      immigration:  avg(scores.IMMIGRATION),
-      global:       avg(scores.GLOBAL),
-      environment:  avg(scores.ENVIRONMENT),
+    const { data, error } = await rpc('founder_get_gender_scores');
+    if (error) return { error };
+    return (data ?? []).map(r => ({
+      genre:       r.genre,
+      n:           r.n,
+      social:      r.social,
+      immigration: r.immigration,
+      global:      r.global,
+      environment: r.environment,
     }));
   });
 
   // ── Sociologie — scores par commune ──────────────────────────────────────
   const byCommune = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return null;
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('user_id, theme_scores')
-      .not('theme_scores', 'is', null);
-
-    if (!data) return null;
-
-    const { data: demos } = await supabase
-      .from('user_demographics')
-      .select('user_id, commune_type')
-      .not('commune_type', 'is', null);
-
-    if (!demos) return null;
-
-    const demoMap = {};
-    demos.forEach(d => { demoMap[d.user_id] = d.commune_type; });
-
-    const groups = {};
-    data.forEach(({ user_id, theme_scores }) => {
-      const ct = demoMap[user_id];
-      if (!ct || !theme_scores) return;
-      if (!groups[ct]) groups[ct] = { IMMIGRATION: [], GLOBAL: [], SECURITY: [], n: 0 };
-      groups[ct].IMMIGRATION.push(Number(theme_scores.IMMIGRATION ?? 50));
-      groups[ct].GLOBAL.push(Number(theme_scores.GLOBAL ?? 50));
-      groups[ct].SECURITY.push(Number(theme_scores.SECURITY ?? 50));
-      groups[ct].n++;
-    });
-
-    const avg = arr => arr.length ? (arr.reduce((s, v) => s + v, 0) / arr.length).toFixed(1) : '–';
-    const order = ['grande_ville', 'ville_moyenne', 'petite_ville', 'rural'];
-
-    return order
-      .filter(ct => groups[ct])
-      .map(ct => ({
-        commune: ct.replace('_', ' '),
-        n: groups[ct].n,
-        immigration: avg(groups[ct].IMMIGRATION),
-        global:      avg(groups[ct].GLOBAL),
-        security:    avg(groups[ct].SECURITY),
-      }));
+    const { data, error } = await rpc('founder_get_commune_scores');
+    if (error) return { error };
+    return (data ?? []).map(r => ({
+      commune:     r.commune.replace('_', ' '),
+      n:           r.n,
+      immigration: r.immigration,
+      global:      r.global,
+      security:    r.security,
+    }));
   });
 
   // ── Questions — top 10 les plus skippées ─────────────────────────────────
   const topSkipped = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return [];
-    const { data } = await supabase
-      .from('events')
-      .select('props')
-      .eq('event_name', 'question_skipped');
-
-    if (!data) return [];
-    const counts = {};
-    data.forEach(({ props }) => {
-      const id = props?.question_id;
-      if (id) counts[id] = (counts[id] || 0) + 1;
-    });
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([id, n]) => ({ id, n }));
+    const { data, error } = await rpc('founder_get_top_skipped', { limit_n: 10 });
+    if (error) return { error };
+    return (data ?? []).map(r => ({ id: r.id, n: r.count }));
   });
 
-  // ── Events today ──────────────────────────────────────────────────────────
+  // ── Events 7 derniers jours ───────────────────────────────────────────────
   const eventBreakdown = useQuery(async () => {
-    if (!isSupabaseEnabled || !supabase) return [];
-    const yesterday = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const { data } = await supabase
-      .from('events')
-      .select('event_name')
-      .gte('created_at', yesterday);
-
-    if (!data) return [];
-    const counts = {};
-    data.forEach(({ event_name }) => {
-      counts[event_name] = (counts[event_name] || 0) + 1;
-    });
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([event, n]) => ({ event, n }));
+    const { data, error } = await rpc('founder_get_events', { days_back: 7 });
+    if (error) return { error };
+    return (data ?? []).map(r => ({ event: r.event, n: r.count }));
   });
 
   const reload = () => {

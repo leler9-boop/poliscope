@@ -52,9 +52,20 @@ export default function Elections() {
         </motion.div>
       )}
 
-      {/* Election cards */}
+      {/* Election cards — fr_2027 always first, then future↑, then past↓ */}
       <div className="grid sm:grid-cols-2 gap-5 mb-12">
-        {elections.map((election, idx) => {
+        {[...elections].sort((a, b) => {
+          if (a.id === 'fr_2027') return -1;
+          if (b.id === 'fr_2027') return 1;
+          const now = new Date().getFullYear();
+          const aFuture = a.year >= now;
+          const bFuture = b.year >= now;
+          if (aFuture !== bFuture) return aFuture ? -1 : 1;
+          const dir = aFuture ? 1 : -1;
+          if (a.year !== b.year) return (a.year - b.year) * dir;
+          if (a.country !== b.country) return a.country === 'France' ? -1 : 1;
+          return 0;
+        }).map((election, idx) => {
           const hasAnswers = Object.keys(electionAnswers[election.id] ?? {}).length > 0;
           const qCount = election.specificQuestions?.length ?? 0;
 
