@@ -7,6 +7,7 @@ import { elections } from '../data/elections.js';
 import { calculateAlignment, alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
+import { trackElectionViewed } from '../lib/analytics.js';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -1085,6 +1086,11 @@ export default function ElectionDetail() {
       useStore.setState({ selectedElectionId: paramId, currentPage: 'electionDetail' });
     }
   }, [paramId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Track election view once electionId is known
+  useEffect(() => {
+    if (electionId) trackElectionViewed({ electionId });
+  }, [electionId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const adjustedProfile = profile
     ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }

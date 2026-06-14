@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { rankByAlignment, generateWhyMatch, alignmentBarColor } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
 import MatchCard from '../components/MatchCard.jsx';
+import { trackFigureViewed } from '../lib/analytics.js';
 
 function applyAdjustments(themes, adjustments) {
   if (!adjustments || Object.keys(adjustments).length === 0) return themes;
@@ -30,6 +31,10 @@ export default function HistoricalFigures() {
   const t = createTranslator(language);
 
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+
+  const handleFigureExpand = useCallback((figure) => {
+    trackFigureViewed({ figureId: figure.id, section: 'historical' });
+  }, []);
 
   const adjustedProfile = profile
     ? { ...profile, themes: applyAdjustments(profile.themes, profileAdjustments) }
@@ -121,6 +126,7 @@ export default function HistoricalFigures() {
                 isTopMatch={true}
                 showDetails={true}
                 whyMatch={generateWhyMatch(adjustedProfile.themes, topMatch, language)}
+                onExpand={handleFigureExpand}
               />
             </motion.div>
           )}
@@ -141,6 +147,7 @@ export default function HistoricalFigures() {
                     language={language}
                     showDetails={true}
                     whyMatch={generateWhyMatch(adjustedProfile.themes, figure, language)}
+                    onExpand={handleFigureExpand}
                   />
                 </motion.div>
               ))}
@@ -167,6 +174,7 @@ export default function HistoricalFigures() {
                       language={language}
                       showDetails={true}
                       whyMatch={generateWhyMatch(adjustedProfile.themes, figure, language)}
+                      onExpand={handleFigureExpand}
                     />
                   </motion.div>
                 ))}

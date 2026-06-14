@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
@@ -8,6 +8,7 @@ import { candidateDetails } from '../data/candidateDetails.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 import { CandidateAvatar } from '../components/LazyImage.jsx';
+import { trackCandidateViewed, trackCompareStarted } from '../lib/analytics.js';
 
 // Pole labels for each theme (0 = left pole, 100 = right pole)
 const THEME_AXES = {
@@ -185,6 +186,16 @@ export default function CandidateProfile() {
     }
   }, [paramId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Track candidate view once candidateId is known
+  useEffect(() => {
+    if (candidateId) trackCandidateViewed({ candidateId });
+  }, [candidateId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleCompare = useCallback((id1, id2) => {
+    trackCompareStarted({ id1, id2 });
+    startCompare(id1, id2);
+  }, [startCompare]);
+
   const found = findCandidate(candidateId);
 
   if (!found) {
@@ -351,7 +362,7 @@ export default function CandidateProfile() {
               .map(c => (
                   <button
                     key={c.id}
-                    onClick={() => startCompare(candidate.id, c.id)}
+                    onClick={() => handleCompare(candidate.id, c.id)}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-800 hover:text-gray-900 bg-white transition-all"
                   >
                     <CandidateAvatar src={c.image} name={c.name} size={18} />

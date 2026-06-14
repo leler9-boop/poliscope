@@ -3,6 +3,7 @@ import { Reorder, motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { trackPriorityCompleted } from '../lib/analytics.js';
 
 // Short descriptions shown under each theme name in the ranking list.
 // Aim: a 17-year-old immediately understands what each theme covers.
@@ -41,6 +42,7 @@ export default function PriorityRanking() {
   const [order, setOrder] = useState(storedPriority ?? [...THEMES_ORDER]);
 
   const handleConfirm = () => {
+    trackPriorityCompleted({ priorityOrder: order });
     setPriority(order);
     startTest(testMode ?? 'medium');
   };

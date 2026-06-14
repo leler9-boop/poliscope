@@ -9,6 +9,7 @@ export default function MatchCard({
   showDetails = true,
   isTopMatch = false,
   whyMatch = null,
+  onExpand = null,
 }) {
   const [expanded, setExpanded] = useState(isTopMatch);
   const { name, alignment, color, description, disclaimer, political_context } = target;
@@ -138,7 +139,10 @@ export default function MatchCard({
         {/* Toggle biography */}
         {showDetails && (bio || disc) && (
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => {
+              if (!expanded && onExpand) onExpand(target);
+              setExpanded(!expanded);
+            }}
             className="mt-4 text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1.5"
           >
             <span className="text-slate-300 text-[10px]">{expanded ? '▲' : '▼'}</span>

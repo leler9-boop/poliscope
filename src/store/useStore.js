@@ -12,6 +12,7 @@ import {
   trackTestComplete,
   trackImproveStarted,
   trackImproveCompleted,
+  trackRetakeStarted,
 } from '../lib/analytics.js';
 
 /**
@@ -337,6 +338,7 @@ export const useStore = create(
       clearRevealPending: () => set({ profileRevealPending: false }),
 
       resetProfile: () => {
+        trackRetakeStarted();
         set({
           answers: {},
           profile: null,

@@ -9,11 +9,11 @@
  *  - Dual-color system: archetype color (identity) + candidate color (match)
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { getRarityLine, ARCHETYPE_RARITY } from '../data/archetypeRarity.js';
 import { THEME_COLORS, THEMES_ORDER } from '../data/questions.js';
-import { trackProfileShared, trackProfileDownloaded } from '../lib/analytics.js';
+import { trackProfileShared, trackProfileDownloaded, trackShareModalOpened } from '../lib/analytics.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
@@ -110,6 +110,12 @@ export default function ProfileShareModal({
   const [copyStatus,     setCopyStatus]     = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(null);
   const [shareStatus,    setShareStatus]    = useState(null);
+
+  // Track modal open intent (fires once on mount)
+  useEffect(() => {
+    trackShareModalOpened({ archetypeId: topArchetype?.id ?? null });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const lang          = language === 'fr' ? 'fr' : 'en';
   const accentColor   = topArchetype?.color ?? '#2563eb';

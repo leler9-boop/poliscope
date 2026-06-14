@@ -6,6 +6,7 @@ import { rankByAlignment, generateWhyMatch, alignmentBarColor } from '../engine/
 import { frenchFigures } from '../data/frenchFigures.js';
 import MatchCard from '../components/MatchCard.jsx';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { trackFigureViewed } from '../lib/analytics.js';
 
 // ── Theme axis pole labels ────────────────────────────────────────────────────
 
@@ -72,6 +73,12 @@ function ProfileDrawer({ figure, language, onClose }) {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
+
+  // Track figure view on drawer open
+  useEffect(() => {
+    if (figure?.id) trackFigureViewed({ figureId: figure.id, section: 'french' });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [figure?.id]);
 
   const party    = typeof figure.party === 'object' ? figure.party[language] : figure.party;
   const role     = typeof figure.role  === 'object' ? figure.role[language]  : figure.role;

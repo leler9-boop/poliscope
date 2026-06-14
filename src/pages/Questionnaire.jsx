@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
+import { trackQuestionAnswered, trackQuestionSkipped } from '../lib/analytics.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
 import ConceptModal from '../components/ConceptModal.jsx';
@@ -94,12 +95,22 @@ export default function Questionnaire() {
     return () => clearTimeout(autoAdvanceTimer.current);
   }, [currentIndex]);
 
+  const testMode = useStore(s => s.testMode);
+
   const handleAnswer = (val) => {
     if (!question) return;
     const wasAnswered = currentAnswer != null;
     answerQuestion(question.id, val);
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
     if (!wasAnswered) {
+      trackQuestionAnswered({
+        questionId:    question.id,
+        theme:         question.theme,
+        value:         val,
+        questionIndex: currentIndex,
+        mode:          testMode,
+        isImprove:     improveMode,
+      });
       clearTimeout(autoAdvanceTimer.current);
       autoAdvanceTimer.current = setTimeout(() => {
         directionRef.current = 1;
@@ -125,6 +136,14 @@ export default function Questionnaire() {
   const handleSkip = () => {
     clearTimeout(autoAdvanceTimer.current);
     directionRef.current = 1;
+    if (question) {
+      trackQuestionSkipped({
+        questionId:    question.id,
+        theme:         question.theme,
+        questionIndex: currentIndex,
+        mode:          testMode,
+      });
+    }
     if (isLast) finishQuestionnaire();
     else nextQuestion();
   };
