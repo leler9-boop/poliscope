@@ -1,133 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { ThemeComparisonThree } from '../components/CompareBar.jsx';
 
-const THEME_AXES = {
-  ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'      } },
-  SOCIAL:          { en: { left: 'Traditional',     right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'      } },
-  IMMIGRATION:     { en: { left: 'Restrictive',     right: 'Open'           }, fr: { left: 'Restrictive',    right: 'Ouverte'           } },
-  SECURITY:        { en: { left: 'State security',  right: 'Civil liberties'}, fr: { left: 'Sécurité d\'État','right': 'Libertés civiles'} },
-  ENVIRONMENT:     { en: { left: 'Growth first',    right: 'Ecology first'  }, fr: { left: 'Croissance',     right: 'Écologie'          } },
-  DEMOCRACY:       { en: { left: 'Strong state',    right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'      } },
-  GLOBAL:          { en: { left: 'Sovereignty',     right: 'Multilateralism'}, fr: { left: 'Souveraineté',   right: 'Multilatéralisme'  } },
-  PUBLIC_SERVICES: { en: { left: 'Private sector',  right: 'Public services'}, fr: { left: 'Secteur privé',  right: 'Services publics'  } },
-};
-
-function diffColor(diff) {
-  if (diff < 12) return '#16a34a';
-  if (diff < 28) return '#2563eb';
-  if (diff < 45) return '#d97706';
-  return '#dc2626';
-}
-
-function diffLabel(diff, language) {
-  if (diff < 12) return language === 'fr' ? 'Très proches' : 'Very similar';
-  if (diff < 28) return language === 'fr' ? 'Proches' : 'Close';
-  if (diff < 45) return language === 'fr' ? 'Différence modérée' : 'Moderate difference';
-  return language === 'fr' ? 'Désaccord marqué' : 'Strong disagreement';
-}
-
-function compareSentence(s1, s2, c1Name, c2Name, userScore, themeLabel, language) {
-  const diff = Math.abs(s1 - s2);
-  const n1 = c1Name.split(' ').pop();
-  const n2 = c2Name.split(' ').pop();
-  const theme = themeLabel.toLowerCase();
-
-  let base;
-  if (language === 'fr') {
-    if (diff < 12) base = `${n1} et ${n2} ont des positions très similaires sur ${theme}.`;
-    else if (diff < 28) base = `${n1} et ${n2} ont des vues légèrement différentes sur ${theme}.`;
-    else if (diff < 45) base = `${n1} et ${n2} diffèrent modérément sur ${theme}.`;
-    else base = `${n1} et ${n2} ont des positions opposées sur ${theme}.`;
-  } else {
-    if (diff < 12) base = `${n1} and ${n2} share very similar views on ${theme}.`;
-    else if (diff < 28) base = `${n1} and ${n2} have slightly different views on ${theme}.`;
-    else if (diff < 45) base = `${n1} and ${n2} differ moderately on ${theme}.`;
-    else base = `${n1} and ${n2} hold opposing views on ${theme}.`;
-  }
-
-  if (userScore == null) return base;
-  const d1 = Math.abs(userScore - s1);
-  const d2 = Math.abs(userScore - s2);
-  if (Math.abs(d1 - d2) < 5) {
-    return base + (language === 'fr' ? ' Vous êtes à égale distance des deux.' : ' You are equidistant from both.');
-  }
-  const closer = d1 < d2 ? n1 : n2;
-  return base + (language === 'fr' ? ` Votre position se rapproche de ${closer}.` : ` Your views are closer to ${closer}.`);
-}
-
-/** Single bar row: label | ████░░░ | score */
-function ThemeBarRow({ label, score, color, delay = 0 }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-16 flex-shrink-0 text-xs text-gray-500 text-right truncate">{label}</span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: color }}
-          initial={{ width: 0 }}
-          animate={{ width: `${score}%` }}
-          transition={{ duration: 0.85, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-        />
-      </div>
-      <span className="w-7 flex-shrink-0 text-right text-xs font-semibold tabular-nums text-gray-500">{score}</span>
-    </div>
-  );
-}
-
-/** Two candidates (+ optional user) — one labeled bar per row, same scale */
-function CompareAxis({ s1, s2, userScore, color1, color2, leftLabel, rightLabel, diff, sentence, c1Name, c2Name, language, delay = 0 }) {
-  const hasUser  = userScore != null;
-  const n1       = c1Name.split(' ').pop();
-  const n2       = c2Name.split(' ').pop();
-  const youLabel = language === 'fr' ? 'Vous' : 'You';
-
-  return (
-    <div className="space-y-2">
-      {/* Row 1 — user (if available) */}
-      {hasUser && (
-        <ThemeBarRow label={youLabel} score={Math.round(userScore)} color="#1f2937" delay={delay} />
-      )}
-      {/* Row 2 — candidate 1 */}
-      <ThemeBarRow label={n1} score={Math.round(s1)} color={color1} delay={delay + (hasUser ? 0.08 : 0)} />
-      {/* Row 3 — candidate 2 */}
-      <ThemeBarRow label={n2} score={Math.round(s2)} color={color2} delay={delay + (hasUser ? 0.16 : 0.08)} />
-
-      {/* Pole labels aligned with bars */}
-      <div className="flex items-center gap-3">
-        <div className="w-16 flex-shrink-0" />
-        <div className="flex-1 flex justify-between">
-          <span className="text-[10px] text-gray-300">{leftLabel}</span>
-          <span className="text-[10px] text-gray-300">{rightLabel}</span>
-        </div>
-        <div className="w-7 flex-shrink-0" />
-      </div>
-
-      {/* Diff label + sentence */}
-      <div className="flex items-start gap-3">
-        <div className="w-16 flex-shrink-0" />
-        <div className="flex-1 pb-1">
-          <span className="text-xs font-semibold" style={{ color: diffColor(diff) }}>
-            {diffLabel(diff, language)}
-          </span>
-          <motion.p
-            className="text-xs text-gray-400 leading-relaxed mt-0.5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: delay + 0.8 }}
-          >
-            {sentence}
-          </motion.p>
-        </div>
-        <div className="w-7 flex-shrink-0" />
-      </div>
-    </div>
-  );
-}
 
 function findCandidate(id) {
   for (const election of elections) {
@@ -237,51 +115,19 @@ export default function CandidateCompare() {
         ))}
       </div>
 
-      {/* Unified axis comparison */}
+      {/* Unified axis comparison — three-marker dual-axis */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Comparaison par thème' : 'Theme comparison'}
         </h2>
-        {userThemes && (
-          <p className="text-xs text-gray-400 mb-5">
-            {language === 'fr'
-              ? 'Votre position (gris foncé) et celles des deux candidats.'
-              : 'Your position (dark) alongside both candidates.'}
-          </p>
-        )}
-
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 divide-y divide-gray-50">
-          {THEMES_ORDER.map((theme, idx) => {
-            const label  = THEME_LABELS[language]?.[theme] ?? theme;
-            const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
-            const s1     = c1.profile?.[theme] ?? 50;
-            const s2     = c2.profile?.[theme] ?? 50;
-            const u      = userThemes?.[theme];
-            const diff   = Math.abs(s1 - s2);
-            const sentence = compareSentence(s1, s2, c1.name, c2.name, u, label, language);
-
-            return (
-              <div key={theme} className={idx > 0 ? 'pt-5' : ''}>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">{label}</p>
-                <CompareAxis
-                  s1={s1}
-                  s2={s2}
-                  userScore={u}
-                  color1={c1.color ?? '#374151'}
-                  color2={c2.color ?? '#9ca3af'}
-                  leftLabel={poles.left}
-                  rightLabel={poles.right}
-                  diff={diff}
-                  sentence={sentence}
-                  c1Name={c1.name}
-                  c2Name={c2.name}
-                  language={language}
-                  delay={0.06 + idx * 0.04}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <ThemeComparisonThree
+          userThemes={userThemes}
+          themes1={c1.profile}
+          themes2={c2.profile}
+          name1={c1.name}
+          name2={c2.name}
+          language={language}
+        />
       </section>
 
       {/* Bio side-by-side */}

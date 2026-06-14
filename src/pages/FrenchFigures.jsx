@@ -6,6 +6,7 @@ import { rankByAlignment, generateWhyMatch, alignmentBarColor } from '../engine/
 import { frenchFigures } from '../data/frenchFigures.js';
 import MatchCard from '../components/MatchCard.jsx';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { ThemeComparison } from '../components/CompareBar.jsx';
 import { trackFigureViewed } from '../lib/analytics.js';
 
 // ── Theme axis pole labels ────────────────────────────────────────────────────
@@ -300,81 +301,19 @@ function CompareModal({ figure, userThemes, language, onClose }) {
             </div>
           )}
 
-          {/* Theme bars comparison */}
+          {/* Theme comparison — dual-marker axis */}
           {userThemes && (
-            <div className="p-5 space-y-5">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <div className="p-5">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
                 {language === 'fr' ? 'Comparaison par thème' : 'Theme comparison'}
               </p>
-              {THEMES_ORDER.map((theme) => {
-                const userScore   = Math.round(userThemes[theme] ?? 50);
-                const figureScore = Math.round(figure.profile[theme] ?? 50);
-                const diff        = Math.abs(userScore - figureScore);
-                const color       = THEME_COLORS[theme];
-                const axis        = THEME_AXES[theme];
-                const axisLabels  = axis ? axis[language] : null;
-                const label       = THEME_LABELS[language][theme];
-
-                return (
-                  <div key={theme} className="space-y-1.5">
-                    {/* Theme label + diff badge */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-gray-700">{label}</span>
-                      <span
-                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white"
-                        style={{ backgroundColor: diffColor(diff) }}
-                      >
-                        {diffLabel(diff, language)}
-                      </span>
-                    </div>
-
-                    {/* Axis poles */}
-                    {axisLabels && (
-                      <div className="flex justify-between text-[10px] text-gray-300">
-                        <span>{axisLabels.left}</span>
-                        <span>{axisLabels.right}</span>
-                      </div>
-                    )}
-
-                    {/* User bar */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400 w-10 text-right flex-shrink-0">
-                        {language === 'fr' ? 'Moi' : 'Me'}
-                      </span>
-                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full bg-gray-800"
-                          initial={{ width: '0%' }}
-                          animate={{ width: `${userScore}%` }}
-                          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-bold tabular-nums text-gray-600 w-7 flex-shrink-0">
-                        {userScore}
-                      </span>
-                    </div>
-
-                    {/* Figure bar */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400 w-10 text-right flex-shrink-0 truncate">
-                        {figure.name.split(' ')[0]}
-                      </span>
-                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full"
-                          style={{ backgroundColor: color }}
-                          initial={{ width: '0%' }}
-                          animate={{ width: `${figureScore}%` }}
-                          transition={{ duration: 0.6, delay: 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-bold tabular-nums w-7 flex-shrink-0" style={{ color }}>
-                        {figureScore}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+              <ThemeComparison
+                userThemes={userThemes}
+                targetThemes={figure.profile}
+                targetName={figure.name.split(' ')[0]}
+                language={language}
+                card={false}
+              />
             </div>
           )}
         </motion.div>

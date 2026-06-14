@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
@@ -9,125 +8,8 @@ import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 import { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackCandidateViewed, trackCompareStarted } from '../lib/analytics.js';
+import { ThemeComparison } from '../components/CompareBar.jsx';
 
-// Pole labels for each theme (0 = left pole, 100 = right pole)
-const THEME_AXES = {
-  ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'      } },
-  SOCIAL:          { en: { left: 'Traditional',     right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'      } },
-  IMMIGRATION:     { en: { left: 'Restrictive',     right: 'Open'           }, fr: { left: 'Restrictive',    right: 'Ouverte'           } },
-  SECURITY:        { en: { left: 'State security',  right: 'Civil liberties'}, fr: { left: 'Sécurité d\'État','right': 'Libertés civiles'} },
-  ENVIRONMENT:     { en: { left: 'Growth first',    right: 'Ecology first'  }, fr: { left: 'Croissance',     right: 'Écologie'          } },
-  DEMOCRACY:       { en: { left: 'Strong state',    right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'      } },
-  GLOBAL:          { en: { left: 'Sovereignty',     right: 'Multilateralism'}, fr: { left: 'Souveraineté',   right: 'Multilatéralisme'  } },
-  PUBLIC_SERVICES: { en: { left: 'Private sector',  right: 'Public services'}, fr: { left: 'Secteur privé',  right: 'Services publics'  } },
-};
-
-function diffColor(diff) {
-  if (diff < 12) return '#16a34a';
-  if (diff < 28) return '#2563eb';
-  if (diff < 45) return '#d97706';
-  return '#dc2626';
-}
-
-function diffLabel(diff, language) {
-  if (diff < 12) return language === 'fr' ? 'Très proches' : 'Very close';
-  if (diff < 28) return language === 'fr' ? 'Proches' : 'Close';
-  if (diff < 45) return language === 'fr' ? 'Différence modérée' : 'Moderate difference';
-  return language === 'fr' ? 'Désaccord marqué' : 'Strong disagreement';
-}
-
-function diffSentence(diff, themeLabel, candidateName, language) {
-  const name = candidateName.split(' ').pop();
-  if (!diff && diff !== 0) return null;
-  if (language === 'fr') {
-    if (diff < 12) return `Vous et ${name} partagez des positions très similaires sur ${themeLabel.toLowerCase()}.`;
-    if (diff < 28) return `Vos positions sur ${themeLabel.toLowerCase()} sont assez proches.`;
-    if (diff < 45) return `Vous avez des différences modérées avec ${name} sur ${themeLabel.toLowerCase()}.`;
-    return `Vous et ${name} avez des positions opposées sur ${themeLabel.toLowerCase()}.`;
-  }
-  if (diff < 12) return `You and ${name} share very similar views on ${themeLabel.toLowerCase()}.`;
-  if (diff < 28) return `Your views on ${themeLabel.toLowerCase()} are fairly close to ${name}'s.`;
-  if (diff < 45) return `You and ${name} have moderate differences on ${themeLabel.toLowerCase()}.`;
-  return `You and ${name} hold opposing views on ${themeLabel.toLowerCase()}.`;
-}
-
-/** Single bar row: label | ████░░░ | score */
-function ThemeBarRow({ label, score, color, delay = 0 }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-16 flex-shrink-0 text-xs text-gray-500 text-right truncate">{label}</span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: color }}
-          initial={{ width: 0 }}
-          animate={{ width: `${score}%` }}
-          transition={{ duration: 0.85, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-        />
-      </div>
-      <span className="w-7 flex-shrink-0 text-right text-xs font-semibold tabular-nums text-gray-500">{score}</span>
-    </div>
-  );
-}
-
-/** User vs candidate — two aligned bars on the same scale */
-function ThemeAxis({ score, userScore, color, leftLabel, rightLabel, diff, themeLabel, candidateName, language, policyText, delay = 0 }) {
-  const hasUser  = userScore != null;
-  const shortName = candidateName.split(' ').pop();
-  const youLabel  = language === 'fr' ? 'Vous' : 'You';
-
-  return (
-    <div className="space-y-2">
-      {/* Row 1 — user */}
-      {hasUser && (
-        <ThemeBarRow label={youLabel} score={Math.round(userScore)} color="#1f2937" delay={delay} />
-      )}
-      {/* Row 2 — candidate */}
-      <ThemeBarRow label={shortName} score={Math.round(score)} color={color} delay={delay + (hasUser ? 0.1 : 0)} />
-
-      {/* Pole labels aligned with bars */}
-      <div className="flex items-center gap-3">
-        <div className="w-16 flex-shrink-0" />
-        <div className="flex-1 flex justify-between">
-          <span className="text-[10px] text-gray-300">{leftLabel}</span>
-          <span className="text-[10px] text-gray-300">{rightLabel}</span>
-        </div>
-        <div className="w-7 flex-shrink-0" />
-      </div>
-
-      {/* Diff label + interpretation */}
-      {hasUser && diff != null && (
-        <div className="flex items-start gap-3">
-          <div className="w-16 flex-shrink-0" />
-          <div className="flex-1 pb-1">
-            <span className="text-xs font-semibold" style={{ color: diffColor(diff) }}>
-              {diffLabel(diff, language)}
-            </span>
-            <motion.p
-              className="text-xs text-gray-400 leading-relaxed mt-0.5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: delay + 0.7 }}
-            >
-              {diffSentence(diff, themeLabel, candidateName, language)}
-            </motion.p>
-            {policyText && (
-              <motion.p
-                className="text-xs text-gray-500 leading-relaxed mt-2 pl-3 border-l-2 border-gray-200"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: delay + 0.9 }}
-              >
-                {policyText}
-              </motion.p>
-            )}
-          </div>
-          <div className="w-7 flex-shrink-0" />
-        </div>
-      )}
-    </div>
-  );
-}
 
 function findCandidate(id) {
   for (const election of elections) {
@@ -305,49 +187,32 @@ export default function CandidateProfile() {
         </section>
       )}
 
-      {/* Ideological positions — axis per theme */}
+      {/* Ideological positions — dual-marker axis per theme */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Positions idéologiques' : 'Ideological positions'}
         </h2>
-        {userThemes && (
-          <p className="text-xs text-gray-400 mb-5">
-            {language === 'fr'
-              ? 'Votre position (gris foncé) comparée à celle du candidat.'
-              : 'Your position (dark) compared to the candidate\'s.'}
-          </p>
-        )}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 divide-y divide-gray-50">
-          {THEMES_ORDER.map((theme, idx) => {
-            const score      = candidate.profile?.[theme] ?? 50;
-            const userScore  = userThemes?.[theme];
-            const label      = THEME_LABELS[language]?.[theme] ?? theme;
-            const color      = THEME_COLORS[theme] ?? '#6b7280';
-            const poles      = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
-            const diff       = userScore != null ? Math.abs(score - userScore) : null;
-            const policyText = POLICY_ELECTION_IDS.has(election.id) && diff != null && diff < 28
-              ? CANDIDATE_POLICIES[candidateId]?.[theme]?.[language] ?? null
-              : null;
-            return (
-              <div key={theme} className={idx > 0 ? 'pt-5' : ''}>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">{label}</p>
-                <ThemeAxis
-                  score={score}
-                  userScore={userScore}
-                  color={color}
-                  leftLabel={poles.left}
-                  rightLabel={poles.right}
-                  diff={diff}
-                  themeLabel={label}
-                  candidateName={candidate.name}
-                  language={language}
-                  policyText={policyText}
-                  delay={0.08 + idx * 0.05}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <ThemeComparison
+          userThemes={userThemes}
+          targetThemes={candidate.profile}
+          targetName={candidate.name.split(' ').pop()}
+          language={language}
+          policyTexts={
+            POLICY_ELECTION_IDS.has(election.id)
+              ? Object.fromEntries(
+                  Object.entries(CANDIDATE_POLICIES[candidateId] ?? {}).map(([theme, vals]) => [
+                    theme,
+                    (() => {
+                      const uScore = userThemes?.[theme];
+                      const cScore = candidate.profile?.[theme] ?? 50;
+                      const diff   = uScore != null ? Math.abs(uScore - cScore) : null;
+                      return diff != null && diff < 28 ? (vals?.[language] ?? null) : null;
+                    })(),
+                  ])
+                )
+              : {}
+          }
+        />
       </section>
 
       {/* Compare with others */}
