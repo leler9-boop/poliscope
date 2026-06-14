@@ -570,7 +570,7 @@ export default function ProfileShareModal({
                   color: 'rgba(255,255,255,0.42)',
                   letterSpacing: '0.005em',
                 }}>
-                  {lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What's your archetype?'}
+                  {lang === 'fr' ? 'Et toi, quel est ton archétype ?' : "What's your archetype?"}
                 </span>
                 <span style={{
                   fontSize: 9, fontWeight: 800, letterSpacing: '0.18em',
