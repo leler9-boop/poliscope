@@ -1,14 +1,22 @@
+/**
+ * ProfileShareModal — Share Card V3
+ *
+ * Design principles:
+ *  - Treat the card as a SOCIAL OBJECT, not a UI component
+ *  - Spotify Wrapped × Apple Design: premium, modern, youth-first
+ *  - 3-second rule: WHO AM I → HOW RARE → WHO AM I CLOSE TO → MY DNA
+ *  - Viral hooks: rarity badge, huge match %, political DNA fingerprint
+ *  - Dual-color system: archetype color (identity) + candidate color (match)
+ */
+
 import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { getRarityLine } from '../data/archetypeRarity.js';
+import { getRarityLine, ARCHETYPE_RARITY } from '../data/archetypeRarity.js';
+import { THEME_COLORS, THEMES_ORDER } from '../data/questions.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
-function getReliabilityNudge(pct, lang) {
-  if (pct >= 80) return lang === 'fr' ? 'Profil complet ✦' : 'Full profile ✦';
-  if (pct >= 50) return lang === 'fr' ? 'Ton profil se précise. Continue →' : 'Your profile is taking shape. Keep going →';
-  return lang === 'fr' ? 'Réponds à plus de questions pour affiner ton profil' : 'Answer more questions to sharpen your profile';
-}
+// ── Colour helpers ──────────────────────────────────────────────────────────
 
 function hexAlpha(hex, alpha) {
   if (!hex || hex.length < 7) return `rgba(37,99,235,${alpha})`;
@@ -18,7 +26,74 @@ function hexAlpha(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// Lighten a hex color by mixing with white at `ratio` (0 = original, 1 = white)
+function lightenHex(hex, ratio) {
+  if (!hex || hex.length < 7) return hex;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const R = Math.round(r + (255 - r) * ratio);
+  const G = Math.round(g + (255 - g) * ratio);
+  const B = Math.round(b + (255 - b) * ratio);
+  return `#${R.toString(16).padStart(2, '0')}${G.toString(16).padStart(2, '0')}${B.toString(16).padStart(2, '0')}`;
+}
+
+// ── Viral data helpers ──────────────────────────────────────────────────────
+
+/**
+ * Return ultra-short single-char labels for the DNA bars.
+ * Using initials only — at 7px they're decorative anyway.
+ */
+const THEME_INITIAL = {
+  ECONOMY: 'É', SOCIAL: 'S', IMMIGRATION: 'I', SECURITY: 'Sé',
+  ENVIRONMENT: 'Ec', DEMOCRACY: 'D', GLOBAL: 'M', PUBLIC_SERVICES: 'P',
+};
+const THEME_INITIAL_EN = {
+  ECONOMY: 'Ec', SOCIAL: 'So', IMMIGRATION: 'Im', SECURITY: 'Se',
+  ENVIRONMENT: 'En', DEMOCRACY: 'De', GLOBAL: 'Gl', PUBLIC_SERVICES: 'Ps',
+};
+
+/**
+ * Find the theme where the user has the strongest position (furthest from 50).
+ * Returns { theme, score, label } or null if no clear signature.
+ */
+function getSignaturePosition(themes, lang) {
+  if (!themes) return null;
+  let maxDist = 0, maxTheme = null, maxScore = 50;
+  Object.entries(themes).forEach(([theme, score]) => {
+    const dist = Math.abs(score - 50);
+    if (dist > maxDist) { maxDist = dist; maxTheme = theme; maxScore = score; }
+  });
+  if (!maxTheme || maxDist < 18) return null;
+
+  const isRight = maxScore >= 50;
+  const POLE = {
+    fr: {
+      ECONOMY: ['État fort', 'Libéral·e'],
+      SOCIAL: ['Conservateur·rice', 'Progressiste'],
+      IMMIGRATION: ['Ouvert·e', 'Restrictif·ve'],
+      SECURITY: ['Libertés civiles', 'Ordre et sécurité'],
+      ENVIRONMENT: ['Croissance d\'abord', 'Écologiste'],
+      DEMOCRACY: ['Autorité forte', 'Démocratie'],
+      GLOBAL: ['Souverainiste', 'Mondialiste'],
+      PUBLIC_SERVICES: ['État minimal', 'État protecteur'],
+    },
+    en: {
+      ECONOMY: ['Statist', 'Liberal'],
+      SOCIAL: ['Conservative', 'Progressive'],
+      IMMIGRATION: ['Open borders', 'Restrictive'],
+      SECURITY: ['Civil liberties', 'Law & order'],
+      ENVIRONMENT: ['Growth first', 'Ecologist'],
+      DEMOCRACY: ['Strong authority', 'Democrat'],
+      GLOBAL: ['Sovereignist', 'Globalist'],
+      PUBLIC_SERVICES: ['Minimal state', 'Welfare state'],
+    },
+  };
+  const label = POLE[lang]?.[maxTheme]?.[isRight ? 1 : 0];
+  return label ? { theme: maxTheme, label } : null;
+}
+
+// ── Component ──────────────────────────────────────────────────────────────
 
 export default function ProfileShareModal({
   themes,
@@ -35,15 +110,28 @@ export default function ProfileShareModal({
   const [downloadStatus, setDownloadStatus] = useState(null);
   const [shareStatus,    setShareStatus]    = useState(null);
 
-  const lang         = language === 'fr' ? 'fr' : 'en';
-  const accentColor  = topArchetype?.color ?? '#2563eb';
-  const topCandidate = rankedCandidates?.[0] ?? null;
-  const rarityLine   = topArchetype?.id ? getRarityLine(topArchetype.id, lang) : '';
+  const lang          = language === 'fr' ? 'fr' : 'en';
+  const accentColor   = topArchetype?.color ?? '#2563eb';
+  const topCandidate  = rankedCandidates?.[0] ?? null;
+  const candidateColor = topCandidate?.color ?? accentColor;
 
-  const reliabilityPct   = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
-  const reliabilityNudge = getReliabilityNudge(reliabilityPct, lang);
+  // Rarity
+  const rarityLine = topArchetype?.id ? getRarityLine(topArchetype.id, lang) : '';
+  const rarityPct  = topArchetype?.id ? (ARCHETYPE_RARITY[topArchetype.id] ?? null) : null;
+  const isUltraRare = rarityPct != null && rarityPct <= 2;
+  const isRare      = rarityPct != null && rarityPct <= 5;
+
+  // Signature position
+  const signature = getSignaturePosition(themes, lang);
+
+  // Archetype
+  const archName = topArchetype?.name?.[lang] ?? topArchetype?.name?.fr
+    ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…');
+  const traits = topArchetype?.traits?.[lang] ?? topArchetype?.traits?.fr ?? [];
 
   const resolvedShareUrl = shareUrl ?? 'https://poliscop.org';
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
 
   const handleNativeShare = async () => {
     if (!canNativeShare) return;
@@ -51,7 +139,7 @@ export default function ProfileShareModal({
     try {
       await navigator.share({
         title: lang === 'fr' ? 'Mon profil politique – Poliscop 2027' : 'My political profile – Poliscop 2027',
-        text:  lang === 'fr' ? 'Découvre mon profil politique →' : 'Check out my political profile →',
+        text:  lang === 'fr' ? 'Découvre mon archétype politique →' : 'Discover my political archetype →',
         url:   resolvedShareUrl,
       });
       setShareStatus('done');
@@ -72,8 +160,8 @@ export default function ProfileShareModal({
       const { toPng } = await import('html-to-image');
       const dataUrl = await toPng(cardRef.current, {
         quality: 1,
-        pixelRatio: 2,
-        backgroundColor: '#0f172a',
+        pixelRatio: 3,   // 3× for Instagram Story quality
+        backgroundColor: '#050810',
       });
       const link = document.createElement('a');
       link.download = 'poliscop-profil.png';
@@ -87,120 +175,63 @@ export default function ProfileShareModal({
     }
   };
 
-  // ── Card styles (all inline — required for html-to-image) ─────────────────
+  // ── Card visual system ────────────────────────────────────────────────────
+  //
+  // Dual-color scheme: archetype color anchors identity (top-left),
+  // candidate color anchors the match result (bottom-right).
+  // Where they meet in the middle = the user's political "intersection".
 
-  const c = {
-    root: {
-      // Centred radial spotlight sits at ~36% down — right where the name lives
-      background: `radial-gradient(ellipse at 52% 36%, ${hexAlpha(accentColor, 0.22)} 0%, transparent 62%), #07111e`,
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-      borderRadius: 20,
-      overflow: 'hidden',
-      width: '100%',
-    },
-    // 4px solid stripe — confident, not decorative
-    accent: { height: 4, background: accentColor },
-    inner:  { padding: '18px 22px 20px' },
+  const bg = [
+    `radial-gradient(ellipse at -8% -4%, ${hexAlpha(accentColor, 0.42)} 0%, transparent 52%)`,
+    `radial-gradient(ellipse at 106% 106%, ${hexAlpha(candidateColor, 0.30)} 0%, transparent 48%)`,
+    '#050810',
+  ].join(', ');
 
-    // ── Header — micro brand ────────────────────────────────────
-    brandRow:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-    brandName: { fontSize: 10, fontWeight: 800, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase' },
-    brandYear: { fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: hexAlpha(accentColor, 0.5) },
+  // The gradient accent stripe at the very top
+  const accentStripe = `linear-gradient(90deg, ${accentColor} 0%, ${lightenHex(candidateColor, 0.1)} 100%)`;
 
-    // ── Identity hero ───────────────────────────────────────────
-    youAre: {
-      fontSize: 10, fontWeight: 700, color: hexAlpha(accentColor, 0.9),
-      textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 9,
-    },
-    archeName: {
-      fontSize: 36, fontWeight: 900, color: '#ffffff',
-      letterSpacing: '-0.028em', lineHeight: 1.06, marginBottom: 16,
-      wordBreak: 'break-word',
-      textShadow: `0 0 100px ${hexAlpha(accentColor, 0.7)}, 0 0 32px ${hexAlpha(accentColor, 0.38)}`,
-    },
-    heroLine: {
-      width: 40, height: 3, borderRadius: 99,
-      background: accentColor, marginBottom: 14,
-    },
+  // ── DNA bars data ─────────────────────────────────────────────────────────
+  //
+  // 8 vertical bars, one per theme, height = score/100 of max bar height.
+  // Each bar is a colored column rising from a dark baseline.
+  // Visually: like a music equalizer — each person's bars are unique.
 
-    // ── Traits — editorial, dot-separated ─────────────────────
-    traitLine: {
-      fontSize: 11, fontWeight: 500,
-      color: 'rgba(255,255,255,0.40)',
-      letterSpacing: '0.02em', marginBottom: 0,
-    },
-
-    // ── Rarity (optional) ───────────────────────────────────────
-    rarityText: {
-      fontSize: 10, fontWeight: 600,
-      color: hexAlpha(accentColor, 0.72),
-      fontStyle: 'italic', marginTop: 8,
-    },
-
-    // ── Section divider ─────────────────────────────────────────
-    sectionDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.07)', margin: '16px 0' },
-
-    // ── Match section ───────────────────────────────────────────
-    matchLabel: {
-      fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)',
-      textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 10,
-    },
-    matchRow: {
-      display: 'flex', alignItems: 'center', gap: 14,
-      backgroundColor: 'rgba(255,255,255,0.04)',
-      border: '1px solid rgba(255,255,255,0.09)',
-      borderRadius: 12, padding: '10px 14px', marginBottom: 16,
-    },
-    matchPct: {
-      fontSize: 28, fontWeight: 900, color: accentColor,
-      letterSpacing: '-0.03em', flexShrink: 0, lineHeight: 1,
-      textShadow: `0 0 24px ${hexAlpha(accentColor, 0.55)}`,
-    },
-    matchDivLine: { width: 1, height: 26, backgroundColor: 'rgba(255,255,255,0.10)', flexShrink: 0 },
-    matchInfo:   { flex: 1, minWidth: 0 },
-    matchName:   { fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.88)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', marginBottom: 2 },
-    matchParty:  { fontSize: 10, color: 'rgba(255,255,255,0.30)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
-
-    // ── Footer ────────────────────────────────────────────────
-    footer:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.07)' },
-    footerCta: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.48)', letterSpacing: '0.01em' },
-    footerUrl: { fontSize: 9,  fontWeight: 800, color: accentColor, opacity: 0.55, letterSpacing: '0.16em', textTransform: 'uppercase' },
-  };
-
-  const traits = topArchetype?.traits?.[lang] ?? topArchetype?.traits?.fr ?? [];
+  const DNA_HEIGHT = 52;   // px, max bar height
+  const themeInitials = lang === 'fr' ? THEME_INITIAL : THEME_INITIAL_EN;
 
   return (
     <motion.div
       className="fixed inset-0 z-50 overflow-y-auto"
-      style={{ backgroundColor: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)' }}
+      style={{ backgroundColor: 'rgba(0,0,0,0.80)', backdropFilter: 'blur(12px)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.22 }}
       onClick={onClose}
     >
-      {/* min-h-full + flex → correct iOS Safari scroll */}
       <div className="flex min-h-full items-start sm:items-center justify-center p-4 py-6">
         <motion.div
           className="w-full max-w-sm flex flex-col gap-3"
-          initial={{ scale: 0.88, opacity: 0, y: 28 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.93, opacity: 0, y: 14 }}
-          transition={{ duration: 0.42, ease: [0.34, 1.08, 0.64, 1] }}
+          initial={{ scale: 0.86, opacity: 0, y: 32 }}
+          animate={{ scale: 1,    opacity: 1, y: 0 }}
+          exit={{ scale: 0.93,    opacity: 0, y: 16 }}
+          transition={{ duration: 0.40, ease: [0.34, 1.08, 0.64, 1] }}
           onClick={e => e.stopPropagation()}
         >
 
-          {/* ── Action buttons — FIRST (always visible, no scroll needed) ── */}
+          {/* ── Action buttons — ABOVE card, always visible ── */}
           <div className="flex flex-col gap-2.5">
 
+            {/* Primary: native share or copy link */}
             {canNativeShare ? (
               <motion.button
                 onClick={handleNativeShare}
-                className="w-full flex items-center justify-center gap-2 bg-white text-gray-900 font-semibold py-3.5 rounded-2xl text-sm"
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.15 }}
+                className="w-full flex items-center justify-center gap-2.5 font-bold min-h-[54px] rounded-2xl text-sm"
+                style={{ backgroundColor: accentColor, color: '#ffffff' }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.13 }}
               >
-                {shareStatus === 'done' ? '✓' : '↗'}
+                <span style={{ fontSize: 16 }}>{shareStatus === 'done' ? '✓' : '↗'}</span>
                 {shareStatus === 'done'
                   ? (lang === 'fr' ? 'Partagé !' : 'Shared!')
                   : (lang === 'fr' ? 'Partager mon profil' : 'Share my profile')}
@@ -208,114 +239,338 @@ export default function ProfileShareModal({
             ) : (
               <motion.button
                 onClick={handleCopyLink}
-                className="w-full flex items-center justify-center gap-2 bg-white text-gray-900 font-semibold py-3.5 rounded-2xl text-sm"
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.15 }}
+                className="w-full flex items-center justify-center gap-2.5 bg-white text-gray-900 font-bold min-h-[54px] rounded-2xl text-sm"
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.13 }}
               >
-                {copyStatus === 'copied' ? '✓' : '🔗'}
+                <span>{copyStatus === 'copied' ? '✓' : '🔗'}</span>
                 {copyStatus === 'copied'
                   ? (lang === 'fr' ? 'Lien copié !' : 'Link copied!')
                   : (lang === 'fr' ? 'Copier le lien' : 'Copy link')}
               </motion.button>
             )}
 
+            {/* Secondary: download image + copy link (if native share available) */}
             <div className="flex gap-2.5">
               <motion.button
                 onClick={handleDownload}
-                className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl text-sm border"
-                style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.12)', color: 'white' }}
-                whileHover={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-                whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}
+                className="flex-1 flex items-center justify-center gap-2 font-semibold min-h-[46px] rounded-2xl text-sm border"
+                style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.88)' }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.13 }}
               >
-                {downloadStatus === 'loading' ? <span className="opacity-60 text-xs">…</span>
+                {downloadStatus === 'loading' ? <span className="text-xs opacity-60">…</span>
                  : downloadStatus === 'done'  ? '✓'
-                 : downloadStatus === 'error' ? '✗' : '↓'}
-                {downloadStatus === 'loading' ? (lang === 'fr' ? 'Export…'       : 'Exporting…')
-                 : downloadStatus === 'done'  ? (lang === 'fr' ? 'Téléchargé !'  : 'Downloaded!')
-                 : downloadStatus === 'error' ? (lang === 'fr' ? 'Erreur'        : 'Error')
-                 :                              (lang === 'fr' ? 'Image'         : 'Save image')}
+                 : downloadStatus === 'error' ? '✗'
+                 : <span style={{ fontSize: 13 }}>↓</span>}
+                <span>
+                  {downloadStatus === 'loading' ? (lang === 'fr' ? 'Export…'        : 'Exporting…')
+                   : downloadStatus === 'done'  ? (lang === 'fr' ? 'Téléchargé !'   : 'Downloaded!')
+                   : downloadStatus === 'error' ? (lang === 'fr' ? 'Erreur'         : 'Error')
+                   :                              (lang === 'fr' ? 'Sauvegarder'    : 'Save image')}
+                </span>
               </motion.button>
 
               {canNativeShare && (
                 <motion.button
                   onClick={handleCopyLink}
-                  className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl text-sm border"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.12)', color: 'white' }}
-                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-                  whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}
+                  className="flex-1 flex items-center justify-center gap-2 font-semibold min-h-[46px] rounded-2xl text-sm border"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.88)' }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.13 }}
                 >
                   {copyStatus === 'copied' ? '✓' : '🔗'}
-                  {copyStatus === 'copied'
-                    ? (lang === 'fr' ? 'Lien copié !' : 'Link copied!')
-                    : (lang === 'fr' ? 'Copier le lien' : 'Copy link')}
+                  <span>
+                    {copyStatus === 'copied'
+                      ? (lang === 'fr' ? 'Lien copié !' : 'Link copied!')
+                      : (lang === 'fr' ? 'Copier lien'  : 'Copy link')}
+                  </span>
                 </motion.button>
               )}
             </div>
           </div>
 
-          {/* ── Share card — preview ── */}
-          <div ref={cardRef} style={c.root}>
+          {/* ══════════════════════════════════════════════════════════════
+              SHARE CARD V3 — social object
+              All styles are inline (required for html-to-image compatibility).
+              No Tailwind classes inside cardRef.
+          ══════════════════════════════════════════════════════════════ */}
+          <div
+            ref={cardRef}
+            style={{
+              background: bg,
+              fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif',
+              borderRadius: 24,
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          >
 
-            {/* Solid accent stripe */}
-            <div style={c.accent} />
+            {/* Top accent stripe — gradient from archetype color to candidate color */}
+            <div style={{ height: 5, background: accentStripe }} />
 
-            <div style={c.inner}>
+            <div style={{ padding: '18px 22px 20px' }}>
 
-              {/* Micro brand */}
-              <div style={c.brandRow}>
-                <span style={c.brandName}>POLISCOP</span>
-                <span style={c.brandYear}>2027</span>
+              {/* ── Brand row ── */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
+                <span style={{
+                  fontSize: 9, fontWeight: 800, letterSpacing: '0.22em',
+                  color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase',
+                }}>
+                  POLISCOP
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: hexAlpha(accentColor, 0.6) }} />
+                  <span style={{
+                    fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+                    color: hexAlpha(accentColor, 0.65), textTransform: 'uppercase',
+                  }}>
+                    2027
+                  </span>
+                </div>
               </div>
 
-              {/* Identity hero */}
-              <p style={c.youAre}>{lang === 'fr' ? 'Vous êtes' : 'You are'}</p>
-              <p style={c.archeName}>
-                {topArchetype?.name?.[lang] ?? topArchetype?.name?.fr ?? (lang === 'fr' ? 'Profil en cours…' : 'Profile in progress…')}
-              </p>
-              <div style={c.heroLine} />
+              {/* ══ ZONE 1: IDENTITY ══════════════════════════════════════ */}
 
-              {/* Traits — editorial, not pills */}
+              {/* "Tu es" label */}
+              <p style={{
+                fontSize: 10, fontWeight: 700, letterSpacing: '0.20em',
+                textTransform: 'uppercase', color: hexAlpha(accentColor, 0.95),
+                marginBottom: 7,
+              }}>
+                {lang === 'fr' ? 'Tu es' : 'You are'}
+              </p>
+
+              {/* Archetype name — the identity hero */}
+              <p style={{
+                fontSize: 42, fontWeight: 900, color: '#ffffff',
+                letterSpacing: '-0.030em', lineHeight: 1.04,
+                marginBottom: 10, wordBreak: 'break-word',
+                textShadow: [
+                  `0 0 120px ${hexAlpha(accentColor, 0.85)}`,
+                  `0 0 40px ${hexAlpha(accentColor, 0.55)}`,
+                  `0 2px 8px rgba(0,0,0,0.6)`,
+                ].join(', '),
+              }}>
+                {archName}
+              </p>
+
+              {/* Traits — editorial, dot-separated */}
               {traits.length > 0 && (
-                <p style={c.traitLine}>{traits.slice(0, 3).join(' · ')}</p>
+                <p style={{
+                  fontSize: 11, fontWeight: 500,
+                  color: 'rgba(255,255,255,0.42)',
+                  letterSpacing: '0.01em', marginBottom: 12,
+                  lineHeight: 1.4,
+                }}>
+                  {traits.slice(0, 3).join(' · ')}
+                </p>
               )}
 
-              {/* Rarity — only if available */}
-              {rarityLine ? <p style={c.rarityText}>{rarityLine}</p> : null}
+              {/* Rarity badge — status signal */}
+              {rarityLine ? (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  backgroundColor: isRare ? hexAlpha(accentColor, 0.16) : 'rgba(255,255,255,0.06)',
+                  border: `1px solid ${isRare ? hexAlpha(accentColor, 0.38) : 'rgba(255,255,255,0.10)'}`,
+                  borderRadius: 99, padding: '5px 11px', marginBottom: 18,
+                }}>
+                  {isUltraRare && (
+                    <span style={{ fontSize: 8, color: accentColor, letterSpacing: '0.1em' }}>◆◆</span>
+                  )}
+                  {isRare && !isUltraRare && (
+                    <span style={{ fontSize: 8, color: accentColor }}>◆</span>
+                  )}
+                  <span style={{
+                    fontSize: 10, fontWeight: 600,
+                    color: isRare ? hexAlpha(accentColor, 0.95) : 'rgba(255,255,255,0.40)',
+                    letterSpacing: '0.01em',
+                  }}>
+                    {rarityLine}
+                  </span>
+                </div>
+              ) : (
+                <div style={{ marginBottom: 18 }} />
+              )}
 
-              {/* Candidate match */}
-              {topCandidate && (
-                <>
-                  <div style={c.sectionDivider} />
-                  <p style={c.matchLabel}>
-                    {lang === 'fr' ? 'Match 2027' : '2027 Match'}
+              {/* ── Divider ── */}
+              <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 18 }} />
+
+              {/* ══ ZONE 2: MATCH — the BIG NUMBER ═══════════════════════ */}
+
+              {topCandidate ? (
+                <div style={{ marginBottom: 18 }}>
+                  <p style={{
+                    fontSize: 9, fontWeight: 700,
+                    color: 'rgba(255,255,255,0.28)',
+                    textTransform: 'uppercase', letterSpacing: '0.16em',
+                    marginBottom: 10,
+                  }}>
+                    {lang === 'fr' ? 'Compatibilité 2027' : '2027 Match'}
                   </p>
-                  <div style={c.matchRow}>
-                    <span style={c.matchPct}>{topCandidate.alignment}%</span>
-                    <div style={c.matchDivLine} />
-                    <div style={c.matchInfo}>
-                      <p style={c.matchName}>{topCandidate.name}</p>
-                      <p style={c.matchParty}>{topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}</p>
+
+                  {/* The big number — the most shareable element */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, marginBottom: 8 }}>
+                    <span style={{
+                      fontSize: 64, fontWeight: 900, letterSpacing: '-0.045em',
+                      lineHeight: 0.92, color: candidateColor,
+                      textShadow: [
+                        `0 0 80px ${hexAlpha(candidateColor, 0.80)}`,
+                        `0 0 28px ${hexAlpha(candidateColor, 0.50)}`,
+                        `0 2px 8px rgba(0,0,0,0.5)`,
+                      ].join(', '),
+                    }}>
+                      {topCandidate.alignment}%
+                    </span>
+                  </div>
+
+                  {/* Candidate info */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {/* Candidate color dot */}
+                    <div style={{
+                      width: 8, height: 8, borderRadius: '50%',
+                      backgroundColor: candidateColor, flexShrink: 0,
+                      boxShadow: `0 0 10px ${hexAlpha(candidateColor, 0.7)}`,
+                    }} />
+                    <div>
+                      <p style={{
+                        fontSize: 14, fontWeight: 700,
+                        color: 'rgba(255,255,255,0.92)',
+                        marginBottom: 1,
+                        letterSpacing: '-0.01em',
+                      }}>
+                        {lang === 'fr' ? 'avec ' : 'with '}{topCandidate.name}
+                      </p>
+                      <p style={{
+                        fontSize: 10, color: 'rgba(255,255,255,0.32)',
+                      }}>
+                        {topCandidate.party?.[lang] ?? topCandidate.party?.fr ?? ''}
+                      </p>
                     </div>
                   </div>
-                </>
+                </div>
+              ) : (
+                <div style={{ marginBottom: 18 }}>
+                  <p style={{
+                    fontSize: 11, color: 'rgba(255,255,255,0.28)',
+                    fontStyle: 'italic', lineHeight: 1.5,
+                  }}>
+                    {lang === 'fr'
+                      ? 'Réponds à plus de questions pour découvrir tes candidats.'
+                      : 'Answer more questions to discover your matches.'}
+                  </p>
+                </div>
               )}
 
-              {/* Footer */}
-              <div style={c.footer}>
-                <span style={c.footerCta}>{lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What’s your archetype?'}</span>
-                <span style={c.footerUrl}>poliscop.org</span>
+              {/* ── Divider ── */}
+              <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 16 }} />
+
+              {/* ══ ZONE 3: DNA FINGERPRINT ═══════════════════════════════
+                  8 vertical bars — one per political theme.
+                  Each person's bar pattern is unique — like a fingerprint.
+                  Colors = theme colors. Height = user's score on that theme.
+              ════════════════════════════════════════════════════════════ */}
+              {themes && (
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{
+                    fontSize: 9, fontWeight: 700,
+                    color: 'rgba(255,255,255,0.25)',
+                    textTransform: 'uppercase', letterSpacing: '0.16em',
+                    marginBottom: 10,
+                  }}>
+                    {lang === 'fr' ? 'Ton ADN politique' : 'Your political DNA'}
+                  </p>
+
+                  {/* The equalizer bars */}
+                  <div style={{
+                    display: 'flex', alignItems: 'flex-end',
+                    gap: 5, height: DNA_HEIGHT,
+                  }}>
+                    {THEMES_ORDER.map(theme => {
+                      const score = themes[theme] ?? 50;
+                      const barH  = Math.max(3, Math.round((score / 100) * DNA_HEIGHT));
+                      const emptyH = DNA_HEIGHT - barH;
+                      const color = THEME_COLORS[theme] ?? '#6b7280';
+
+                      return (
+                        <div
+                          key={theme}
+                          style={{
+                            flex: 1, height: '100%',
+                            display: 'flex', flexDirection: 'column',
+                            justifyContent: 'flex-end',
+                          }}
+                        >
+                          {/* Ghost (empty) upper portion */}
+                          {emptyH > 0 && (
+                            <div style={{
+                              height: emptyH,
+                              backgroundColor: hexAlpha(color, 0.10),
+                              borderRadius: '3px 3px 0 0',
+                            }} />
+                          )}
+                          {/* Colored bar — filled from bottom */}
+                          <div style={{
+                            height: barH,
+                            background: `linear-gradient(to top, ${color}, ${hexAlpha(color, 0.72)})`,
+                            borderRadius: emptyH === 0 ? '3px 3px 0 0' : 0,
+                          }} />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Bar baseline */}
+                  <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.14)', marginBottom: 5 }} />
+
+                  {/* Theme initial labels */}
+                  <div style={{ display: 'flex', gap: 5 }}>
+                    {THEMES_ORDER.map(theme => (
+                      <div key={theme} style={{ flex: 1, textAlign: 'center' }}>
+                        <span style={{
+                          fontSize: 7, fontWeight: 600,
+                          color: hexAlpha(THEME_COLORS[theme] ?? '#6b7280', 0.65),
+                          display: 'block', letterSpacing: '-0.02em',
+                        }}>
+                          {themeInitials[theme] ?? '?'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Footer ── */}
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                paddingTop: 13, borderTop: '1px solid rgba(255,255,255,0.07)',
+              }}>
+                <span style={{
+                  fontSize: 11, fontWeight: 600,
+                  color: 'rgba(255,255,255,0.42)',
+                  letterSpacing: '0.005em',
+                }}>
+                  {lang === 'fr' ? 'Et toi, quel est ton archétype ?' : 'What's your archetype?'}
+                </span>
+                <span style={{
+                  fontSize: 9, fontWeight: 800, letterSpacing: '0.18em',
+                  textTransform: 'uppercase', color: hexAlpha(accentColor, 0.72),
+                }}>
+                  poliscop.org
+                </span>
               </div>
 
             </div>
           </div>
+          {/* ── End share card ── */}
 
           {/* Close */}
           <button
             onClick={onClose}
-            className="w-full text-sm py-4 min-h-[52px] transition-colors flex items-center justify-center font-medium"
-            style={{ color: 'rgba(255,255,255,0.38)' }}
+            className="w-full text-sm min-h-[52px] transition-colors flex items-center justify-center font-medium"
+            style={{ color: 'rgba(255,255,255,0.32)' }}
             onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.62)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.32)'}
           >
             {lang === 'fr' ? 'Fermer' : 'Close'}
           </button>
