@@ -73,12 +73,14 @@ const THEME_ABBR_EN = {
 // ── Confidence helpers ──────────────────────────────────────────────────────
 // V4 NEW: wire up the answeredCount prop that V3 received but never displayed
 
+// Calibrated against quiz max (40 questions for full mode, not 162 raw pool).
+// quick(8q) → 2 bars, medium(24q) → 4 bars, full(40q) → 5 bars.
 function getConfidenceLevel(answeredCount, lang) {
   const n = answeredCount ?? 0;
-  if (n >= 90) return { label: lang === 'fr' ? 'Profil consolidé'  : 'Consolidated profile', bars: 5 };
-  if (n >= 60) return { label: lang === 'fr' ? 'Fiabilité élevée'  : 'High reliability',     bars: 4 };
-  if (n >= 35) return { label: lang === 'fr' ? 'Fiabilité modérée' : 'Moderate reliability', bars: 3 };
-  if (n >= 15) return { label: lang === 'fr' ? 'Profil partiel'    : 'Partial profile',      bars: 2 };
+  if (n >= 40) return { label: lang === 'fr' ? 'Profil complet'    : 'Complete profile',     bars: 5 };
+  if (n >= 24) return { label: lang === 'fr' ? 'Fiabilité élevée'  : 'High reliability',     bars: 4 };
+  if (n >= 16) return { label: lang === 'fr' ? 'Fiabilité modérée' : 'Moderate reliability', bars: 3 };
+  if (n >= 8)  return { label: lang === 'fr' ? 'Profil partiel'    : 'Partial profile',      bars: 2 };
   return               { label: lang === 'fr' ? 'Profil en cours'  : 'Profile in progress',  bars: 1 };
 }
 

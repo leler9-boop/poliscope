@@ -356,11 +356,11 @@ export const archetypes = [
 
   {
     id: 'social_patriote',
-    name: { fr: 'Le·La Social·e Patriote', en: 'The Social Patriot' },
+    name: { fr: 'Le·La Républicain·e Populaire', en: 'The Popular Republican' },
     color: '#7c2d12',
     description: {
-      fr: "Vous défendez les travailleurs et les services publics, mais refusez le multiculturalisme et l'immigration massive.",
-      en: "You defend workers and public services but reject multiculturalism and mass immigration.",
+      fr: "Vous défendez les travailleurs et les services publics dans un cadre républicain et laïque strict, avec une méfiance envers l'immigration de masse.",
+      en: "You defend workers and public services within a strict secular republican framework, with wariness toward mass immigration.",
     },
     traits: {
       fr: ['Pour les droits des travailleurs', 'Pour la laïcité stricte', 'Pour une immigration contrôlée'],

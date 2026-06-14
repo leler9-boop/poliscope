@@ -61,12 +61,18 @@ export function calculateProfile(answers) {
   // Confidence based on number of answered questions
   const answeredCount = Object.keys(answers).length;
   const totalQuestions = allQuestions.length;
-  const confidenceScore = Math.min(100, Math.round((answeredCount / totalQuestions) * 100));
+  // Confidence is calibrated against the quiz's actual max (40 questions for full mode),
+  // NOT against the raw JSON pool (162 questions). This ensures:
+  //   quick mode (8q)   → 'low'
+  //   medium mode (24q) → 'medium'
+  //   full mode (40q)   → 'very_high'
+  // Previously: thresholds referenced 162 total → full mode showed 'medium' (wrong)
+  const confidenceScore = Math.min(100, Math.round((answeredCount / 40) * 100));
   let confidence;
   if (answeredCount < 8)        confidence = 'very_low';
-  else if (answeredCount < 24)  confidence = 'low';
-  else if (answeredCount < 50)  confidence = 'medium';
-  else if (answeredCount < 100) confidence = 'high';
+  else if (answeredCount < 16)  confidence = 'low';
+  else if (answeredCount < 28)  confidence = 'medium';
+  else if (answeredCount < 40)  confidence = 'high';
   else                          confidence = 'very_high';
 
   return { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions };
