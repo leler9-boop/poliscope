@@ -95,7 +95,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
             <span className="underline underline-offset-2 decoration-dotted">
               {showInfo
                 ? (language === 'fr' ? 'Masquer le contexte' : 'Hide context')
-                : (language === 'fr' ? 'Je ne connais pas ce sujet' : 'I need more context')}
+                : (language === 'fr' ? 'Comprendre cet enjeu' : 'Understand this issue')}
             </span>
           </motion.button>
         )}
@@ -117,13 +117,18 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
           )}
         </AnimatePresence>
 
-        {/* ── Concept pills ── */}
+        {/* ── Concept resources ─────────────────────────────────────────────────
+            V4: "Pour aller plus loin" resource entries instead of badge-pills.
+            Each entry looks like a clickable article card, not a hashtag.
+            The chevron → communicates "there's a full explanation inside."
+        ──────────────────────────────────────────────────────────────────── */}
         {concepts.length > 0 && onConceptClick && (
           <div className="mb-5">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2">
-              {language === 'fr' ? 'En savoir plus' : 'Learn more'}
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+              <span>📚</span>
+              <span>{language === 'fr' ? 'Pour aller plus loin' : 'Go deeper'}</span>
             </p>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="space-y-1.5">
               {concepts.map((key) => {
                 const concept = CONCEPTS[key];
                 if (!concept) return null;
@@ -132,10 +137,15 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
                   <button
                     key={key}
                     onClick={() => onConceptClick(key)}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-600 text-xs font-medium transition-all min-h-[32px]"
+                    className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 text-left transition-all group min-h-[44px]"
                   >
-                    <span>{concept.icon}</span>
-                    <span>{label}</span>
+                    <span className="text-base flex-shrink-0 leading-none">{concept.icon}</span>
+                    <span className="flex-1 text-sm font-medium text-slate-700 group-hover:text-blue-700 leading-snug">
+                      {label}
+                    </span>
+                    <svg className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-500 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+                      <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </button>
                 );
               })}

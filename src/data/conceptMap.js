@@ -304,48 +304,60 @@ export const CONCEPTS = {
 };
 
 // ─── Theme transitions ────────────────────────────────────────────────────────
-// Short orientation text shown when the quiz changes theme (15–30 words max).
+// Chapter-opening intros — shown when the quiz changes theme.
+// V4: replaced administrative list ("Les prochaines questions portent sur X, Y, Z")
+// with chapter-opening format: a title + an evocative framing question.
+// The banner now stays visible until the user answers the first question
+// of the new theme (or manually dismisses it).
 
 export const THEME_INTROS = {
   ECONOMY: {
     icon: '💶',
-    fr: 'Les prochaines questions portent sur les impôts, la dette, les entreprises, les salaires et le rôle de l\'État dans l\'économie.',
-    en: 'The next questions are about taxes, debt, businesses, wages and the role of the state in the economy.',
+    chapter: { fr: 'Économie', en: 'Economy' },
+    fr: 'Comment l\'argent public doit-il être géré ? Impôts, dette, rôle de l\'État.',
+    en: 'How should public money be managed? Taxes, debt, the role of the state.',
   },
   SOCIAL: {
     icon: '🏙️',
-    fr: 'Les prochaines questions portent sur les libertés individuelles, la laïcité, les droits des femmes et les choix de société.',
-    en: 'The next questions are about individual freedoms, secularism, women\'s rights and social choices.',
+    chapter: { fr: 'Questions de société', en: 'Social issues' },
+    fr: 'Quelle société voulons-nous construire ? Libertés, laïcité, égalité, identité.',
+    en: 'What kind of society do we want to build? Freedoms, secularism, equality, identity.',
   },
   IMMIGRATION: {
     icon: '🌍',
-    fr: 'Les prochaines questions portent sur les frontières, l\'accueil des migrants, l\'intégration et l\'identité nationale.',
-    en: 'The next questions are about borders, welcoming migrants, integration and national identity.',
+    chapter: { fr: 'Immigration', en: 'Immigration' },
+    fr: 'Qui peut entrer, rester, devenir français ? Frontières, intégration, identité nationale.',
+    en: 'Who can enter, stay, become French? Borders, integration, national identity.',
   },
   SECURITY: {
     icon: '🛡️',
-    fr: 'Les prochaines questions portent sur la police, la justice, la surveillance et l\'équilibre entre sécurité et libertés.',
-    en: 'The next questions are about policing, justice, surveillance and the balance between security and freedoms.',
+    chapter: { fr: 'Sécurité & Libertés', en: 'Security & Freedoms' },
+    fr: 'Jusqu\'où l\'État peut-il surveiller et punir ? Police, justice, libertés civiles.',
+    en: 'How far can the state monitor and punish? Police, justice, civil liberties.',
   },
   ENVIRONMENT: {
     icon: '🌱',
-    fr: 'Les prochaines questions portent sur le climat, l\'énergie, le nucléaire et les limites de la croissance.',
-    en: 'The next questions are about climate, energy, nuclear power and the limits of growth.',
+    chapter: { fr: 'Environnement', en: 'Environment' },
+    fr: 'Croissance économique ou préservation de la planète ? Climat, nucléaire, sobriété.',
+    en: 'Economic growth or protecting the planet? Climate, nuclear, sobriety.',
   },
   DEMOCRACY: {
     icon: '🏛️',
-    fr: 'Les prochaines questions portent sur les institutions, les réformes démocratiques et le pouvoir des citoyens.',
-    en: 'The next questions are about institutions, democratic reforms and citizens\' power.',
+    chapter: { fr: 'Démocratie', en: 'Democracy' },
+    fr: 'Qui décide vraiment ? Institutions, référendum, pouvoir citoyen.',
+    en: 'Who really decides? Institutions, referendums, citizens\' power.',
   },
   GLOBAL: {
     icon: '🌐',
-    fr: 'Les prochaines questions portent sur la politique étrangère, l\'OTAN, l\'Europe et la place de la France dans le monde.',
-    en: 'The next questions are about foreign policy, NATO, Europe and France\'s place in the world.',
+    chapter: { fr: 'France & Monde', en: 'France & the World' },
+    fr: 'Quelle est la place de la France dans le monde ? OTAN, Europe, souveraineté.',
+    en: 'What is France\'s place in the world? NATO, Europe, sovereignty.',
   },
   PUBLIC_SERVICES: {
     icon: '🏥',
-    fr: 'Les prochaines questions portent sur les hôpitaux, l\'école, les retraites et les services de l\'État.',
-    en: 'The next questions are about hospitals, education, pensions and state services.',
+    chapter: { fr: 'Services publics', en: 'Public services' },
+    fr: 'Quelle protection collective voulons-nous ? Hôpitaux, école, retraites, aides sociales.',
+    en: 'What collective protection do we want? Hospitals, schools, pensions, social benefits.',
   },
 };
 

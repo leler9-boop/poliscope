@@ -8,6 +8,7 @@ import PreQuizModal from '../components/PreQuizModal.jsx';
 import ConceptModal from '../components/ConceptModal.jsx';
 import { questionHints } from '../data/questionHints.js';
 import { QUESTION_CONCEPTS, THEME_INTROS } from '../data/conceptMap.js';
+import { THEME_COLORS } from '../data/questions.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -47,8 +48,11 @@ export default function Questionnaire() {
     setIntroSeen(true);
   };
 
-  // Detect theme change and show brief orientation banner
-  // Must be before early return to satisfy Rules of Hooks
+  // Detect theme change and show chapter transition banner.
+  // V4: removed 3-second auto-timeout. Banner now stays visible until:
+  //   (1) user answers the first question of the new theme, or
+  //   (2) user manually clicks ✕.
+  // Must be before early return to satisfy Rules of Hooks.
   const currentQuestion = (questionsQueue && questionsQueue.length > 0) ? questionsQueue[currentIndex] : null;
   useEffect(() => {
     if (!currentQuestion) return;
@@ -56,10 +60,14 @@ export default function Questionnaire() {
     if (prevThemeRef.current !== null && prevThemeRef.current !== currentTheme) {
       const intro = THEME_INTROS[currentTheme];
       if (intro) {
-        setThemeIntro({ theme: currentTheme, icon: intro.icon, text: intro[language] ?? intro.fr });
-        const timer = setTimeout(() => setThemeIntro(null), 3000);
+        setThemeIntro({
+          theme:   currentTheme,
+          icon:    intro.icon,
+          chapter: intro.chapter?.[language] ?? intro.chapter?.fr ?? currentTheme,
+          text:    intro[language] ?? intro.fr,
+        });
         prevThemeRef.current = currentTheme;
-        return () => clearTimeout(timer);
+        return; // no timer — banner persists until first answer or manual close
       }
     }
     prevThemeRef.current = currentTheme;
@@ -101,6 +109,8 @@ export default function Questionnaire() {
     if (!question) return;
     const wasAnswered = currentAnswer != null;
     answerQuestion(question.id, val);
+    // Dismiss chapter banner on first answer of the new theme (V4)
+    if (themeIntro && !wasAnswered) setThemeIntro(null);
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
     if (!wasAnswered) {
       trackQuestionAnswered({
@@ -229,24 +239,50 @@ export default function Questionnaire() {
           </div>
         </div>
 
-        {/* ── Theme transition banner ── */}
+        {/* ── Chapter transition banner ─────────────────────────────────────────
+            V4: redesigned from notification toast to chapter-opening card.
+            - Left accent border in theme color (chapter marker)
+            - Two-line hierarchy: CHAPTER NAME → framing question
+            - No auto-timeout: stays until user answers first question or clicks ✕
+        ────────────────────────────────────────────────────────────────────── */}
         <AnimatePresence>
           {themeIntro && (
             <motion.div
               className="mt-4 px-4 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: -8, height: 0 }}
-              animate={{ opacity: 1, y: 0,  height: 'auto' }}
-              exit={{    opacity: 0, y: -4,  height: 0 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              initial={{ opacity: 0, y: -10, height: 0 }}
+              animate={{ opacity: 1, y: 0,   height: 'auto' }}
+              exit={{    opacity: 0, y: -6,   height: 0 }}
+              transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <div
-                className="flex items-center gap-3 px-4 py-3 rounded-xl border border-blue-100 bg-blue-50 cursor-pointer"
-                onClick={() => setThemeIntro(null)}
+                className="flex items-start gap-3.5 px-4 py-3.5 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+                style={{ borderLeft: `3px solid ${THEME_COLORS[themeIntro.theme] ?? '#2563eb'}` }}
               >
-                <span className="text-lg flex-shrink-0">{themeIntro.icon}</span>
-                <p className="text-sm text-blue-800 leading-snug flex-1">{themeIntro.text}</p>
-                <button className="text-blue-400 hover:text-blue-600 transition-colors text-xs font-medium flex-shrink-0">
-                  ✕
+                {/* Icon */}
+                <span className="text-xl flex-shrink-0 mt-0.5 leading-none">{themeIntro.icon}</span>
+
+                {/* Text hierarchy */}
+                <div className="flex-1 min-w-0">
+                  <p
+                    className="text-[10px] font-bold uppercase tracking-widest mb-1 leading-none"
+                    style={{ color: THEME_COLORS[themeIntro.theme] ?? '#2563eb' }}
+                  >
+                    {themeIntro.chapter}
+                  </p>
+                  <p className="text-sm font-medium text-slate-800 leading-snug">
+                    {themeIntro.text}
+                  </p>
+                </div>
+
+                {/* Dismiss */}
+                <button
+                  onClick={() => setThemeIntro(null)}
+                  className="text-slate-300 hover:text-slate-500 transition-colors flex-shrink-0 p-0.5 mt-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center"
+                  aria-label="Fermer"
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
                 </button>
               </div>
             </motion.div>
