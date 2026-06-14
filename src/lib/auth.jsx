@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase.js';
 import { useStore } from '../store/useStore.js';
 import { initAnonymousSession, mergeAnonymousAnswers } from './anonymous.js';
+import { trackSignupCompleted, trackLoginCompleted } from './analytics.js';
 
 const AuthContext = createContext(null);
 
@@ -146,6 +147,16 @@ export function AuthProvider({ children }) {
         await mergeAnonymousAnswers(u.id);
         await smartSync(u.id);
 
+        // Track login vs signup by checking if this is the user's first sign-in.
+        // user.created_at ≈ now means it's a fresh signup; older date means login.
+        const createdAt = u.created_at ? new Date(u.created_at) : null;
+        const isNewUser = createdAt && (Date.now() - createdAt.getTime()) < 30_000;
+        if (isNewUser) {
+          trackSignupCompleted({ method: u.app_metadata?.provider ?? 'email' });
+        } else {
+          trackLoginCompleted({ method: u.app_metadata?.provider ?? 'email' });
+        }
+
         // Show onboarding if user has never filled in demographics.
         // Guard: only check once per login cycle, even if SIGNED_IN fires twice.
         if (!onboardingChecked) {
@@ -287,6 +298,29 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  /**
+   * Persist the computed archetype and top candidate into user_profiles.
+   * Called from Profile.jsx once archetype + candidates are resolved.
+   * Fire-and-forget — errors are logged, never surface to the user.
+   *
+   * @param {{ archetypeId: string, topCandidateId: string, topCandidateAlignment: number }} meta
+   */
+  async function saveProfileMeta({ archetypeId, topCandidateId, topCandidateAlignment }) {
+    if (!isSupabaseEnabled || !supabase || !user) return;
+    const { error } = await supabase
+      .from('user_profiles')
+      .upsert(
+        {
+          user_id:                 user.id,
+          archetype_id:            archetypeId            ?? null,
+          top_candidate_id:        topCandidateId         ?? null,
+          top_candidate_alignment: topCandidateAlignment  ?? null,
+        },
+        { onConflict: 'user_id' }
+      );
+    if (error) console.error('[Poliscop] saveProfileMeta error:', error.message);
+  }
+
   const value = {
     user,
     loading,
@@ -301,6 +335,7 @@ export function AuthProvider({ children }) {
     loadCloudData,
     saveDemographics,
     loadDemographics,
+    saveProfileMeta,
     // Legacy alias used by the Profile.jsx cloud-save button
     saveProfile: async (answers) => saveAnswers(answers),
   };

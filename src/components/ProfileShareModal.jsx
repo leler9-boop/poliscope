@@ -13,6 +13,7 @@ import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { getRarityLine, ARCHETYPE_RARITY } from '../data/archetypeRarity.js';
 import { THEME_COLORS, THEMES_ORDER } from '../data/questions.js';
+import { trackProfileShared, trackProfileDownloaded } from '../lib/analytics.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
@@ -144,6 +145,12 @@ export default function ProfileShareModal({
       });
       setShareStatus('done');
       setTimeout(() => setShareStatus(null), 2500);
+      trackProfileShared({
+        method:                  'native',
+        archetypeId:             topArchetype?.id ?? null,
+        topCandidateId:          topCandidate?.id ?? null,
+        topCandidateAlignment:   topCandidate?.alignment ?? null,
+      });
     } catch { setShareStatus(null); }
   };
 
@@ -151,6 +158,12 @@ export default function ProfileShareModal({
     try { await navigator.clipboard.writeText(resolvedShareUrl); } catch { /* silent */ }
     setCopyStatus('copied');
     setTimeout(() => setCopyStatus(null), 2500);
+    trackProfileShared({
+      method:                'copy',
+      archetypeId:           topArchetype?.id ?? null,
+      topCandidateId:        topCandidate?.id ?? null,
+      topCandidateAlignment: topCandidate?.alignment ?? null,
+    });
   };
 
   const handleDownload = async () => {
@@ -169,6 +182,13 @@ export default function ProfileShareModal({
       link.click();
       setDownloadStatus('done');
       setTimeout(() => setDownloadStatus(null), 2500);
+      trackProfileDownloaded({ archetypeId: topArchetype?.id ?? null });
+      trackProfileShared({
+        method:                'download',
+        archetypeId:           topArchetype?.id ?? null,
+        topCandidateId:        topCandidate?.id ?? null,
+        topCandidateAlignment: topCandidate?.alignment ?? null,
+      });
     } catch {
       setDownloadStatus('error');
       setTimeout(() => setDownloadStatus(null), 2500);

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
@@ -36,6 +36,7 @@ import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import ProfileReveal from '../components/ProfileReveal.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
+import { trackProfileViewed, trackProfileExported } from '../lib/analytics.js';
 
 /** Weight editor — lets user allocate 100 points across themes. */
 function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClose }) {
@@ -190,7 +191,7 @@ export default function Profile() {
   const [selectedSubtheme, setSelectedSubtheme] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
 
-  const { user, saveAnswers, saveUserProfile } = useAuth();
+  const { user, saveAnswers, saveUserProfile, saveProfileMeta } = useAuth();
 
   if (!profile && !isSharedView) {
     return (
@@ -260,6 +261,29 @@ export default function Profile() {
   const adjustmentCount = Object.values(profileAdjustments).filter(v => v !== 0).length;
   const answeredTotal = Object.keys(answers).length;
   const unansweredCount = totalQuestions - answeredTotal;
+
+  // ── Analytics: fire profile_viewed once on mount ──────────────────────────
+  useEffect(() => {
+    if (isSharedView) return;
+    trackProfileViewed({
+      answeredCount: answeredTotal,
+      archetypeId:   topArchetype?.id ?? null,
+      topCandidateId: rankedCandidates?.[0]?.id ?? null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Analytics: persist archetype + top candidate to DB once resolved ─────
+  useEffect(() => {
+    if (isSharedView || !user || !topArchetype) return;
+    const topCand = rankedCandidates?.[0] ?? null;
+    saveProfileMeta({
+      archetypeId:           topArchetype.id,
+      topCandidateId:        topCand?.id ?? null,
+      topCandidateAlignment: topCand?.alignment ?? null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topArchetype?.id, rankedCandidates?.[0]?.id, user?.id]);
 
   // Confidence bar color — neutral/positive palette only (no red for low scores)
   const confBarColor =
@@ -377,7 +401,7 @@ export default function Profile() {
           {/* Secondary actions — desktop only */}
           {!isSharedView && (<>
             <button
-              onClick={exportProfile}
+              onClick={() => { exportProfile(); trackProfileExported(); }}
               className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
             >
               ↓ {t('profile_export')}

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
+import { trackLandingView } from '../lib/analytics.js';
 
 /* ── Animation helpers ── */
 const fadeUp = (delay = 0) => ({
@@ -42,6 +43,11 @@ export default function Landing() {
   const language = useStore(s => s.language);
   const navigate  = useStore(s => s.navigate);
   const profile   = useStore(s => s.profile);
+
+  useEffect(() => {
+    trackLandingView({ lang: language, hasProfile: !!profile });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const t = createTranslator(language);
 
   const steps = [

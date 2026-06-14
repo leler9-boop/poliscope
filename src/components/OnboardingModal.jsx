@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../lib/auth.jsx';
 import { useStore } from '../store/useStore.js';
+import { trackDemographicsCompleted, trackDemographicsSkipped } from '../lib/analytics.js';
 
 const AGE_RANGES = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'];
 
@@ -40,6 +41,11 @@ export default function OnboardingModal() {
       setSaveError(true);
       return; // keep modal open — do not dismiss until save succeeds
     }
+    trackDemographicsCompleted({
+      ageRange:       ageRange || null,
+      educationLevel: educationLevel || null,
+      hasPostalCode:  !!postalCode,
+    });
     setNeedsOnboarding(false);
   }
 
@@ -51,6 +57,7 @@ export default function OnboardingModal() {
       setSaveError(true);
       return; // keep modal open — do not dismiss until save succeeds
     }
+    trackDemographicsSkipped();
     setNeedsOnboarding(false);
   }
 

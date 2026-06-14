@@ -7,6 +7,12 @@ import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 import { getOrCreateAnonymousId } from '../lib/anonymous.js';
+import {
+  trackTestStart,
+  trackTestComplete,
+  trackImproveStarted,
+  trackImproveCompleted,
+} from '../lib/analytics.js';
 
 /**
  * Pick the next question for improve mode.
@@ -110,7 +116,7 @@ export const useStore = create(
       },
 
       startTest: (mode) => {
-        const { priorityOrder } = get();
+        const { priorityOrder, language } = get();
         const queue = getQuestionQueue(mode, priorityOrder);
         set({
           testMode: mode,
@@ -119,6 +125,7 @@ export const useStore = create(
           currentPage: 'questionnaire',
         });
         routerNavigate('/quiz');
+        trackTestStart({ mode, lang: language });
       },
 
       startRefinement: (extraCount) => {
@@ -143,11 +150,14 @@ export const useStore = create(
           currentPage: 'questionnaire',
         });
         routerNavigate('/quiz');
+        trackImproveStarted();
       },
 
       stopImproveMode: () => {
+        const { answers } = get();
         set({ improveMode: false, currentPage: 'profile' });
         routerNavigate('/profile');
+        trackImproveCompleted({ answeredCount: Object.keys(answers).length });
       },
 
       nextImproveQuestion: () => {
@@ -291,10 +301,16 @@ export const useStore = create(
         if (currentQuestionIndex < questionsQueue.length - 1) {
           set({ currentQuestionIndex: currentQuestionIndex + 1 });
         } else {
-          const { answers } = get();
+          const { answers, testMode, language } = get();
           const profile = calculateProfile(answers);
           set({ profile, currentPage: 'profile' });
           routerNavigate('/profile');
+          trackTestComplete({
+            mode: testMode,
+            answeredCount: Object.keys(answers).length,
+            totalCount: profile.totalQuestions,
+            lang: language,
+          });
         }
       },
 
@@ -306,10 +322,16 @@ export const useStore = create(
       },
 
       finishQuestionnaire: () => {
-        const { answers } = get();
+        const { answers, testMode, language } = get();
         const profile = calculateProfile(answers);
         set({ profile, currentPage: 'profile', profileRevealPending: true });
         routerNavigate('/profile');
+        trackTestComplete({
+          mode: testMode,
+          answeredCount: Object.keys(answers).length,
+          totalCount: profile.totalQuestions,
+          lang: language,
+        });
       },
 
       clearRevealPending: () => set({ profileRevealPending: false }),
