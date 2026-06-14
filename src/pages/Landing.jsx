@@ -110,7 +110,7 @@ export default function Landing() {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="pt-20 sm:pt-28 pb-20 sm:pb-24 text-center">
+        <section className="pt-12 sm:pt-28 pb-20 sm:pb-24 text-center">
 
           {/* Badge */}
           <motion.div
@@ -156,12 +156,12 @@ export default function Landing() {
 
           {/* CTAs */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16"
+            className="flex flex-col items-stretch sm:flex-row sm:items-center sm:justify-center gap-3 mb-16"
             {...fadeUp(0.24)}
           >
             <motion.button
               onClick={() => navigate('selectTest')}
-              className="inline-flex items-center gap-2 bg-slate-900 text-white font-semibold px-7 py-3.5 rounded-xl text-sm"
+              className="flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold px-7 py-4 sm:py-3.5 rounded-xl text-sm min-h-[56px] sm:min-h-0 sm:w-auto"
               style={{ boxShadow: '0 1px 3px rgba(15,23,42,0.12), 0 1px 2px rgba(15,23,42,0.08)' }}
               whileHover={{ scale: 1.02, boxShadow: '0 8px 24px rgba(15,23,42,0.18)' }}
               whileTap={{ scale: 0.97 }}
@@ -176,14 +176,14 @@ export default function Landing() {
             {profile ? (
               <button
                 onClick={() => navigate('profile')}
-                className="text-sm font-medium text-slate-400 hover:text-slate-700 transition-colors px-4 py-3.5"
+                className="text-sm font-medium text-slate-400 hover:text-slate-700 transition-colors px-4 py-3.5 text-center"
               >
                 {language === 'fr' ? 'Voir mon profil →' : 'View my profile →'}
               </button>
             ) : (
               <button
                 onClick={() => navigate('elections')}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 px-6 py-3.5 rounded-xl hover:border-slate-300 hover:bg-slate-50 transition-all"
+                className="flex items-center justify-center gap-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 px-6 min-h-[56px] sm:min-h-0 sm:py-3.5 rounded-xl hover:border-slate-300 hover:bg-slate-50 transition-all"
               >
                 {t('landing_cta_elections')}
               </button>
@@ -305,7 +305,7 @@ export default function Landing() {
 
             <motion.button
               onClick={() => navigate('selectTest')}
-              className="inline-flex items-center gap-2 bg-white text-slate-900 font-semibold px-7 py-3.5 rounded-xl text-sm"
+              className="flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-7 py-4 sm:py-3.5 rounded-xl text-sm w-full sm:w-auto min-h-[56px] sm:min-h-0"
               style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.25)' }}
               whileHover={{ scale: 1.03, boxShadow: '0 8px 24px rgba(0,0,0,0.32)' }}
               whileTap={{ scale: 0.97 }}

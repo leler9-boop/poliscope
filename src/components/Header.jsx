@@ -146,7 +146,7 @@ export default function Header() {
             {/* Language toggle */}
             <button
               onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-              className="text-[12px] font-semibold text-slate-400 hover:text-slate-700 px-2 py-1.5 rounded-md hover:bg-slate-50 transition-colors"
+              className="text-[12px] font-semibold text-slate-400 hover:text-slate-700 px-3 py-2 min-h-[40px] rounded-md hover:bg-slate-50 transition-colors flex items-center"
             >
               {t('lang_switch')}
             </button>
@@ -157,7 +157,7 @@ export default function Header() {
                 {/* Avatar button */}
                 <button
                   onClick={() => setAccountOpen(v => !v)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white transition-all ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold text-white transition-all ${
                     accountOpen ? 'ring-2 ring-slate-400 ring-offset-1' : 'hover:ring-2 hover:ring-slate-200 hover:ring-offset-1'
                   }`}
                   style={{ backgroundColor: '#1A2845' }}
@@ -219,12 +219,12 @@ export default function Header() {
 
         {/* ── Mobile nav ── */}
         {!hideNav && (
-          <div className="sm:hidden flex gap-0.5 pb-2 overflow-x-auto scrollbar-none">
+          <div className="sm:hidden flex gap-0.5 pb-1.5 overflow-x-auto scrollbar-none">
             {[...navItems, ...infoItems].map(item => (
               <button
                 key={item.key}
                 onClick={() => !item.disabled && navigate(item.page)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3.5 py-2 min-h-[36px] rounded-lg text-[13px] font-medium whitespace-nowrap transition-colors flex items-center ${
                   isActive(item.path)
                     ? item.highlight
                       ? 'text-amber-700 bg-amber-50'
@@ -242,7 +242,7 @@ export default function Header() {
             {!isLoggedIn && (
               <button
                 onClick={() => navigate('auth')}
-                className="px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                className="px-3.5 py-2 min-h-[36px] rounded-lg text-[13px] font-medium whitespace-nowrap text-slate-500 hover:text-slate-900 hover:bg-slate-50 flex items-center"
               >
                 {language === 'fr' ? 'Connexion' : 'Sign in'}
               </button>

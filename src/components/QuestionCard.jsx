@@ -132,7 +132,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
                   <button
                     key={key}
                     onClick={() => onConceptClick(key)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-600 text-xs font-medium transition-all"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-600 text-xs font-medium transition-all min-h-[32px]"
                   >
                     <span>{concept.icon}</span>
                     <span>{label}</span>
@@ -197,7 +197,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
         <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
           <button
             onClick={() => setReportOpen(true)}
-            className="text-[11px] text-slate-300 hover:text-slate-500 transition-colors"
+            className="text-[11px] text-slate-300 hover:text-slate-500 transition-colors py-2.5 px-1 min-h-[44px] flex items-center"
           >
             {language === 'fr' ? 'Signaler un problème' : 'Report an issue'}
           </button>

@@ -113,8 +113,9 @@ export default function ProfileShareModal({
       textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 9,
     },
     archeName: {
-      fontSize: 44, fontWeight: 900, color: '#ffffff',
+      fontSize: 36, fontWeight: 900, color: '#ffffff',
       letterSpacing: '-0.028em', lineHeight: 1.06, marginBottom: 16,
+      wordBreak: 'break-word',
       textShadow: `0 0 100px ${hexAlpha(accentColor, 0.7)}, 0 0 32px ${hexAlpha(accentColor, 0.38)}`,
     },
     heroLine: {
@@ -311,10 +312,10 @@ export default function ProfileShareModal({
           {/* Close */}
           <button
             onClick={onClose}
-            className="w-full text-xs py-3 transition-colors"
-            style={{ color: 'rgba(255,255,255,0.32)' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.58)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.32)'}
+            className="w-full text-sm py-4 min-h-[52px] transition-colors flex items-center justify-center font-medium"
+            style={{ color: 'rgba(255,255,255,0.38)' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.62)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
           >
             {lang === 'fr' ? 'Fermer' : 'Close'}
           </button>

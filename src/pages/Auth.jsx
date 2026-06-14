@@ -71,9 +71,9 @@ export default function Auth() {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="max-w-md mx-auto px-4 py-10">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1.5">
           {mode === 'signup'
             ? (fr ? 'Créer un compte' : 'Create account')
             : (fr ? 'Se connecter' : 'Sign in')}
@@ -95,7 +95,7 @@ export default function Auth() {
             if (e) { setError(e.message); setGoogleLoading(false); }
             // On success, the page redirects to Google — no further action needed
           }}
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors mb-4 disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl min-h-[52px] text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors mb-4 disabled:opacity-60"
         >
           {/* Google logo */}
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,19 +120,19 @@ export default function Auth() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               {fr ? 'Mot de passe' : 'Password'}
             </label>
             <input
@@ -141,19 +141,19 @@ export default function Auth() {
               minLength={6}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-700">
+            <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-sm text-green-700">
+            <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700">
               {success}
             </div>
           )}
@@ -161,7 +161,7 @@ export default function Auth() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-bold min-h-[56px] rounded-xl text-sm transition-colors flex items-center justify-center"
           >
             {loading
               ? (fr ? 'Chargement…' : 'Loading…')
@@ -171,19 +171,18 @@ export default function Auth() {
           </button>
         </form>
 
-        <div className="mt-5 text-center space-y-2">
+        <div className="mt-5 text-center space-y-1">
           <button
             onClick={() => { setMode(m => m === 'signin' ? 'signup' : 'signin'); setError(''); setSuccess(''); }}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium min-h-[44px] flex items-center justify-center w-full"
           >
             {mode === 'signin'
               ? (fr ? 'Pas de compte ? Créer un compte' : 'No account? Create one')
               : (fr ? 'Déjà un compte ? Se connecter' : 'Already have an account? Sign in')}
           </button>
-          <br />
           <button
             onClick={() => navigate('landing')}
-            className="text-sm text-gray-400 hover:text-gray-600"
+            className="text-sm text-gray-400 hover:text-gray-600 min-h-[44px] flex items-center justify-center w-full"
           >
             {fr ? 'Continuer sans compte →' : 'Continue without account →'}
           </button>

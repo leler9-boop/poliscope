@@ -60,7 +60,7 @@ export default function ConceptModal({ conceptKey, language, onClose, onGoToArti
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors text-base font-medium leading-none"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors text-base font-medium leading-none"
             aria-label="Fermer"
           >
             ✕
@@ -76,7 +76,7 @@ export default function ConceptModal({ conceptKey, language, onClose, onGoToArti
             <button
               key={n}
               onClick={() => setLevel(n)}
-              className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
+              className={`text-xs font-semibold px-4 py-2.5 min-h-[40px] rounded-full border transition-all flex items-center ${
                 level === n
                   ? 'bg-slate-900 text-white border-slate-900'
                   : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
@@ -122,7 +122,7 @@ export default function ConceptModal({ conceptKey, language, onClose, onGoToArti
           {/* ── Dismiss ── */}
           <button
             onClick={onClose}
-            className="mt-3 w-full text-xs text-slate-400 hover:text-slate-600 py-2 transition-colors"
+            className="mt-3 w-full text-xs text-slate-400 hover:text-slate-600 py-3 min-h-[44px] transition-colors flex items-center justify-center"
           >
             {lang === 'fr' ? '← Revenir à la question' : '← Back to question'}
           </button>

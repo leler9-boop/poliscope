@@ -234,7 +234,8 @@ export default function ProfileReveal({
             {/* CTA — dismiss to full profile */}
             <motion.button
               onClick={onDismiss}
-              className="w-full py-4 rounded-2xl font-bold text-white text-base bg-slate-700 hover:bg-slate-600 transition-all active:scale-95"
+              className="w-full py-4 rounded-2xl font-bold text-white text-base transition-all active:scale-95"
+              style={{ backgroundColor: topCandidate?.color ?? color }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: topCandidate ? 1.45 : 0.4 }}

@@ -100,7 +100,7 @@ function WeightEditor({ initial, themeWeights, setThemeWeights, language, onClos
         <button
           onClick={() => { setThemeWeights(weights); onClose(); }}
           disabled={remaining !== 0}
-          className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold py-2.5 rounded-xl transition-colors"
+          className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold min-h-[44px] rounded-xl transition-colors"
         >
           {language === 'fr' ? 'Appliquer les priorités' : 'Apply priorities'}
         </button>
@@ -369,7 +369,7 @@ export default function Profile() {
           {/* Share — always visible */}
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black px-3 py-2.5 rounded-xl transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black px-4 min-h-[44px] rounded-xl transition-colors"
           >
             ↗ {language === 'fr' ? 'Partager' : 'Share'}
           </button>
@@ -391,7 +391,7 @@ export default function Profile() {
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="flex items-center gap-1.5 text-xs font-medium text-red-400 border border-red-100 px-2.5 py-2.5 rounded-xl hover:bg-red-50 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-red-400 border border-red-100 px-3 py-2.5 rounded-xl hover:bg-red-50 transition-colors min-h-[40px]"
               title={t('profile_reset')}
             >
               ✕
@@ -754,16 +754,7 @@ export default function Profile() {
         );
       })()}
 
-      {/* ── Mobile-only: candidates CTA — visible immediately after hero ── */}
-      {!isSharedView && (
-        <button
-          onClick={() => navigate('elections')}
-          className="sm:hidden w-full flex items-center justify-between px-4 py-3.5 mb-6 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors"
-        >
-          <span>🗳️ {language === 'fr' ? 'Voir mes compatibilités 2027' : 'See my 2027 candidate matches'}</span>
-          <span className="text-slate-400">→</span>
-        </button>
-      )}
+      {/* ── Mobile-only: candidates CTA removed — inline candidates section already below ── */}
 
       {/* ── Share CTA — desktop only (mobile has it in header) ── */}
       <motion.div
@@ -824,40 +815,13 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Ideological axes */}
-      <motion.div
-        className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 mb-5 sm:mb-8"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
-        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5 sm:mb-6">{t('profile_axes_title')}</h2>
-        <div className="grid sm:grid-cols-3 gap-x-10">
-          {axisKeys.map(axisKey => {
-            const axisInfo = AXES_LABELS[axisKey]?.[language];
-            if (!axisInfo) return null;
-            return (
-              <AxisBar
-                key={axisKey}
-                label={axisInfo.label}
-                score={axes[axisKey] ?? 50}
-                leftLabel={axisInfo.left}
-                rightLabel={axisInfo.right}
-                language={language}
-                delay={0.1 + axisKeys.indexOf(axisKey) * 0.08}
-              />
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* ═══ CANDIDATS 2027 ═══ */}
+      {/* ═══ CANDIDATS 2027 — now before axes for mobile-first hierarchy ═══ */}
       {rankedCandidates.length > 0 && (
         <motion.div
           className="mb-6 sm:mb-8"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 0.5, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div className="flex items-baseline justify-between mb-4 gap-3">
             <div>
@@ -888,7 +852,7 @@ export default function Profile() {
                   style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: candidate.color } : {}}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.5 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.4, delay: 0.4 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: candidate.color }} />
@@ -910,7 +874,7 @@ export default function Profile() {
                           style={{ color: barColor }}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ delay: 0.55 + idx * 0.07 }}
+                          transition={{ delay: 0.45 + idx * 0.07 }}
                         >
                           {candidate.alignment}%
                         </motion.span>
@@ -924,7 +888,7 @@ export default function Profile() {
                       style={{ backgroundColor: barColor }}
                       initial={{ width: '0%' }}
                       animate={{ width: `${candidate.alignment}%` }}
-                      transition={{ duration: 0.75, delay: 0.52 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      transition={{ duration: 0.75, delay: 0.42 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
                     />
                   </div>
                 </motion.div>
@@ -942,6 +906,33 @@ export default function Profile() {
           )}
         </motion.div>
       )}
+
+      {/* Ideological axes */}
+      <motion.div
+        className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 mb-5 sm:mb-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5 sm:mb-6">{t('profile_axes_title')}</h2>
+        <div className="grid sm:grid-cols-3 gap-x-10">
+          {axisKeys.map(axisKey => {
+            const axisInfo = AXES_LABELS[axisKey]?.[language];
+            if (!axisInfo) return null;
+            return (
+              <AxisBar
+                key={axisKey}
+                label={axisInfo.label}
+                score={axes[axisKey] ?? 50}
+                leftLabel={axisInfo.left}
+                rightLabel={axisInfo.right}
+                language={language}
+                delay={0.1 + axisKeys.indexOf(axisKey) * 0.08}
+              />
+            );
+          })}
+        </div>
+      </motion.div>
 
       {/* ═══ COURANTS IDÉOLOGIQUES (collapsible) ═══ */}
       {(() => {
@@ -1212,7 +1203,7 @@ export default function Profile() {
                     <button
                       key={rt.id}
                       onClick={() => { setSelectedRefinementTheme(rt); setRefineStep(2); }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-center"
+                      className="flex flex-col items-center gap-1.5 p-3 min-h-[72px] rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-center justify-center"
                     >
                       <span className="text-xl">{rt.emoji}</span>
                       <span className="text-xs font-semibold text-slate-800">{rt.label[language]}</span>
@@ -1349,7 +1340,7 @@ export default function Profile() {
                     <button
                       key={n}
                       onClick={() => startRefinement(n)}
-                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-4 min-h-[40px] rounded-xl hover:bg-blue-100 transition-colors flex items-center"
                     >
                       +{n} {language === 'fr' ? 'questions' : 'questions'}
                     </button>
@@ -1357,7 +1348,7 @@ export default function Profile() {
                   {unansweredCount > 0 && (
                     <button
                       onClick={() => startRefinement(unansweredCount)}
-                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+                      className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-4 min-h-[40px] rounded-xl hover:bg-blue-100 transition-colors flex items-center"
                     >
                       {language === 'fr' ? 'Toutes' : 'All remaining'}
                     </button>
@@ -1412,13 +1403,13 @@ export default function Profile() {
           <div className="flex flex-col gap-2">
             <button
               onClick={() => navigate('elections')}
-              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-lg transition-colors text-left"
+              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 min-h-[48px] rounded-xl transition-colors text-left"
             >
               🗳️ {t('profile_view_elections')}
             </button>
             <button
               onClick={() => navigate('figures')}
-              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 rounded-lg transition-colors text-left"
+              className="flex items-center gap-2 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 px-4 min-h-[48px] rounded-xl transition-colors text-left"
             >
               🏛️ {t('profile_view_figures')}
             </button>
@@ -1432,6 +1423,18 @@ export default function Profile() {
           ? 'Les scores représentent vos positions sur des spectres thématiques, pas des verdicts moraux. Une valeur de 50 est neutre/centrale.'
           : 'Scores represent your position on thematic spectrums, not moral verdicts. A value of 50 is neutral/centrist.'}
       </p>
+
+      {/* Mobile-only reset link — safe, discoverable, not dangerous */}
+      {!isSharedView && (
+        <div className="sm:hidden mt-4 text-center">
+          <button
+            onClick={() => setShowResetConfirm(true)}
+            className="text-xs text-slate-300 hover:text-red-400 transition-colors py-2 px-4 min-h-[44px] inline-flex items-center"
+          >
+            {language === 'fr' ? 'Réinitialiser le profil' : 'Reset profile'}
+          </button>
+        </div>
+      )}
 
       {/* Share modal */}
       <AnimatePresence>

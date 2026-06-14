@@ -56,14 +56,10 @@ export default function PriorityRanking() {
 
   const bodyLines = language === 'fr'
     ? [
-        'Faites glisser les thèmes du plus important au moins important.',
-        'Ce classement ne change pas vos opinions. Il indique simplement les sujets auxquels vous accordez le plus d\'importance.',
-        'Les thèmes placés en haut auront davantage de poids dans votre résultat final.',
+        'Glissez les thèmes du plus important au moins important. Les thèmes en haut auront plus de poids dans votre profil.',
       ]
     : [
-        'Drag the themes from most to least important.',
-        'This ranking doesn\'t change your opinions. It simply shows which topics you care about most.',
-        'Themes placed higher will carry more weight in your final result.',
+        'Drag themes from most to least important. Top themes carry more weight in your final profile.',
       ];
 
   return (
@@ -128,7 +124,7 @@ export default function PriorityRanking() {
                 zIndex: 10,
                 cursor: 'grabbing',
               }}
-              className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing"
+              className="bg-white border border-gray-200 rounded-xl px-4 py-4 flex items-center gap-3 cursor-grab active:cursor-grabbing"
               style={{ listStyle: 'none' }}
               transition={{ duration: 0.18 }}
             >
@@ -169,7 +165,7 @@ export default function PriorityRanking() {
       <div className="flex flex-col gap-3">
         <motion.button
           onClick={handleConfirm}
-          className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3.5 rounded-xl transition-colors text-sm"
+          className="w-full bg-gray-900 hover:bg-black text-white font-semibold min-h-[56px] py-3.5 rounded-xl transition-colors text-sm"
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.15 }}

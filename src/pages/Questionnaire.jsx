@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
@@ -27,6 +27,12 @@ export default function Questionnaire() {
   const [introSeen, setIntroSeen] = useState(() => {
     try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
   });
+
+  // ── Question slide direction (1 = forward, -1 = backward) ──
+  const directionRef = useRef(1);
+
+  // ── Auto-advance timer ──
+  const autoAdvanceTimer = useRef(null);
 
   // ── Concept modal ──
   const [activeConceptKey, setActiveConceptKey] = useState(null);
@@ -83,11 +89,30 @@ export default function Questionnaire() {
     ? Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)
     : 0;
 
+  // Clear auto-advance timer when question changes (user manually navigated)
+  useEffect(() => {
+    return () => clearTimeout(autoAdvanceTimer.current);
+  }, [currentIndex]);
+
   const handleAnswer = (val) => {
-    if (question) answerQuestion(question.id, val);
+    if (!question) return;
+    const wasAnswered = currentAnswer != null;
+    answerQuestion(question.id, val);
+    // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
+    if (!wasAnswered) {
+      clearTimeout(autoAdvanceTimer.current);
+      autoAdvanceTimer.current = setTimeout(() => {
+        directionRef.current = 1;
+        if (improveMode) nextImproveQuestion();
+        else if (isLast) finishQuestionnaire();
+        else nextQuestion();
+      }, 600);
+    }
   };
 
   const handleNext = () => {
+    clearTimeout(autoAdvanceTimer.current);
+    directionRef.current = 1;
     if (improveMode) {
       nextImproveQuestion();
     } else if (isLast) {
@@ -98,8 +123,16 @@ export default function Questionnaire() {
   };
 
   const handleSkip = () => {
+    clearTimeout(autoAdvanceTimer.current);
+    directionRef.current = 1;
     if (isLast) finishQuestionnaire();
     else nextQuestion();
+  };
+
+  const handlePrev = () => {
+    clearTimeout(autoAdvanceTimer.current);
+    directionRef.current = -1;
+    prevQuestion();
   };
 
   return (
@@ -111,6 +144,7 @@ export default function Questionnaire() {
       </AnimatePresence>
 
       {/* ── Concept modal ── */}
+      {/* Note: onGoToArticle intentionally omitted — navigating away would exit the quiz */}
       <AnimatePresence>
         {activeConceptKey && (
           <ConceptModal
@@ -118,10 +152,6 @@ export default function Questionnaire() {
             conceptKey={activeConceptKey}
             language={language}
             onClose={() => setActiveConceptKey(null)}
-            onGoToArticle={() => {
-              setActiveConceptKey(null);
-              navigate('beginner');
-            }}
           />
         )}
       </AnimatePresence>
@@ -184,7 +214,7 @@ export default function Questionnaire() {
         <AnimatePresence>
           {themeIntro && (
             <motion.div
-              className="mx-4 mt-4 max-w-2xl mx-auto"
+              className="mt-4 px-4 max-w-2xl mx-auto"
               initial={{ opacity: 0, y: -8, height: 0 }}
               animate={{ opacity: 1, y: 0,  height: 'auto' }}
               exit={{    opacity: 0, y: -4,  height: 0 }}
@@ -204,24 +234,44 @@ export default function Questionnaire() {
           )}
         </AnimatePresence>
 
-        {/* ── Question card ── */}
-        <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-28 px-4">
-          {question && (
-            <QuestionCard
-              question={
-                questionHints[question.id]
-                  ? { ...question, info: questionHints[question.id] }
-                  : question.explanation
-                  ? { ...question, info: question.explanation }
-                  : question
-              }
-              currentAnswer={currentAnswer}
-              onAnswer={handleAnswer}
-              language={language}
-              concepts={QUESTION_CONCEPTS[question.id] ?? []}
-              onConceptClick={setActiveConceptKey}
-            />
-          )}
+        {/* ── Question card — animated slide between questions ── */}
+        <div className="flex-1 flex flex-col items-center justify-start pt-8 pb-28 px-4 overflow-hidden">
+          <AnimatePresence
+            mode="wait"
+            custom={directionRef.current}
+          >
+            {question && (
+              <motion.div
+                key={question.id}
+                custom={directionRef.current}
+                variants={{
+                  enter: (d) => ({ opacity: 0, x: d * 28, scale: 0.98 }),
+                  center: { opacity: 1, x: 0, scale: 1 },
+                  exit: (d) => ({ opacity: 0, x: d * -20, scale: 0.98 }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.24, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="w-full max-w-2xl"
+              >
+                <QuestionCard
+                  question={
+                    questionHints[question.id]
+                      ? { ...question, info: questionHints[question.id] }
+                      : question.explanation
+                      ? { ...question, info: question.explanation }
+                      : question
+                  }
+                  currentAnswer={currentAnswer}
+                  onAnswer={handleAnswer}
+                  language={language}
+                  concepts={QUESTION_CONCEPTS[question.id] ?? []}
+                  onConceptClick={setActiveConceptKey}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* ── Navigation bas ── */}
@@ -251,7 +301,7 @@ export default function Questionnaire() {
               <>
                 {/* Retour */}
                 <button
-                  onClick={prevQuestion}
+                  onClick={handlePrev}
                   disabled={currentIndex === 0}
                   className={`min-h-[56px] min-w-[56px] rounded-xl border text-sm font-medium transition-colors flex items-center justify-center ${
                     currentIndex === 0
