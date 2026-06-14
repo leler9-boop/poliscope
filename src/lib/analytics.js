@@ -134,13 +134,23 @@ export function trackLoginCompleted({ method } = {}) {
 
 /**
  * User submits the onboarding demographics form.
- * @param {{ ageRange: string|null, educationLevel: string|null, hasPostalCode: boolean }} props
+ * @param {{ gender, ageRange, communeType, employmentStatus, educationLevel, hasPostalCode }} props
  */
-export function trackDemographicsCompleted({ ageRange, educationLevel, hasPostalCode } = {}) {
+export function trackDemographicsCompleted({
+  gender,
+  ageRange,
+  communeType,
+  employmentStatus,
+  educationLevel,
+  hasPostalCode,
+} = {}) {
   track('demographics_completed', {
-    age_range:       ageRange       ?? null,
-    education_level: educationLevel ?? null,
-    has_postal_code: hasPostalCode  ?? false,
+    gender:           gender           ?? null,
+    age_range:        ageRange         ?? null,
+    commune_type:     communeType      ?? null,
+    employment_status: employmentStatus ?? null,
+    education_level:  educationLevel   ?? null,
+    has_postal_code:  hasPostalCode    ?? false,
   });
 }
 

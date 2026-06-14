@@ -495,7 +495,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
 
   const rankedCandidates = useMemo(() => {
     return election.candidates
-      .filter(c => !c.variantOf) // hide variant candidates (e.g. Bardella when Le Pen is the primary RN candidate)
+      .filter(c => !c.variantOf) // filter any remaining variant candidates
       .map(c => ({
         ...c,
         alignment: blendedAlignment(globalProfile, thisElectionAnswers, c, questions, priorityOrder),

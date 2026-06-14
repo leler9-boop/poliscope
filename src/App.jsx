@@ -29,6 +29,7 @@ const CandidateCompare = lazy(() => import('./pages/CandidateCompare.jsx'));
 const Beginner         = lazy(() => import('./pages/Beginner.jsx'));
 const Privacy          = lazy(() => import('./pages/Privacy.jsx'));
 const Terms            = lazy(() => import('./pages/Terms.jsx'));
+const FounderDashboard = lazy(() => import('./pages/FounderDashboard.jsx'));
 
 function PageLoader() {
   return (
@@ -121,6 +122,7 @@ function AppInner() {
             <Route path="/learn"        element={<Beginner />} />
             <Route path="/privacy"      element={<Privacy />} />
             <Route path="/terms"        element={<Terms />} />
+            <Route path="/founder"      element={<FounderDashboard />} />
             <Route path="*"             element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

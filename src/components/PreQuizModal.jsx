@@ -6,12 +6,14 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
     fr: {
       title: 'Avant de commencer',
       text: "Si une question ne vous concerne pas, ou si vous n'avez tout simplement pas d'avis — passez-la. C'est normal.\n\nEn revanche, évitez de répondre au hasard : ça peut fausser votre profil.",
-      button: 'C\'est parti',
+      button: "C'est parti",
+      consent: "En commençant, tu acceptes que tes réponses anonymisées contribuent à mieux comprendre les opinions des Français.",
     },
     en: {
       title: 'Before you start',
       text: "If a question doesn't apply to you, or you just don't have a view on it — skip it. That's fine.\n\nJust avoid answering randomly: it can skew your results.",
-      button: 'Let\'s go',
+      button: "Let's go",
+      consent: "By continuing, you agree that your anonymized answers help us better understand political opinions.",
     },
   };
 
@@ -34,13 +36,17 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         transition={{ duration: 0.25, ease: [0.34, 1.1, 0.64, 1] }}
       >
         <h2 className="text-xl font-bold text-gray-900 mb-4">{c.title}</h2>
-        <p className="text-sm text-gray-500 leading-relaxed mb-8 whitespace-pre-line">{c.text}</p>
+        <p className="text-sm text-gray-500 leading-relaxed mb-6 whitespace-pre-line">{c.text}</p>
         <button
           onClick={onStart}
           className="w-full py-3 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold transition-colors"
         >
           {c.button}
         </button>
+        {/* Consent notice — transparent, non-blocking */}
+        <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">
+          {c.consent}
+        </p>
       </motion.div>
     </motion.div>
   );

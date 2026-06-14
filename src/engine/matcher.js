@@ -54,13 +54,13 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
 
   const meanDistance = weightedDistanceSum / totalWeight; // 0–1
 
-  // Power 2.8: produces a sharper, more realistic spread.
-  // d=0.05 → 86%  (very similar)
-  // d=0.15 → 64%  (moderate overlap)
-  // d=0.25 → 44%  (clear disagreement)
-  // d=0.35 → 28%  (weak alignment)
-  // d=0.50 → 14%  (opposing)
-  const baseAlignment = Math.round(Math.pow(1 - meanDistance, 2.8) * 100);
+  // Power 2.4: balanced spread — generous enough for moderate users, still punishing for opposites.
+  // d=0.05 → 89%  (very similar)
+  // d=0.15 → 71%  (good overlap)
+  // d=0.25 → 53%  (moderate disagreement)
+  // d=0.35 → 37%  (weak alignment)
+  // d=0.50 → 19%  (opposing)
+  const baseAlignment = Math.round(Math.pow(1 - meanDistance, 2.4) * 100);
 
   // Multiplicative veto: on 4 clivant themes, a large distance crushes the score.
   // This models the "dealbreaker" effect — e.g. a user strongly opposed to immigration

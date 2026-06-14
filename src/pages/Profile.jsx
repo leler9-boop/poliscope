@@ -241,11 +241,11 @@ export default function Profile() {
     [themes, priorityOrder]
   );
 
-  // fr_2027 candidates, excluding variants (bardella → variantOf lepen_2027)
+  // fr_2027 candidates — all shown (Bardella is now the primary RN candidate)
   const fr2027Candidates = useMemo(() => {
     const election = elections.find(e => e.id === 'fr_2027');
     if (!election) return [];
-    return election.candidates.filter(c => !c.variantOf);
+    return election.candidates;
   }, []);
 
   const rankedCandidates = useMemo(() => {

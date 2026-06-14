@@ -272,13 +272,30 @@ export function AuthProvider({ children }) {
   /**
    * Save optional demographic data. Creates a record even if all fields are null
    * (used to mark onboarding as seen/skipped).
+   *
+   * @param {{ gender, age_range, commune_type, employment_status, education_level, postal_code }} fields
    */
-  async function saveDemographics({ age_range, education_level, postal_code }) {
+  async function saveDemographics({
+    gender           = null,
+    age_range        = null,
+    commune_type     = null,
+    employment_status = null,
+    education_level  = null,
+    postal_code      = null,
+  } = {}) {
     if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
     const { error } = await supabase
       .from('user_demographics')
       .upsert(
-        { user_id: user.id, age_range: age_range ?? null, education_level: education_level ?? null, postal_code: postal_code ?? null },
+        {
+          user_id: user.id,
+          gender:            gender            ?? null,
+          age_range:         age_range         ?? null,
+          commune_type:      commune_type      ?? null,
+          employment_status: employment_status ?? null,
+          education_level:   education_level   ?? null,
+          postal_code:       postal_code       ?? null,
+        },
         { onConflict: 'user_id' }
       );
     if (error) console.error('[Poliscop] Demographics save error:', error.message);
