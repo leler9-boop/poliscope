@@ -138,6 +138,32 @@ export default function CandidateProfile() {
         </div>
       </div>
 
+      {/* Candidacy status badge */}
+      {candidate.candidacyStatus && (
+        <div className="mb-6">
+          {(() => {
+            const statusConfig = {
+              declared:    { fr: 'Candidat déclaré',       en: 'Declared candidate',      bg: 'bg-green-50',  text: 'text-green-700',  border: 'border-green-200',  dot: 'bg-green-500'  },
+              probable:    { fr: 'Candidature probable',   en: 'Probable candidate',       bg: 'bg-blue-50',   text: 'text-blue-700',   border: 'border-blue-200',   dot: 'bg-blue-400'   },
+              speculative: { fr: 'Hypothèse politique',    en: 'Political hypothesis',     bg: 'bg-amber-50',  text: 'text-amber-700',  border: 'border-amber-200',  dot: 'bg-amber-400'  },
+              ineligible:  { fr: 'Inéligible',             en: 'Ineligible',               bg: 'bg-red-50',    text: 'text-red-700',    border: 'border-red-200',    dot: 'bg-red-400'    },
+            };
+            const s = statusConfig[candidate.candidacyStatus] ?? statusConfig.speculative;
+            const label = language === 'fr' ? s.fr : s.en;
+            const result = typeof candidate.result === 'object' ? candidate.result[language] : candidate.result;
+            return (
+              <div className={`inline-flex items-start gap-2 rounded-xl border px-3.5 py-2.5 ${s.bg} ${s.border}`}>
+                <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${s.dot}`} />
+                <div>
+                  <p className={`text-xs font-bold ${s.text}`}>{label}</p>
+                  {result && <p className={`text-xs mt-0.5 ${s.text} opacity-75`}>{result}</p>}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
       {/* Bio */}
       {candidate.description && (
         <section className="mb-8">
@@ -149,6 +175,29 @@ export default function CandidateProfile() {
           </p>
         </section>
       )}
+
+      {/* Programme */}
+      <section className="mb-8">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+          {language === 'fr' ? 'Programme' : 'Programme'}
+        </h2>
+        {candidate.programme?.[language] ? (
+          <p className="text-gray-700 leading-relaxed">{candidate.programme[language]}</p>
+        ) : (
+          <div className="rounded-xl bg-gray-50 border border-gray-100 px-4 py-3 space-y-1.5">
+            <p className="text-sm text-gray-500">
+              {language === 'fr'
+                ? 'Programme officiel non publié à ce stade.'
+                : 'Official programme not yet published.'}
+            </p>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              {language === 'fr'
+                ? 'Les positions ci-dessous sont déduites de ses déclarations publiques, votes, interviews et prises de position récentes.'
+                : 'The positions shown below are inferred from public statements, votes, interviews and recent positions.'}
+            </p>
+          </div>
+        )}
+      </section>
 
       {/* Key positions */}
       {positions.length > 0 && (

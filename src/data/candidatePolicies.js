@@ -717,4 +717,111 @@ export const CANDIDATE_POLICIES = {
       en: `He sought to repeal the Affordable Care Act (Obamacare) without a replacement and advocated significant cuts to federal social spending.`,
     },
   },
+
+  // ── FRANCE 2027 — candidats manquants ──────────────────────────────────────
+
+  bardella: {
+    ECONOMY: {
+      fr: `Bardella défend le pouvoir d'achat comme priorité absolue : il propose une baisse de TVA sur les produits de première nécessité, la défense des retraites anticipées pour les carrières longues et un soutien à l'industrie française via la préférence nationale dans les marchés publics. Il s'oppose aux délocalisations et aux traités de libre-échange qu'il juge défavorables aux travailleurs français.`,
+      en: `Bardella makes purchasing power his top priority: he proposes a VAT cut on essential goods, early retirement protection for long careers, and support for French industry through national preference in public contracts. He opposes offshoring and free-trade agreements he considers harmful to French workers.`,
+    },
+    SOCIAL: {
+      fr: `Bardella porte des valeurs conservatrices sur la société : priorité à la famille traditionnelle, opposition aux politiques jugées "woke" dans l'éducation et les médias, défense de la laïcité contre "l'islamisme". Il s'oppose à la PMA pour toutes et à toute extension des droits aux couples homosexuels.`,
+      en: `Bardella holds conservative social values: priority to the traditional family, opposition to policies he labels "woke" in education and the media, and defence of secularism against "Islamism". He opposes medically assisted procreation for all and any extension of rights to same-sex couples.`,
+    },
+    IMMIGRATION: {
+      fr: `L'immigration est le thème central de Bardella. Il défend l'immigration zéro (arrêt total de l'immigration légale non-européenne), la suppression du droit du sol, l'expulsion systématique des étrangers en situation irrégulière et la fin du regroupement familial hors UE. Il veut constitutionnaliser la priorité nationale dans l'accès aux droits sociaux et au logement.`,
+      en: `Immigration is Bardella's defining theme. He advocates near-zero immigration (ending non-European legal migration), abolishing birthright citizenship, systematically deporting undocumented migrants, and ending family reunification from outside the EU. He wants national priority in social rights and housing enshrined in the constitution.`,
+    },
+    SECURITY: {
+      fr: `Il défend la tolérance zéro face à la délinquance, le rétablissement des peines planchers, la construction de nouvelles prisons et le doublement des effectifs de police. Il veut durcir les peines pour les récidivistes et restaurer l'autorité de l'État dans les quartiers qualifiés de "perdus de la République".`,
+      en: `He advocates zero tolerance on crime, restoring mandatory minimum sentences, building new prisons, and doubling police staffing. He wants harsher penalties for repeat offenders and restoration of state authority in areas he describes as "lost to the Republic".`,
+    },
+    ENVIRONMENT: {
+      fr: `Bardella est sceptique vis-à-vis des objectifs climatiques européens jugés trop coûteux. Il s'oppose aux normes européennes sur les véhicules thermiques et à l'éolien terrestre. Il soutient le nucléaire, mais rejette les contraintes environnementales sur les entreprises françaises qui selon lui nuisent à leur compétitivité.`,
+      en: `Bardella is sceptical of European climate targets he considers too costly. He opposes EU standards on combustion-engine vehicles and onshore wind. He supports nuclear power but rejects environmental constraints on French businesses, which he says harm their competitiveness.`,
+    },
+    DEMOCRACY: {
+      fr: `Il défend le référendum d'initiative populaire et veut redonner la parole aux Français sur des sujets bloqués par les élites politiques, notamment l'immigration. Il est favorable à la primauté du droit français sur le droit européen et critique les institutions qui limitent la souveraineté populaire selon lui.`,
+      en: `He supports the citizens' initiative referendum and wants to give French people a direct say on issues blocked by political elites, particularly immigration. He favours French law taking precedence over European law and criticises institutions he says limit popular sovereignty.`,
+    },
+    GLOBAL: {
+      fr: `Bardella est eurosceptique mais a abandonné le Frexit après la Brexit. Il veut refonder l'UE en alliance de nations souveraines, réduire les compétences de Bruxelles, et refuse l'élargissement à l'Ukraine. Sur la Russie, il a longtemps affiché des positions ambiguës bien que la guerre en Ukraine ait durci son discours public.`,
+      en: `Bardella is Eurosceptic but dropped Frexit after Brexit. He wants to refound the EU as an alliance of sovereign nations, reduce Brussels' powers, and opposes Ukraine's membership. On Russia, he long held ambiguous positions, though the Ukraine war has hardened his public stance.`,
+    },
+    PUBLIC_SERVICES: {
+      fr: `Il défend les services publics de proximité (hôpitaux, postes, écoles en zones rurales) et la retraite à 60 ans pour les carrières longues. Il veut réserver prioritairement l'accès aux aides sociales aux Français et aux Européens, au détriment des étrangers extra-communautaires.`,
+      en: `He defends local public services (hospitals, post offices, schools in rural areas) and retirement at 60 for long careers. He wants social benefits reserved primarily for French and European citizens, to the exclusion of non-EU nationals.`,
+    },
+  },
+
+  castets: {
+    ECONOMY: {
+      fr: `Castets défend une économie redistribuant davantage vers le travail et les ménages modestes. Elle soutient l'annulation de la réforme des retraites, l'augmentation du SMIC, et un plan d'investissement public massif dans les services publics financé par une fiscalité accrue sur le capital et les grandes entreprises. Elle s'oppose à l'austérité budgétaire.`,
+      en: `Castets advocates an economy redistributing more towards labour and low-income households. She supports cancelling the pension reform, raising the minimum wage, and a massive public investment plan in public services funded by higher taxes on capital and large corporations. She opposes fiscal austerity.`,
+    },
+    SOCIAL: {
+      fr: `Elle défend les droits des femmes, la laïcité, l'égalité LGBTQ+ et une société plurielle inclusive. En tant que haute fonctionnaire issue de la société civile, elle met en avant des valeurs républicaines et progressistes sur les questions de société.`,
+      en: `She defends women's rights, secularism, LGBTQ+ equality, and an inclusive pluralist society. As a senior civil servant from civil society, she emphasises republican and progressive values on social issues.`,
+    },
+    IMMIGRATION: {
+      fr: `Castets défend une politique migratoire humaine, le respect du droit d'asile international et des droits fondamentaux des personnes migrantes. Elle s'oppose aux lois immigration restrictives et à la rhétorique de contrôle des frontières au détriment de la dignité humaine.`,
+      en: `Castets advocates a humane migration policy, respect for international asylum law, and the fundamental rights of migrants. She opposes restrictive immigration laws and border-control rhetoric at the expense of human dignity.`,
+    },
+    SECURITY: {
+      fr: `Elle privilégie une approche préventive de la sécurité : investissement dans les services sociaux, la jeunesse et l'éducation pour traiter les causes profondes de la délinquance, plutôt qu'un durcissement pénal. Elle défend les libertés publiques face aux dérives sécuritaires.`,
+      en: `She favours a preventive approach to security: investing in social services, youth, and education to address the root causes of crime, rather than penal toughening. She defends civil liberties against authoritarian security drifts.`,
+    },
+    ENVIRONMENT: {
+      fr: `Castets porte des engagements climatiques forts alignés sur le programme NFP : planification écologique, sortie des énergies fossiles, rénovation thermique massive des logements et transport public. Elle est favorable à la sortie du nucléaire à terme.`,
+      en: `Castets carries strong climate commitments aligned with the NFP programme: ecological planning, phase-out of fossil fuels, mass thermal renovation of housing, and public transport. She supports phasing out nuclear energy in the long term.`,
+    },
+    DEMOCRACY: {
+      fr: `Elle défend le renforcement de la démocratie participative et un meilleur contrôle citoyen des institutions. Elle soutient la proportionnelle pour les élections législatives et des mécanismes de démocratie directe pour impliquer davantage les citoyens dans les décisions publiques.`,
+      en: `She advocates strengthening participatory democracy and greater citizen oversight of institutions. She supports proportional representation for legislative elections and direct democracy mechanisms to give citizens more say in public decisions.`,
+    },
+    GLOBAL: {
+      fr: `Castets est pro-européenne mais critique de l'Europe actuelle, jugée trop orientée vers le marché et l'austérité. Elle veut une Europe plus sociale, solidaire et souveraine sur le plan industriel. Elle soutient l'Ukraine sans ambiguïté et défend le multilatéralisme.`,
+      en: `Castets is pro-European but critical of the current EU, which she finds too market-oriented and austere. She wants a more social, solidarity-driven, and industrially sovereign Europe. She unambiguously supports Ukraine and defends multilateralism.`,
+    },
+    PUBLIC_SERVICES: {
+      fr: `C'est son terrain de prédilection en tant qu'ancienne directrice des finances de la Ville de Paris. Elle défend la sanctuarisation et le renforcement massif des services publics : hôpitaux, école, justice, logement social. Elle s'oppose aux privatisations et aux coupes budgétaires.`,
+      en: `This is her home territory as former Director of Finance for the City of Paris. She defends the protection and massive strengthening of public services: hospitals, schools, justice, social housing. She opposes privatisations and budget cuts.`,
+    },
+  },
+
+  roussel_2027: {
+    ECONOMY: {
+      fr: `Roussel défend une économie de plein emploi avec des salaires élevés et une forte protection des travailleurs. Il propose l'augmentation du SMIC, la suppression de la réforme des retraites et un soutien appuyé à l'industrie française. Il distingue le PCF de LFI en refusant le catastrophisme économique et en valorisant la production et le travail.`,
+      en: `Roussel advocates a full-employment economy with high wages and strong worker protections. He proposes raising the minimum wage, scrapping the pension reform, and strong support for French industry. He distances the PCF from LFI by rejecting economic doom-mongering and valuing production and labour.`,
+    },
+    SOCIAL: {
+      fr: `Roussel est progressiste sur les droits sociaux mais porte un discours de laïcité strict et de défense de la culture ouvrière, parfois distinct des positions boboïsées de la gauche parisienne. Il est favorable aux droits LGBTQ+ mais met en avant la lutte des classes plutôt que les identités.`,
+      en: `Roussel is progressive on social rights but carries a discourse of strict secularism and defence of working-class culture, sometimes distinct from the metropolitan left's positions. He supports LGBTQ+ rights but emphasises class struggle over identity politics.`,
+    },
+    IMMIGRATION: {
+      fr: `Roussel a une position plus mesurée que LFI sur l'immigration : il défend les droits des personnes migrantes et le droit d'asile, mais insiste sur l'intégration et la laïcité. Il refuse la concurrence déloyale entre travailleurs étrangers et français et plaide pour la régularisation des sans-papiers qui travaillent.`,
+      en: `Roussel holds a more measured position than LFI on immigration: he defends migrants' rights and the right to asylum, but insists on integration and secularism. He opposes unfair competition between foreign and French workers and advocates regularising undocumented workers who are employed.`,
+    },
+    SECURITY: {
+      fr: `Il privilégie la prévention et l'investissement public dans les quartiers populaires pour réduire la délinquance, plutôt qu'une approche purement répressive. Il défend les libertés publiques et critique les dérives sécuritaires, tout en reconnaissant le besoin d'une police au service de la population.`,
+      en: `He prioritises prevention and public investment in working-class neighbourhoods to reduce crime, rather than a purely repressive approach. He defends civil liberties and criticises authoritarian security drifts, while recognising the need for police serving the population.`,
+    },
+    ENVIRONMENT: {
+      fr: `Roussel adopte une position nuancée sur le nucléaire, moins anti-nucléaire que les Verts, considérant qu'il peut être compatible avec la transition écologique. Il défend des investissements massifs dans les renouvelables et les transports en commun, mais refuse que la transition se fasse au détriment des travailleurs.`,
+      en: `Roussel takes a nuanced position on nuclear power, less anti-nuclear than the Greens, considering it potentially compatible with the ecological transition. He advocates massive investment in renewables and public transport, but refuses to let the transition be made at workers' expense.`,
+    },
+    DEMOCRACY: {
+      fr: `Il défend les institutions démocratiques, une VIe République plus parlementaire et davantage de démocratie participative dans les entreprises (droits des salariés). Il est favorable à la proportionnelle pour mieux représenter les partis politiques au Parlement.`,
+      en: `He defends democratic institutions, a more parliamentary Sixth Republic, and greater participatory democracy in businesses (employee rights). He supports proportional representation for better party representation in Parliament.`,
+    },
+    GLOBAL: {
+      fr: `Roussel est plus souverainiste que les partis de gauche classiques sur certains sujets commerciaux : il s'oppose aux traités de libre-échange et défend la préférence locale et nationale dans la commande publique. Il soutient l'Ukraine, contrairement à LFI, et est résolument anti-OTAN dans une logique de désarmement multilatéral.`,
+      en: `Roussel is more sovereignist than traditional left parties on some trade issues: he opposes free-trade agreements and defends local and national preference in public procurement. He supports Ukraine, unlike LFI, and is resolutely anti-NATO in a logic of multilateral disarmament.`,
+    },
+    PUBLIC_SERVICES: {
+      fr: `C'est la priorité absolue du PCF : reconstruction des services publics, arrêt de toutes les privatisations, retour à la gestion publique des secteurs stratégiques (eau, énergie, transport). Il défend un État fort et un secteur public étendu comme rempart contre les inégalités.`,
+      en: `This is the PCF's absolute priority: rebuilding public services, stopping all privatisations, returning to public management of strategic sectors (water, energy, transport). He defends a strong state and an extensive public sector as a bulwark against inequality.`,
+    },
+  },
 };

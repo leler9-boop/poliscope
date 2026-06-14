@@ -1,16 +1,22 @@
 /**
- * CompareBar — Dual-marker axis comparison.
+ * CompareBar — Dual-row axis comparison.
  *
- * Shows USER and TARGET positions on a shared 0–100 ideological spectrum.
- * A dot at each position; the gap between dots = political distance.
- * Theme color identifies the theme, not the person.
+ * DESIGN RATIONALE:
+ * Previous design: two markers on ONE shared track → markers overlap, confusing.
+ * New design: TWO SEPARATE rows — one for "Vous", one for the target.
+ * User understands position at a glance without decoding overlapping symbols.
+ *
+ * Layout per theme:
+ *   ÉCONOMIE                              Δ 9 · Très proches
+ *   Vous         ──────────────●────────  54
+ *   Gabriel Attal ─────────────────●───── 63
  *
  * Exports:
- *   CompareBar            — single theme row, user vs. one target
- *   CompareBarThree       — single theme row, user vs. two targets
- *   AutoInsights          — auto-generated top agreements / divergences
- *   ThemeComparison       — all 8 themes + insights, user vs. one target
- *   ThemeComparisonThree  — all 8 themes + insights, user vs. two targets
+ *   CompareBar            — single theme, user vs. one target
+ *   CompareBarThree       — single theme, user vs. two targets (3-row layout)
+ *   AutoInsights          — top agreements / divergences
+ *   ThemeComparison       — all 8 themes, user vs. one target
+ *   ThemeComparisonThree  — all 8 themes, user vs. two targets
  */
 
 import React from 'react';
@@ -36,7 +42,7 @@ function diffBg(diff) {
 function diffLabel(diff, language) {
   if (diff < 12) return language === 'fr' ? 'Très proches' : 'Very similar';
   if (diff < 28) return language === 'fr' ? 'Proches' : 'Close';
-  if (diff < 45) return language === 'fr' ? 'Différence modérée' : 'Moderate';
+  if (diff < 45) return language === 'fr' ? 'Différence notable' : 'Notable gap';
   return language === 'fr' ? 'Désaccord marqué' : 'Strong gap';
 }
 
@@ -45,49 +51,78 @@ function diffLabel(diff, language) {
 const THEME_AXES = {
   ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'   } },
   SOCIAL:          { en: { left: 'Traditional',    right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'   } },
-  IMMIGRATION:     { en: { left: 'Restrictive',    right: 'Open'           }, fr: { left: 'Restrictif',     right: 'Ouvert'         } },
-  SECURITY:        { en: { left: 'State security', right: 'Civil liberties'}, fr: { left: 'Sécurité',       right: 'Libertés'       } },
+  IMMIGRATION:     { en: { left: 'Open',           right: 'Restrictive'    }, fr: { left: 'Ouvert',         right: 'Restrictif'     } },
+  SECURITY:        { en: { left: 'Civil liberties', right: 'Law & order'   }, fr: { left: 'Libertés',       right: 'Sécurité'       } },
   ENVIRONMENT:     { en: { left: 'Growth first',   right: 'Ecology'        }, fr: { left: 'Croissance',     right: 'Écologie'       } },
   DEMOCRACY:       { en: { left: 'Strong state',   right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'   } },
   GLOBAL:          { en: { left: 'Sovereignty',    right: 'Multilateral'   }, fr: { left: 'Souveraineté',   right: 'Multilatéral'   } },
   PUBLIC_SERVICES: { en: { left: 'Private',        right: 'Public services'}, fr: { left: 'Privé',          right: 'Services publics'} },
 };
 
-// ── USER marker (dark square) ──────────────────────────────────────────────────
+// ── ScoreRow — one labeled bar ─────────────────────────────────────────────────
+// label | ════════════════●══════════ | score
 
-function UserMarker({ position, delay }) {
+function ScoreRow({ label, score, color, isUser = false, delay = 0, showPoles = false, leftPole, rightPole, language }) {
+  const pct = Math.round(score ?? 50);
+
   return (
-    <motion.div
-      className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-sm bg-slate-800 z-20 shadow-sm"
-      initial={{ left: '50%', opacity: 0, scale: 0.5 }}
-      animate={{ left: `${position}%`, opacity: 1, scale: 1 }}
-      transition={{ duration: 0.85, delay, ease: [0.34, 1.12, 0.64, 1] }}
-    />
-  );
-}
+    <div>
+      {showPoles && (
+        <div className="flex justify-between mb-0.5">
+          <span className="text-[9px] text-slate-300 hidden sm:block">{leftPole}</span>
+          <span className="text-[9px] text-slate-300 hidden sm:block">{rightPole}</span>
+        </div>
+      )}
+      <div className="flex items-center gap-2.5">
+        {/* Label */}
+        <span
+          className={`text-[11px] w-[90px] flex-shrink-0 truncate font-medium ${isUser ? 'text-slate-700' : ''}`}
+          style={{ color: isUser ? '#334155' : color }}
+        >
+          {label}
+        </span>
 
-// ── TARGET marker (outlined circle) ────────────────────────────────────────────
+        {/* Track */}
+        <div className="relative flex-1 h-[5px] bg-slate-100 rounded-full">
+          {/* Fill from left to marker */}
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{ backgroundColor: isUser ? '#334155' : color, opacity: isUser ? 0.35 : 0.22 }}
+            initial={{ width: '50%' }}
+            animate={{ width: `${pct}%` }}
+            transition={{ duration: 0.8, delay, ease: [0.34, 1.12, 0.64, 1] }}
+          />
 
-function TargetMarker({ position, color, delay, diamond = false }) {
-  if (diamond) {
-    return (
-      <motion.div
-        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 border-2 bg-white z-10 shadow-sm"
-        style={{ borderColor: color, transform: 'translateX(-50%) translateY(-50%) rotate(45deg)' }}
-        initial={{ left: '50%', opacity: 0 }}
-        animate={{ left: `${position}%`, opacity: 0.85 }}
-        transition={{ duration: 0.85, delay, ease: [0.34, 1.12, 0.64, 1] }}
-      />
-    );
-  }
-  return (
-    <motion.div
-      className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 bg-white z-10 shadow-sm"
-      style={{ borderColor: color }}
-      initial={{ left: '50%', opacity: 0, scale: 0.5 }}
-      animate={{ left: `${position}%`, opacity: 1, scale: 1 }}
-      transition={{ duration: 0.85, delay, ease: [0.34, 1.12, 0.64, 1] }}
-    />
+          {/* Marker dot */}
+          <motion.div
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full shadow-sm"
+            style={{
+              width: isUser ? 11 : 11,
+              height: isUser ? 11 : 11,
+              backgroundColor: isUser ? '#1e293b' : 'white',
+              border: isUser ? 'none' : `2.5px solid ${color}`,
+            }}
+            initial={{ left: '50%', opacity: 0, scale: 0.4 }}
+            animate={{ left: `${pct}%`, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay, ease: [0.34, 1.12, 0.64, 1] }}
+          />
+        </div>
+
+        {/* Score */}
+        <span
+          className="text-[12px] font-bold tabular-nums w-[26px] text-right flex-shrink-0"
+          style={{ color: isUser ? '#334155' : color }}
+        >
+          {pct}
+        </span>
+      </div>
+      {showPoles && (
+        <div className="flex justify-between mt-0.5 sm:hidden">
+          <span className="text-[9px] text-slate-300">{leftPole}</span>
+          <span className="text-[9px] text-slate-300">{rightPole}</span>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -108,7 +143,7 @@ export function CompareBar({
   return (
     <div className="py-3 last:pb-0">
       {/* Header: theme label + diff badge */}
-      <div className="flex items-center justify-between mb-2.5">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: themeColor }} />
           <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
@@ -125,69 +160,38 @@ export function CompareBar({
         )}
       </div>
 
-      {/* Track */}
-      <div className="relative h-2 bg-slate-100 rounded-full">
-        {/* Center tick */}
-        <div className="absolute inset-y-0 w-px bg-slate-200" style={{ left: '50%' }} />
-
-        {/* Gap fill — colored zone between the two markers */}
-        {hasUser && diff > 0 && (
-          <motion.div
-            className="absolute inset-y-0 rounded-full"
-            style={{
-              backgroundColor: themeColor,
-              opacity: 0.12,
-              left: `${Math.min(u, t)}%`,
-              width: `${diff}%`,
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.12 }}
-            transition={{ delay: delay + 0.6, duration: 0.4 }}
+      {/* Two rows */}
+      <div className="space-y-2">
+        {hasUser && (
+          <ScoreRow
+            label={youLabel}
+            score={u}
+            color={themeColor}
+            isUser
+            delay={delay}
+            showPoles
+            leftPole={leftPole}
+            rightPole={rightPole}
+            language={language}
           />
         )}
-
-        {/* USER marker */}
-        {hasUser && <UserMarker position={u} delay={delay} />}
-
-        {/* TARGET marker */}
-        <TargetMarker position={t} color={themeColor} delay={hasUser ? delay + 0.12 : delay} />
+        <ScoreRow
+          label={targetName}
+          score={t}
+          color={themeColor}
+          isUser={false}
+          delay={hasUser ? delay + 0.1 : delay}
+          showPoles={!hasUser}
+          leftPole={leftPole}
+          rightPole={rightPole}
+          language={language}
+        />
       </div>
 
-      {/* Pole labels + Legend */}
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-[9px] text-slate-300 flex-shrink-0 hidden sm:block">{leftPole}</span>
-        <div className="flex items-center gap-3 flex-wrap">
-          {hasUser && (
-            <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-sm bg-slate-800 flex-shrink-0" />
-              <span className="text-[10px] text-slate-600 font-medium">
-                {youLabel} <span className="font-bold tabular-nums">{u}</span>
-              </span>
-            </div>
-          )}
-          <div className="flex items-center gap-1">
-            <span
-              className="w-2.5 h-2.5 rounded-full border-2 bg-white flex-shrink-0"
-              style={{ borderColor: themeColor }}
-            />
-            <span className="text-[10px] font-medium" style={{ color: themeColor }}>
-              {targetName} <span className="font-bold tabular-nums">{t}</span>
-            </span>
-          </div>
-        </div>
-        <span className="text-[9px] text-slate-300 flex-shrink-0 hidden sm:block">{rightPole}</span>
-      </div>
-
-      {/* Pole labels — mobile only, below legend */}
-      <div className="flex justify-between mt-0.5 sm:hidden">
-        <span className="text-[9px] text-slate-300">{leftPole}</span>
-        <span className="text-[9px] text-slate-300">{rightPole}</span>
-      </div>
-
-      {/* Optional policy text (shows when positions are close) */}
+      {/* Optional policy text */}
       {policyText && (
         <motion.p
-          className="text-xs text-gray-500 leading-relaxed mt-2 pl-3 border-l-2 border-gray-200"
+          className="text-xs text-gray-500 leading-relaxed mt-2.5 pl-3 border-l-2 border-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: delay + 0.9 }}
@@ -201,26 +205,31 @@ export function CompareBar({
 
 // ── CompareBarThree ────────────────────────────────────────────────────────────
 // Single theme row: user vs. two targets.
+// Three rows: Vous / Candidat 1 / Candidat 2
 
 export function CompareBarThree({
   themeLabel, themeColor, leftPole, rightPole,
   userScore, score1, score2, name1, name2,
   language, delay = 0,
 }) {
-  const u    = Math.round(userScore ?? 50);
-  const s1   = Math.round(score1 ?? 50);
-  const s2   = Math.round(score2 ?? 50);
-  const diff = Math.abs(s1 - s2);
+  const u  = Math.round(userScore ?? 50);
+  const s1 = Math.round(score1 ?? 50);
+  const s2 = Math.round(score2 ?? 50);
   const hasUser = userScore != null;
-  const youLabel = language === 'fr' ? 'Vous' : 'You';
 
   const n1short = name1.split(' ').pop();
   const n2short = name2.split(' ').pop();
+  const youLabel = language === 'fr' ? 'Vous' : 'You';
+
+  const diff12 = Math.abs(s1 - s2);
+
+  // Second color: slightly muted version of the theme color
+  const color2 = themeColor + 'bb';
 
   return (
     <div className="py-3 last:pb-0">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2.5">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: themeColor }} />
           <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
@@ -229,58 +238,46 @@ export function CompareBarThree({
         </div>
         <span
           className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-          style={{ backgroundColor: diffBg(diff), color: diffColor(diff) }}
+          style={{ backgroundColor: diffBg(diff12), color: diffColor(diff12) }}
         >
-          {n1short} vs {n2short} Δ {diff}
+          {n1short} vs {n2short} · Δ {diff12}
         </span>
       </div>
 
-      {/* Track */}
-      <div className="relative h-2 bg-slate-100 rounded-full">
-        <div className="absolute inset-y-0 w-px bg-slate-200" style={{ left: '50%' }} />
-
-        {/* USER marker */}
-        {hasUser && <UserMarker position={u} delay={delay} />}
-
-        {/* Candidate 1 marker (circle) */}
-        <TargetMarker position={s1} color={themeColor} delay={delay + 0.12} />
-
-        {/* Candidate 2 marker (diamond) */}
-        <TargetMarker position={s2} color={themeColor} delay={delay + 0.22} diamond />
-      </div>
-
-      {/* Legend */}
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-[9px] text-slate-300 flex-shrink-0 hidden sm:block">{leftPole}</span>
-        <div className="flex items-center gap-3 flex-wrap">
-          {hasUser && (
-            <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-sm bg-slate-800 flex-shrink-0" />
-              <span className="text-[10px] text-slate-600 font-bold tabular-nums">{u}</span>
-              <span className="text-[9px] text-slate-400">{youLabel}</span>
-            </div>
-          )}
-          <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full border-2 bg-white flex-shrink-0" style={{ borderColor: themeColor }} />
-            <span className="text-[10px] font-bold tabular-nums" style={{ color: themeColor }}>{s1}</span>
-            <span className="text-[9px]" style={{ color: themeColor }}>{n1short}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span
-              className="w-2.5 h-2.5 border-2 bg-white flex-shrink-0"
-              style={{ borderColor: themeColor, transform: 'rotate(45deg)', opacity: 0.8 }}
-            />
-            <span className="text-[10px] font-bold tabular-nums" style={{ color: themeColor, opacity: 0.85 }}>{s2}</span>
-            <span className="text-[9px]" style={{ color: themeColor, opacity: 0.85 }}>{n2short}</span>
-          </div>
-        </div>
-        <span className="text-[9px] text-slate-300 flex-shrink-0 hidden sm:block">{rightPole}</span>
-      </div>
-
-      {/* Pole labels mobile */}
-      <div className="flex justify-between mt-0.5 sm:hidden">
-        <span className="text-[9px] text-slate-300">{leftPole}</span>
-        <span className="text-[9px] text-slate-300">{rightPole}</span>
+      {/* Three rows */}
+      <div className="space-y-2">
+        {hasUser && (
+          <ScoreRow
+            label={youLabel}
+            score={u}
+            color={themeColor}
+            isUser
+            delay={delay}
+            showPoles
+            leftPole={leftPole}
+            rightPole={rightPole}
+            language={language}
+          />
+        )}
+        <ScoreRow
+          label={n1short}
+          score={s1}
+          color={themeColor}
+          isUser={false}
+          delay={delay + 0.08}
+          showPoles={!hasUser}
+          leftPole={leftPole}
+          rightPole={rightPole}
+          language={language}
+        />
+        <ScoreRow
+          label={n2short}
+          score={s2}
+          color={color2}
+          isUser={false}
+          delay={delay + 0.16}
+          language={language}
+        />
       </div>
     </div>
   );
@@ -411,7 +408,7 @@ export function ThemeComparisonThree({
         );
       })}
 
-      {/* Insights block */}
+      {/* Insights */}
       {userThemes && (themes1 || themes2) && (
         <div className="pt-4 space-y-4">
           {themes1 && (

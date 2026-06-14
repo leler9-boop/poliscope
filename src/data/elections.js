@@ -869,10 +869,12 @@ export const elections = [
     specificQuestions: [
       {
         id: `fr_2027_q1`,
-        text: { en: `The retirement age in France should be kept at 64 or lowered.`, fr: `L'âge de la retraite en France devrait être maintenu à 64 ans ou abaissé.` },
+        // Rewritten for neutrality: old text "maintenu à 64 ans ou abaissé" blocked any position above 64.
+        // New text covers the full spectrum: strongly agree=want much lower, strongly disagree=want higher.
+        text: { en: `The statutory retirement age should be lowered from the current 64 years.`, fr: `L'âge légal de départ à la retraite devrait être abaissé par rapport à la loi actuelle (64 ans).` },
         theme: `ECONOMY`, direction: -1,
-        info: { en: `The 2023 pension reform raised the retirement age to 64, triggering mass protests. The 2027 election will partly be a verdict on that reform.`, fr: `La réforme des retraites de 2023 a porté l'âge légal à 64 ans, déclenchant des manifestations massives. L'élection 2027 sera en partie un verdict sur cette réforme.` },
-        positions: { lepen: 4, philippe: 2, attal: 2, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 1 },
+        info: { en: `The 2023 pension reform raised the retirement age to 64, triggering massive protests. The 2027 election will partly be a verdict on this reform — with candidates ranging from abolishing it (far left) to keeping or even extending it (centre-right).`, fr: `La réforme des retraites de 2023 a porté l'âge légal à 64 ans, déclenchant des manifestations massives. L'élection 2027 sera en partie un verdict sur cette réforme — les candidats vont de son abrogation (gauche) à son maintien voire son approfondissement (centre-droit).` },
+        positions: { lepen: 4, philippe: 2, attal: 2, melenchon: 5, glucksmann: 4, tondelier: 5, retailleau: 1, bardella: 4, castets: 5, roussel_2027: 5 },
       },
       {
         id: `fr_2027_q2`,

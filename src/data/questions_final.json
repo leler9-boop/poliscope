@@ -1327,7 +1327,7 @@
   },
   {
     "id": "GLO_9",
-    "text": "La domination culturelle américaine (films, séries, réseaux sociaux) menace la culture française.",
+    "text": "L'État devrait mieux protéger la culture française face à l'influence culturelle américaine (films, séries, réseaux sociaux).",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1564,7 +1564,7 @@
   },
   {
     "id": "PUB_13",
-    "text": "Le système de protection sociale français est trop coûteux et doit être réduit.",
+    "text": "Les dépenses de protection sociale françaises devraient être significativement réduites.",
     "axis": "economic",
     "weight": 3,
     "status": "SECONDARY",
@@ -1758,7 +1758,7 @@
   },
   {
     "id": "ECO_26",
-    "text": "L'âge légal de départ à la retraite à 64 ans est trop élevé et doit être abaissé.",
+    "text": "L'âge légal de départ à la retraite devrait être abaissé par rapport au niveau actuel (64 ans).",
     "axis": "economic",
     "weight": 5,
     "status": "CORE",
@@ -1776,7 +1776,7 @@
   },
   {
     "id": "ENV_25",
-    "text": "Les normes environnementales européennes sur l'agriculture sont trop strictes et nuisent aux agriculteurs français.",
+    "text": "Les normes environnementales européennes sur l'agriculture devraient être assouplies pour mieux tenir compte des réalités des agriculteurs français.",
     "axis": "global",
     "weight": 3,
     "status": "SECONDARY",
