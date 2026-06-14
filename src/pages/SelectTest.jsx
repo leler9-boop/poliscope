@@ -4,26 +4,26 @@ import { createTranslator } from '../i18n/translations.js';
 
 const MODES = [
   {
-    id: 'quick',
-    questions: 8,
-    minutes: '~3',
+    id: 'discovery',
+    questions: 16,
+    minutes: '~6',
     color: 'border-green-200 hover:border-green-400',
     badge: 'bg-green-50 text-green-700',
     icon: '⚡',
   },
   {
-    id: 'medium',
-    questions: 24,
-    minutes: '~10',
+    id: 'standard',
+    questions: 32,
+    minutes: '~12',
     color: 'border-blue-200 hover:border-blue-400',
     badge: 'bg-blue-50 text-blue-700',
     icon: '📋',
     recommended: true,
   },
   {
-    id: 'full',
-    questions: 40,
-    minutes: '~20',
+    id: 'deep',
+    questions: 64,
+    minutes: '~25',
     color: 'border-purple-200 hover:border-purple-400',
     badge: 'bg-purple-50 text-purple-700',
     icon: '🔬',
@@ -35,21 +35,21 @@ export default function SelectTest() {
   const navigate  = useStore(s => s.navigate);
   const startTest = useStore(s => s.startTest);
   const t = createTranslator(language);
-  const [selected, setSelected] = React.useState('medium');
+  const [selected, setSelected] = React.useState('standard');
 
   const handleStart = () => {
     navigate('priorities');
   };
 
   const descKey = {
-    quick: 'test_quick_desc',
-    medium: 'test_medium_desc',
-    full: 'test_full_desc',
+    discovery: 'test_quick_desc',
+    standard:  'test_medium_desc',
+    deep:      'test_full_desc',
   };
   const labelKey = {
-    quick: 'test_quick',
-    medium: 'test_medium',
-    full: 'test_full',
+    discovery: 'test_quick',
+    standard:  'test_medium',
+    deep:      'test_full',
   };
 
   return (

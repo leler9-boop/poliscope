@@ -61,18 +61,18 @@ export function calculateProfile(answers) {
   // Confidence based on number of answered questions
   const answeredCount = Object.keys(answers).length;
   const totalQuestions = allQuestions.length;
-  // Confidence is calibrated against the quiz's actual max (40 questions for full mode),
-  // NOT against the raw JSON pool (162 questions). This ensures:
-  //   quick mode (8q)   → 'low'
-  //   medium mode (24q) → 'medium'
-  //   full mode (40q)   → 'very_high'
-  // Previously: thresholds referenced 162 total → full mode showed 'medium' (wrong)
-  const confidenceScore = Math.min(100, Math.round((answeredCount / 40) * 100));
+  // Confidence calibrated against the quiz's actual max (64 questions for deep/Approfondi mode).
+  //   discovery mode (16q) → 25% → 'medium'  ("Première estimation")
+  //   standard mode  (32q) → 50% → 'high'    ("Profil robuste")
+  //   deep mode      (64q) → 100% → 'very_high' ("Profil très fiable")
+  // Profile.jsx confBarColor thresholds (≥80 emerald, ≥60 green, ≥40 blue) remain percentage-based
+  // and automatically produce the right colour for each mode.
+  const confidenceScore = Math.min(100, Math.round((answeredCount / 64) * 100));
   let confidence;
   if (answeredCount < 8)        confidence = 'very_low';
   else if (answeredCount < 16)  confidence = 'low';
-  else if (answeredCount < 28)  confidence = 'medium';
-  else if (answeredCount < 40)  confidence = 'high';
+  else if (answeredCount < 32)  confidence = 'medium';
+  else if (answeredCount < 64)  confidence = 'high';
   else                          confidence = 'very_high';
 
   return { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions };
@@ -122,34 +122,34 @@ function calculateAxes(themes) {
 export function getConfidenceMeta(confidence, lang = 'en') {
   const meta = {
     very_low: {
-      en: { label: 'Very low confidence', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200',
-            message: 'Your profile is still very approximate. Answer more questions to start building an accurate picture.' },
-      fr: { label: 'Très faible fiabilité', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200',
-            message: 'Votre profil est encore très approximatif. Répondez à plus de questions pour commencer à construire une image précise.' },
+      en: { label: 'Profile in progress', color: 'text-gray-500', bg: 'bg-gray-50', border: 'border-gray-200',
+            message: 'Answer a few more questions to generate your first profile.' },
+      fr: { label: 'Profil en cours', color: 'text-gray-500', bg: 'bg-gray-50', border: 'border-gray-200',
+            message: 'Répondez à quelques questions supplémentaires pour générer votre premier profil.' },
     },
     low: {
-      en: { label: 'Low confidence', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
-            message: 'Your profile is still approximate. Answer more questions to improve precision.' },
-      fr: { label: 'Faible fiabilité', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
-            message: 'Votre profil est encore approximatif. Répondez à plus de questions pour améliorer la précision.' },
+      en: { label: 'Early signals', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
+            message: 'A first orientation is visible. Complete the Discovery test for a more reliable result.' },
+      fr: { label: 'Premiers signaux', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200',
+            message: 'Une première orientation est visible. Complétez le test Découverte pour un résultat plus fiable.' },
     },
     medium: {
-      en: { label: 'Medium confidence', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200',
-            message: 'Your profile is reasonably accurate. More questions will refine it further.' },
-      fr: { label: 'Fiabilité moyenne', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200',
-            message: 'Votre profil est assez précis. Davantage de questions le raffineront encore.' },
+      en: { label: 'First estimation', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200',
+            message: 'Your profile captures your main positions. The Standard test will sharpen it further.' },
+      fr: { label: 'Première estimation', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200',
+            message: 'Votre profil capture vos grandes positions. Le test Standard le précisera davantage.' },
     },
     high: {
-      en: { label: 'High confidence', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Your profile is highly accurate and well-defined.' },
-      fr: { label: 'Haute fiabilité', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Votre profil est très précis et bien défini.' },
+      en: { label: 'Robust profile', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
+            message: 'Your profile is solid and well-differentiated across all themes.' },
+      fr: { label: 'Profil robuste', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
+            message: 'Votre profil est solide et bien différencié sur l\'ensemble des thèmes.' },
     },
     very_high: {
-      en: { label: 'Very high confidence', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
-            message: 'Your profile is extremely accurate based on a comprehensive set of answers.' },
-      fr: { label: 'Très haute fiabilité', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
-            message: 'Votre profil est extrêmement précis, basé sur un ensemble complet de réponses.' },
+      en: { label: 'Highly reliable profile', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Your profile is built on a comprehensive set of answers across all political themes.' },
+      fr: { label: 'Profil très fiable', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Votre profil repose sur un ensemble complet de réponses couvrant tous les grands thèmes politiques.' },
     },
   };
   return meta[confidence]?.[lang] ?? meta.very_low[lang];

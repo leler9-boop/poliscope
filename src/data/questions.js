@@ -169,8 +169,13 @@ export function getQuiz(isFastMode) {
 // ─── Question queue for quiz sessions ────────────────────────────────────────
 
 export function getQuestionQueue(mode, priorityOrder) {
-  // Select source pool by mode
-  const source = mode === 'quick' ? coreQuestions : questions;
+  // Backward compat: map old mode names to new ones
+  // Old: quick(8q) → discovery(16q), medium(24q) → standard(32q), full(40q) → deep(64q)
+  const modeAlias = { quick: 'discovery', medium: 'standard', full: 'deep' };
+  const m = modeAlias[mode] ?? mode;
+
+  // All modes draw from the full question pool; CORE questions are always served first.
+  const source = questions;
 
   // Group by theme
   const byTheme = {};
@@ -186,23 +191,17 @@ export function getQuestionQueue(mode, priorityOrder) {
     return a;
   }
 
-  // Per-mode caps: quick=1/theme (8 total), medium=3/theme (24 total), full=5/theme (40 total)
+  // Per-mode caps: discovery=2/theme (16 total), standard=4/theme (32 total), deep=8/theme (64 total)
   // Matches the question counts advertised on the SelectTest screen.
-  const capPerTheme = { quick: 1, medium: 3, full: 5 };
-  const cap = capPerTheme[mode] ?? 5;
+  const capPerTheme = { discovery: 2, standard: 4, deep: 8 };
+  const cap = capPerTheme[m] ?? 8;
 
   THEMES_ORDER.forEach(t => {
     let pool = byTheme[t];
-    if (mode === 'quick') {
-      // source is already coreQuestions — cap to 1 per theme
-      pool = pool.slice(0, cap);
-    } else if (mode === 'medium') {
-      const core = pool.filter(q => q.status === 'CORE');
-      const rest = shuffle(pool.filter(q => q.status !== 'CORE'));
-      pool = [...core, ...rest].slice(0, cap);
-    } else {
-      pool = shuffle(pool).slice(0, cap);
-    }
+    // All modes: CORE questions first (highest signal), then shuffled remainder
+    const core = pool.filter(q => q.status === 'CORE');
+    const rest = shuffle(pool.filter(q => q.status !== 'CORE'));
+    pool = [...core, ...rest].slice(0, cap);
     byTheme[t] = pool;
   });
 

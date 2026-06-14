@@ -73,15 +73,16 @@ const THEME_ABBR_EN = {
 // ── Confidence helpers ──────────────────────────────────────────────────────
 // V4 NEW: wire up the answeredCount prop that V3 received but never displayed
 
-// Calibrated against quiz max (40 questions for full mode, not 162 raw pool).
-// quick(8q) → 2 bars, medium(24q) → 4 bars, full(40q) → 5 bars.
+// Calibrated against quiz max (64 questions for Approfondi/deep mode).
+// discovery(16q) → 2 bars, standard(32q) → 4 bars, deep(64q) → 5 bars.
+// Intermediate thresholds handle improve-mode and partial completions.
 function getConfidenceLevel(answeredCount, lang) {
   const n = answeredCount ?? 0;
-  if (n >= 40) return { label: lang === 'fr' ? 'Profil complet'    : 'Complete profile',     bars: 5 };
-  if (n >= 24) return { label: lang === 'fr' ? 'Fiabilité élevée'  : 'High reliability',     bars: 4 };
-  if (n >= 16) return { label: lang === 'fr' ? 'Fiabilité modérée' : 'Moderate reliability', bars: 3 };
-  if (n >= 8)  return { label: lang === 'fr' ? 'Profil partiel'    : 'Partial profile',      bars: 2 };
-  return               { label: lang === 'fr' ? 'Profil en cours'  : 'Profile in progress',  bars: 1 };
+  if (n >= 64) return { label: lang === 'fr' ? 'Profil très fiable'   : 'Highly reliable profile', bars: 5 };
+  if (n >= 32) return { label: lang === 'fr' ? 'Profil robuste'       : 'Robust profile',          bars: 4 };
+  if (n >= 24) return { label: lang === 'fr' ? 'Profil en cours'      : 'Profile building',        bars: 3 };
+  if (n >= 16) return { label: lang === 'fr' ? 'Première estimation'  : 'First estimation',        bars: 2 };
+  return               { label: lang === 'fr' ? 'Profil en cours'     : 'Profile in progress',     bars: 1 };
 }
 
 // ── Viral data helpers ──────────────────────────────────────────────────────

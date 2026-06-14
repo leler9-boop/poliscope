@@ -27,12 +27,12 @@ export const translations = {
 
     // ── Test mode selection ──
     select_test: `Choose your test length`,
-    test_quick: `Quick`,
+    test_quick: `Discovery`,
     test_medium: `Standard`,
-    test_full: `Comprehensive`,
-    test_quick_desc: `8 questions · ~3 minutes · General orientation`,
-    test_medium_desc: `24 questions · ~10 minutes · Reliable profile`,
-    test_full_desc: `40 questions · ~20 minutes · Full accuracy`,
+    test_full: `In-depth`,
+    test_quick_desc: `16 questions · ~6 minutes · First estimation`,
+    test_medium_desc: `32 questions · ~12 minutes · Robust profile`,
+    test_full_desc: `64 questions · ~25 minutes · Maximum precision`,
     test_start: `Start test`,
     test_note: `Longer tests produce more accurate profiles. You can always add questions later.`,
 
@@ -198,12 +198,12 @@ export const translations = {
 
     // ── Test mode selection ──
     select_test: `Choisissez la longueur du test`,
-    test_quick: `Rapide`,
+    test_quick: `Découverte`,
     test_medium: `Standard`,
-    test_full: `Complet`,
-    test_quick_desc: `8 questions · ~3 minutes · Orientation générale`,
-    test_medium_desc: `24 questions · ~10 minutes · Profil fiable`,
-    test_full_desc: `40 questions · ~20 minutes · Précision maximale`,
+    test_full: `Approfondi`,
+    test_quick_desc: `16 questions · ~6 minutes · Première estimation`,
+    test_medium_desc: `32 questions · ~12 minutes · Profil robuste`,
+    test_full_desc: `64 questions · ~25 minutes · Précision maximale`,
     test_start: `Commencer le test`,
     test_note: `Les tests plus longs produisent des profils plus précis. Vous pouvez toujours ajouter des questions plus tard.`,
 
