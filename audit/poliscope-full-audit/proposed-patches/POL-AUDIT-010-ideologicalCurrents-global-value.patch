@@ -1,0 +1,11 @@
+--- a/src/data/ideologicalCurrents.js
++++ b/src/data/ideologicalCurrents.js
+@@ -294,7 +294,7 @@
+       SECURITY: 78,
+       ENVIRONMENT: 28,
+       DEMOCRACY: 48,
+-      GLOBAL: 85,
++      GLOBAL: 18,
+       PUBLIC_SERVICES: 55,
+     },
+   },

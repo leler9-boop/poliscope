@@ -1,0 +1,167 @@
+[
+  {
+    "entityId": "lepen_2027",
+    "claim": "Cour d'appel de Paris : condamnation confirmée, inéligibilité réduite à 15 mois fermes déjà purgés au 30/06/2026 — Marine Le Pen est éligible pour 2027",
+    "sourceUrl": "https://www.touteleurope.eu/vie-politique-des-etats-membres/proces-des-assistants-du-rn-marine-le-pen-condamnee-en-appel-mais-eligible-a-l-election-presidentielle-2027/",
+    "sourceTitle": "Procès des assistants du RN : Marine Le Pen condamnée en appel, mais éligible à l'élection présidentielle 2027",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-07",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Corroboré indépendamment par RTS, Euronews, franceinfo, Public Sénat, France24, CNN, Al Jazeera"
+  },
+  {
+    "entityId": "lepen_2027",
+    "claim": "Marine Le Pen annonce publiquement (TF1) sa candidature pour 2027 malgré la condamnation confirmée ; pourvoi en cassation formé, sans effet suspensif sur la candidature",
+    "sourceUrl": "https://www.euronews.com/my-europe/2026/07/07/marine-le-pen-vows-to-remain-a-candidate-for-frances-2027-election-despite-conviction",
+    "sourceTitle": "Marine Le Pen vows to run in France's 2027 presidential election despite fraud conviction",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-07",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": ""
+  },
+  {
+    "entityId": "bardella",
+    "claim": "Bardella reste président du RN et se positionne aux côtés de Le Pen plutôt qu'en candidat de substitution ; aucune déclaration officielle RN sur le porteur unique de la candidature au 10/07/2026",
+    "sourceUrl": "https://www.thenation.com/article/world/jordan-bardella-marine-le-pen-rassemblement-national-france-far-right-2027-presidential-election/",
+    "sourceTitle": "It's Jordan Bardella's Party Now",
+    "sourceType": "press-analysis",
+    "publishedAt": "2026-07-07",
+    "verifiedAt": "2026-07-10",
+    "confidence": "medium",
+    "notes": "Situation fluide à J+3 du verdict — à revérifier avant toute correction définitive du code"
+  },
+  {
+    "entityId": "fr_pm_lecornu",
+    "claim": "Sébastien Lecornu est Premier ministre depuis le 10 septembre 2025, toujours en fonction au 9-10 juillet 2026",
+    "sourceUrl": "https://www.elysee.fr/emmanuel-macron/2026/07/09/compte-rendu-du-conseil-des-ministres-du-jeudi-9-juillet-2026",
+    "sourceTitle": "Compte rendu du Conseil des ministres du jeudi 9 juillet 2026",
+    "sourceType": "official-government",
+    "publishedAt": "2026-07-09",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Confirmé également par vie-publique.fr et info.gouv.fr"
+  },
+  {
+    "entityId": "bayrou",
+    "claim": "François Bayrou a démissionné de Matignon le 9 septembre 2025 (vote de confiance perdu 194-364), remplacé par Lecornu le lendemain",
+    "sourceUrl": "https://www.vie-publique.fr/en-bref/300089-sebastien-lecornu-nomme-premier-ministre",
+    "sourceTitle": "Sébastien Lecornu nommé Premier ministre",
+    "sourceType": "official-government",
+    "publishedAt": "2025-09-10",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "frenchFigures.js présente encore Bayrou comme Premier ministre en fonction ; Lecornu absent du fichier"
+  },
+  {
+    "entityId": "paris_2026",
+    "claim": "Municipales de Paris tenues les 15 et 22 mars 2026 ; Emmanuel Grégoire élu maire face à Rachida Dati (>50%, +9 points)",
+    "sourceUrl": "https://presse.paris.fr/communiques/elections-municipales-2026-a-paris-annonce-des-resultats-du-premier-tour",
+    "sourceTitle": "Élections municipales 2026 à Paris : Annonce des résultats du premier tour",
+    "sourceType": "official-municipal",
+    "publishedAt": "2026-03",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Corroboré par le ministère de l'Intérieur et Wikipédia FR"
+  },
+  {
+    "entityId": "paris_2026",
+    "claim": "1er tour : Grégoire 37,98%, Dati 25,46%, Chikirou 11,72%, Bournazel 11,34%, Knafo (Reconquête) 10,4%",
+    "sourceUrl": "https://www.resultats-elections.interieur.gouv.fr/municipales2026/ensemble_geographique/11/75/75056/",
+    "sourceTitle": "Paris (75056) - Élections municipales 2026 - Résultats",
+    "sourceType": "official-government",
+    "publishedAt": "2026-03",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Bournazel et Knafo absents du tableau candidates structuré de elections.js"
+  },
+  {
+    "entityId": "merz",
+    "claim": "Friedrich Merz, chancelier fédéral d'Allemagne depuis le 6 mai 2025",
+    "sourceUrl": "https://www.bundesregierung.de/breg-fr/le-gouvernement-f%C3%A9d%C3%A9ral/conseil-des-ministres-f%C3%A9d%C3%A9ral/2343774-2343774",
+    "sourceTitle": "Friedrich Merz - Bundesregierung.de",
+    "sourceType": "official-government",
+    "publishedAt": null,
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Poliscope le présente correctement comme vainqueur historique de l'élection de_2025 ; aucune erreur"
+  },
+  {
+    "entityId": "starmer",
+    "claim": "Keir Starmer a démissionné le 22 juin 2026 ; succession Andy Burnham en cours (prise de fonction attendue ~20 juillet 2026, après la date d'audit)",
+    "sourceUrl": "https://www.npr.org/2026/06/22/nx-s1-5866231/keir-starmer-resigns",
+    "sourceTitle": "Keir Starmer has resigned, paving way for a 7th U.K. prime minister in 10 years",
+    "sourceType": "press-national",
+    "publishedAt": "2026-06-22",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Poliscope ne mentionne Starmer que dans le bloc historique uk_2024 ; aucune erreur, simple absence de couverture de la crise 2026"
+  },
+  {
+    "entityId": "berlusconi",
+    "claim": "Silvio Berlusconi décédé le 12 juin 2023",
+    "sourceUrl": "https://www.touteleurope.eu/vie-politique-des-etats-membres/l-ancien-president-du-conseil-italien-silvio-berlusconi-est-mort/",
+    "sourceTitle": "L'ancien président du Conseil italien Silvio Berlusconi est mort",
+    "sourceType": "press-national",
+    "publishedAt": "2023-06-12",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Poliscope le présente uniquement dans le bloc historique it_2022 ; aucune erreur"
+  },
+  {
+    "entityId": "sanchez",
+    "claim": "Pedro Sánchez toujours président du gouvernement espagnol en 2026",
+    "sourceUrl": "https://www.touteleurope.eu/vie-politique-des-etats-membres/espagne-le-premier-ministre-pedro-sanchez-reconduit-a-la-tete-du-gouvernement/",
+    "sourceTitle": "Espagne : le Premier ministre Pedro Sánchez reconduit à la tête du gouvernement",
+    "sourceType": "press-national",
+    "publishedAt": "2026",
+    "verifiedAt": "2026-07-10",
+    "confidence": "medium",
+    "notes": "Convergence de plusieurs sources, pas de source officielle unique citée dans le temps imparti"
+  },
+  {
+    "entityId": "macron",
+    "claim": "Réforme des retraites promulguée le 15 avril 2023, âge légal porté à 64 ans",
+    "sourceUrl": "https://www.france24.com/fr/france/20230415-la-loi-sur-la-r%C3%A9forme-des-retraites-officiellement-promulgu%C3%A9e-par-emmanuel-macron",
+    "sourceTitle": "La loi sur la réforme des retraites promulguée par Emmanuel Macron",
+    "sourceType": "press-national",
+    "publishedAt": "2023-04-15",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "candidateDetails.js:19 ajoute une mention ambiguë '(later 65)' non tranchée par cet audit — nécessite relecture humaine"
+  },
+  {
+    "entityId": "bardella",
+    "claim": "RN 1er parti aux européennes de juin 2024 avec 31,37% des voix sous la houlette de Bardella",
+    "sourceUrl": "https://www.publicsenat.fr/actualites/politique/europeennes-2024-jordan-bardella-loin-devant-avec-315-un-record-pour-le-rn",
+    "sourceTitle": "Européennes 2024 : Jordan Bardella loin devant, avec 31,5%, un record pour le RN",
+    "sourceType": "press-national",
+    "publishedAt": "2024-06-10",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Cohérent avec elections.js et frenchFigures.js — aucune correction nécessaire"
+  },
+  {
+    "entityId": "fr_assembly",
+    "claim": "L'Assemblée nationale reste sans majorité absolue ni relative depuis 2024, situation qui se poursuit en juillet 2026 (motion de censure 2/07/2026, séance du 6/07/2026, 49.3 répété en janvier 2026)",
+    "sourceUrl": "https://www.assemblee-nationale.fr/dyn/17/comptes-rendus/seance/session-extraordinaire-de-2025-2026/seance-du-lundi-06-juillet-2026",
+    "sourceTitle": "Compte rendu de la séance du lundi 06 juillet 2026 - Assemblée nationale",
+    "sourceType": "official-government",
+    "publishedAt": "2026-07-06",
+    "verifiedAt": "2026-07-10",
+    "confidence": "high",
+    "notes": "Contredit le cadrage borné 'de 2022 à 2024' de frenchFigures.js:44,48, qui suggère à tort une résolution de la situation"
+  },
+  {
+    "entityId": "ruffin_lapres",
+    "claim": "La primaire de la gauche unitaire est fixée au 11 octobre 2026 (L'Après, Écologistes, Debout!, Génération.s), Mélenchon et Glucksmann refusant d'y participer",
+    "sourceUrl": "https://fr.wikipedia.org/wiki/Primaire_de_la_gauche_unitaire_de_2026",
+    "sourceTitle": "Primaire de la gauche unitaire de 2026",
+    "sourceType": "reference",
+    "publishedAt": "2026",
+    "verifiedAt": "2026-07-10",
+    "confidence": "medium",
+    "notes": "Confirme un point déjà exact dans elections.js:851/865 ; 'L'Après' (scission LFI 2024 de Ruffin) n'est pas nommée dans frenchFigures.js:1042 mais correctement décrite comme rupture avec LFI"
+  }
+]

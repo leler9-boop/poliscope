@@ -1,0 +1,29 @@
+--- a/src/data/refinementThemes.js
++++ b/src/data/refinementThemes.js
+@@ -62,7 +62,7 @@
+         },
+         lessLabel: { en: 'Protectionism', fr: 'Protectionnisme' },
+         moreLabel: { en: 'Free trade', fr: 'Libre-échange' },
+-        adjustment: { ECONOMY: 4, GLOBAL: -2 },
++        adjustment: { ECONOMY: 4, GLOBAL: 2 },
+       },
+     ],
+   },
+@@ -265,7 +265,7 @@
+         },
+         lessLabel: { en: 'National sovereignty', fr: 'Souveraineté nationale' },
+         moreLabel: { en: 'Multilateralism', fr: 'Multilatéralisme' },
+-        adjustment: { GLOBAL: -5 },
++        adjustment: { GLOBAL: 5 },
+       },
+       {
+         id: 'military',
+@@ -287,7 +287,7 @@
+         },
+         lessLabel: { en: 'Global integration', fr: 'Intégration mondiale' },
+         moreLabel: { en: 'National first', fr: 'Nation d\'abord' },
+-        adjustment: { GLOBAL: 5 },
++        adjustment: { GLOBAL: -5 },
+       },
+     ],
+   },

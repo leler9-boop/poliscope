@@ -1,0 +1,11 @@
+--- a/src/engine/matcher.js
++++ b/src/engine/matcher.js
+@@ -52,7 +52,7 @@
+     totalWeight += weight;
+   });
+ 
+-  const meanDistance = weightedDistanceSum / totalWeight; // 0–1
++  const meanDistance = totalWeight > 0 ? weightedDistanceSum / totalWeight : 0.5; // 0–1
+ 
+   // Power 2.4: balanced spread — generous enough for moderate users, still punishing for opposites.
+   // d=0.05 → 89%  (very similar)
