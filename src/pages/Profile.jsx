@@ -179,6 +179,10 @@ export default function Profile() {
   const fileRef = useRef(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
+  // Mobile-only action sheet — the desktop secondary-actions row (save/export/
+  // import/privacy/reset) is `hidden sm:flex` and has no other mobile entry
+  // point otherwise, which made it unreachable on phones.
+  const [showMobileActions, setShowMobileActions] = useState(false);
 
   // ── RGPD consent gate for cloud save (main button + migration banner) ─────
   const consent = useStore(s => s.consent);
@@ -452,6 +456,18 @@ export default function Profile() {
             ↗ {language === 'fr' ? 'Partager' : 'Share'}
           </button>
 
+          {/* Overflow trigger — mobile only, opens the sheet below with the
+              same actions the desktop row exposes inline */}
+          {!isSharedView && (
+            <button
+              onClick={() => setShowMobileActions(true)}
+              className="sm:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors shrink-0"
+              aria-label={language === 'fr' ? 'Plus d\'actions' : 'More actions'}
+            >
+              <span className="text-lg leading-none">⋯</span>
+            </button>
+          )}
+
           {/* Secondary actions — desktop only */}
           {!isSharedView && (<>
             <button
@@ -486,6 +502,86 @@ export default function Profile() {
           </>)}
         </div>
       </motion.div>
+
+      {/* Mobile action sheet — same actions as the desktop row above, reachable on phones */}
+      {showMobileActions && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:hidden bg-black/40"
+          onClick={() => setShowMobileActions(false)}
+        >
+          <div
+            className="bg-white rounded-t-2xl w-full pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-9 h-1 bg-slate-200 rounded-full mx-auto mt-1 mb-3" />
+
+            {!isSupabaseEnabled ? null : user ? (
+              <button
+                onClick={() => { setShowMobileActions(false); handleSaveClick(); }}
+                disabled={saveStatus === 'saving'}
+                className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+              >
+                <span className="text-base w-5 text-center">☁</span>
+                {saveStatus === 'saved'  ? (language === 'fr' ? 'Enregistré' : 'Saved') :
+                 saveStatus === 'error'  ? (language === 'fr' ? 'Erreur — réessayer' : 'Error — retry') :
+                 saveStatus === 'saving' ? (language === 'fr' ? 'Enregistrement…' : 'Saving…') :
+                 (language === 'fr' ? 'Enregistrer en ligne' : 'Save online')}
+              </button>
+            ) : (
+              <button
+                onClick={() => { setShowMobileActions(false); navigate('auth'); }}
+                className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+              >
+                <span className="text-base w-5 text-center">☁</span>
+                {language === 'fr' ? 'Connexion pour sauvegarder' : 'Sign in to save'}
+              </button>
+            )}
+
+            <button
+              onClick={() => { setShowMobileActions(false); exportProfile(); trackProfileExported(); }}
+              className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+            >
+              <span className="text-base w-5 text-center">↓</span>
+              {t('profile_export')}
+            </button>
+
+            <button
+              onClick={() => { setShowMobileActions(false); fileRef.current?.click(); }}
+              className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+            >
+              <span className="text-base w-5 text-center">↑</span>
+              {t('profile_import')}
+            </button>
+
+            {user && (
+              <button
+                onClick={() => { setShowMobileActions(false); setShowDataControls(true); }}
+                className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+              >
+                <span className="text-base w-5 text-center">🔒</span>
+                {language === 'fr' ? 'Confidentialité — tes données en ligne' : 'Privacy — your online data'}
+              </button>
+            )}
+
+            <div className="my-1 border-t border-slate-100" />
+
+            <button
+              onClick={() => { setShowMobileActions(false); setShowResetConfirm(true); }}
+              className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-red-500 active:bg-red-50"
+            >
+              <span className="text-base w-5 text-center">✕</span>
+              {t('profile_reset')}
+            </button>
+
+            <button
+              onClick={() => setShowMobileActions(false)}
+              className="w-full text-center px-5 py-3 text-sm font-medium text-slate-400 active:bg-slate-50"
+            >
+              {language === 'fr' ? 'Annuler' : 'Cancel'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* RGPD consent — before any cloud save of political answers */}
       {showConsentModal && <ConsentModal onDecided={handleConsentDecided} />}
@@ -673,7 +769,7 @@ export default function Profile() {
               {/* ── Top 2027 match — quick preview in hero ─────────────── */}
               {rankedCandidates?.[0] && (
                 <motion.div
-                  className="flex items-center gap-2.5 mb-5 px-3.5 py-2.5 rounded-xl border"
+                  className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 mb-5 px-3.5 py-2.5 rounded-xl border"
                   style={{ backgroundColor: `${accentColor}08`, borderColor: `${accentColor}22` }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -682,16 +778,22 @@ export default function Profile() {
                   <span className="text-xs font-semibold text-slate-400 shrink-0">
                     {language === 'fr' ? 'Meilleur match 2027' : 'Best 2027 match'}
                   </span>
-                  <span className="flex items-center gap-1.5 min-w-0 flex-1">
-                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: rankedCandidates[0].color }} />
-                    <span className="font-semibold text-slate-900 text-sm truncate">{rankedCandidates[0].name}</span>
-                  </span>
-                  <span
-                    className="font-bold text-sm tabular-nums shrink-0"
-                    style={{ color: alignmentBarColor(rankedCandidates[0].alignment) }}
-                  >
-                    {rankedCandidates[0].alignment}%
-                  </span>
+                  {/* `sm:contents` drops this wrapper from the desktop layout (children
+                      become direct flex items of the row above, unchanged from before) —
+                      on mobile it keeps name+% on their own line so the name has room
+                      to breathe instead of truncating to "Édouard Ph…". */}
+                  <div className="flex items-center justify-between sm:contents gap-1.5">
+                    <span className="flex items-center gap-1.5 min-w-0 flex-1">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: rankedCandidates[0].color }} />
+                      <span className="font-semibold text-slate-900 text-sm truncate">{rankedCandidates[0].name}</span>
+                    </span>
+                    <span
+                      className="font-bold text-sm tabular-nums shrink-0"
+                      style={{ color: alignmentBarColor(rankedCandidates[0].alignment) }}
+                    >
+                      {rankedCandidates[0].alignment}%
+                    </span>
+                  </div>
                 </motion.div>
               )}
               {closeSecondCandidate && (
