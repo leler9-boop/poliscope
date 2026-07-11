@@ -95,8 +95,8 @@ export default function Landing() {
       Icon: IconBuilding,
       title: language === 'fr' ? 'Figures historiques' : 'Historical figures',
       desc:  language === 'fr'
-        ? '40 dirigeants historiques mondiaux. Découvrez à qui vous ressemblez, de FDR à Thatcher.'
-        : '40 world leaders across history. Discover who you resemble, from FDR to Thatcher.',
+        ? '60 dirigeants historiques mondiaux. Découvrez à qui vous ressemblez, de FDR à Thatcher.'
+        : '60 world leaders across history. Discover who you resemble, from FDR to Thatcher.',
       action:      profile ? () => navigate('figures') : null,
       actionLabel: language === 'fr' ? 'Explorer →' : 'Explore →',
     },
