@@ -32,6 +32,8 @@ Légende « Degré » : **Mineur** = wording/factuel, sens inchangé · **Modér
 
 **Commits** : un commit éditorial (10 questions, wording/explications, sens préservé) + un commit méthodologique séparé (ECO_13, bascule de polarité + test).
 
+**⚠️ Correction apportée au lot 8 (2026-07-11)** : l'affirmation ci-dessus « aucun doublon dans ce thème » était **fausse**, et la liste des 13 « conformes » incluait par erreur trois entrées qui ne sont pas des questions actives : `ECO_16` (doublon de `ECO_1`, texte réel mais correctement filtré), `ECO_21` et `ECO_22` (doublons vides de `ECO_14`/`ECO_8`). Ces trois n'ont donc jamais été de vraies questions à réviser — l'erreur était une extraction incorrecte au tout début de la mission (avant la fenêtre de contexte visible de cette session, donc impossible à diagnostiquer précisément après coup), pas un défaut de contenu. Plus sérieusement, **deux vraies questions actives, `ECO_26` (CORE, âge de départ à la retraite) et `ECO_27` (droits de douane), n'ont jamais été examinées lors de ce lot**, alors que le total de « 24 questions actives » était par ailleurs correct par coïncidence (14 IDs listés dans les « conformes » au lieu de 13, dont 3 invalides, compensant presque exactement les 2 manquants). Ces deux questions ont été revues et, pour `ECO_27`, corrigée au lot 8 — voir cette section pour le détail complet. `ECO_24` (CORE), bien que correctement identifiée à l'époque, a également été retravaillée au lot 8 suite à la découverte d'une redondance inter-thème non détectable avant l'achèvement du lot GLOBAL (lot 6). **Aucune autre question n'est concernée par cette correction** — la réconciliation complète des 8 thèmes (lot 8) a confirmé que les lots 2 à 7 correspondent exactement à l'état réel des données.
+
 ---
 
 ## Lot 2/8 — Protection sociale, santé, services publics (PUBLIC_SERVICES)
@@ -228,4 +230,65 @@ Les 10 entrées affectées ont été corrigées (ou supprimées pour les 3 morte
 
 ---
 
-*(Le lot 8 sera ajouté ici.)*
+## Lot 8/8 — Technologie, données, IA (contrôle de couverture) + réconciliation finale
+
+Ce dernier lot avait deux objectifs : (1) vérifier la couverture du sujet « technologie/données/IA », identifié par l'audit d'origine comme le principal angle mort thématique ; (2) une réconciliation complète des 8 thèmes contre les vraies données, déclenchée par la découverte d'une erreur d'extraction au lot 1 (voir l'encart de correction dans la section Lot 1 ci-dessus).
+
+### Réconciliation ECONOMY (correction du lot 1)
+
+| ID | Ancienne formulation | Nouvelle formulation | Raison principale | Explication modifiée | Degré | Validation factuelle |
+|---|---|---|---|---|---|---|
+| ECO_24 *(CORE)* | « Un impôt mondial minimum sur les bénéfices des multinationales doit être instauré. » | « Le taux minimum mondial d'imposition des multinationales (actuellement 15 %) doit être relevé. » | Quasi-doublon inter-thème avec `GLO_10` (identifié indépendamment par cette session ET déjà signalé dans `02-question-audit.md` de l'audit d'origine, jamais corrigé) — les deux questions demandaient essentiellement « soutenez-vous un impôt minimum mondial ? ». `GLO_10` (déjà revue au lot 6, laissée inchangée) garde la question d'existence du principe ; `ECO_24` recentrée sur l'adéquation du taux actuel, une nuance distincte et plus discriminante (on peut soutenir le principe sans juger 15 % suffisant) | Oui (réécrite) | Modéré | N/A (accord de 2021, taux de 15 % déjà exact) |
+| ECO_27 | « La France doit imposer des droits de douane sur les importations pour protéger ses industries. » | « La France doit imposer des droits de douane ciblés en réponse aux pratiques commerciales déloyales d'autres pays (dumping, subventions massives). » | Quasi-doublon inter-thème avec `GLO_6` (idem, déjà signalé dans l'audit d'origine) — recentrée sur les droits compensateurs/anti-dumping ciblés (position distincte du protectionnisme généralisé de `GLO_6`, qu'un libre-échangiste modéré peut soutenir) | Oui (réécrite) | Modéré | N/A (mécanisme réel, déjà utilisé par l'UE, ex. acier) |
+| ECO_26 *(CORE)* | *(texte inchangé)* | *(texte inchangé)* | Jamais examinée au lot 1 (erreur d'extraction) ; revue maintenant : déjà bien construite (référence exacte à la réforme des retraites de 2023, 62→64 ans ; explication équilibrée), aucune correction nécessaire | Non | — | Confirmée déjà exacte |
+| ECO_16 | *(dup de `ECO_1`, texte réel)* | — | Jamais réellement « conforme » (c'est un doublon) : réexaminée par précaution, jugée correctement filtrée — redondante avec la combinaison déjà active d'`ECO_1`/`ECO_4`/`ECO_9`/`ECO_14` sur la redistribution, sans nuance propre suffisante pour justifier une promotion | — | — | — |
+
+**Note méthodologique sur `ECO_24`/`ECO_27` (changements de fond)** : polarité vérifiée inchangée dans les deux cas (`DIRECTION_MAP.ECO_24 = -1`, `DIRECTION_MAP.ECO_27 = -1`, tous deux conservés — l'accord continue de pousser vers le pôle statiste/protectionniste dans le même sens qu'avant la reformulation). Aucune bascule, donc inclus dans le commit éditorial de ce lot plutôt que committées séparément, comme `ENV_8` (lot 3) et `SOC_21` (lot 7).
+
+**Sur l'erreur elle-même** : la réconciliation programmatique des 8 thèmes (comparaison des IDs actifs réels contre les IDs effectivement revus par chaque lot) confirme que **seul le lot 1 était affecté** — les lots 2 à 7 correspondent exactement à l'état réel des données. L'écart n'a été détectable qu'en croisant cette session avec les notes précises par question de l'audit d'origine (`02-question-audit.md`), qui nommait explicitement `ECO_24` et `ECO_27`. Signalé ici en toute transparence plutôt que corrigé silencieusement, conformément à l'exigence de rigueur de la mission.
+
+### Couverture technologie / données / IA
+
+**Constat confirmé** (déjà identifié par l'audit d'origine dans `03-topic-coverage.md`, revérifié indépendamment par cette session) : **aucune des 200 questions du corpus ne porte au premier plan sur la régulation de l'IA, la décision algorithmique, ou la collecte de données par les entreprises privées.** Huit questions touchent le numérique de façon secondaire, chacune au service d'un autre sujet principal :
+
+| ID | Thème | Angle réel (pas centré sur la tech) |
+|---|---|---|
+| `SEC_1` | SECURITY | Surveillance étatique des communications (anti-terrorisme) |
+| `SEC_4` | SECURITY | Reconnaissance faciale *par la police* (pouvoirs policiers) |
+| `SEC_10` | SECURITY | Fausses informations en ligne (droit de la presse/désinformation) |
+| `SEC_12` | SECURITY | Chiffrement *pour les enquêtes* (pouvoirs des services secrets) |
+| `SOC_15` | SOCIAL | Responsabilité légale des réseaux sociaux (droit des plateformes) |
+| `DEM_2` | DEMOCRACY | Pouvoir politique des réseaux sociaux (influence électorale) |
+| `ECO_12` | ECONOMY | Démantèlement des géants technologiques (droit de la concurrence) |
+| `GLO_9` | GLOBAL | Influence culturelle américaine *via* les plateformes (souveraineté culturelle) |
+
+Sujets structurants absents malgré leur poids dans le débat politique 2024-2026 (AI Act européen entré en application par phases, dont les obligations les plus lourdes s'appliquent en août 2026 ; algorithmes publics contestés comme Parcoursup ou les algorithmes de notation de risque de la CAF ; RGPD et collecte de données par les plateformes privées, distincte de la surveillance étatique déjà couverte par `SEC_1`) : la régulation de l'IA en tant que telle, la transparence des décisions algorithmiques publiques, la collecte de données personnelles par les entreprises (par opposition à l'État), et la souveraineté numérique/technologique.
+
+**Décision** : conformément au cadrage de la mission (« audit éditorial des 162 questions existantes », pas extension du corpus), **ce lot documente le manque plutôt que d'ajouter unilatéralement de nouvelles questions**. Ajouter un thème complet nécessiterait des changements d'architecture dépassant le périmètre éditorial : nouveau préfixe dans `PREFIX_TO_THEME`/`THEMES_ORDER`, recalcul des axes dans `scorer.js`, mise à jour de la mention « 8 thèmes » codée en dur dans `Landing.jsx` et ailleurs dans l'interface, rééquilibrage des poids CORE/PRIMARY/SECONDARY — une décision de produit, pas une correction éditoriale, qui mérite un arbitrage explicite plutôt qu'une initiative unilatérale.
+
+**Proposition (à valider, non appliquée)** — six questions candidates, rédigées selon les mêmes standards que le reste du corpus (5 parties : contexte, changement, pour, contre, nuances), pouvant être intégrées à un futur thème dédié ou réparties dans les thèmes existants selon la préférence retenue :
+
+1. *(algorithmes publics)* « L'utilisation d'algorithmes pour attribuer des places à l'université ou des aides sociales doit être rendue totalement transparente aux citoyens concernés. » — ancrage réel : contentieux Parcoursup, algorithme de notation des allocataires de la CAF.
+2. *(régulation de l'IA)* « Le développement de l'intelligence artificielle doit être strictement encadré par la loi, même au risque de ralentir l'innovation. » — ancrage réel : AI Act européen, obligations renforcées à partir d'août 2026.
+3. *(données privées)* « Les entreprises technologiques doivent obtenir un consentement explicite avant d'utiliser les données personnelles de leurs utilisateurs pour entraîner des intelligences artificielles. » — distinct de `SEC_1` (surveillance étatique) : collecte par des acteurs privés.
+4. *(contenus générés par IA)* « Les contenus générés par intelligence artificielle (images, vidéos, voix) doivent être obligatoirement identifiés comme tels. » — ancrage réel : deepfakes, désinformation électorale.
+5. *(souveraineté numérique)* « La France et l'Europe doivent développer leurs propres technologies d'intelligence artificielle plutôt que dépendre d'entreprises américaines ou chinoises. » — distinct de `GLO_11` (dépendance à la Chine en général) : spécifique à l'IA/au numérique.
+6. *(emploi et automatisation)* « Les entreprises qui suppriment des emplois par l'automatisation doivent contribuer davantage au financement de la protection sociale. » — ancrage réel : débats récurrents sur une « taxe robot ».
+
+Chaque proposition est formulée en une seule proposition claire, avec une direction d'accord non ambiguë et sans jugement de valeur implicite — prête à intégration si le produit décide d'étendre sa couverture.
+
+### Deux autres angles morts signalés par l'audit d'origine (hors périmètre de ce lot, mentionnés pour mémoire)
+
+`03-topic-coverage.md` documente deux sujets **présents dans un brouillon éditorial antérieur (`knowledge-base/questions.md`) mais disparus du corpus final sans trace expliquant pourquoi** : l'égalité femmes-hommes en tant que sujet autonome (item CORE dans le brouillon), et le contrôle/accountability de la police au-delà de la vidéosurveillance (également CORE dans le brouillon). Cette session n'a pas cherché à reconstituer ce brouillon ni à réintroduire ces questions — signalé ici pour que le produit décide s'il s'agit d'un oubli à corriger ou d'un choix éditorial délibéré non documenté. Un troisième angle mort mineur, la décentralisation (compétences des collectivités territoriales), n'a pas non plus de question dédiée dans le corpus actuel.
+
+### Tests exécutés (réconciliation ECONOMY)
+
+`test1`-`test4` PASS (107 questions direction=1, inchangé). `node scripts/lint-questions.mjs ECONOMY` → 1 signalement, faux positif déjà connu (ECO_20). `JSON.parse` → 200 entrées valides. `npm run build` → succès.
+
+**Commit** : un commit éditorial pour `ECO_24`/`ECO_27` (changements de fond sans bascule de polarité, comme au lot 3 et au lot 7) + un commit documentaire pour la correction du lot 1, la synthèse du lot 8 et les propositions de couverture technologie/IA.
+
+---
+
+## Bilan de la mission des 8 lots
+
+162 questions actives auditées de façon exhaustive (100 %). **26 questions modifiées** au total (ECONOMY 13 dont la correction du lot 8 ; PUBLIC_SERVICES 11 ; ENVIRONMENT 6 ; IMMIGRATION 7 ; SECURITY 5 ; DEMOCRACY 1 ; GLOBAL 1 ; SOCIAL 2). **3 changements méthodologiques** (bascule de polarité ou redondance inter-thème corrigée en profondeur) documentés avec vérification de direction dédiée : `ECO_13` (lot 1, seule vraie bascule de `DIRECTION_MAP`), `ENV_8` (lot 3), `SOC_21` (lot 7) — plus `ECO_24`/`ECO_27` (lot 8). **3 doublons inter-thèmes** corrigés (`ECO_24`/`GLO_10`, `ECO_27`/`GLO_6`, `SOC_21`/`SEC_9`), un mécanisme d'incohérence que le système `isDuplicate` ne peut pas détecter puisqu'il n'opère qu'au sein d'un même thème. **1 bug technique significatif** découvert et corrigé en cours de route (`questionHints.js` désynchronisé, affectant l'affichage réel de 10 questions indépendamment de ce travail éditorial). **1 erreur de processus** découverte et corrigée en toute transparence (lot 1 : 2 questions actives jamais examinées, 3 doublons faussement comptés comme « conformes »). Un angle mort thématique majeur (technologie/IA/données) documenté avec 6 questions candidates proposées mais non appliquées, ainsi que deux angles morts mineurs signalés pour mémoire (égalité F/H, accountability policière — disparus d'un brouillon antérieur sans explication).
