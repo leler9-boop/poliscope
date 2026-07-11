@@ -32,7 +32,6 @@ import { generateProfileSummary } from '../engine/profileSummary.js';
 import { refinementThemes } from '../data/refinementThemes.js';
 import { getArchetype, getTopTraits } from '../engine/archetypeEngine.js';
 import AxisBar from '../components/AxisBar.jsx';
-import RadarChart from '../components/RadarChart.jsx';
 import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import ProfileReveal from '../components/ProfileReveal.jsx';
 import ConsentModal from '../components/ConsentModal.jsx';
@@ -882,42 +881,31 @@ export default function Profile() {
         <h2 className="font-semibold text-sm uppercase tracking-widest text-slate-500 mb-5">
           {language === 'fr' ? 'Vos positions' : 'Your positions'}
         </h2>
-        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
-          {/* Radar — the shape of the whole profile at a glance, complements the bars below */}
-          <motion.div
-            className="flex justify-center lg:justify-start shrink-0 mb-6 lg:mb-0"
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            <RadarChart themes={themes} language={language} size={260} />
-          </motion.div>
-          <div className="grid sm:grid-cols-2 gap-x-10 flex-1">
-            {THEMES_ORDER.map((theme, idx) => {
-              const score  = themes[theme] ?? 50;
-              const label  = THEME_LABELS[language]?.[theme] ?? theme;
-              const color  = THEME_COLORS[theme] ?? '#6b7280';
-              const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
-              return (
-                <motion.div
-                  key={theme}
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <AxisBar
-                    label={label}
-                    score={score}
-                    leftLabel={poles.left}
-                    rightLabel={poles.right}
-                    color={color}
-                    language={language}
-                    delay={0.32 + idx * 0.06}
-                  />
-                </motion.div>
-              );
-            })}
-          </div>
+        <div className="grid sm:grid-cols-2 gap-x-10">
+          {THEMES_ORDER.map((theme, idx) => {
+            const score  = themes[theme] ?? 50;
+            const label  = THEME_LABELS[language]?.[theme] ?? theme;
+            const color  = THEME_COLORS[theme] ?? '#6b7280';
+            const poles  = THEME_AXES[theme]?.[language] ?? THEME_AXES[theme]?.en ?? {};
+            return (
+              <motion.div
+                key={theme}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + idx * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <AxisBar
+                  label={label}
+                  score={score}
+                  leftLabel={poles.left}
+                  rightLabel={poles.right}
+                  color={color}
+                  language={language}
+                  delay={0.32 + idx * 0.06}
+                />
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
 
