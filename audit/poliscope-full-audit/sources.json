@@ -19,7 +19,40 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": ""
+    "notes": "SUPERSEDÉE le 2026-07-11 (voir entrées ci-dessous) : 'pourvoi ... formé' et 'sans effet suspensif' se sont révélés inexacts sur re-vérification — le pourvoi n'était qu'annoncé (délai légal de 10 jours), et l'effet est bien suspensif une fois déposé. Conservée pour traçabilité, ne plus utiliser comme source de la formulation actuelle du code."
+  },
+  {
+    "entityId": "lepen_2027",
+    "claim": "Marine Le Pen a publiquement déclaré sa candidature à la présidentielle 2027 sur TF1 le soir du 7 juillet 2026 (« Je suis candidate à l'élection présidentielle et je ne changerai pas d'avis »)",
+    "sourceUrl": "https://www.franceinfo.fr/politique/marine-le-pen/je-suis-candidate-a-l-election-presidentielle-marine-le-pen-annonce-son-pourvoi-en-cassation-apres-sa-condamnation-allegee-en-appel_8098361.html",
+    "sourceTitle": "\"Je suis candidate\" : Marine Le Pen annonce qu'elle se présente à la présidentielle après la réduction de sa peine d'inéligibilité, et qu'elle va se pourvoir en cassation",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-07",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Corrige l'entrée du 2026-07-10 ci-dessus, qui indiquait à tort dans le code 'candidature non officiellement déclarée' — la déclaration était déjà publique et sans ambiguïté dès le 7 juillet."
+  },
+  {
+    "entityId": "lepen_2027",
+    "claim": "Le pourvoi en cassation de Marine Le Pen a été ANNONCÉ le 7 juillet 2026, non confirmé déposé à la date de vérification. Délai légal pour le former : 10 jours à compter de l'arrêt (~17 juillet 2026). Une fois déposé, un pourvoi en cassation a un effet suspensif en droit pénal français.",
+    "sourceUrl": "https://www.franceinfo.fr/politique/front-national/affaire-des-assistants-fn-au-parlement-europeen/presidentielle-bracelet-electronique-pourvoi-en-cassation-les-questions-qui-se-posent-apres-la-condamnation-reduite-de-marine-le-pen-en-appel_8097893.html",
+    "sourceTitle": "Présidentielle, pourvoi en cassation, inéligibilité… Les questions qui se posent après la condamnation en appel réduite de Marine Le Pen",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-08",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "REMPLACE l'entrée du 2026-07-10 ci-dessus ('pourvoi ... formé, sans effet suspensif') — les deux détails étaient inexacts : dépôt non confirmé, et le sens de l'effet suspensif était inversé."
+  },
+  {
+    "entityId": "lepen_2027",
+    "claim": "La cour d'appel de Paris n'a pas assorti son arrêt du 7 juillet 2026 d'une exécution provisoire sur la peine d'inéligibilité — à la différence du jugement de première instance de mars 2025, qui lui en était assorti. Second fondement, indépendant de la peine déjà purgée, à son éligibilité actuelle.",
+    "sourceUrl": "https://www.franceinfo.fr/politique/front-national/affaire-des-assistants-fn-au-parlement-europeen/il-n-y-a-plus-d-execution-provisoire-pourquoi-marine-le-pen-mise-sur-un-pourvoi-en-cassation-pour-esperer-gagner-la-presidentielle_8098436.html",
+    "sourceTitle": "\"Il n'y a plus d'exécution provisoire\" : pourquoi Marine Le Pen mise sur un pourvoi en cassation pour espérer gagner la présidentielle",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-08",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium-high",
+    "notes": "Nuance juridique non confirmée par une source judiciaire primaire (arrêt de la cour, communiqué du parquet général) — recommandé de faire valider par un professionnel du droit avant toute communication publique s'appuyant précisément sur ce mécanisme."
   },
   {
     "entityId": "bardella",
@@ -30,7 +63,18 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-10",
     "confidence": "medium",
-    "notes": "Situation fluide à J+3 du verdict — à revérifier avant toute correction définitive du code"
+    "notes": "Toujours valide — complétée le 2026-07-11 par l'entrée suivante sur le lancement de campagne commun."
+  },
+  {
+    "entityId": "bardella",
+    "claim": "Bardella et Le Pen ont lancé leur campagne conjointement à La Flèche (Sarthe) début juillet 2026 ; la presse le décrit comme le Premier ministre pressenti d'une présidence Le Pen plutôt que comme un candidat concurrent. Aucun processus d'investiture interne du RN n'a été documenté dans les sources consultées.",
+    "sourceUrl": "https://www.france24.com/fr/france/20260708-marine-le-pen-candidate-en-2027-un-choix-dynastique-du-rn-qui-%C3%A9clipse-jordan-bardella",
+    "sourceTitle": "Marine Le Pen candidate en 2027 : le pari qui pourrait faire exploser le RN",
+    "sourceType": "press-national",
+    "publishedAt": "2026-07-08",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium",
+    "notes": "'Premier ministre pressenti' est une lecture de la presse, pas un statut constitutionnel ou partisan formalisé — d'où candidacyStatus:'speculative' plutôt que 'declared' pour Bardella dans elections.js."
   },
   {
     "entityId": "fr_pm_lecornu",

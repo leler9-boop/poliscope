@@ -52,7 +52,7 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
     totalWeight += weight;
   });
 
-  const meanDistance = weightedDistanceSum / totalWeight; // 0–1
+  const meanDistance = totalWeight > 0 ? weightedDistanceSum / totalWeight : 0.5; // 0–1
 
   // Power 2.4: balanced spread — generous enough for moderate users, still punishing for opposites.
   // d=0.05 → 89%  (very similar)
@@ -60,7 +60,9 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
   // d=0.25 → 53%  (moderate disagreement)
   // d=0.35 → 37%  (weak alignment)
   // d=0.50 → 19%  (opposing)
-  const baseAlignment = Math.round(Math.pow(1 - meanDistance, 2.4) * 100);
+  // POL-AUDIT-019: kept unrounded here — rounding once, after the veto below, avoids a
+  // rare double-rounding artifact that could flip a ranking by one point (~0.04% of pairs).
+  const baseAlignment = Math.pow(1 - meanDistance, 2.4) * 100;
 
   // Multiplicative veto: on 4 clivant themes, a large distance crushes the score.
   // This models the "dealbreaker" effect — e.g. a user strongly opposed to immigration

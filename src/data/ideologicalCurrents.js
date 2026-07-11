@@ -295,7 +295,7 @@ export const ideologicalCurrents = [
       SECURITY: 78,
       ENVIRONMENT: 28,
       DEMOCRACY: 48,
-      GLOBAL: 85,
+      GLOBAL: 18,
       PUBLIC_SERVICES: 55,
     },
   },

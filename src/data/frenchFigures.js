@@ -41,11 +41,11 @@ export const frenchFigures = [
     key_facts: {
       fr: [
         `Sa réforme des retraites, adoptée sans vote via le 49.3, a déclenché plusieurs mois de mobilisation sociale.`,
-        `A gouverné sans majorité absolue à l'Assemblée nationale de 2022 à 2024, inédit sous la Ve République.`,
+        `Gouverne sans majorité absolue à l'Assemblée nationale depuis 2022 — une situation devenue sans majorité du tout, même relative, après 2024 ; inédit sous la Ve République et toujours en cours au 2026-07-10.`,
       ],
       en: [
         `His pension reform, passed without a vote via Article 49.3, triggered months of social unrest.`,
-        `Governed without an absolute majority in the National Assembly from 2022 to 2024 — unprecedented under the Fifth Republic.`,
+        `Has governed without an absolute majority in the National Assembly since 2022 — a situation that became a lack of any majority at all, even relative, after 2024; unprecedented under the Fifth Republic and still ongoing as of 2026-07-10.`,
       ],
     },
     career_timeline: [
@@ -355,14 +355,14 @@ export const frenchFigures = [
     emoji: `🕊️`,
     family: `center`,
     party: { fr: `MoDem`, en: `MoDem` },
-    role: { fr: `Premier ministre`, en: `Prime Minister` },
+    role: { fr: `Ancien Premier ministre`, en: `Former Prime Minister` },
     short_summary: {
-      fr: `Centriste historique, Premier ministre depuis décembre 2024, allié fidèle de Macron depuis 2017.`,
-      en: `Veteran centrist, Prime Minister since December 2024, loyal Macron ally since 2017.`,
+      fr: `Centriste historique, Premier ministre de décembre 2024 à septembre 2025, allié fidèle de Macron depuis 2017.`,
+      en: `Veteran centrist, Prime Minister from December 2024 to September 2025, loyal Macron ally since 2017.`,
     },
     description: {
-      fr: `François Bayrou est nommé Premier ministre en décembre 2024, après avoir été l'un des alliés centraux de Macron depuis 2017. Fondateur du MoDem, il incarne un centrisme humaniste attaché à la démocratie participative et au dialogue social. Candidat à trois élections présidentielles (2002, 2007, 2012), il n'avait jamais accédé à de hautes fonctions exécutives avant 2024.`,
-      en: `François Bayrou was appointed Prime Minister in December 2024, having been one of Macron's central allies since 2017. Founder of MoDem, he embodies a humanist centrism committed to participatory democracy and social dialogue. A candidate in three presidential elections (2002, 2007, 2012), he had never held high executive office before 2024.`,
+      fr: `François Bayrou est nommé Premier ministre en décembre 2024, après avoir été l'un des alliés centraux de Macron depuis 2017. Il démissionne le 9 septembre 2025 après avoir perdu un vote de confiance (194 voix pour, 364 contre), et est remplacé dès le lendemain par Sébastien Lecornu. Fondateur du MoDem, il incarne un centrisme humaniste attaché à la démocratie participative et au dialogue social. Candidat à trois élections présidentielles (2002, 2007, 2012), il n'avait jamais accédé à de hautes fonctions exécutives avant 2024. (Vérifié le 2026-07-10, source : vie-publique.fr.)`,
+      en: `François Bayrou was appointed Prime Minister in December 2024, having been one of Macron's central allies since 2017. He resigned on 9 September 2025 after losing a confidence vote (194 for, 364 against), and was succeeded the next day by Sébastien Lecornu. Founder of MoDem, he embodies a humanist centrism committed to participatory democracy and social dialogue. A candidate in three presidential elections (2002, 2007, 2012), he had never held high executive office before 2024. (Verified 2026-07-10, source: vie-publique.fr.)`,
     },
     key_positions: {
       fr: [
@@ -707,8 +707,8 @@ export const frenchFigures = [
       en: `Leading figure of the French far right, presidential runner-up in 2017 and 2022.`,
     },
     description: {
-      fr: `Marine Le Pen a présidé le Front national puis le Rassemblement national de 2011 à 2021. Candidate à la présidentielle en 2012, 2017 et 2022, elle arrive au second tour face à Macron en 2022, obtenant 41,45 % des voix. Sa stratégie de « dédiabolisation » a contribué à normaliser le RN dans le paysage politique français. Elle fait face à un procès en 2025 pour détournement de fonds européens.`,
-      en: `Marine Le Pen led the Front national then Rassemblement national from 2011 to 2021. A presidential candidate in 2012, 2017 and 2022, she reached the second round against Macron in 2022, obtaining 41.45%. Her "de-demonisation" strategy helped normalise the RN in French politics. She faces trial in 2025 for misappropriation of European funds.`,
+      fr: `Marine Le Pen a présidé le Front national puis le Rassemblement national de 2011 à 2021. Candidate à la présidentielle en 2012, 2017 et 2022, elle arrive au second tour face à Macron en 2022, obtenant 41,45 % des voix. Sa stratégie de « dédiabolisation » a contribué à normaliser le RN dans le paysage politique français. Condamnée en première instance en mars 2025 pour détournement de fonds européens, sa condamnation a été confirmée en appel le 7 juillet 2026 avec une peine d'inéligibilité réduite à 15 mois fermes, déjà purgée — elle est donc éligible à la présidentielle de 2027 et a déclaré sa candidature le soir même sur TF1 (vérifié le 2026-07-11).`,
+      en: `Marine Le Pen led the Front national then Rassemblement national from 2011 to 2021. A presidential candidate in 2012, 2017 and 2022, she reached the second round against Macron in 2022, obtaining 41.45%. Her "de-demonisation" strategy helped normalise the RN in French politics. Convicted at first instance in March 2025 for misappropriating European funds, her conviction was upheld on appeal on 7 July 2026 with the ineligibility sentence reduced to 15 months already served — she is therefore eligible for the 2027 presidential election and declared her candidacy that same evening on TF1 (verified 2026-07-11).`,
     },
     key_positions: {
       fr: [
@@ -728,11 +728,11 @@ export const frenchFigures = [
     },
     key_facts: {
       fr: [
-        `Jugée en 2025 pour détournement de fonds européens via des assistants parlementaires fictifs — risque d'inéligibilité.`,
+        `Condamnation pour détournement de fonds européens confirmée en appel le 7 juillet 2026 ; peine d'inéligibilité réduite à 15 mois fermes, purgée au 30 juin 2026 — éligible pour 2027, candidature déclarée le 7 juillet 2026 sur TF1. A annoncé son intention de former un pourvoi en cassation (délai légal de 10 jours ; non confirmé déposé à ce stade) (vérifié le 2026-07-11).`,
         `A obtenu 41,45 % au second tour de la présidentielle 2022, record historique pour l'extrême droite française.`,
       ],
       en: [
-        `Tried in 2025 for misappropriating European funds via fictitious parliamentary assistants — at risk of ineligibility.`,
+        `Conviction for misappropriating European funds upheld on appeal 7 July 2026; ineligibility sentence reduced to 15 months, served by 30 June 2026 — eligible for 2027, candidacy declared 7 July 2026 on TF1. Has announced intent to file a cassation appeal (10-day legal deadline; not confirmed filed yet) (verified 2026-07-11).`,
         `Obtained 41.45% in the 2022 presidential second round, a historic record for the French far right.`,
       ],
     },
@@ -742,8 +742,8 @@ export const frenchFigures = [
       { year: 2022, fr: `Finaliste à nouveau avec 41,45 % face à Macron.`, en: `Runner-up again with 41.45% against Macron.` },
     ],
     disclaimer: {
-      fr: `Sa « dédiabolisation » du RN a permis une montée en puissance électorale, mais les enquêtes judiciaires en cours pèsent sur sa candidature future.`,
-      en: `Her "de-demonisation" of the RN enabled an electoral rise, but ongoing judicial proceedings weigh on her future candidacy.`,
+      fr: `Sa « dédiabolisation » du RN a permis une montée en puissance électorale. Sa condamnation pour détournement de fonds européens (confirmée en appel le 7 juillet 2026) devrait être contestée par un pourvoi en cassation, annoncé mais non confirmé déposé ; la peine d'inéligibilité a néanmoins déjà été purgée, la rendant éligible pour 2027 — elle a déclaré sa candidature dès le soir du verdict.`,
+      en: `Her "de-demonisation" of the RN enabled an electoral rise. Her conviction for misappropriating European funds (upheld on appeal 7 July 2026) is expected to be challenged via a cassation appeal, announced but not confirmed filed; the ineligibility sentence has already been served, however, making her eligible for 2027 — she declared her candidacy the same evening as the verdict.`,
     },
     profile: {
       ECONOMY: 40, SOCIAL: 15, IMMIGRATION: 5, SECURITY: 10,
