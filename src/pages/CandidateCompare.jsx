@@ -62,10 +62,14 @@ export default function CandidateCompare() {
   const r1 = id1 ? findCandidate(id1) : null;
   const r2 = id2 ? findCandidate(id2) : null;
 
-  if (!r1 || !r2) {
-    navigate('elections');
-    return null;
-  }
+  // Redirect in an effect, not during render — calling navigate() (a state
+  // setter) synchronously in the render body trips React's "Cannot update a
+  // component while rendering a different component" warning.
+  useEffect(() => {
+    if (!r1 || !r2) navigate('elections');
+  }, [r1, r2]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!r1 || !r2) return null;
 
   const c1 = r1.candidate;
   const c2 = r2.candidate;
