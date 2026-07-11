@@ -253,6 +253,15 @@ export default function Profile() {
     return rankByAlignment({ themes }, fr2027Candidates, priorityOrder ?? [], themeWeights ?? null);
   }, [themes, fr2027Candidates, priorityOrder, themeWeights]);
 
+  // Lot 2 (proposal #3, robustness simulation): ~48% of profiles have their top-2 matches
+  // within 1 point in a stress test — a single "best match" badge overstates precision
+  // when the runner-up is nearly tied. Flag it rather than hide it.
+  const closeSecondCandidate = useMemo(() => {
+    if (rankedCandidates.length < 2) return null;
+    const gap = rankedCandidates[0].alignment - rankedCandidates[1].alignment;
+    return gap <= 3 ? rankedCandidates[1] : null;
+  }, [rankedCandidates]);
+
   const profileSummary = useMemo(
     () => generateProfileSummary(themes, rankedCurrents, language),
     [themes, rankedCurrents, language]
@@ -630,6 +639,13 @@ export default function Profile() {
                     {rankedCandidates[0].alignment}%
                   </span>
                 </motion.div>
+              )}
+              {closeSecondCandidate && (
+                <p className="text-[11px] text-slate-400 -mt-3.5 mb-5 px-3.5">
+                  {language === 'fr'
+                    ? `Résultat serré — à ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} de ${closeSecondCandidate.name} (${closeSecondCandidate.alignment}%).`
+                    : `Close result — ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} ahead of ${closeSecondCandidate.name} (${closeSecondCandidate.alignment}%).`}
+                </p>
               )}
 
               {/* ── Methodology transparency ─────────────────────────────── */}
