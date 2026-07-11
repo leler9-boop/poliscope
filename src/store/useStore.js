@@ -91,10 +91,6 @@ export const useStore = create(
       // computed profile, or archetype/candidate-carrying analytics events.
       consent: { politicalData: null, grantedAt: null, version: null },
 
-      // ── Consent prompt (session-only) — true when an action needs a consent
-      // decision the user hasn't made yet (mirrors needsOnboarding's pattern) ──
-      needsConsent: false,
-
       // ── Profile reveal (session-only) — true once after quiz completion ──
       profileRevealPending: false,
 
@@ -200,8 +196,6 @@ export const useStore = create(
 
       setNeedsOnboarding: (v) => set({ needsOnboarding: v }),
 
-      setNeedsConsent: (v) => set({ needsConsent: v }),
-
       /**
        * Record a consent decision (grant or decline). Also mirrors the decision
        * into analytics.js's module-level flag so trackQuestionAnswered() and
@@ -211,7 +205,7 @@ export const useStore = create(
        */
       setConsent: (granted) => {
         const consent = { politicalData: granted === true, grantedAt: new Date().toISOString(), version: CONSENT_VERSION };
-        set({ consent, needsConsent: false });
+        set({ consent });
         setAnalyticsConsent(granted === true);
       },
 
@@ -219,6 +213,16 @@ export const useStore = create(
       withdrawConsent: () => {
         set({ consent: { politicalData: false, grantedAt: new Date().toISOString(), version: CONSENT_VERSION } });
         setAnalyticsConsent(false);
+      },
+
+      /**
+       * Sync local consent state FROM a server-side user_consents row (auth.jsx,
+       * on login) — unlike setConsent(), preserves the row's original grantedAt
+       * rather than stamping "now", since this isn't a new decision.
+       */
+      hydrateConsent: ({ granted, grantedAt, version }) => {
+        set({ consent: { politicalData: granted === true, grantedAt: grantedAt ?? null, version: version ?? null } });
+        setAnalyticsConsent(granted === true);
       },
 
       setSyncConflict: (v) => set({ syncConflict: v }),

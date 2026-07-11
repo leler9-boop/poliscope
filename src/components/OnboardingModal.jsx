@@ -149,8 +149,8 @@ export default function OnboardingModal() {
           </h2>
           <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
             {fr
-              ? 'Ces informations aident Poliscop à mieux comprendre les opinions des Français. Tout est anonymisé.'
-              : 'This helps Poliscop understand French political opinions. Everything is anonymized.'}
+              ? 'Ces informations aident Poliscop à mieux comprendre les opinions des Français. Elles restent liées à ton compte, mais ne sont jamais analysées individuellement — uniquement en groupe.'
+              : 'This helps Poliscop understand French political opinions. It stays linked to your account, but is never analyzed individually — only in grouped form.'}
           </p>
           {/* Progress dots */}
           {filledCount > 0 && (
@@ -253,8 +253,8 @@ export default function OnboardingModal() {
           {/* Privacy */}
           <p className="text-[11px] text-gray-400 italic leading-relaxed">
             {fr
-              ? 'Aucune donnée personnelle n\'est vendue ou partagée. Les analyses sont toujours agrégées et anonymisées.'
-              : 'No personal data is sold or shared. All analysis is aggregated and anonymized.'}
+              ? 'Aucune donnée personnelle n\'est vendue ou partagée. Les analyses que nous publions sont toujours groupées, jamais individuelles.'
+              : 'No personal data is sold or shared. Analysis we publish is always grouped, never individual.'}
           </p>
 
           {saveError && (

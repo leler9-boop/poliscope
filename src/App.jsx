@@ -73,15 +73,22 @@ function AppInner() {
   const profile         = useStore(s => s.profile);
   const needsOnboarding = useStore(s => s.needsOnboarding);
   const syncConflict    = useStore(s => s.syncConflict);
+  const hasConsent      = useStore(s => s.consent?.politicalData === true);
   const t = createTranslator(language);
 
   const { saveUserProfile, isAuthenticated } = useAuth();
   const saveTimer = useRef(null);
   const [toast, setToast] = useState(null);
 
-  // Debounced profile save to Supabase
+  // Debounced profile save to Supabase.
+  // Gated on hasConsent: without it, saveUserProfile() internally no-ops
+  // (see hasPoliticalDataConsent() in auth.jsx), but skipping the call here
+  // too avoids a pointless request and, more importantly, a misleading
+  // "save failed" toast for a user who deliberately declined consent — that's
+  // expected behavior, not an error. Re-runs on hasConsent so granting
+  // consent triggers an immediate first sync of the already-computed profile.
   useEffect(() => {
-    if (!isAuthenticated || !profile) return;
+    if (!isAuthenticated || !profile || !hasConsent) return;
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
       const { error } = await saveUserProfile(profile);
@@ -92,7 +99,7 @@ function AppInner() {
       }
     }, 3000);
     return () => clearTimeout(saveTimer.current);
-  }, [answers]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [answers, hasConsent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-[#f7f7f5] flex flex-col">

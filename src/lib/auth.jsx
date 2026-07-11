@@ -2,11 +2,19 @@
 // The entire app works without auth (guest mode).
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase.js';
-import { useStore } from '../store/useStore.js';
+import { useStore, CONSENT_VERSION } from '../store/useStore.js';
 import { initAnonymousSession, mergeAnonymousAnswers } from './anonymous.js';
 import { trackSignupCompleted, trackLoginCompleted } from './analytics.js';
 
 const AuthContext = createContext(null);
+
+// RGPD: single source of truth for "is it OK to write political-opinion data
+// (answers, computed profile, archetype/candidate) to Supabase for this user?"
+// Checked before every such write in this file. See
+// audit/rgpd-remediation-2026-07/ for the full design rationale.
+function hasPoliticalDataConsent() {
+  return useStore.getState().consent?.politicalData === true;
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
@@ -23,6 +31,9 @@ export function AuthProvider({ children }) {
    */
   async function smartSync(userId) {
     if (!isSupabaseEnabled || !supabase) return;
+    // RGPD: no automatic account sync (read or write) without explicit consent —
+    // logging in is not itself consent. See hasPoliticalDataConsent() above.
+    if (!hasPoliticalDataConsent()) return;
 
     const storeState    = useStore.getState();
     const localAnswers  = storeState.answers;
@@ -113,6 +124,51 @@ export function AuthProvider({ children }) {
       });
   }
 
+  /**
+   * Reconcile consent state on login: consent is recorded per-account, not per-
+   * device, so a user who consented on their laptop shouldn't be re-asked on
+   * their phone. Precedence: a server-side row always wins (it's the durable
+   * record); if none exists yet but this device has a local decision, push it
+   * to the server (covers "just granted consent in this same session, before
+   * the row existed yet"). If neither exists, do nothing — no consent has ever
+   * been given anywhere, sync stays off until the user is explicitly asked
+   * (triggered from the UI, not automatically here).
+   */
+  async function syncConsentFromServer(userId) {
+    if (!isSupabaseEnabled || !supabase) return;
+    const { data, error } = await supabase
+      .from('user_consents')
+      .select('granted, version, created_at')
+      .eq('user_id', userId)
+      .eq('consent_type', 'political_data')
+      .maybeSingle();
+
+    if (error) {
+      console.error('[Poliscop] consent fetch error:', error.message);
+      return;
+    }
+
+    if (data) {
+      useStore.getState().hydrateConsent({ granted: data.granted, grantedAt: data.created_at, version: data.version });
+      return;
+    }
+
+    const local = useStore.getState().consent;
+    if (local?.politicalData === true || local?.politicalData === false) {
+      await supabase.from('user_consents').upsert(
+        {
+          user_id: userId,
+          consent_type: 'political_data',
+          granted: local.politicalData,
+          version: local.version ?? CONSENT_VERSION,
+        },
+        { onConflict: 'user_id,consent_type' }
+      ).then(({ error: upsertError }) => {
+        if (upsertError) console.error('[Poliscop] consent push error:', upsertError.message);
+      });
+    }
+  }
+
   useEffect(() => {
     if (!isSupabaseEnabled) {
       setLoading(false);
@@ -128,7 +184,10 @@ export function AuthProvider({ children }) {
       setUser(u);
       useStore.getState().setAuthUser(u);
 
-      if (u) await smartSync(u.id);
+      if (u) {
+        await syncConsentFromServer(u.id);
+        await smartSync(u.id);
+      }
 
       setLoading(false);
     });
@@ -144,7 +203,11 @@ export function AuthProvider({ children }) {
       useStore.getState().setAuthUser(u);
 
       if (event === 'SIGNED_IN' && u) {
-        await mergeAnonymousAnswers(u.id);
+        await syncConsentFromServer(u.id);
+        // Merge any legacy anonymous_answers left over from before this device's
+        // consent was known — only meaningful (and only permitted) once consent
+        // is established, hence running it after the sync above, not before.
+        if (hasPoliticalDataConsent()) await mergeAnonymousAnswers(u.id);
         await smartSync(u.id);
 
         // Track login vs signup by checking if this is the user's first sign-in.
@@ -209,13 +272,53 @@ export function AuthProvider({ children }) {
     useStore.getState().setAuthUser(null);
   }
 
+  // ── Consent (RGPD Article 9 — political opinion data) ────────────────────
+
+  /**
+   * Record explicit consent, both locally (immediate effect on this device —
+   * see useStore.setConsent) and server-side (durable, follows the account
+   * across devices). Call this from the consent modal's "I agree" action, not
+   * automatically on login or signup.
+   */
+  async function grantConsent() {
+    useStore.getState().setConsent(true);
+    if (!isSupabaseEnabled || !supabase || !user) return { error: null }; // local-only is still a valid outcome pre-login
+    const { error } = await supabase.from('user_consents').upsert(
+      { user_id: user.id, consent_type: 'political_data', granted: true, version: CONSENT_VERSION },
+      { onConflict: 'user_id,consent_type' }
+    );
+    if (error) console.error('[Poliscop] grantConsent error:', error.message);
+    return { error };
+  }
+
+  /**
+   * Withdraw consent. Does NOT delete already-stored data (that's deleteMyData,
+   * a separate, more consequential action) — it only stops any further sync and
+   * analytics from this point on. The consent row itself is kept (with
+   * granted=false) as the audit trail proving consent was later withdrawn.
+   */
+  async function revokeConsent() {
+    useStore.getState().withdrawConsent();
+    if (!isSupabaseEnabled || !supabase || !user) return { error: null };
+    const { error } = await supabase.from('user_consents').upsert(
+      { user_id: user.id, consent_type: 'political_data', granted: false, version: CONSENT_VERSION },
+      { onConflict: 'user_id,consent_type' }
+    );
+    if (error) console.error('[Poliscop] revokeConsent error:', error.message);
+    return { error };
+  }
+
   // ── Data persistence ──────────────────────────────────────────────────────
 
   /**
    * Upsert all answers into user_answers (one row per question).
+   * Requires explicit consent — see hasPoliticalDataConsent() at the top of this
+   * file. This check is a safety net in addition to the UI only calling this
+   * after consent is confirmed (Profile.jsx) — do not remove it to "simplify".
    */
   async function saveAnswers(answers) {
     if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
+    if (!hasPoliticalDataConsent()) return { error: 'Consent required before saving political answers' };
     const rows = Object.entries(answers).map(([question_id, answer_value]) => ({
       user_id: user.id,
       question_id,
@@ -229,10 +332,12 @@ export function AuthProvider({ children }) {
   }
 
   /**
-   * Upsert computed profile snapshot into user_profiles.
+   * Upsert computed profile snapshot into user_profiles. Requires explicit
+   * consent, same rationale as saveAnswers() above.
    */
   async function saveUserProfile(profile) {
     if (!isSupabaseEnabled || !user || !profile) return { error: 'Not authenticated' };
+    if (!hasPoliticalDataConsent()) return { error: 'Consent required before saving political answers' };
     const payload = {
       user_id:          user.id,
       theme_scores:     profile.themes,
@@ -317,13 +422,20 @@ export function AuthProvider({ children }) {
 
   /**
    * Persist the computed archetype and top candidate into user_profiles.
-   * Called from Profile.jsx once archetype + candidates are resolved.
-   * Fire-and-forget — errors are logged, never surface to the user.
+   * Called automatically from a useEffect in Profile.jsx once archetype +
+   * candidates are resolved — NOT from a user-initiated save action. Because
+   * this fires without any explicit click, the consent check below is the
+   * only thing standing between "user is logged in" and an unconsented write:
+   * archetype_id/top_candidate_id are themselves derived political-opinion
+   * data (see audit/rgpd-remediation-2026-07/), same rationale as
+   * saveAnswers()/saveUserProfile() above. Fire-and-forget — errors are
+   * logged, never surface to the user.
    *
    * @param {{ archetypeId: string, topCandidateId: string, topCandidateAlignment: number }} meta
    */
   async function saveProfileMeta({ archetypeId, topCandidateId, topCandidateAlignment }) {
     if (!isSupabaseEnabled || !supabase || !user) return;
+    if (!hasPoliticalDataConsent()) return;
     const { error } = await supabase
       .from('user_profiles')
       .upsert(
@@ -353,6 +465,8 @@ export function AuthProvider({ children }) {
     saveDemographics,
     loadDemographics,
     saveProfileMeta,
+    grantConsent,
+    revokeConsent,
     // Legacy alias used by the Profile.jsx cloud-save button
     saveProfile: async (answers) => saveAnswers(answers),
   };

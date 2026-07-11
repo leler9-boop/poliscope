@@ -34,6 +34,7 @@ import { getArchetype, getTopTraits } from '../engine/archetypeEngine.js';
 import AxisBar from '../components/AxisBar.jsx';
 import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import ProfileReveal from '../components/ProfileReveal.jsx';
+import ConsentModal from '../components/ConsentModal.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 import { trackProfileViewed, trackProfileExported } from '../lib/analytics.js';
@@ -178,6 +179,13 @@ export default function Profile() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'saved' | 'error'
 
+  // ── RGPD consent gate for cloud save (main button + migration banner) ─────
+  const consent = useStore(s => s.consent);
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  // Which button opened the modal, so we know what to resume on "I agree" —
+  // both currently do the exact same save, kept distinct for setPendingMigration(false).
+  const pendingSaveKind = useRef(null); // 'save' | 'migrate'
+
   const [showAllCurrents, setShowAllCurrents] = useState(false);
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -312,6 +320,46 @@ export default function Profile() {
     reader.readAsText(file);
   };
 
+  // ── Cloud save, gated on RGPD consent ──────────────────────────────────────
+  // saveAnswers()/saveUserProfile() already refuse to write without consent
+  // (see hasPoliticalDataConsent() in auth.jsx) — the checks here exist so we
+  // show the consent modal and ask *before* the save attempt, instead of
+  // silently failing and confusing the user with an "error" status.
+  const performCloudSave = async () => {
+    setSaveStatus('saving');
+    const [a, p] = await Promise.all([saveAnswers(answers), saveUserProfile(profile)]);
+    setSaveStatus(!a.error && !p.error ? 'saved' : 'error');
+    setTimeout(() => setSaveStatus(null), 3000);
+  };
+
+  const handleSaveClick = () => {
+    if (consent?.politicalData !== true) {
+      pendingSaveKind.current = 'save';
+      setShowConsentModal(true);
+      return;
+    }
+    performCloudSave();
+  };
+
+  const handleMigrateYes = () => {
+    if (consent?.politicalData !== true) {
+      pendingSaveKind.current = 'migrate';
+      setShowConsentModal(true);
+      return;
+    }
+    performCloudSave();
+    setPendingMigration(false);
+  };
+
+  const handleConsentDecided = (granted) => {
+    setShowConsentModal(false);
+    if (granted) {
+      performCloudSave();
+      if (pendingSaveKind.current === 'migrate') setPendingMigration(false);
+    }
+    pendingSaveKind.current = null;
+  };
+
   const axisKeys = ['social', 'institutional', 'international'];
 
   return (
@@ -369,12 +417,7 @@ export default function Profile() {
           {!isSharedView && isSupabaseEnabled && (
             user ? (
               <button
-                onClick={async () => {
-                  setSaveStatus('saving');
-                  const [a, p] = await Promise.all([saveAnswers(answers), saveUserProfile(profile)]);
-                  setSaveStatus(!a.error && !p.error ? 'saved' : 'error');
-                  setTimeout(() => setSaveStatus(null), 3000);
-                }}
+                onClick={handleSaveClick}
                 disabled={saveStatus === 'saving'}
                 className={`hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border transition-colors ${
                   saveStatus === 'saved'  ? 'border-green-300 bg-green-50 text-green-700' :
@@ -433,6 +476,9 @@ export default function Profile() {
         </div>
       </motion.div>
 
+      {/* RGPD consent — before any cloud save of political answers */}
+      {showConsentModal && <ConsentModal onDecided={handleConsentDecided} />}
+
       {/* Reset confirmation */}
       {showResetConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
@@ -466,13 +512,7 @@ export default function Profile() {
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <button
-              onClick={async () => {
-                setSaveStatus('saving');
-                const [a, p] = await Promise.all([saveAnswers(answers), saveUserProfile(profile)]);
-                setSaveStatus(!a.error && !p.error ? 'saved' : 'error');
-                setTimeout(() => setSaveStatus(null), 3000);
-                setPendingMigration(false);
-              }}
+              onClick={handleMigrateYes}
               className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors"
             >
               {t('migrate_yes')}

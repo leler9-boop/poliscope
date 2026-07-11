@@ -7,13 +7,13 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
       title: 'Avant de commencer',
       text: "Si une question ne vous concerne pas, ou si vous n'avez tout simplement pas d'avis — passez-la. C'est normal.\n\nEn revanche, évitez de répondre au hasard : ça peut fausser votre profil.",
       button: "C'est parti",
-      consent: "En commençant, tu acceptes que tes réponses anonymisées contribuent à mieux comprendre les opinions des Français.",
+      privacyNote: "Tes réponses restent sur cet appareil. Si tu crées un compte et actives la sauvegarde en ligne, on te demandera ton accord séparément avant d'envoyer quoi que ce soit.",
     },
     en: {
       title: 'Before you start',
       text: "If a question doesn't apply to you, or you just don't have a view on it — skip it. That's fine.\n\nJust avoid answering randomly: it can skew your results.",
       button: "Let's go",
-      consent: "By continuing, you agree that your anonymized answers help us better understand political opinions.",
+      privacyNote: "Your answers stay on this device. If you create an account and enable cloud save, we'll ask your consent separately before sending anything.",
     },
   };
 
@@ -43,9 +43,11 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         >
           {c.button}
         </button>
-        {/* Consent notice — transparent, non-blocking */}
+        {/* Privacy notice — informational only, NOT a consent mechanism.
+            Real RGPD consent (political-opinion data, Article 9) happens later,
+            explicitly, in ConsentModal.jsx — see audit/rgpd-remediation-2026-07/. */}
         <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">
-          {c.consent}
+          {c.privacyNote}
         </p>
       </motion.div>
     </motion.div>

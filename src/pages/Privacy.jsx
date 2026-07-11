@@ -11,7 +11,10 @@ export default function Privacy() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-1">Politique de Confidentialité</h1>
-        <p className="text-sm text-gray-400 mb-10">Dernière mise à jour : 10 juin 2026</p>
+        <p className="text-sm text-gray-400 mb-3">Dernière mise à jour : 11 juillet 2026</p>
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-10">
+          Version mise à jour suite à une revue technique RGPD interne (juillet 2026), notamment sur la base légale applicable aux réponses politiques. Cette mise à jour est fournie de bonne foi mais n'a pas encore été validée par un professionnel du droit ; elle ne constitue pas un avis juridique définitif.
+        </p>
 
         <div className="space-y-8 text-gray-700 text-sm leading-relaxed">
 
@@ -64,8 +67,9 @@ export default function Privacy() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   <tr><td className="py-2 pr-4">Fonctionnement du compte et authentification</td><td className="py-2">Exécution du contrat (art. 6.1.b RGPD)</td></tr>
-                  <tr><td className="py-2 pr-4">Sauvegarde et synchronisation de votre profil</td><td className="py-2">Exécution du contrat</td></tr>
-                  <tr><td className="py-2 pr-4">Amélioration du service (données agrégées, anonymisées)</td><td className="py-2">Intérêt légitime (art. 6.1.f RGPD)</td></tr>
+                  <tr><td className="py-2 pr-4">Sauvegarde et synchronisation de vos réponses et de votre profil politique</td><td className="py-2">Consentement explicite (art. 9.2.a RGPD — vos réponses relèvent des données sensibles « opinions politiques »)</td></tr>
+                  <tr><td className="py-2 pr-4">Mesure d'audience générale (pages vues, parcours, sans lien avec vos réponses)</td><td className="py-2">Intérêt légitime (art. 6.1.f RGPD)</td></tr>
+                  <tr><td className="py-2 pr-4">Analyse de tendances politiques agrégées (à partir de vos réponses)</td><td className="py-2">Consentement explicite (art. 9.2.a RGPD)</td></tr>
                   <tr><td className="py-2 pr-4">Respect des obligations légales</td><td className="py-2">Obligation légale (art. 6.1.c RGPD)</td></tr>
                 </tbody>
               </table>
