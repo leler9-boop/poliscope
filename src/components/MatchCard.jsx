@@ -56,51 +56,58 @@ export default function MatchCard({
           </div>
         )}
 
-        <div className="flex items-start gap-3 sm:gap-4">
-          {/* Rank badge */}
-          {rank != null && (
-            <div
-              className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              style={
-                isTopMatch    ? { backgroundColor: barColor, color: 'white' } :
-                rank <= 3     ? { backgroundColor: `${barColor}22`, color: barColor } :
-                                { backgroundColor: '#f3f4f6', color: '#9ca3af' }
-              }
-            >
-              {rank}
-            </div>
-          )}
+        {/* `sm:contents` on the inner wrapper: on desktop it drops out of the box
+            model so rank+name+score stay in one row exactly as before; on mobile
+            it's a real row of its own (flex-col parent) so the name gets the
+            full card width instead of fighting the big score number for space —
+            was truncating to e.g. "Alexander Hami…" on a 375px screen. */}
+        <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4">
+          <div className="flex items-start gap-3 sm:contents">
+            {/* Rank badge */}
+            {rank != null && (
+              <div
+                className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                style={
+                  isTopMatch    ? { backgroundColor: barColor, color: 'white' } :
+                  rank <= 3     ? { backgroundColor: `${barColor}22`, color: barColor } :
+                                  { backgroundColor: '#f3f4f6', color: '#9ca3af' }
+                }
+              >
+                {rank}
+              </div>
+            )}
 
-          {/* Name + meta */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              {target.emoji && (
-                <span className="text-base leading-none flex-shrink-0">{target.emoji}</span>
+            {/* Name + meta */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                {target.emoji && (
+                  <span className="text-base leading-none flex-shrink-0">{target.emoji}</span>
+                )}
+                {color && !target.emoji && (
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                )}
+                <h3 className={`font-semibold truncate ${isTopMatch ? 'text-slate-900 text-base' : 'text-slate-900 text-sm'}`}>
+                  {name}
+                </h3>
+                {target.flag && <span className="text-sm leading-none flex-shrink-0">{target.flag}</span>}
+              </div>
+              {target.party && (
+                <p className="text-xs text-slate-400 mb-0.5">
+                  {typeof target.party === 'object' ? target.party[language] : target.party}
+                </p>
               )}
-              {color && !target.emoji && (
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+              {target.role && (
+                <p className="text-xs text-slate-400">
+                  {typeof target.role === 'object' ? target.role[language] : target.role}
+                  {target.years && <span className="ml-1 text-slate-300">· {target.years}</span>}
+                </p>
               )}
-              <h3 className={`font-semibold truncate ${isTopMatch ? 'text-slate-900 text-base' : 'text-slate-900 text-sm'}`}>
-                {name}
-              </h3>
-              {target.flag && <span className="text-sm leading-none flex-shrink-0">{target.flag}</span>}
+              {context && (
+                <p className="text-xs text-blue-700 bg-blue-50 rounded-md px-2 py-0.5 mt-1.5 inline-block">
+                  {context}
+                </p>
+              )}
             </div>
-            {target.party && (
-              <p className="text-xs text-slate-400 mb-0.5">
-                {typeof target.party === 'object' ? target.party[language] : target.party}
-              </p>
-            )}
-            {target.role && (
-              <p className="text-xs text-slate-400">
-                {typeof target.role === 'object' ? target.role[language] : target.role}
-                {target.years && <span className="ml-1 text-slate-300">· {target.years}</span>}
-              </p>
-            )}
-            {context && (
-              <p className="text-xs text-blue-700 bg-blue-50 rounded-md px-2 py-0.5 mt-1.5 inline-block">
-                {context}
-              </p>
-            )}
           </div>
 
           {/* Score */}
