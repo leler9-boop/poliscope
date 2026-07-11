@@ -383,15 +383,15 @@
     "axis": "global",
     "status": "CORE",
     "cluster": "immigration volume",
-    "explanation": "La France accueille environ 300 000 immigrés légaux par an. Le débat porte sur ce niveau : certains estiment qu'il est trop élevé et met sous pression les services publics ; d'autres soulignent les contributions économiques et démographiques de l'immigration."
+    "explanation": "La France a délivré environ 384 000 nouveaux titres de séjour en 2025 (+11 % sur un an), un niveau record. Le débat porte sur ce niveau : certains estiment qu'il est trop élevé et met sous pression les services publics ; d'autres soulignent les contributions économiques et démographiques de l'immigration."
   },
   {
     "id": "IMM_2",
-    "text": "Les demandeurs d'asile doivent avoir le droit de travailler et d'accéder aux services sociaux dès le dépôt de leur dossier.",
+    "text": "Les demandeurs d'asile doivent avoir le droit de travailler dès le dépôt de leur dossier.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
-    "explanation": "Les demandeurs d'asile en France ont accès à certaines aides, mais pas au droit de travailler pendant l'instruction de leur dossier, qui peut durer plusieurs mois. Le débat porte sur l'étendue des droits accordés avant qu'une décision définitive soit rendue."
+    "explanation": "Les demandeurs d'asile en France ont accès à certaines aides, mais pas au droit de travailler pendant l'instruction de leur dossier, qui peut durer plusieurs mois voire plus d'un an. Ses partisans y voient un moyen de favoriser l'autonomie financière et l'intégration ; ses opposants craignent que cela n'incite davantage de demandes, y compris infondées."
   },
   {
     "id": "IMM_3",
@@ -439,7 +439,7 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
-    "explanation": "Des travailleurs étrangers contribuent aux cotisations sociales et paient des impôts en France, sans toujours bénéficier des mêmes protections que les citoyens. Le débat porte sur l'équité de ce traitement différencié."
+    "explanation": "Des travailleurs étrangers contribuent aux cotisations sociales et paient des impôts en France, sans toujours bénéficier des mêmes protections que les citoyens. Ses partisans y voient une question d'équité directement liée à la contribution ; ses opposants estiment que l'égalité totale des droits doit rester progressive, certaines prestations non contributives restant réservées aux citoyens ou aux résidents de très longue durée."
   },
   {
     "id": "IMM_9",
@@ -447,7 +447,7 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
-    "explanation": "Le dérèglement climatique pousse des populations à fuir des zones inhabitables. Ces personnes ne sont pas reconnues comme réfugiés au sens de la Convention de Genève. Le débat porte sur la création d'un statut légal protégeant ces migrations, amenées à s'amplifier."
+    "explanation": "Le dérèglement climatique pousse des populations à fuir des zones inhabitables. Ces personnes ne sont pas reconnues comme réfugiés au sens de la Convention de Genève. Ses partisans y voient une réponse nécessaire à une crise appelée à s'aggraver ; ses opposants s'inquiètent de la difficulté à définir juridiquement un tel statut et de la capacité d'accueil qu'il impliquerait."
   },
   {
     "id": "IMM_10",
@@ -503,7 +503,7 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
-    "explanation": "La loi immigration de 2024 a introduit un débat sur un quota d'immigration économique voté par le Parlement. Ce système existe au Royaume-Uni et en Australie. Le débat porte sur la pertinence de fixer un chiffre annuel et les critères qui le définiraient."
+    "explanation": "La loi immigration de 2024 prévoyait un débat annuel au Parlement sur un objectif chiffré d'immigration, mais cette disposition a été censurée par le Conseil constitutionnel en janvier 2024, qui a jugé qu'aucune exigence constitutionnelle ne permet d'imposer un tel débat ou de tels objectifs chiffrés au Parlement. Un système de plafond voté existe au Royaume-Uni et en Australie. Le débat porte sur la pertinence d'un tel plafond et sur les moyens constitutionnels de l'instaurer en France."
   },
   {
     "id": "IMM_17",
@@ -542,11 +542,11 @@
   },
   {
     "id": "IMM_21",
-    "text": "L'UE doit créer une politique d'asile commune et contraignante.",
+    "text": "L'UE doit imposer une répartition contraignante des demandeurs d'asile entre ses États membres.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
-    "explanation": "Chaque pays de l'UE gère actuellement ses demandes d'asile de façon indépendante, avec des disparités importantes. Le Pacte européen sur la migration de 2024 tente d'harmoniser les règles. Le débat porte sur la solidarité entre États membres et le partage des responsabilités."
+    "explanation": "Chaque pays de l'UE gère actuellement ses demandes d'asile de façon largement indépendante, avec des disparités importantes. Le Pacte européen sur la migration et l'asile, entré en vigueur le 12 juin 2026, instaure un mécanisme de solidarité entre États membres, mais laisse le choix entre accueillir des demandeurs, verser une compensation financière, ou apporter un soutien opérationnel — sans obligation d'accueil. Ses partisans veulent une répartition pleinement contraignante ; ses opposants défendent la souveraineté des États sur leurs politiques migratoires."
   },
   {
     "id": "IMM_22",
@@ -588,11 +588,11 @@
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
-    "explanation": "La reconnaissance faciale identifie des personnes dans l'espace public en temps réel. Elle est utilisée par des États autoritaires pour surveiller les populations. La France l'expérimente dans certains contextes. Le débat porte sur les risques pour les libertés civiles et les biais algorithmiques."
+    "explanation": "La reconnaissance faciale identifie des personnes dans l'espace public en temps réel. Ses partisans y voient un outil efficace pour identifier rapidement des suspects ou retrouver des personnes disparues ; ses opposants soulignent qu'elle est aussi utilisée par des États autoritaires pour surveiller leurs populations, et s'inquiètent des biais algorithmiques et des risques pour les libertés civiles. La France l'expérimente déjà dans certains contextes."
   },
   {
     "id": "SEC_5",
-    "text": "Les peines de prison doivent augmenter et être plus strictes.",
+    "text": "Les peines de prison doivent être plus longues.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
@@ -612,7 +612,7 @@
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
-    "explanation": "La France a atteint l'objectif OTAN de consacrer 2 % de son PIB à la défense. Face aux tensions en Europe (guerre en Ukraine), certains veulent accélérer ce réarmement ; d'autres estiment que les priorités sociales sont plus urgentes."
+    "explanation": "La France consacre actuellement environ 2 % de son PIB à la défense. Lors du sommet de l'OTAN de La Haye en juin 2025, les pays membres se sont engagés à porter cet effort à 5 % du PIB d'ici 2035 (3,5 % pour la défense stricte, 1,5 % pour la sécurité au sens large). Face aux tensions en Europe (guerre en Ukraine) et à ce nouvel objectif, certains veulent accélérer ce réarmement ; d'autres estiment que les priorités sociales sont plus urgentes."
   },
   {
     "id": "SEC_8",
@@ -656,11 +656,11 @@
   },
   {
     "id": "SEC_13",
-    "text": "Les policiers doivent porter des caméras corporelles en permanence.",
+    "text": "Le déclenchement des caméras-piétons des policiers doit être automatique, sans possibilité de désactivation.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
-    "explanation": "Des études montrent que les caméras piétons réduisent les incidents lors des interventions policières. Elles sont déjà obligatoires en France. Le débat porte sur leur usage systématique, la conservation des enregistrements et l'accès à ces images en cas de litige."
+    "explanation": "Les policiers sont déjà équipés de caméras-piétons en France, mais leur déclenchement reste souvent laissé à l'appréciation de l'agent. Des études montrent que leur usage réduit les incidents lors des interventions. Le débat porte sur le passage à un enregistrement systématique, la conservation des enregistrements et l'accès à ces images en cas de litige."
   },
   {
     "id": "SEC_14",
@@ -727,7 +727,7 @@
     "axis": "authority",
     "status": "CORE",
     "cluster": "whistleblower protection",
-    "explanation": "Les lanceurs d'alerte signalent des comportements illégaux au sein d'organisations. La loi Sapin 2 les protège partiellement. Des affaires comme celle d'Edward Snowden illustrent leur vulnérabilité. Le débat porte sur l'étendue de leur protection légale en France."
+    "explanation": "Les lanceurs d'alerte signalent des comportements illégaux au sein d'organisations. La loi Sapin 2 les protège partiellement. Des affaires comme celle d'Edward Snowden illustrent leur vulnérabilité. Ses partisans veulent étendre cette protection ; ses opposants craignent qu'une protection trop large ne facilite la divulgation d'informations sensibles (secret défense, secrets d'affaires, enquêtes en cours) sans garde-fou suffisant."
   },
   {
     "id": "SEC_22",
@@ -1523,7 +1523,7 @@
     "axis": "global",
     "status": "CORE",
     "cluster": "citizenship",
-    "explanation": "Le droit du sol permet à un enfant né en France d'acquérir la nationalité française sous certaines conditions. Certains veulent le supprimer ou le conditionner à la nationalité des parents ; d'autres considèrent qu'il est fondamental à l'identité républicaine française."
+    "explanation": "Le droit du sol permet à un enfant né en France d'acquérir la nationalité française sous certaines conditions. Une dérogation restreignant ce droit existe déjà à Mayotte, durcie en 2025-2026 (résidence régulière des deux parents désormais exigée, contre un seul parent auparavant). Certains veulent l'étendre ou conditionner plus largement la nationalité à celle des parents ; d'autres considèrent le droit du sol fondamental à l'identité républicaine française, et rappellent qu'une extension nationale de restrictions similaires nécessiterait une réforme constitutionnelle."
   },
   {
     "id": "SEC_23",
