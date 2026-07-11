@@ -105,8 +105,8 @@ export default function Landing() {
   const stats = [
     language === 'fr' ? '8 thèmes' : '8 themes',
     language === 'fr' ? '4 axes idéologiques' : '4 ideological axes',
-    language === 'fr' ? '120+ questions' : '120+ questions',
-    language === 'fr' ? '40 figures historiques' : '40 historical figures',
+    language === 'fr' ? '160+ questions' : '160+ questions',
+    language === 'fr' ? '60 figures historiques' : '60 historical figures',
   ];
 
   return (
