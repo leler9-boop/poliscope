@@ -1630,6 +1630,14 @@
     "explanation": "Dans les quartiers défavorisés, la délinquance est souvent liée au chômage et aux inégalités. Le débat oppose ceux qui veulent d'abord rétablir l'ordre par la police, à ceux qui estiment que les investissements sociaux et éducatifs sont la réponse durable."
   },
   {
+    "id": "SEC_25",
+    "text": "Les policiers soupçonnés d'usage excessif de la force doivent faire l'objet d'une enquête totalement indépendante de la police.",
+    "axis": "authority",
+    "status": "CORE",
+    "cluster": "police accountability",
+    "explanation": "Aujourd'hui, quand un policier est mis en cause après un usage de la force, l'enquête est généralement menée par l'Inspection Générale de la Police Nationale (IGPN), un service composé de policiers que la presse surnomme « police des polices ». Ses partisans estiment que l'expertise du métier est nécessaire pour juger de décisions prises en quelques secondes ; ses opposants, dont le Défenseur des droits, y voient un risque de partialité qui nourrit la défiance envers la police, et réclament que ces enquêtes soient confiées à un organisme totalement extérieur à la hiérarchie policière, comme il en existe dans d'autres pays européens."
+  },
+  {
     "id": "ECO_27",
     "text": "La France doit imposer des droits de douane ciblés en réponse aux pratiques commerciales déloyales d'autres pays (dumping, subventions massives).",
     "axis": "economic",
