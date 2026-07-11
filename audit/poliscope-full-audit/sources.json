@@ -251,5 +251,16 @@
     "verifiedAt": "2026-07-11",
     "confidence": "low",
     "notes": "Remplace l'ancien chiffre '400 000 places manquantes' (source non retrouvée) par ~200 000, chiffre le plus explicite trouvé en recherche ciblée. Confidence 'low' : forte variance méthodologique connue entre sources sur ce chiffre (besoin non satisfait vs écart structurel) ; à re-vérifier auprès d'une source officielle (CNAF/ONAPE) si ce point devient central à un usage futur."
+  },
+  {
+    "entityId": "question_ENV_7",
+    "claim": "L'interdiction totale des voitures thermiques neuves prévue par l'UE pour 2035 a été assouplie par une proposition de la Commission européenne du 16 décembre 2025 : réduction de 90% des émissions exigée (vs 2021) plutôt qu'interdiction totale, avec exceptions pour hybrides rechargeables/biocarburants/e-carburants ; proposition encore soumise à l'approbation du Parlement européen et du Conseil",
+    "sourceUrl": "https://www.touteleurope.eu/economie-et-social/automobile-la-commission-europeenne-freine-sur-le-tout-electrique-en-2035-et-donne-son-feu-vert-a-une-part-limitee-de-voitures-thermiques/",
+    "sourceTitle": "La Commission européenne freine sur le tout-électrique en 2035 - Toute l'Europe",
+    "sourceType": "press",
+    "publishedAt": "2025-12",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium",
+    "notes": "Remplace la formulation de ENV_7 qui présentait l'interdiction totale 2035 comme entièrement actée. Confidence 'medium' : plusieurs sources de presse convergent sur les mêmes chiffres (90%, exceptions hybrides/e-carburants) mais la proposition n'est pas encore un texte adopté — à re-vérifier si le Parlement/Conseil statue définitivement."
   }
 ]

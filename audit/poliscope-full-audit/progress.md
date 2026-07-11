@@ -105,3 +105,13 @@ Table de synthèse cumulative (avant/après, raison, degré de changement) : [17
 **Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint PUBLIC_SERVICES (1 faux positif connu), build production OK. Vérification navigateur réelle : `priorityOrder` positionné sur Services publics en premier via `localStorage` (technique plus fiable que le drag-and-drop tactile), confirmant que PUB_23 (CORE, explication la plus longue du lot) s'affiche en première question et rend correctement sans troncature.
 
 **Effet de bord noté (hors périmètre de ce lot)** : page d'accueil affiche des statistiques obsolètes (« 120+ questions », « 40 figures historiques » vs. 162/60 réels) — signalé séparément, pas corrigé ici pour ne pas interrompre le cycle éditorial.
+
+### Lot 3/8 — Écologie, énergie, agriculture (ENVIRONMENT) ✅ COMMITÉ (2026-07-11)
+
+18 questions actives revues, 6 modifiées, 12 conformes sans changement. 7 entrées `isDuplicate` évaluées individuellement (pas seulement leur vacuité) : 4 stubs vides, 3 (ENV_5/12/18) à texte réel jugées correctement écartées car redondantes avec des questions actives ou intrinsèquement mal formées (affirmation comparative non ancrée). ENV_8 reformulée pour un changement de fond (retrait d'une redondance avec ENV_23 + formulation présuppositionnelle) avec note méthodologique dédiée vérifiant l'absence de bascule de polarité — inclus dans le commit éditorial (pas de split nécessaire, contrairement à ECO_13). Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-38--écologie-énergie-agriculture-environment).
+
+**Commit** : **`15500b4`** — *fix: ENVIRONMENT batch — clarity, neutrality, and factual updates (6 questions)*.
+
+**Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint ENVIRONMENT → **0 signalement** (premier lot sans résidu). Build OK. Vérification navigateur réelle allégée (ENV_24 CORE confirmé en première question sur mobile 375×812) — le pipeline de rendu ayant déjà été validé en profondeur sur 2 lots consécutifs sans anomalie, un contrôle exhaustif à chaque lot n'apporte plus d'information marginale suffisante pour son coût.
+
+**Recherche ciblée** : 1 nouvelle source (`question_ENV_7`, assouplissement UE 2035 des moteurs thermiques, décembre 2025, confiance moyenne).

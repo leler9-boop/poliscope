@@ -68,4 +68,33 @@ Légende « Degré » : **Mineur** = wording/factuel, sens inchangé · **Modér
 
 ---
 
-*(Les lots 3 à 8 seront ajoutés ici au fur et à mesure.)*
+## Lot 3/8 — Écologie, énergie, agriculture (ENVIRONMENT)
+
+18 questions actives revues. 7 entrées `isDuplicate` examinées individuellement (pas seulement vérifiées vides comme au lot 2) : ENV_16/17/19/20 sont des stubs vides (aucune action) ; **ENV_5, ENV_12 et ENV_18 ont un texte propre non vide** mais ont été jugées correctement écartées de la file active après analyse — voir note dédiée ci-dessous plutôt que promues. 12 questions jugées conformes sans modification (ENV_2, 3, 4, 6, 9, 10, 13, 15, 22, 23, 24, 25). 6 modifiées :
+
+| ID | Ancienne formulation | Nouvelle formulation | Raison principale | Explication modifiée | Degré | Validation factuelle |
+|---|---|---|---|---|---|---|
+| ENV_1 | *(texte inchangé)* | *(texte inchangé)* | Explication à sens unique pour une formulation forte (« priorité absolue ») — aucun argument contra | Oui | Mineur | N/A (argument de principe) |
+| ENV_7 | *(texte inchangé)* | *(texte inchangé)* | Explication présentait l'interdiction UE 2035 comme totalement actée | Oui | Mineur | Effectuée (confiance moyenne) — la Commission européenne a proposé un assouplissement en décembre 2025 (réduction de 90 % des émissions plutôt qu'interdiction totale), encore non validé par le Parlement/Conseil |
+| ENV_8 | « **Pour vraiment protéger** l'environnement, il faut accepter de réduire la croissance économique. » | « L'État doit abandonner la croissance du PIB comme objectif prioritaire de sa politique économique. » | (a) Formulation présuppositionnelle (« pour vraiment... » sous-entend que les autres approches ne sont pas de la « vraie » protection) ; (b) redondance de fond avec ENV_23 (les deux mesuraient essentiellement la même attitude pro-décroissance). Recentrée sur un axe distinct (rejet du PIB comme métrique-cible), polarité de l'accord inchangée (voir note méthodologique) | Oui (réécrite) | Modéré | N/A (claim structurel) |
+| ENV_11 | « Des militants qui bloquent des routes ou s'enchaînent à des machines pour alerter... » *(23 mots)* | « Les militants qui pratiquent la désobéissance civile pour alerter... » *(19 mots)* | Dépassait la cible de longueur ; remplace deux exemples concrets par le terme technique déjà utilisé et défini dans sa propre explication | Non | Mineur | N/A |
+| ENV_14 | *(texte inchangé)* | *(texte inchangé)* | Explication à sens unique (uniquement des arguments contre la géo-ingénierie, aucun argument pour) | Oui | Mineur | N/A (argument de principe) |
+| ENV_21 | *(texte inchangé)* | *(texte inchangé)* | Explication à sens unique (aucun argument contra à l'élévation de la biodiversité au rang du climat) | Oui | Mineur | N/A (argument de principe) |
+
+**Note méthodologique sur ENV_8** (changement de fond, pas seulement de forme) : avant de reformuler, la direction de score (`DIRECTION_MAP.ENV_8 = 1`) a été analysée pour vérifier qu'elle restait valide. L'ancienne formulation (accord = pro-décroissance) et la nouvelle (accord = rejet du PIB comme objectif prioritaire) pointent dans le **même sens réel** (distanciation vis-à-vis de la croissance comme priorité) : aucune bascule de `DIRECTION_MAP` n'était donc nécessaire, contrairement à ECO_13 au lot 1. Vérifié également que la nouvelle formulation ne duplique pas ENV_23 (qui reste centrée sur la réduction volontaire de production/consommation) ni ENV_4 (centrée sur l'arbitrage emploi/réglementation) : les trois questions couvrent désormais des nuances distinctes de l'axe croissance/environnement.
+
+**Note sur les doublons à texte non vide** (ENV_5, ENV_12, ENV_18) : contrairement au lot 2 (services publics), ces trois entrées `isDuplicate` contiennent une formulation propre plutôt qu'un stub vide, ce qui impose une évaluation individuelle plutôt qu'un simple constat de vacuité.
+- **ENV_5** (« La transition énergétique doit être rapide, même à coût économique ») et **ENV_12** (« L'environnement doit primer sur le développement économique ») mesurent des nuances de l'axe croissance/environnement déjà couvertes par ENV_4 (arbitrage emploi), et par ENV_8/ENV_23 après la reformulation ci-dessus. Les promouvoir ajouterait une redondance (sur-pondération de cet axe) plutôt qu'une précision nouvelle, contrairement au critère du brief (« garder les variantes seulement quand elles améliorent la précision »). Laissées filtrées, aucune action.
+- **ENV_18** (« La taxe carbone est l'outil le plus efficace contre les émissions ») pose en plus un problème de format : c'est une affirmation comparative/superlative implicite (« le plus efficace » par rapport à quelles autres mesures, non listées), intrinsèquement plus ambiguë à noter sur une échelle simple qu'une question de soutien direct comme ENV_3. Laissée filtrée, aucune action.
+
+**Tests exécutés** : `test1`-`test4` PASS (107 questions direction=1, inchangé — confirmant qu'aucune bascule de polarité n'a eu lieu, cohérent avec la note méthodologique ci-dessus). `node scripts/lint-questions.mjs ENVIRONMENT` → **0 signalement** (premier lot sans aucun résidu, y compris faux positif). `JSON.parse` → 200 entrées valides. `npm run build` → succès.
+
+**Recherche ciblée effectuée** (1 nouvelle entrée dans `sources.json`, `question_ENV_7`) : assouplissement de l'interdiction UE 2035 des moteurs thermiques (presse spécialisée convergente, confiance moyenne — proposition de la Commission non encore adoptée par le Parlement/Conseil). Chiffres jugés stables et non re-vérifiés cette session (risque faible, non prioritaires) : part du nucléaire dans l'électricité française (~70 %, ENV_2/ENV_24), part de l'élevage dans les émissions mondiales (~15 %, ENV_9), fonds « pertes et préjudices » COP27 (ENV_10).
+
+**Vérification produit réelle** : `priorityOrder` positionné sur ENVIRONNEMENT en premier via `localStorage`, confirmant que ENV_24 (CORE) s'affiche en première question et rend correctement sur viewport mobile 375×812. Vérification allégée par rapport aux lots 1-2 (pas de clic à travers plusieurs questions supplémentaires) : le pipeline de rendu (panneaux, wrapping, thèmes) a déjà été validé de façon approfondie sur deux lots consécutifs sans aucune anomalie, un contrôle exhaustif à chaque lot n'apporte plus d'information marginale suffisante pour son coût. Données de test effacées, serveur de dev arrêté après contrôle.
+
+**Commit** : un seul commit éditorial. Bien qu'ENV_8 soit un changement de fond documenté avec une note méthodologique dédiée, il ne nécessite pas de bascule de `DIRECTION_MAP` ni de test de monotonie séparé — il est donc inclus dans le commit éditorial plutôt que committé à part (contrairement à ECO_13 au lot 1, qui inversait réellement la polarité).
+
+---
+
+*(Les lots 4 à 8 seront ajoutés ici au fur et à mesure.)*
