@@ -7,6 +7,7 @@ register(pathToFileURL(`${ROOT}/audit/poliscope-full-audit/proposed-tests/_json-
 
 const { questions, THEMES_ORDER } = await import(`${ROOT}/src/data/questions.js`);
 const rawAll = (await import(`${ROOT}/src/data/questions_final.json`, { with: { type: 'json' } })).default;
+const { questionHints } = await import(`${ROOT}/src/data/questionHints.js`);
 
 const ANGLICISMS = [
   'supporter', 'adresser ce', 'adresser cette', 'opportunité', 'réaliser que',
@@ -79,3 +80,22 @@ console.log('Repartition des signalements:', JSON.stringify(counts, null, 2));
 
 console.log('\nDetail (id, theme, flags):');
 flagged.forEach(r => console.log(`${r.id}\t${r.theme ?? '(dup)'}\t${r.flags.join(', ')}`));
+
+// questionHints.js overrides the "Comprendre cet enjeu" panel entirely when present
+// (see Questionnaire.jsx) — an orphaned entry (retired/renamed ID, or now pointing at a
+// duplicate) silently shows wrong or dead content with no fallback. This only catches
+// structural orphaning, NOT topic drift (hint text no longer matching its question's
+// current subject) — that requires manual review, which found 8 mismatched entries in a
+// full pass on 2026-07-11 (see 17-editorial-batches-synthesis.md, batch 4).
+if (!themeArg) {
+  const hintIssues = Object.keys(questionHints)
+    .map(id => {
+      const raw = rawAll.find(r => r.id === id);
+      if (!raw) return `${id}\tHINT_ORPHANED_MISSING (no such question id)`;
+      if (raw.isDuplicate) return `${id}\tHINT_ORPHANED_DUPLICATE (points at a filtered-out duplicate)`;
+      return null;
+    })
+    .filter(Boolean);
+  console.log(`\nquestionHints.js structural check: ${Object.keys(questionHints).length} entries, ${hintIssues.length} orphaned.`);
+  hintIssues.forEach(line => console.log(line));
+}
