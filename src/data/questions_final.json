@@ -744,7 +744,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "climate urgency",
-    "explanation": "Le consensus scientifique est clair : les activités humaines provoquent le réchauffement climatique. Le débat politique porte sur l'urgence et l'ampleur des mesures à prendre, leur coût économique, et leur répartition entre pays riches et pauvres."
+    "explanation": "Le consensus scientifique est clair : les activités humaines provoquent le réchauffement climatique. Le débat politique porte sur l'urgence et l'ampleur des mesures à prendre, leur coût économique, et leur répartition entre pays riches et pauvres. Ses opposants ne nient pas nécessairement cette urgence, mais estiment que d'autres priorités (pouvoir d'achat, sécurité, santé) ne doivent pas être reléguées au second plan."
   },
   {
     "id": "ENV_2",
@@ -793,15 +793,15 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
-    "explanation": "L'UE a décidé d'interdire la vente de voitures neuves à moteur thermique à partir de 2035. Le débat porte sur la faisabilité (réseau de recharge, prix des voitures électriques) et sur les alternatives pour les ménages qui ne peuvent pas se les permettre."
+    "explanation": "Le règlement européen prévoyait une interdiction totale des voitures neuves à moteur thermique à partir de 2035. En décembre 2025, la Commission européenne a proposé d'assouplir cette règle : une réduction de 90 % des émissions serait exigée plutôt qu'une interdiction totale, avec des exceptions pour les hybrides rechargeables, les biocarburants et les e-carburants — une proposition encore soumise à l'approbation du Parlement européen et du Conseil. Le débat porte sur la faisabilité (réseau de recharge, prix des voitures électriques) et sur la nécessité de maintenir une trajectoire claire vers l'électrique face aux pressions de l'industrie."
   },
   {
     "id": "ENV_8",
-    "text": "Pour vraiment protéger l'environnement, il faut accepter de réduire la croissance économique.",
+    "text": "L'État doit abandonner la croissance du PIB comme objectif prioritaire de sa politique économique.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
-    "explanation": "Augmenter la production génère des émissions et consomme des ressources. Certains pensent que la technologie permettra de « décarboner » la croissance ; d'autres estiment qu'il faut réduire la production et la consommation pour respecter les limites planétaires."
+    "explanation": "Le Produit Intérieur Brut mesure la production de richesse, mais ignore les impacts environnementaux et les inégalités. Ses partisans veulent le remplacer par des indicateurs de bien-être ou de soutenabilité ; ses opposants estiment que la croissance du PIB reste nécessaire pour financer les services publics et créer des emplois."
   },
   {
     "id": "ENV_9",
@@ -821,7 +821,7 @@
   },
   {
     "id": "ENV_11",
-    "text": "Des militants qui bloquent des routes ou s'enchaînent à des machines pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
+    "text": "Les militants qui pratiquent la désobéissance civile pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
@@ -850,7 +850,7 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
-    "explanation": "La géo-ingénierie désigne des technologies d'intervention sur le climat : injection de particules dans la stratosphère, capture directe de CO₂. Ces solutions sont expérimentales, risquées, et soulèvent des questions de gouvernance internationale sur qui décide de les activer."
+    "explanation": "La géo-ingénierie désigne des technologies d'intervention sur le climat : injection de particules dans la stratosphère, capture directe de CO₂. Ses partisans y voient un filet de sécurité si la réduction des émissions s'avère insuffisante ; ses opposants jugent ces solutions expérimentales et risquées, et soulèvent des questions de gouvernance internationale sur qui déciderait de les activer."
   },
   {
     "id": "ENV_15",
@@ -911,7 +911,7 @@
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
-    "explanation": "La sixième extinction de masse des espèces est en cours, principalement due à la destruction des habitats. La biodiversité reçoit moins d'attention politique que le climat, bien que les deux crises soient liées. Le débat porte sur les moyens d'en faire une priorité politique équivalente."
+    "explanation": "La sixième extinction de masse des espèces est en cours, principalement due à la destruction des habitats. La biodiversité reçoit moins d'attention politique que le climat, bien que les deux crises soient liées. Ses partisans veulent corriger ce déséquilibre ; ses opposants craignent qu'élever la biodiversité au même rang ne dilue l'attention et les ressources consacrées à l'urgence climatique, dont les conséquences sont jugées plus immédiates."
   },
   {
     "id": "ENV_22",
