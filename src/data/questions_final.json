@@ -1636,5 +1636,21 @@
     "status": "SECONDARY",
     "cluster": "protectionism",
     "explanation": "Les droits de douane ciblés (dits « compensateurs » ou « anti-dumping ») visent des pratiques jugées déloyales, comme des subventions massives ou une vente à perte délibérée. L'UE les utilise déjà dans certains secteurs, comme l'acier. Ses partisans y voient un outil légitime de défense commerciale, distinct du protectionnisme généralisé ; ses opposants craignent des mesures de rétorsion et un renchérissement des produits pour les consommateurs."
+  },
+  {
+    "id": "ECO_28",
+    "text": "Le développement de l'intelligence artificielle doit être strictement réglementé par la loi, même au risque de ralentir l'innovation.",
+    "axis": "economic",
+    "status": "PRIMARY",
+    "cluster": "tech regulation",
+    "explanation": "L'AI Act européen, entré en vigueur en 2024, est le premier cadre légal complet au monde sur l'intelligence artificielle ; ses obligations les plus lourdes, pour les systèmes jugés à haut risque, s'appliquent à partir d'août 2026. Ses partisans estiment qu'un encadrement strict est nécessaire face aux risques de biais, de désinformation ou de perte de contrôle sur des décisions automatisées. Ses opposants ne rejettent pas toute régulation, mais craignent qu'un cadre trop contraignant ne pousse les investissements et les talents vers des zones moins régulées (États-Unis, Chine), au détriment d'un secteur jugé stratégique pour l'Europe."
+  },
+  {
+    "id": "DEM_26",
+    "text": "Les critères des algorithmes utilisés par l'administration pour des décisions comme Parcoursup doivent être rendus publics.",
+    "axis": "authority",
+    "status": "PRIMARY",
+    "cluster": "algorithmic transparency",
+    "explanation": "Depuis 2018, les algorithmes locaux des universités sur Parcoursup restent partiellement confidentiels, et plusieurs caisses d'allocations familiales ont été critiquées pour l'usage d'algorithmes de notation ciblant leurs contrôles sur les allocataires les plus précaires. La loi impose déjà aux administrations d'informer un usager qu'une décision individuelle repose sur un algorithme et de lui en communiquer les règles sur demande, mais pas de les publier systématiquement. Ses partisans estiment qu'une transparence totale permettrait de comprendre et contester les décisions, et de vérifier l'absence de biais ; ses opposants craignent qu'une divulgation complète ne permette de contourner les critères ou ne complexifie des procédures déjà techniques."
   }
 ]

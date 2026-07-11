@@ -128,6 +128,10 @@ const DIRECTION_MAP = {
   DEM_25: 1,  // concentration médias = pro-pluralisme = DEMOCRACY up
   SEC_24: 1,  // banlieues police > aides = sécuritaire = SECURITY up
   ECO_27:-1,  // protectionnisme = anti-libre-échange = ECONOMY down
+
+  // Chantier 2 (2026-07-11) — comblement de lacunes thématiques (tech/IA, égalité F/H, accountability policière)
+  ECO_28:-1,  // régulation stricte de l'IA = interventionnisme = ECONOMY down (même sens que ECO_9)
+  DEM_26: 1,  // transparence des algorithmes publics = accountability = DEMOCRACY up (même sens que DEM_8/15/16/25)
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────
