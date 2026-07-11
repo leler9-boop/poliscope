@@ -1487,11 +1487,11 @@
   },
   {
     "id": "ECO_24",
-    "text": "Un impôt mondial minimum sur les bénéfices des multinationales doit être instauré.",
+    "text": "Le taux minimum mondial d'imposition des multinationales (actuellement 15 %) doit être relevé.",
     "axis": "economic",
     "status": "CORE",
     "cluster": "corporate taxes",
-    "explanation": "Certaines multinationales déplacent leurs bénéfices dans des pays à faible fiscalité. Un accord de 2021 a fixé un taux minimum de 15 % pour les multinationales. Certains jugent ce taux insuffisant pour financer les services publics ; d'autres s'opposent à toute harmonisation fiscale internationale."
+    "explanation": "Un accord international de 2021 a établi un taux plancher de 15 % pour l'impôt sur les sociétés, afin de limiter la concurrence fiscale entre États. Ses partisans jugent ce taux trop bas pour vraiment dissuader l'optimisation fiscale et réclament un relèvement, parfois jusqu'à 25 % ; ses opposants estiment que 15 % constitue déjà un compromis international difficile à obtenir, et que le relever risquerait de faire échouer l'accord."
   },
   {
     "id": "ECO_25",
@@ -1631,10 +1631,10 @@
   },
   {
     "id": "ECO_27",
-    "text": "La France doit imposer des droits de douane sur les importations pour protéger ses industries.",
+    "text": "La France doit imposer des droits de douane ciblés en réponse aux pratiques commerciales déloyales d'autres pays (dumping, subventions massives).",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "protectionism",
-    "explanation": "Les droits de douane sont des taxes sur les importations. Ils protègent les industries locales de la concurrence étrangère et peuvent préserver des emplois ; mais ils renchérissent les produits pour les consommateurs et peuvent provoquer des mesures de rétorsion commerciales."
+    "explanation": "Les droits de douane ciblés (dits « compensateurs » ou « anti-dumping ») visent des pratiques jugées déloyales, comme des subventions massives ou une vente à perte délibérée. L'UE les utilise déjà dans certains secteurs, comme l'acier. Ses partisans y voient un outil légitime de défense commerciale, distinct du protectionnisme généralisé ; ses opposants craignent des mesures de rétorsion et un renchérissement des produits pour les consommateurs."
   }
 ]
