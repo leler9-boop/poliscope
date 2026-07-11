@@ -150,4 +150,28 @@ Les 10 entrées affectées ont été corrigées (ou supprimées pour les 3 morte
 
 ---
 
-*(Les lots 5 à 8 seront ajoutés ici au fur et à mesure.)*
+## Lot 5/8 — Institutions, démocratie, libertés publiques (DEMOCRACY)
+
+21 questions actives revues. **Qualité de base nettement plus élevée que les lots précédents** : 20 conformes sans modification (DEM_1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 21, 23, 24), 1 seule modifiée. C'est le plus petit nombre de corrections de tous les lots à ce jour, résultat honnête d'une revue complète et non d'un contrôle allégé — plusieurs questions constituent même des modèles de bonne pratique déjà en place (ex. DEM_7, DEM_10, DEM_21 avec des exemples concrets et un vrai équilibre pour/contre).
+
+| ID | Ancienne formulation | Nouvelle formulation | Raison principale | Explication modifiée | Degré | Validation factuelle |
+|---|---|---|---|---|---|---|
+| DEM_25 | *(texte inchangé)* | *(texte inchangé)* | Explication à sens unique (aucun contra à l'idée que la concentration médiatique nuit au pluralisme) | Oui | Mineur | N/A (argument de principe) |
+
+**Cas limites documentés (chevauchement thématique, pas doublons)** : DEM_3 (principe général du référendum d'initiative citoyenne déclenchable sur n'importe quelle loi) et DEM_24 *(CORE)* (introduction spécifique du RIC dans la Constitution, avec la genèse Gilets jaunes et le risque sur les droits des minorités) mesurent des nuances liées mais distinctes (principe vs. mécanisme constitutionnel précis) ; poids différents (SECONDARY vs CORE) limitant la sur-pondération. DEM_13 (régulation des médias pour l'équilibre politique) et DEM_25 (la concentration médiatique par quelques fortunes nuit au pluralisme) portent sur des leviers différents (intervention réglementaire générale vs. diagnostic causal précis sur la concentration capitalistique) — quelqu'un pourrait partager le diagnostic de DEM_25 sans soutenir la régulation de DEM_13 (préférant par exemple des règles anti-concentration plutôt qu'un contrôle de contenu), et vice-versa. Les deux paires laissées telles quelles.
+
+**Doublons revus** : DEM_17 (dup de DEM_1), DEM_18 (dup de DEM_3), DEM_20 (dup de DEM_2) sont des stubs vides, aucune action. DEM_22 (dup de `SOC_15`, référence inter-thème avec texte réel : « Les réseaux sociaux sont responsables du contenu qu'ils amplifient. ») a été délibérément rattaché à une question SOCIAL existante plutôt que dupliqué comme question DEMOCRACY distincte — choix de conception cohérent, non modifié.
+
+**Aucune recherche factuelle nécessaire ce lot** : tous les faits vérifiables cités sont stables et non sujets à un changement récent (interdiction des dons d'entreprises aux partis depuis 1995 ; limite à deux mandats présidentiels depuis la révision constitutionnelle de 2008 ; nom actuel de l'ARCOM, fusion CSA/HADOPI de janvier 2022 ; référence à la Pologne sous le PiS déjà correctement au passé, DEM_21 rédigée avec soin pour ne pas laisser entendre une situation en cours alors que le PiS a perdu le pouvoir fin 2023). Seul le taux d'abstention de DEM_1 (« dépasse souvent 50 % ») reste une formulation généraliste et déjà prudente, sans élection précise citée à vérifier.
+
+**Suivi hint accompli** : DEM_1 et DEM_4 avaient leurs entrées `questionHints.js` corrigées en cours du lot précédent (bug de désynchronisation découvert sur IMM_1, corrigé dans le commit `c196659` avant ce lot). Cette revue éditoriale confirme maintenant que le contenu sous-jacent de DEM_1 et DEM_4 (texte + explication) est lui-même de bonne qualité, sans changement nécessaire — la correction technique du lot précédent et la revue éditoriale de celui-ci convergent sur ces deux questions.
+
+**Tests exécutés** : `test1`-`test4` PASS (107 questions direction=1, inchangé). `node scripts/lint-questions.mjs DEMOCRACY` → **0 signalement**. `JSON.parse` → 200 entrées valides. `npm run build` → succès.
+
+**Vérification produit réelle** : `priorityOrder` positionné sur Démocratie en premier via `localStorage`. Première question affichée : DEM_8 *(CORE)*, rendu propre confirmé sur mobile 375×812. Données de test effacées, serveur de dev arrêté après contrôle.
+
+**Commit** : un seul commit éditorial (une seule modification, aucune bascule de polarité).
+
+---
+
+*(Les lots 6 à 8 seront ajoutés ici au fur et à mesure.)*

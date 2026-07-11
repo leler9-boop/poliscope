@@ -129,3 +129,13 @@ Le plus gros lot (38 questions actives, deux thèmes traités ensemble). 12 ques
 **Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint IMMIGRATION (2 faux positifs confirmés), lint SECURITY (0 signalement), build OK. Vérification navigateur réelle en boucle fermée : bug `questionHints.js` découvert sur IMM_1 (250 000 affiché au lieu de 384 000 attendu), corrigé, puis re-vérifié dans le même navigateur (384 000 confirmé affiché).
 
 **Recherche ciblée** : 5 nouvelles sources (`question_IMM_1`, `question_IMM_16`, `question_IMM_21`, `question_IMM_23`, `question_SEC_7`) — chiffres d'immigration 2025 (officiel, confiance haute), censure constitutionnelle du plafond d'immigration voté (officiel, confiance haute), entrée en vigueur du Pacte européen migration/asile le 12 juin 2026 (officiel, confiance haute), dérogation au droit du sol à Mayotte (presse, confiance moyenne), relèvement de l'objectif OTAN à 5 % du PIB (presse, confiance haute).
+
+### Lot 5/8 — Institutions, démocratie, libertés publiques (DEMOCRACY) ✅ COMMITÉ (2026-07-11)
+
+21 questions actives revues, 1 seule modifiée (DEM_25, contre-argument manquant) — qualité de base nettement plus élevée que les lots précédents, confirmée par une revue complète et non un contrôle allégé. 2 cas limites de chevauchement thématique documentés (DEM_3/DEM_24 sur le RIC, DEM_13/DEM_25 sur la concentration médiatique — nuances distinctes, conservées). Aucune recherche factuelle nécessaire (tous les faits cités sont stables : loi de 1995, réforme constitutionnelle de 2008, ARCOM 2022, référence Pologne/PiS déjà correctement au passé). Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-58--institutions-démocratie-libertés-publiques-democracy).
+
+**Commit** : **`6450eb8`** — *fix: DEMOCRACY batch — add missing counter-argument to DEM_25*.
+
+**Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint DEMOCRACY → **0 signalement**. Build OK. Vérification navigateur réelle : `priorityOrder` positionné sur Démocratie en premier, DEM_8 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812.
+
+**Suivi hint** : DEM_1 et DEM_4, dont les entrées `questionHints.js` avaient été corrigées au lot précédent (bug de désynchronisation), confirmées ici avoir aussi un contenu source (texte + explication) de bonne qualité — aucun changement nécessaire.
