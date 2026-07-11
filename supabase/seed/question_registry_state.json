@@ -1,0 +1,1662 @@
+{
+ "ECO_1": [
+  {
+   "version": 1,
+   "text": "Les impôts sur les plus hauts revenus doivent augmenter.",
+   "hash": "e2256f794c20421127380ec46a14cea0dfbef1caa669421afc09ff7b3739f584",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_2": [
+  {
+   "version": 1,
+   "text": "Le SMIC doit augmenter significativement.",
+   "hash": "cc2c8d7c70576d6b4764c87dad515b6b8f2f6344ad6504b20744cbd297d28dc7",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_3": [
+  {
+   "version": 1,
+   "text": "Les impôts sur les bénéfices des entreprises doivent baisser.",
+   "hash": "9c53768a21217fd34fff8672383d0652439b10b21d656d3aaf6e37e7e58e7dbb",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_4": [
+  {
+   "version": 1,
+   "text": "L'impôt sur la fortune doit être élargi aux placements financiers, et pas seulement à l'immobilier.",
+   "hash": "7850755c06978515ab36a46e331d482bd76cd53f5379b04b6ab1bd6234b8e497",
+   "direction": -1,
+   "status": "PRIMARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_5": [
+  {
+   "version": 1,
+   "text": "L'État doit réduire ses dépenses publiques.",
+   "hash": "719215f3a912c1bf9aca2e40a087016b66a0273c136ce323f3b00512c26e38f2",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_6": [
+  {
+   "version": 1,
+   "text": "Les syndicats doivent avoir davantage de pouvoir dans les entreprises.",
+   "hash": "fcd1c95f80600a80f458910d1be5a5a517ae6e6d543b180d5695dc20a7fe0de0",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_7": [
+  {
+   "version": 1,
+   "text": "La France devrait conclure davantage d'accords de libre-échange.",
+   "hash": "e90d52b75a90a61b887a3dd2322005476f4f276ba395457dedbccab3beef65fc",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_8": [
+  {
+   "version": 1,
+   "text": "L'État doit nationaliser les secteurs stratégiques comme l'énergie et les transports.",
+   "hash": "82e7a9afca8765c480905ececdd37c06af35ee6fd90be04c3c22415d2401538b",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_9": [
+  {
+   "version": 1,
+   "text": "Le secteur financier (banques, marchés boursiers) doit être strictement réglementé.",
+   "hash": "62a23f35a803f1f1e4b932c262e95627fae89f113718602c6745919fdc1a0d00",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_10": [
+  {
+   "version": 1,
+   "text": "Un revenu universel de base doit être versé à tous les citoyens, sans conditions.",
+   "hash": "c3910a626cb5e8c09a5e763b0a228c087797e008bb302cbb5eb85cf3bc747100",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_11": [
+  {
+   "version": 1,
+   "text": "Réduire la dette française doit être la priorité budgétaire.",
+   "hash": "357b7f60175896bc5570e856f7cbdf7f6c8deb55ec318b35feb2201087333bf9",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_12": [
+  {
+   "version": 1,
+   "text": "Les grandes entreprises technologiques en position dominante doivent être démantelées.",
+   "hash": "ca03f841d322dc36b4751369de45a703ff97a0b4e5fd1c8576315721897d99be",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_13": [
+  {
+   "version": 1,
+   "text": "L'économie des plateformes (Uber, Deliveroo...) doit être davantage réglementée pour protéger les travailleurs indépendants.",
+   "hash": "48da9031fd42dc070da5a646b06b3282925bd80b58958ad53eda42cdd4d9e705",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_14": [
+  {
+   "version": 1,
+   "text": "L'impôt sur les successions doit augmenter fortement.",
+   "hash": "28f882d16848a80812cf5699b8f95c7639538674cac73ec23bd184fd19b80128",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_15": [
+  {
+   "version": 1,
+   "text": "Les entreprises publiques doivent être privatisées.",
+   "hash": "d06ffea58771090f74511218a39549c34f27bcfdf84c090d3f978ef347f0f915",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_17": [
+  {
+   "version": 1,
+   "text": "Dans l'ensemble, le commerce international est bénéfique pour la France.",
+   "hash": "4f27c9ceedcfbb75216ff5e353b7eafd367b1f5ebdd7d006772bc82a9b9896bf",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_18": [
+  {
+   "version": 1,
+   "text": "Le lobbying des grandes entreprises doit être davantage encadré par la loi.",
+   "hash": "a1fa317acc862f4f4b4c04f8c8787a8f5c2b88d50a7773cd62291b45b6327078",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_19": [
+  {
+   "version": 1,
+   "text": "La semaine de 4 jours doit être imposée par la loi.",
+   "hash": "089d0048026c4f6646e626d307afbe619696d4878c6cb13f426958a230119d10",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_20": [
+  {
+   "version": 1,
+   "text": "La Banque Centrale Européenne doit être plus contrôlée par les parlements.",
+   "hash": "36fe23341147db98b7e284031cbe8fa886ce8ed25219f40839665db03772da51",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_23": [
+  {
+   "version": 1,
+   "text": "La priorité économique doit être la croissance, même si elle creuse les inégalités.",
+   "hash": "d44e006f57ce298c7a85b879bbc20695596ba9b28de18fa8d478a2a413d4e5ef",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "SOC_3": [
+  {
+   "version": 1,
+   "text": "Le cannabis doit être légalisé et encadré par l'État.",
+   "hash": "4608801655503d9428d1d1cee6d0dccd4cdb053067ea4d3a9b76b72b185a11c5",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_4": [
+  {
+   "version": 1,
+   "text": "Les politiques d'aide aux groupes discriminés sont justifiées.",
+   "hash": "7a6487bd86a04757828b206275f3617b10b02a6ce94002eaa84627fa8a02f3f1",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_5": [
+  {
+   "version": 1,
+   "text": "La religion doit influencer plus les lois françaises.",
+   "hash": "e4a05bcaabeeec0c795fd0f8aec92f130c3dbb72a420ec9a79b2bb319e825f5d",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_6": [
+  {
+   "version": 1,
+   "text": "Les personnes transgenres doivent pouvoir modifier leur identité de genre à l'état civil sans passer par un suivi médical obligatoire.",
+   "hash": "a31eaec121e294466889f2d69b00b5c0047a24018ea9f3cb6da613b57abf4acf",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_7": [
+  {
+   "version": 1,
+   "text": "L'État doit promouvoir la famille traditionnelle hétérosexuelle.",
+   "hash": "6b3e272972bda140fab64e23579dfdab113b4acfdb861f30ba1abf21299690af",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_8": [
+  {
+   "version": 1,
+   "text": "Les lois contre les discours haineux doivent être renforcées.",
+   "hash": "da8025c9abb1fad6359c211f42346bb44696e6f46d59794ebea399e88fa362c5",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_10": [
+  {
+   "version": 1,
+   "text": "L'euthanasie doit être légale pour les malades terminaux qui le demandent.",
+   "hash": "644ede505f1be7af4c49f2e3c890522a10243dbaa1e11fb8b1eca144fef65d3c",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_12": [
+  {
+   "version": 1,
+   "text": "Les écoles et universités doivent adopter un langage neutre en genre.",
+   "hash": "f7fd93d13d7029fbcf4e34f753fc55cb5d241c40230053ddcb2d0c88852a3c3c",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_14": [
+  {
+   "version": 1,
+   "text": "L'accès aux sites pornographiques doit être soumis à une vérification obligatoire de l'âge.",
+   "hash": "41a097965ab5843f3efaec21ea3005850d66fc129e93bf14359d2ee04fb71944",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_15": [
+  {
+   "version": 1,
+   "text": "Les réseaux sociaux doivent être responsables légalement du contenu dangereux.",
+   "hash": "c7da318e612490c62d8399ccaf2b2111b2bcaa647830348f25427823bda44daa",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_16": [
+  {
+   "version": 1,
+   "text": "Le port de signes religieux doit être autorisé dans tous les espaces publics, y compris les écoles et les administrations.",
+   "hash": "a7d4b80953a36ec85678ad9141748a55cfb259ecb9cb34a9e4fef60b5bc3c459",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_19": [
+  {
+   "version": 1,
+   "text": "Le genre d'une personne est uniquement déterminé par sa biologie et ne peut pas être modifié.",
+   "hash": "7f5194b13d61d061efca9389e26b1be6bdbaafab9ee2817a39e7dd7113e1e278",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_20": [
+  {
+   "version": 1,
+   "text": "Le travail du sexe entre adultes consentants doit être décriminalisé.",
+   "hash": "d437e95e0006b3830aa43fc0deab9524dd8ad125b56797132e538b3aae75e455",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_21": [
+  {
+   "version": 1,
+   "text": "Consommer des drogues doit être considéré comme un choix personnel relevant de la liberté individuelle.",
+   "hash": "4f30bd343026e56a8db3b257aff4f3f367f70b3207984e143aa24a3a2f8a6feb",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_22": [
+  {
+   "version": 1,
+   "text": "La libre expression prime sur la protection des sentiments religieux.",
+   "hash": "7e43418c84021c30b1963685467d6f64338529861c63980a0f1a4afc477b7325",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_23": [
+  {
+   "version": 1,
+   "text": "L'école doit enseigner une éducation à la sexualité complète, incluant le consentement, la contraception et les relations saines.",
+   "hash": "2db53249bcf01a0e0954f325edbf60b6b02c04dad5a6121374e78c5d3faf4e44",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "IMM_1": [
+  {
+   "version": 1,
+   "text": "L'immigration en France doit baisser sensiblement.",
+   "hash": "acaba256d3758a6ec0e30a44a0d0cb88bbaa63066ef6cf76b71f0b389c27f5e3",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_2": [
+  {
+   "version": 1,
+   "text": "Les demandeurs d'asile doivent avoir le droit de travailler dès le dépôt de leur dossier.",
+   "hash": "3e0df37815a2aded012f9f0e42f280c30f0098119fe15176412f95d64b60d556",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_3": [
+  {
+   "version": 1,
+   "text": "Les étrangers en situation irrégulière installés depuis de nombreuses années en France doivent pouvoir être régularisés.",
+   "hash": "6351ae2dc668017c73bb64e81765c27a87bcba63477fb79454552b4f238b9b6e",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_4": [
+  {
+   "version": 1,
+   "text": "La France doit cibler les immigrés hautement qualifiés.",
+   "hash": "55e5c4cd92b6690ac9863a0358be9460bead2e63fa2e80f82d091304873509c3",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_5": [
+  {
+   "version": 1,
+   "text": "La France doit rétablir des contrôles systématiques à ses frontières pour réguler les entrées.",
+   "hash": "86e65d840e1121468c6a3c8b62cb837c5f0f43e0405bddd9b83294441ac00926",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_6": [
+  {
+   "version": 1,
+   "text": "L'obtention ou le renouvellement d'un titre de séjour doit être conditionné à une évaluation de l'intégration.",
+   "hash": "98881b766c104b85a8fd476e5d3527b56821b2347e3a9bcea7af8291868969b7",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_7": [
+  {
+   "version": 1,
+   "text": "L'État doit valoriser et préserver les cultures d'origine des immigrés installés en France.",
+   "hash": "274aa55677ddb6e2048bdfe888b5de305a22a2d284b8639070ccfe89907f53c7",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_8": [
+  {
+   "version": 1,
+   "text": "Les étrangers en situation régulière qui travaillent et cotisent en France doivent avoir les mêmes droits sociaux que les citoyens.",
+   "hash": "2ac299b1bcccb962a518eb388898b587305f4e54a0618795dce51e9c845ed0c3",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_9": [
+  {
+   "version": 1,
+   "text": "La France doit accueillir plus de réfugiés climatiques.",
+   "hash": "44b8b076c64fd4229b87ce622a7cb2cbc90f27f8c9bd40b0ecc4643c71a056eb",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_10": [
+  {
+   "version": 1,
+   "text": "Les centres de rétention des migrants doivent fermer.",
+   "hash": "b99af0c558b51f732e73f9e5642ea55756218adfd7000efdf4a969f64c3f4a69",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_11": [
+  {
+   "version": 1,
+   "text": "Les immigrés apportent des bénéfices économiques importants.",
+   "hash": "6965a202392873985857b7d3402c550991698e25d3da18692dbeaaf3fd5907db",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_12": [
+  {
+   "version": 1,
+   "text": "Les étrangers condamnés pour crimes graves doivent être expulsés.",
+   "hash": "3a5a99df3af5e43e374cd2c70459a57c845ba5ca1c5bb925f8e24f88d98947d3",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_13": [
+  {
+   "version": 1,
+   "text": "Les enfants d'immigrés doivent s'identifier à la France d'abord.",
+   "hash": "aef2597e456afff09e56b2b58511f5cff3f7b59033cbef62a1d80e4f70025d4a",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_14": [
+  {
+   "version": 1,
+   "text": "Les demandes d'asile doivent être traitées hors de France.",
+   "hash": "e2298a373041d48542dff6ce89061af617c09b5c0c8d82852bfa7f0a2a991016",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_15": [
+  {
+   "version": 1,
+   "text": "Les immigrés qui demandent un titre de séjour doivent passer un test de langue et de valeurs républicaines.",
+   "hash": "2a46e58ebf2b28628abba14e30aec526fe54b561b23b9041e3d55b5af403b19d",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_16": [
+  {
+   "version": 1,
+   "text": "La France doit fixer chaque année un plafond d'immigration légale, voté par le Parlement.",
+   "hash": "3719aa21ec5583ae2c1df647fbde5b3cdb44cc4d1a45f4fc341999a66cebc6ee",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_20": [
+  {
+   "version": 1,
+   "text": "Les immigrants doivent apprendre le français pour résider en France.",
+   "hash": "33612db9d8c9bebcc5ebaa8cf1704e17b2298200e59f3708d1d0f07c0215aa44",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "IMM_21": [
+  {
+   "version": 1,
+   "text": "L'UE doit imposer une répartition contraignante des demandeurs d'asile entre ses États membres.",
+   "hash": "ea589fccd464f1ccecd7233fbaa0ec99ef4ef0c4675a7ee408ace460295c5c2d",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "SEC_1": [
+  {
+   "version": 1,
+   "text": "La surveillance de masse des communications doit être arrêtée.",
+   "hash": "0bf3454840b815075f9337bad404070e044d4dabe91dcc560fd8739bc7785ada",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_3": [
+  {
+   "version": 1,
+   "text": "Les lois antiterroristes qui limitent les libertés sont justifiées.",
+   "hash": "d9bbc23243094a96133d41f6dbaf5b10c29d8067f1c56da3fa3ed220fb21ff5a",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_4": [
+  {
+   "version": 1,
+   "text": "La reconnaissance faciale par la police doit être interdite.",
+   "hash": "162753e1ba62689610b53cbadc899846812464d71ba96a23db9bf9264dc56615",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_5": [
+  {
+   "version": 1,
+   "text": "Les peines de prison doivent être plus longues.",
+   "hash": "96aca260c42e74a836ef8f1f3cbcc6e6348b62a529ade0f06d8cf1094e1d212a",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_6": [
+  {
+   "version": 1,
+   "text": "La justice doit se concentrer sur la réinsertion, pas la punition.",
+   "hash": "30d9c2a644175ef60ce80056792a1b17ab31b90db5a5efbf06f889134731bab4",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_7": [
+  {
+   "version": 1,
+   "text": "Les dépenses militaires doivent augmenter fortement.",
+   "hash": "3e167a7151e64d8de7f88df9c9a360ca02a0185417ee8cdc4e0fe15495166901",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_8": [
+  {
+   "version": 1,
+   "text": "Les services secrets doivent être plus contrôlés par le parlement.",
+   "hash": "5a5d02a544dc47f41155ba30f0fa71a3490dbc59546232e5457be5b405039782",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_9": [
+  {
+   "version": 1,
+   "text": "La drogue pour usage personnel doit être dépénalisée.",
+   "hash": "e087e32efd9399b8506e7fd6bc552849a7c1e581f84ef843d3ad35ad9adae90f",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_10": [
+  {
+   "version": 1,
+   "text": "Diffuser de fausses informations en ligne doit avoir des conséquences légales.",
+   "hash": "d656a905daa8dc82cfdf5ba1bc6aefe80402ef0cf98700e3ea40b4038946d0ed",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_11": [
+  {
+   "version": 1,
+   "text": "L'État doit pouvoir retirer la nationalité aux terroristes.",
+   "hash": "2f956dfde698f8bb638297122033dd1beaa596da38c7861870c1ef4e1b36749e",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_12": [
+  {
+   "version": 1,
+   "text": "Les services secrets doivent accéder aux messages chiffrés des suspects.",
+   "hash": "9f01a6b1b6053f7f296aaa5c6e84e4b0fa8f6c689fc5d342854a4baa8b008e40",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_13": [
+  {
+   "version": 1,
+   "text": "Le déclenchement des caméras-piétons des policiers doit être automatique, sans possibilité de désactivation.",
+   "hash": "de5863df3e358959afb133ad9f1b51051f922d51f8e3f9a078c779296189c3c0",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_14": [
+  {
+   "version": 1,
+   "text": "Les jeunes délinquants doivent être jugés moins sévèrement.",
+   "hash": "a7f7a095a353adee28cd8e8f2df7c0148ce3a0c80d4e4bc615b50ed5e78000ad",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_16": [
+  {
+   "version": 1,
+   "text": "La surveillance de masse est acceptable pour combattre le terrorisme.",
+   "hash": "5f12866d12c268acf4149d9d5ddcce04cbf2abe7c03be42eddaa86ae15d2f898",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_19": [
+  {
+   "version": 1,
+   "text": "Les terroristes doivent rester détenus longtemps après leur peine.",
+   "hash": "2f29859a450543fba33e22b442fe1ad045966f60a08255dc19788dc38c2ffe27",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_20": [
+  {
+   "version": 1,
+   "text": "La police doit avoir plus de pouvoirs de contrôle et de fouille.",
+   "hash": "754120d33fe646f258ef6508b92e53ce70bd5be78f54c1f62369bb74d0290093",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_21": [
+  {
+   "version": 1,
+   "text": "Les lanceurs d'alerte doivent être protégés légalement.",
+   "hash": "d5f6dccdd070ba75704ee19ec369bb4ede2973fb0c353064bb76cda337f4698f",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SECURITY"
+  }
+ ],
+ "ENV_1": [
+  {
+   "version": 1,
+   "text": "Lutter contre le changement climatique doit être une priorité absolue pour le gouvernement.",
+   "hash": "88e49c349b9bf25c0af5e5d3cc0e949a9dad2b64a33928984e712cabd8acb169",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_2": [
+  {
+   "version": 1,
+   "text": "La France doit construire de nouveaux réacteurs nucléaires.",
+   "hash": "e2c62bcad74e1c4ce195498e73a1e2a917241fe6ea8bc254ab3473c61ed2ee24",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_3": [
+  {
+   "version": 1,
+   "text": "Une taxe sur les émissions de CO₂ doit être mise en place pour décourager l'usage des carburants fossiles.",
+   "hash": "08e0f123f08b1a1cb3d8143f85038872f4cc0ede79464f4885ed6e29929e7279",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_4": [
+  {
+   "version": 1,
+   "text": "Des réglementations environnementales strictes doivent être maintenues, même si elles entraînent des pertes d'emplois dans certains secteurs.",
+   "hash": "111044b661de75bbfb849def4c15ccca87dfa15787dd4c3b362969d5200c81f2",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_6": [
+  {
+   "version": 1,
+   "text": "L'agriculture intensive doit être fortement réglementée.",
+   "hash": "b4cf1bc80fa55f96559336c1a304852f77be6a74e6baa72c558b9dcbdd55b0f8",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_7": [
+  {
+   "version": 1,
+   "text": "Les voitures thermiques doivent être interdites avant 2035.",
+   "hash": "a7e9a19cb2da216f4cebfee03df0f4edabfdb866d8715e1465108cf076432f47",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_8": [
+  {
+   "version": 1,
+   "text": "L'État doit abandonner la croissance du PIB comme objectif prioritaire de sa politique économique.",
+   "hash": "ac723d4894aff860cb369b5dd5ed87fac87f8189d6702c49dbe8245e6df5fcd1",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_9": [
+  {
+   "version": 1,
+   "text": "La viande doit être taxée pour son impact environnemental.",
+   "hash": "14cf47bc35df07641b11db8e918d489f0a9d8e6f37822002b0ae089a7f4b1c5b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_10": [
+  {
+   "version": 1,
+   "text": "Les pays riches doivent payer les pays pauvres pour les dommages climatiques.",
+   "hash": "a92e3385abb0fe1ed3d006473ea0d6ac5205a442ef1e237efaa0b7b9fe7c3305",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_11": [
+  {
+   "version": 1,
+   "text": "Les militants qui pratiquent la désobéissance civile pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
+   "hash": "d8818e503fdf4f3ffb8ec93fa55d2c3a465681bae071f0d1d390c7e7e7926f1a",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_13": [
+  {
+   "version": 1,
+   "text": "Les traités écologiques doivent pouvoir forcer les États à agir.",
+   "hash": "2ba5db1a803175fd8ce235411a8e4083d98bfd260eeed3bcca4039324c7c6ebb",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_14": [
+  {
+   "version": 1,
+   "text": "La géo-ingénierie doit être étudiée comme solution climatique.",
+   "hash": "6b63f648b0df00f6c25071c0c73c0fa25ec960910e171875f0e0bf52c76d28d8",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_15": [
+  {
+   "version": 1,
+   "text": "Les plastiques à usage unique doivent être complètement interdits.",
+   "hash": "c2ef57303bfce9254cfa5093524b2ab2ed5043398ccbeaa79e76cdcb11fff46a",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_21": [
+  {
+   "version": 1,
+   "text": "La biodiversité doit avoir la même urgence que le climat.",
+   "hash": "8f508f2743888948cc2fc23ab0af69698a37f6a34efb2b048681b26e2cddc235",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_22": [
+  {
+   "version": 1,
+   "text": "L'usage des voitures personnelles en ville doit être limité pour favoriser les transports en commun.",
+   "hash": "f0f84a49b9b86f88b2210b30519c1ce949b466586befd8cdfdf7ac70fa28366d",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "ENV_23": [
+  {
+   "version": 1,
+   "text": "Une réduction volontaire de la production et de la consommation est nécessaire pour respecter les limites de la planète.",
+   "hash": "2dfc4d1ca0df9c6d32bca3a9bba416dbabfa1ebf89b5062d2a51c05c5ebc53fa",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "DEM_1": [
+  {
+   "version": 1,
+   "text": "Le vote doit être obligatoire pour tous.",
+   "hash": "5f6efeb2d8a3fad7c8e91140b728bf1d0c4d039a2d73dcec566cd71ac730af5c",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_2": [
+  {
+   "version": 1,
+   "text": "Les réseaux sociaux ont trop de pouvoir politique.",
+   "hash": "ba966712908669caaabdd607014f722efd3a4c22086acf3a441c94b07f3f3c93",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_3": [
+  {
+   "version": 1,
+   "text": "Les citoyens doivent pouvoir déclencher un référendum sur n'importe quelle loi par voie de pétition.",
+   "hash": "bf9a23976472e946fee92a6945debf8f875f70727f42d467d4edbf531be432d3",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_4": [
+  {
+   "version": 1,
+   "text": "Les juges doivent être totalement indépendants de la politique.",
+   "hash": "d32c233fbcf88fb294c33fafccd3a7341549f7f7795de6362bf1a1729c12b09e",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_5": [
+  {
+   "version": 1,
+   "text": "Le système électoral doit utiliser la proportionnelle.",
+   "hash": "8124db96f8c6755f2b84de4722d312b69d7a0203b9adacd419c1c00b42622519",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_6": [
+  {
+   "version": 1,
+   "text": "L'âge du vote doit être abaissé à 16 ans.",
+   "hash": "ba92919f2065e85afc377fbce1e917d35164d4d64eb3474c19ad392f916eaa16",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_7": [
+  {
+   "version": 1,
+   "text": "Un élu qui ment délibérément à ses concitoyens sur un sujet important doit pouvoir être révoqué.",
+   "hash": "4179fef1a7a048ecf5dee1d949c4d64ab1f9059f4786e423229778cc58f7c671",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_8": [
+  {
+   "version": 1,
+   "text": "Les dons privés importants aux partis politiques doivent être interdits.",
+   "hash": "dcb505b5e79c3852df3b83bc264c24d4eb6592197969a6bf36b61603ec76dad0",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_9": [
+  {
+   "version": 1,
+   "text": "Le Sénat doit être profondément réformé pour être plus représentatif des citoyens.",
+   "hash": "7a635a3380dfabc8d20ab3c369cc31a5e7c7653c5a6558ff32eeb026b5541fad",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_10": [
+  {
+   "version": 1,
+   "text": "Les pouvoirs d'urgence doivent expirer automatiquement après 30 jours.",
+   "hash": "4391c9e2e5f24277070851f11159fd800e4cf35ce1c5cfbbe3c72c8bd38da8f0",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_11": [
+  {
+   "version": 1,
+   "text": "Les mandats politiques doivent être limités en durée.",
+   "hash": "19527391ac68aa8984841194f8b0bc9ccc58fcd9a1454b6ec0cb3dd26305ce8e",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_12": [
+  {
+   "version": 1,
+   "text": "Les citoyens doivent pouvoir révoquer leurs élus avant la fin du mandat.",
+   "hash": "67e75c1913b11d289e24cea01196943cd34759304f8ea60668557919ae8bc41b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_13": [
+  {
+   "version": 1,
+   "text": "Les médias doivent être régulés pour garantir un équilibre politique.",
+   "hash": "eeb9a762035ada867b3359f897be29705a9ac5bd28736834ed7d1addfad8009a",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_14": [
+  {
+   "version": 1,
+   "text": "Les immunités parlementaires doivent être réduites.",
+   "hash": "7f527e204585601b9f67d88d60707fa2f3ac590c7a43e4f9150613525a1b71b6",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_15": [
+  {
+   "version": 1,
+   "text": "Le lobbying d'entreprises doit être strictement régulé et transparent.",
+   "hash": "acdab6126d14003582842dcde6f7022925453d9e7f2196978539392eeaa2627b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_16": [
+  {
+   "version": 1,
+   "text": "Les juges doivent pouvoir annuler les lois du parlement.",
+   "hash": "c451976aee205d58aef036d63bb676122c3496f65b7768b414c78737310b4a7b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_19": [
+  {
+   "version": 1,
+   "text": "Les partis politiques doivent être financés publiquement.",
+   "hash": "e50d51ea2a868dd03d44bf80868583a2e5af4698379063f15ad7d4d6346c6d99",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_21": [
+  {
+   "version": 1,
+   "text": "Les gouvernements doivent pouvoir révoquer les juges.",
+   "hash": "cf813872ca5acddef1d70808df49905256851fbe4385776331fcb45ad937e66e",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "DEM_23": [
+  {
+   "version": 1,
+   "text": "Les institutions internationales doivent pouvoir forcer les États à agir.",
+   "hash": "67c4fe50dbe12c05bccb8f0da118e6cb2cc364302527e92d0ec97f3cc0a32a4b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "GLO_1": [
+  {
+   "version": 1,
+   "text": "L'intérêt national doit primer sur les engagements internationaux.",
+   "hash": "73f56fa8d50a7847026be3b62f77c402378ef15110a7c4600e83d0fb21a054fb",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_2": [
+  {
+   "version": 1,
+   "text": "Les institutions mondiales (ONU, OMC, FMI) ont trop de pouvoir.",
+   "hash": "c4cbeb1c31d69f24b713dfd601b41263ae1007f20d672e8dad11d5ef32463f05",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_3": [
+  {
+   "version": 1,
+   "text": "L'OTAN est une alliance militaire essentielle pour la sécurité de la France.",
+   "hash": "266ee0e7ff31812b8f7f529aa5aa0199538b234da76114e5844871e0d45074c5",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_4": [
+  {
+   "version": 1,
+   "text": "La France doit augmenter son aide publique au développement.",
+   "hash": "747d6b2af3f92d6a410fd48cf603e9d4b396eef6c586e6d90813494a95e7d0ff",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_5": [
+  {
+   "version": 1,
+   "text": "Les intérêts nationaux de la France doivent toujours passer avant les obligations des traités internationaux.",
+   "hash": "359269a04fb27b38c8401bb0d5450198a5914e1f55c38675689752f19975b057",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_6": [
+  {
+   "version": 1,
+   "text": "La France doit utiliser des barrières douanières pour protéger ses industries, même au risque de tensions commerciales.",
+   "hash": "c193fa2e2f5a95e063e0f3881a0030af7088218692350f503fceec89f0360eaf",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_7": [
+  {
+   "version": 1,
+   "text": "La France et ses alliés doivent imposer des sanctions économiques aux régimes autoritaires.",
+   "hash": "968211876a0e5925b8a430a5a8e4f07add6d7ad84553987693600bfc814ba6d6",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_8": [
+  {
+   "version": 1,
+   "text": "L'Union européenne doit renforcer son intégration politique, même si cela réduit les pouvoirs des États membres.",
+   "hash": "10230434d09c15307f106f3c70996d92580960df150c9a7aae1ef0feb606c4ba",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_9": [
+  {
+   "version": 1,
+   "text": "L'État devrait mieux protéger la culture française face à l'influence culturelle américaine (films, séries, réseaux sociaux).",
+   "hash": "11f7752794bcb19e27917fa4ffce5aa94068dc0e43848b793877b4adf4152a58",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_10": [
+  {
+   "version": 1,
+   "text": "Les multinationales doivent payer un impôt minimum mondial.",
+   "hash": "0af025d1ad610d494877e481c279e1f5749141b657e822c93bb93d7e6d48bfcd",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_11": [
+  {
+   "version": 1,
+   "text": "La France doit réduire sa dépendance à la Chine.",
+   "hash": "139b81549a652e957a2c0eb885f33e5424ee009db681d004385c2a5820fb2b17",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_12": [
+  {
+   "version": 1,
+   "text": "Les pays colonisateurs doivent des réparations aux anciennes colonies.",
+   "hash": "49b57e1a4c6ad30a7e5c4a78139b7959be857e16d798aae8e9d09978140704a0",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_13": [
+  {
+   "version": 1,
+   "text": "Les tribunaux internationaux (CPI) doivent juger les crimes de guerre.",
+   "hash": "dfcb6e8b7ac2ec90ba758837da4210b9d32234b8111d6e23720b538563edfa42",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_14": [
+  {
+   "version": 1,
+   "text": "Les pays doivent restreindre la propriété étrangère des secteurs stratégiques.",
+   "hash": "78503d3ce71af7c7f2991dd0756ec5f2f8e977b94bc2629bad4d7fe3ea763875",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_15": [
+  {
+   "version": 1,
+   "text": "La communauté internationale doit intervenir militairement pour stopper un génocide, même sans mandat de l'ONU.",
+   "hash": "b9d73e625f9d3293edc109e1049697f6a9a4dad2d1d7db48abe1ef2806a6bafa",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_16": [
+  {
+   "version": 1,
+   "text": "La France doit réduire ses dépendances stratégiques en produisant davantage localement, notamment en alimentation et en énergie.",
+   "hash": "918be4776bea3ecb1c0ccd99e8737216d5085a979b65a6c7bb2070785a56f120",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_17": [
+  {
+   "version": 1,
+   "text": "La France doit adopter une politique étrangère plus neutre et réduire ses engagements militaires à l'étranger.",
+   "hash": "2bd6bdfd6d4c4d88b3edf365da3157842678fc1c33d2322af161f54658877674",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_20": [
+  {
+   "version": 1,
+   "text": "Les pays doivent sanctionner les violations de droits humains.",
+   "hash": "61b9be320c40ec0f2e170c08568e3617d511df8c57e68dc1225c6a466404822e",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_22": [
+  {
+   "version": 1,
+   "text": "L'État doit financer activement la préservation de la culture et des traditions françaises.",
+   "hash": "2b4793ce1adea80048d3b133edeb5baec6b7a75bffdbf52ee81db7a2099720ba",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "PUB_1": [
+  {
+   "version": 1,
+   "text": "L'État doit garantir un accès aux soins gratuit et de qualité égale pour tous.",
+   "hash": "7574bcc93658547967e90ddaf2d3008f60471353b9cec4c74d26373adf5e1f83",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_2": [
+  {
+   "version": 1,
+   "text": "Les écoles publiques doivent recevoir beaucoup plus de financement.",
+   "hash": "1faf8f2eef16219dfa47025534ef0fabbf73d0d7e8fb3a7112802a3991411044",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_3": [
+  {
+   "version": 1,
+   "text": "Les services publics comme la santé ou l'éducation doivent être ouverts à la concurrence du secteur privé.",
+   "hash": "8d6b6dbf404e232ef1af2e48b9db9e16cafecb733bba174bff8719c21eb43155",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_4": [
+  {
+   "version": 1,
+   "text": "Le système de retraite français doit rester exclusivement par répartition, sans aucune part de capitalisation.",
+   "hash": "35e700db3e92214fc2aacb55c54ba6727ee7294ef2313024345b468a63b9b23c",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_5": [
+  {
+   "version": 1,
+   "text": "Les frais d'inscription à l'université doivent être fortement réduits.",
+   "hash": "25b228b8a4c420a7ef6f7fb759905518f2a9bacd001e9efd590bf4b735f7d4e0",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_6": [
+  {
+   "version": 1,
+   "text": "Le logement social doit être massivement étendu.",
+   "hash": "36ab19662d7d19a6dd650ddf7cb70e1206f79bbf4daa2ad964d85c24bfa77fb9",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_7": [
+  {
+   "version": 1,
+   "text": "Un revenu de base doit remplacer les allocations actuelles.",
+   "hash": "f388b48dd739438c53130ddd982810b848fa584c94ac8a2396884a330eab640b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_8": [
+  {
+   "version": 1,
+   "text": "L'État doit augmenter ses subventions aux bibliothèques, musées et théâtres publics.",
+   "hash": "29c513964748328f2c302a7788781beb0a0d1da218df5fcb533e6a93a8fa1e54",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_9": [
+  {
+   "version": 1,
+   "text": "La garde d'enfants doit être gratuite et accessible à toutes les familles.",
+   "hash": "9a3b39ff3f07625ea2dcebe4ccf0e03a2004349f9f9e5d6954e49184ed3837ed",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_10": [
+  {
+   "version": 1,
+   "text": "La santé mentale doit recevoir autant de financement que la santé physique.",
+   "hash": "55f7af0da3c4f054b4568a36f237aa4db5165543ba9ad8f75619c7c944bb6045",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_11": [
+  {
+   "version": 1,
+   "text": "L'État doit plafonner les loyers dans les grandes villes.",
+   "hash": "54ae5c92453630af7407a58283ee5c0e703951dd90cc2d39bdac5b574d1b599c",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_12": [
+  {
+   "version": 1,
+   "text": "Les transports en commun doivent être gratuits pour les usagers.",
+   "hash": "9147ca2af0e5d55a556a25cb6b30119ff481f4764a42f92bfa6cb4241dec7b63",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_13": [
+  {
+   "version": 1,
+   "text": "Les dépenses de protection sociale françaises devraient être significativement réduites.",
+   "hash": "95792d480db84597d85316b13a18bed3214875b281d3dc4fc64e7a3e8d89ad21",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_14": [
+  {
+   "version": 1,
+   "text": "L'État doit garantir un emploi à qui veut travailler.",
+   "hash": "8fa1843230c8123fe017053511e96cf15dd6ce3930a795cfa1d603a424aca0b1",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_15": [
+  {
+   "version": 1,
+   "text": "Limiter le remboursement de certains soins très coûteux est nécessaire pour préserver l'équilibre des finances publiques.",
+   "hash": "a13ce936e16509f6df9cf045036fa12ab620228e961f6ce652b17da1a51bd3db",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_17": [
+  {
+   "version": 1,
+   "text": "Les services publics essentiels (eau, électricité, santé) ne doivent pas être gérés par des entreprises privées à but lucratif.",
+   "hash": "0a95350d2dd7eb1367979402294d9d0cf9727d0d4cb2ae02c49a36974c3be8c0",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_19": [
+  {
+   "version": 1,
+   "text": "Garantir le niveau des pensions de retraite doit être une priorité, même si cela implique d'augmenter les cotisations.",
+   "hash": "733ae3c14c6cc88ceff6c3d007024a4d8b80342b14bc248da7e72edeb607f4b3",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_23": [
+  {
+   "version": 1,
+   "text": "Les universités doivent être totalement gratuites pour tous les étudiants français.",
+   "hash": "e427420a3aab5141928db9e45f21747a9959679b9dcd74ee2f87af015c2136ba",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "ECO_24": [
+  {
+   "version": 1,
+   "text": "Le taux minimum mondial d'imposition des multinationales (actuellement 15 %) doit être relevé.",
+   "hash": "73ee2522ac2ffe984cccb2a5c6e743ec1887af7119dbd284154737d3b66ba133",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_25": [
+  {
+   "version": 1,
+   "text": "Le partage obligatoire des bénéfices avec les salariés doit être imposé aux grandes entreprises.",
+   "hash": "52c46b522437d4c681c113aa2418a4e33e5b30c35d89b8d839729cc62fde6558",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "SOC_24": [
+  {
+   "version": 1,
+   "text": "Le droit à l'avortement doit être garanti et accessible à toutes les femmes sur tout le territoire.",
+   "hash": "b226faa2b813e7177ae8d22e52a20754d0db80a7d89cc0411c5e56dd7d9132b5",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_25": [
+  {
+   "version": 1,
+   "text": "La procréation médicalement assistée (PMA) doit être accessible aux couples de femmes et aux femmes seules.",
+   "hash": "274f4151ef8b9f8deb859be0db33175e54e642c5c3c7d46bd04d1ad7bf0d4972",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "IMM_23": [
+  {
+   "version": 1,
+   "text": "Tout enfant né en France doit pouvoir obtenir la nationalité française, quelle que soit l'origine de ses parents.",
+   "hash": "3e1d13314ff179527860ef0c6fff6d01be9c33e0ade3ef764ad4e048b5efacf4",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "IMMIGRATION"
+  }
+ ],
+ "SEC_23": [
+  {
+   "version": 1,
+   "text": "La police doit avoir plus de pouvoirs pour maintenir l'ordre dans les quartiers difficiles.",
+   "hash": "986e558c41e8a5412a1b7b8a75a0a56baa2e101ce0652841e1d219b7e92f72c0",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "SECURITY"
+  }
+ ],
+ "ENV_24": [
+  {
+   "version": 1,
+   "text": "La France doit sortir du nucléaire dans les vingt prochaines années.",
+   "hash": "4e3baa1aae6a564d15834b7e9af4ea7b038e1c8d9d0e325666055b0e202ed44e",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "DEM_24": [
+  {
+   "version": 1,
+   "text": "Le référendum d'initiative citoyenne (RIC) doit être introduit dans la Constitution française.",
+   "hash": "c043607e6f4f9b8412800f255592f366b556e98ae18d99039794c8caebc867e6",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "GLO_23": [
+  {
+   "version": 1,
+   "text": "La France doit quitter le commandement militaire intégré de l'OTAN.",
+   "hash": "4836feb1a7c78360968fedc0e4ea57eac209a6168f977f4b0f817a36c77cade2",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "GLO_24": [
+  {
+   "version": 1,
+   "text": "L'Union européenne doit avoir davantage de compétences et de budget pour agir au-delà des capacités individuelles des États membres.",
+   "hash": "0ff07aebf8e6294c8635ceacf3e01a53e7ed34ce4d873ac9c29580c3cc897798",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "GLOBAL"
+  }
+ ],
+ "ECO_26": [
+  {
+   "version": 1,
+   "text": "L'âge légal de départ à la retraite devrait être abaissé par rapport au niveau actuel (64 ans).",
+   "hash": "a4f36177ace0dbe9f6c3e07e88cae9d907791a6278a851a71136d545dc0f7678",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "ECONOMY"
+  }
+ ],
+ "GLO_25": [
+  {
+   "version": 1,
+   "text": "La France doit continuer à soutenir militairement et financièrement l'Ukraine face à la Russie.",
+   "hash": "a00f9d5bc709b6ff3115de0cd4e8eb4e253b066b785eb8049d57aaba5768740f",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "GLOBAL"
+  }
+ ],
+ "ENV_25": [
+  {
+   "version": 1,
+   "text": "Les normes environnementales européennes sur l'agriculture devraient être assouplies pour mieux tenir compte des réalités des agriculteurs français.",
+   "hash": "54274b42090fa36e262a83d352435592b5b358e479c08b3ea490451b1b34a57d",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ENVIRONMENT"
+  }
+ ],
+ "PUB_24": [
+  {
+   "version": 1,
+   "text": "L'État doit obliger les médecins à s'installer dans les déserts médicaux.",
+   "hash": "b882b418c2dcb32846887871b40b55b80b363c177134fce7aa2ccc336ecb5043",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "PUB_25": [
+  {
+   "version": 1,
+   "text": "L'État doit investir massivement dans les hôpitaux publics, notamment aux urgences et dans les lits d'hospitalisation.",
+   "hash": "5dc314c73b3b08183100fbd6bed86a3893ba5cb515884ca83ee8ae7bea6bd540",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "PUBLIC_SERVICES"
+  }
+ ],
+ "SOC_26": [
+  {
+   "version": 1,
+   "text": "L'État doit prendre des mesures concrètes pour réduire les discriminations liées à l'origine ou à la couleur de peau.",
+   "hash": "21361871497dbed13d615059318c02ca1da26005da708feb9ab3b061c1faed3b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SOCIAL"
+  }
+ ],
+ "SOC_27": [
+  {
+   "version": 1,
+   "text": "L'État doit sanctionner financièrement les entreprises qui ne réduisent pas leurs écarts de salaire entre femmes et hommes.",
+   "hash": "2e004f28ad127875b3c676d73ff1c3f26010aba7dca51fb80841f5f4a6d92782",
+   "direction": 1,
+   "status": "CORE",
+   "theme": "SOCIAL"
+  }
+ ],
+ "DEM_25": [
+  {
+   "version": 1,
+   "text": "La détention de nombreux médias par quelques grandes fortunes nuit à la pluralité de l'information en France.",
+   "hash": "3e560d7cc4e2d26647144f6dbe5d67e64648edbf259faf549375bb2fae37dbdb",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "DEMOCRACY"
+  }
+ ],
+ "SEC_24": [
+  {
+   "version": 1,
+   "text": "Face à la délinquance dans les quartiers difficiles, la priorité doit être le renforcement policier plutôt que les aides sociales.",
+   "hash": "399aa58e835d2853c5587eb6d73dfb8c63fedfa20ae49a3a8c818ab56c9cc59b",
+   "direction": 1,
+   "status": "SECONDARY",
+   "theme": "SECURITY"
+  }
+ ],
+ "SEC_25": [
+  {
+   "version": 1,
+   "text": "Les policiers soupçonnés d'usage excessif de la force doivent faire l'objet d'une enquête totalement indépendante de la police.",
+   "hash": "6e0b6e2a4dbf7880b744356fa5f9420415ec6904402c9a5cdd9c81a6cfab723b",
+   "direction": -1,
+   "status": "CORE",
+   "theme": "SECURITY"
+  }
+ ],
+ "ECO_27": [
+  {
+   "version": 1,
+   "text": "La France doit imposer des droits de douane ciblés en réponse aux pratiques commerciales déloyales d'autres pays (dumping, subventions massives).",
+   "hash": "834d7a03a3e175ae1272623a7ea7e4fe6a6ad9433005be72f5cee0e3d3881f7a",
+   "direction": -1,
+   "status": "SECONDARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "ECO_28": [
+  {
+   "version": 1,
+   "text": "Le développement de l'intelligence artificielle doit être strictement réglementé par la loi, même au risque de ralentir l'innovation.",
+   "hash": "413631ebfd92aa8b33b43f41ac0adfb76ecde0c0ec8f05ad83b3fa4b7ba49689",
+   "direction": -1,
+   "status": "PRIMARY",
+   "theme": "ECONOMY"
+  }
+ ],
+ "DEM_26": [
+  {
+   "version": 1,
+   "text": "Les critères des algorithmes utilisés par l'administration pour des décisions comme Parcoursup doivent être rendus publics.",
+   "hash": "b4a8b380c188bd03e11d8cd3d211fcfda2fd6e95d9ea94e1349a0fc2c7140b31",
+   "direction": 1,
+   "status": "PRIMARY",
+   "theme": "DEMOCRACY"
+  }
+ ]
+}
