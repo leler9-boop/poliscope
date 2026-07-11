@@ -1302,7 +1302,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "public healthcare",
-    "explanation": "La France dispose de la Sécurité sociale, qui rembourse une grande partie des soins. Des inégalités d'accès persistent (déserts médicaux, restes à charge). Le débat porte sur la place du privé dans le système de santé et les moyens d'assurer une couverture vraiment universelle."
+    "explanation": "La France dispose de la Sécurité sociale, qui rembourse une grande partie des soins. Des inégalités d'accès persistent (déserts médicaux, restes à charge). Ses partisans veulent réduire encore ces inégalités ; ses opposants soulignent le coût déjà élevé du système et le risque d'allonger les délais d'attente si la gratuité totale augmente la demande sans accroître l'offre de soins."
   },
   {
     "id": "PUB_2",
@@ -1310,31 +1310,31 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "L'école publique souffre d'un manque de moyens dans certaines zones : classes surchargées, bâtiments vétustes. Le débat porte sur le niveau de financement nécessaire et la répartition des ressources entre établissements des quartiers favorisés et défavorisés."
+    "explanation": "L'école publique souffre d'un manque de moyens dans certaines zones : classes surchargées, bâtiments vétustes. Ses partisans y voient une condition nécessaire à l'égalité des chances ; ses opposants estiment que les difficultés scolaires ne sont pas seulement budgétaires et que des moyens supplémentaires ne suffisent pas sans réforme de l'organisation."
   },
   {
     "id": "PUB_3",
-    "text": "Les entreprises privées doivent pouvoir concurrencer la santé et l'éducation publiques.",
+    "text": "Les services publics comme la santé ou l'éducation doivent être ouverts à la concurrence du secteur privé.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "Des entreprises privées opèrent déjà dans la santé et l'éducation. Le débat porte sur les limites de cette privatisation : améliore-t-elle le service ou crée-t-elle un système à deux vitesses où les plus aisés accèdent à de meilleurs soins et à de meilleures écoles ?"
+    "explanation": "Des entreprises privées opèrent déjà dans des services publics comme la santé ou l'éducation. Ses partisans estiment que la concurrence peut améliorer la qualité et l'efficacité du service ; ses opposants craignent qu'elle crée un système à deux vitesses où les plus aisés accèdent à de meilleurs soins et à de meilleures écoles."
   },
   {
     "id": "PUB_4",
-    "text": "Le système de retraite par répartition doit être renforcé.",
+    "text": "Le système de retraite français doit rester exclusivement par répartition, sans aucune part de capitalisation.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "Le système français fonctionne par répartition : les cotisations des actifs financent directement les retraites. Le vieillissement de la population le fragilise. Le débat porte sur les solutions : allonger le temps de travail, augmenter les cotisations, ou introduire une part de capitalisation."
+    "explanation": "Le système français fonctionne par répartition : les cotisations des actifs financent directement les retraites d'aujourd'hui. Le vieillissement de la population le fragilise, et certains proposent d'introduire une part de capitalisation (épargne individuelle investie sur les marchés, comme en Suède) pour diversifier le financement. Ses opposants craignent que cela affaiblisse la solidarité entre générations et expose les pensions aux aléas des marchés financiers."
   },
   {
     "id": "PUB_5",
-    "text": "Les frais d'inscription à l'université doivent être supprimés ou très fortement réduits.",
+    "text": "Les frais d'inscription à l'université doivent être fortement réduits.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "L'université française est peu chère (170 à 600 € par an), mais reste coûteuse quand on intègre le logement et la vie quotidienne. Le débat porte sur la gratuité totale ou le soutien aux étudiants précaires via des bourses ou des prêts à remboursement conditionnel."
+    "explanation": "Pour les étudiants français et européens, l'université reste peu chère (environ 280 à 500 € par an, droits d'inscription et CVEC compris), mais le coût du logement et de la vie quotidienne pèse lourd. Ses partisans veulent réduire encore ces frais pour lever tout obstacle financier ; ses opposants privilégient un soutien ciblé aux étudiants précaires (bourses, prêts à remboursement conditionnel) plutôt qu'une baisse générale."
   },
   {
     "id": "PUB_6",
@@ -1342,7 +1342,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "La France manque d'environ 2 millions de logements sociaux. Les délais d'attente dépassent 10 ans dans les grandes villes. Le débat porte sur les moyens de relancer la construction et sur l'accès : faut-il réserver les HLM aux plus précaires ou maintenir une mixité sociale ?"
+    "explanation": "La France compte plus de 2,9 millions de ménages en attente d'un logement social, un chiffre en forte hausse. Le délai médian d'attribution dépasse 30 mois, et davantage encore dans les zones les plus tendues comme l'Île-de-France. Le débat porte sur les moyens de relancer la construction et sur l'accès : faut-il réserver les HLM aux plus précaires ou maintenir une mixité sociale ?"
   },
   {
     "id": "PUB_7",
@@ -1354,7 +1354,7 @@
   },
   {
     "id": "PUB_8",
-    "text": "L'État doit maintenir et augmenter ses subventions aux bibliothèques, musées et théâtres publics.",
+    "text": "L'État doit augmenter ses subventions aux bibliothèques, musées et théâtres publics.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
@@ -1366,7 +1366,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "La France manque d'environ 400 000 places en crèche. La garde d'enfants conditionne la possibilité pour les parents, souvent les mères, de travailler. Le débat porte sur le financement et la gestion de ce service : faut-il plus de crèches publiques ou développer aussi les modes de garde privés ?"
+    "explanation": "La France manque d'environ 200 000 places en crèche selon les estimations les plus récentes. La garde d'enfants conditionne la possibilité pour les parents, souvent les mères, de travailler. Le débat porte sur le financement et la gestion de ce service : faut-il plus de crèches publiques ou développer aussi les modes de garde privés ?"
   },
   {
     "id": "PUB_10",
@@ -1386,7 +1386,7 @@
   },
   {
     "id": "PUB_12",
-    "text": "Les transports en commun doivent être gratuits ou quasi-gratuits pour les usagers.",
+    "text": "Les transports en commun doivent être gratuits pour les usagers.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
@@ -1410,11 +1410,11 @@
   },
   {
     "id": "PUB_15",
-    "text": "Limiter l'accès aux soins coûteux est acceptable pour les finances publiques.",
+    "text": "Limiter le remboursement de certains soins très coûteux est nécessaire pour préserver l'équilibre des finances publiques.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "Les dépenses de santé augmentent avec le vieillissement de la population. Des débats existent sur le remboursement de certains traitements très coûteux. Le débat porte sur les critères éthiques et économiques qui devraient guider les décisions de remboursement."
+    "explanation": "Les dépenses de santé augmentent avec le vieillissement de la population et l'arrivée de traitements innovants très onéreux. Ses partisans estiment qu'il faut prioriser les remboursements pour préserver la pérennité du système ; ses opposants considèrent que la solidarité nationale doit couvrir tous les soins nécessaires, quel qu'en soit le coût."
   },
   {
     "id": "PUB_16",
@@ -1427,11 +1427,11 @@
   },
   {
     "id": "PUB_17",
-    "text": "Les services publics essentiels comme l'eau, l'électricité et la santé ne doivent pas être gérés par des entreprises privées à but lucratif.",
+    "text": "Les services publics essentiels (eau, électricité, santé) ne doivent pas être gérés par des entreprises privées à but lucratif.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
-    "explanation": "Des entreprises privées gèrent des services comme l'eau, les autoroutes ou les prisons dans certains pays. Le débat porte sur leur capacité à gérer des services d'intérêt général sans en dégrader la qualité au profit de leurs actionnaires."
+    "explanation": "Des entreprises privées gèrent déjà des services comme l'eau, les autoroutes ou les prisons dans certains pays. Ses partisans estiment qu'une gestion privée peut apporter efficacité, investissement et expertise technique ; ses opposants craignent une dégradation de la qualité au profit des actionnaires dans des secteurs vitaux pour la population."
   },
   {
     "id": "PUB_18",
@@ -1483,7 +1483,7 @@
     "axis": "economic",
     "status": "CORE",
     "cluster": "education",
-    "explanation": "Les universités françaises facturent des frais modestes (170 à 600 € par an). La gratuité totale permettrait un accès sans barrière financière. Le débat porte sur son financement et son équité : les études supérieures profitent surtout aux enfants de milieux favorisés."
+    "explanation": "Les universités françaises facturent aux étudiants français et européens des frais modestes (environ 280 à 500 € par an, droits d'inscription et CVEC compris) — un montant nettement plus élevé pour les étudiants hors Union européenne (jusqu'à environ 3 900 € par an depuis un décret de mai 2026). La gratuité totale permettrait un accès sans barrière financière. Le débat porte aussi sur l'équité : les études supérieures profitent surtout aux enfants de milieux favorisés, ce qui interroge la pertinence d'une gratuité universelle plutôt que ciblée sur les plus modestes."
   },
   {
     "id": "ECO_24",
@@ -1603,7 +1603,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "public healthcare",
-    "explanation": "Les hôpitaux publics manquent de lits, de personnel et de matériel selon de nombreux soignants. Des fermetures de services et des temps d'attente aux urgences illustrent cette crise. Le débat porte sur le financement, la gouvernance et la place du secteur privé dans l'organisation des soins."
+    "explanation": "Les hôpitaux publics manquent de lits, de personnel et de matériel selon de nombreux soignants. Des fermetures de services et des temps d'attente aux urgences illustrent cette crise. Ses partisans y voient une urgence sanitaire à traiter en priorité ; ses opposants soulignent que ces investissements doivent être financés dans un contexte de déficit public, et s'interrogent sur l'efficacité de la dépense sans réforme de l'organisation hospitalière."
   },
   {
     "id": "SOC_26",
