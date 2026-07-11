@@ -97,11 +97,11 @@
   },
   {
     "id": "ECO_13",
-    "text": "L'économie des plateformes (Uber, Deliveroo...) ne doit pas être soumise à des réglementations supplémentaires.",
+    "text": "L'économie des plateformes (Uber, Deliveroo...) doit être davantage réglementée pour protéger les travailleurs indépendants.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "Les livreurs et chauffeurs de plateformes comme Uber ou Deliveroo travaillent souvent comme indépendants, sans congés payés ni assurance chômage. Le débat porte sur leur statut : faut-il les réguler pour les protéger, ou conserver la flexibilité qui attire leurs services ?"
+    "explanation": "Les livreurs et chauffeurs de plateformes comme Uber ou Deliveroo travaillent souvent comme indépendants, sans congés payés ni assurance chômage. Une réglementation plus stricte leur donnerait davantage de protections sociales ; ses opposants craignent qu'elle ne réduise la flexibilité qui attire ces plateformes et fasse disparaître des emplois."
   },
   {
     "id": "ECO_14",

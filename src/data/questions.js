@@ -77,7 +77,7 @@ const PREFIX_TO_THEME = {
 // Direction preserved from original scoring logic (1 = agree shifts score up, -1 = down)
 const DIRECTION_MAP = {
   ECO_1: -1, ECO_2: -1, ECO_3:  1, ECO_4: -1, ECO_5:  1, ECO_6: -1, ECO_7:  1, ECO_8: -1,
-  ECO_9: -1, ECO_10:-1, ECO_11: 1, ECO_12:-1, ECO_13: 1, ECO_14:-1, ECO_15: 1,
+  ECO_9: -1, ECO_10:-1, ECO_11: 1, ECO_12:-1, ECO_13:-1, ECO_14:-1, ECO_15: 1, // ECO_13 flipped: reworded from a double negation to a positive framing, meaning of agreement is unchanged
   ECO_16:-1, ECO_17: 1, ECO_18:-1, ECO_19:-1, ECO_20:-1, ECO_21:-1, ECO_22:-1, ECO_23: 1,
 
   SOC_1:  1, SOC_2:  1, SOC_3:  1, SOC_4:  1, SOC_5: -1, SOC_6:  1, SOC_7: -1, SOC_8:  1,
