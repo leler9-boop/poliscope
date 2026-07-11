@@ -133,6 +133,7 @@ const DIRECTION_MAP = {
   ECO_28:-1,  // régulation stricte de l'IA = interventionnisme = ECONOMY down (même sens que ECO_9)
   DEM_26: 1,  // transparence des algorithmes publics = accountability = DEMOCRACY up (même sens que DEM_8/15/16/25)
   SEC_25:-1,  // enquête indépendante de la police = limite le pouvoir policier = SECURITY down (même sens que SEC_1/4/8/13/21)
+  SOC_27: 1,  // sanctionner les écarts de salaire = progressiste = SOCIAL up (même sens que SOC_26)
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────

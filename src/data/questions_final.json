@@ -1614,6 +1614,14 @@
     "explanation": "Des études montrent que des personnes à nom à consonance étrangère ont moins de chances d'être rappelées après un envoi de CV. L'État peut agir via des contrôles (testing), des sanctions ou des politiques d'égalité. Le débat porte sur l'efficacité de ces mesures et leur compatibilité avec l'égalité républicaine."
   },
   {
+    "id": "SOC_27",
+    "text": "L'État doit sanctionner financièrement les entreprises qui ne réduisent pas leurs écarts de salaire entre femmes et hommes.",
+    "axis": "cultural",
+    "status": "CORE",
+    "cluster": "gender pay gap",
+    "explanation": "Depuis 2019, un Index de l'égalité professionnelle (noté sur 100) impose aux entreprises de plus de 50 salariés une pénalité pouvant atteindre 1 % de la masse salariale en cas de score insuffisant. Une directive européenne censée durcir ces règles devait être transposée en droit français au plus tard en juin 2026, un délai déjà dépassé. À poste comparable, l'écart de salaire entre femmes et hommes reste d'environ 4 % en France. Ses partisans réclament des sanctions plus systématiques ; ses opposants jugent la contrainte excessive pour les entreprises."
+  },
+  {
     "id": "DEM_25",
     "text": "La détention de nombreux médias par quelques grandes fortunes nuit à la pluralité de l'information en France.",
     "axis": "authority",
