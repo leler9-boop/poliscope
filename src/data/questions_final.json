@@ -267,7 +267,7 @@
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
-    "explanation": "L'euthanasie active est interdite en France. La loi Claeys-Leonetti permet une sédation profonde jusqu'au décès. Le débat porte sur le droit à mourir dans la dignité, le rôle du corps médical, et le risque de dérives si le cadre légal s'élargit."
+    "explanation": "L'euthanasie active est aujourd'hui interdite en France ; la loi Claeys-Leonetti permet uniquement une sédation profonde jusqu'au décès. Une proposition de loi créant un « droit à l'aide à mourir » a été adoptée à plusieurs reprises par l'Assemblée nationale (dont une troisième fois le 30 juin 2026), mais rejetée par le Sénat le 7 juillet 2026 ; son sort se joue dans les prochains jours. Le débat porte sur le droit à mourir dans la dignité, le rôle du corps médical, et le risque de dérives si le cadre légal s'élargit."
   },
   {
     "id": "SOC_11",
@@ -355,11 +355,11 @@
   },
   {
     "id": "SOC_21",
-    "text": "La possession de drogues pour usage personnel ne doit pas constituer un délit.",
+    "text": "Consommer des drogues doit être considéré comme un choix personnel relevant de la liberté individuelle.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
-    "explanation": "Posséder de la drogue pour son propre usage est illégal en France. Des pays comme le Portugal ont adopté une approche de santé publique : traiter la dépendance sans criminaliser le consommateur. Le débat porte sur l'efficacité de la répression face à l'addiction."
+    "explanation": "Posséder de la drogue pour son propre usage est illégal en France, bien que rarement sanctionné par la prison. Ses partisans estiment que ce qu'un adulte fait de son propre corps relève de sa liberté individuelle, tant qu'il ne nuit pas à autrui ; ses opposants considèrent que l'addiction crée une dépendance qui limite justement cette liberté de choix, et justifie un accompagnement plutôt qu'une pure logique de droit individuel."
   },
   {
     "id": "SOC_22",
