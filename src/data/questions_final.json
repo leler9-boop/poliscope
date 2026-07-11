@@ -13,7 +13,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "Le SMIC est le salaire minimum légal en France (environ 1 800 € brut en 2024). Ses partisans estiment qu'il est insuffisant pour vivre dignement ; ses critiques craignent qu'une forte hausse entraîne des suppressions de postes peu qualifiés."
+    "explanation": "Le SMIC est le salaire minimum légal en France (1 867 € brut par mois depuis juin 2026). Ses partisans estiment qu'il est insuffisant pour vivre dignement ; ses critiques craignent qu'une forte hausse entraîne des suppressions de postes peu qualifiés."
   },
   {
     "id": "ECO_3",
@@ -29,7 +29,7 @@
     "axis": "economic",
     "status": "PRIMARY",
     "cluster": "eco",
-    "explanation": "L'impôt de solidarité sur la fortune (ISF) a été supprimé en 2018 et remplacé par un impôt uniquement sur l'immobilier. Le débat porte sur la nécessité de taxer aussi les placements financiers pour réduire les inégalités de patrimoine."
+    "explanation": "L'impôt de solidarité sur la fortune (ISF) a été supprimé en 2018 et remplacé par un impôt uniquement sur l'immobilier. Le débat porte sur la nécessité de taxer aussi les placements financiers pour réduire les inégalités de patrimoine. Ses opposants estiment que cela pourrait pousser des investisseurs à quitter la France et réduire l'épargne dirigée vers les entreprises."
   },
   {
     "id": "ECO_5",
@@ -37,23 +37,23 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "La France dépense plus qu'elle ne perçoit chaque année, accumulant une dette publique de plus de 3 000 milliards d'euros. Réduire les dépenses permettrait de rééquilibrer les comptes, mais implique des choix difficiles : quels services couper, et pour quels effets sur la vie quotidienne ?"
+    "explanation": "La France dépense plus qu'elle ne perçoit chaque année, avec une dette publique qui dépasse désormais 3 500 milliards d'euros. Réduire les dépenses permettrait de rééquilibrer les comptes, mais implique des choix difficiles : quels services couper, et pour quels effets sur la vie quotidienne ?"
   },
   {
     "id": "ECO_6",
-    "text": "Les syndicats et la négociation collective doivent être renforcés.",
+    "text": "Les syndicats doivent avoir davantage de pouvoir dans les entreprises.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "Les syndicats négocient les salaires et conditions de travail au nom des salariés. La France a un faible taux de syndicalisation (~11 %). Certains veulent leur donner plus de pouvoir dans les entreprises ; d'autres préfèrent des accords négociés directement entre employeurs et salariés."
+    "explanation": "Les syndicats négocient les salaires et conditions de travail au nom des salariés. La France a un faible taux de syndicalisation (environ 11 %). Certains veulent leur donner plus de pouvoir dans les décisions de l'entreprise ; d'autres préfèrent des accords négociés directement entre employeurs et salariés, sans intermédiaire syndical."
   },
   {
     "id": "ECO_7",
-    "text": "Le libre-échange est bon pour la France.",
+    "text": "La France devrait conclure davantage d'accords de libre-échange.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "Le libre-échange permet d'importer et d'exporter sans droits de douane élevés. Il fait baisser les prix pour les consommateurs, mais expose certaines industries françaises à la concurrence étrangère à bas coût, avec des risques de fermetures d'usines et de pertes d'emplois."
+    "explanation": "Les accords de libre-échange suppriment ou réduisent les droits de douane entre pays signataires. Ils font généralement baisser les prix pour les consommateurs, mais exposent certaines industries françaises à une concurrence étrangère à bas coût, avec des risques de fermetures d'usines et de pertes d'emplois."
   },
   {
     "id": "ECO_8",
@@ -65,11 +65,11 @@
   },
   {
     "id": "ECO_9",
-    "text": "La Bourse et les banques doivent être strictement réglementées.",
+    "text": "Le secteur financier (banques, marchés boursiers) doit être strictement réglementé.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "La crise financière de 2008 a montré les risques d'un secteur bancaire peu contrôlé. Le débat porte sur le niveau de régulation : des règles strictes protègent contre les crises, mais peuvent aussi freiner le financement des entreprises et de l'économie."
+    "explanation": "La crise financière de 2008 a montré les risques d'un secteur bancaire et boursier peu contrôlé. Le débat porte sur le niveau de régulation : des règles strictes protègent contre les crises, mais peuvent aussi freiner le financement des entreprises et de l'économie."
   },
   {
     "id": "ECO_10",
@@ -85,11 +85,11 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "La dette publique française dépasse 3 100 milliards d'euros. Certains veulent la réduire en priorité pour alléger les charges d'intérêts ; d'autres estiment qu'en période de crise, s'endetter est nécessaire pour investir dans les services publics et ne pas sacrifier la croissance."
+    "explanation": "La dette publique française dépasse 3 500 milliards d'euros. Certains veulent la réduire en priorité pour alléger les charges d'intérêts, qui atteignent désormais plus de 77 milliards d'euros par an ; d'autres estiment qu'en période de crise, s'endetter est nécessaire pour investir dans les services publics et ne pas sacrifier la croissance."
   },
   {
     "id": "ECO_12",
-    "text": "Les géants de la tech (Google, Amazon) doivent être démantélés.",
+    "text": "Les grandes entreprises technologiques en position dominante doivent être démantelées.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "corporate taxes",
@@ -138,11 +138,11 @@
   },
   {
     "id": "ECO_18",
-    "text": "Les grandes entreprises dominent trop la politique française.",
+    "text": "Le lobbying des grandes entreprises doit être davantage encadré par la loi.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
-    "explanation": "Les grandes entreprises financent des lobbyistes qui défendent leurs intérêts auprès des parlementaires et du gouvernement. Ce lobbying est légal, mais il soulève des questions sur l'égalité d'accès au pouvoir entre les citoyens ordinaires et les intérêts économiques puissants."
+    "explanation": "Les grandes entreprises financent des lobbyistes qui défendent leurs intérêts auprès des parlementaires et du gouvernement. Un encadrement plus strict (transparence des rencontres, limitation des cadeaux) viserait à réduire l'influence disproportionnée des intérêts économiques puissants ; ses opposants estiment que le lobbying, bien encadré, permet aussi de faire remonter une expertise utile aux décideurs."
   },
   {
     "id": "ECO_19",
@@ -1499,7 +1499,7 @@
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "income redistribution",
-    "explanation": "En France, la participation aux bénéfices est obligatoire au-delà de 50 salariés, mais son montant varie. Certains veulent la rendre plus généreuse pour réduire les écarts entre dividendes versés aux actionnaires et salaires des employés."
+    "explanation": "En France, la participation aux bénéfices est obligatoire au-delà de 50 salariés, mais son montant varie. Certains veulent la rendre plus généreuse pour réduire les écarts entre dividendes versés aux actionnaires et salaires des employés. Ses opposants estiment que cela relève de la liberté contractuelle entre employeurs et salariés et pourrait peser sur la compétitivité des entreprises."
   },
   {
     "id": "SOC_24",
