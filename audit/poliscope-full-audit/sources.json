@@ -8,7 +8,9 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Corroboré indépendamment par RTS, Euronews, franceinfo, Public Sénat, France24, CNN, Al Jazeera"
+    "notes": "Corroboré indépendamment par RTS, Euronews, franceinfo, Public Sénat, France24, CNN, Al Jazeera",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier après la décision sur le pourvoi en cassation de Marine Le Pen (dépôt possible jusqu'au ~17 juillet 2026)."
   },
   {
     "entityId": "lepen_2027",
@@ -19,7 +21,9 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "SUPERSEDÉE le 2026-07-11 (voir entrées ci-dessous) : 'pourvoi ... formé' et 'sans effet suspensif' se sont révélés inexacts sur re-vérification — le pourvoi n'était qu'annoncé (délai légal de 10 jours), et l'effet est bien suspensif une fois déposé. Conservée pour traçabilité, ne plus utiliser comme source de la formulation actuelle du code."
+    "notes": "SUPERSEDÉE le 2026-07-11 (voir entrées ci-dessous) : 'pourvoi ... formé' et 'sans effet suspensif' se sont révélés inexacts sur re-vérification — le pourvoi n'était qu'annoncé (délai légal de 10 jours), et l'effet est bien suspensif une fois déposé. Conservée pour traçabilité, ne plus utiliser comme source de la formulation actuelle du code.",
+    "freshnessCategory": "superseded",
+    "nextCheckRule": "Ne plus utiliser comme source — voir les entrées lepen_2027 du 2026-07-11 pour la version corrigée. Conservée uniquement pour traçabilité."
   },
   {
     "entityId": "lepen_2027",
@@ -30,7 +34,9 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "Corrige l'entrée du 2026-07-10 ci-dessus, qui indiquait à tort dans le code 'candidature non officiellement déclarée' — la déclaration était déjà publique et sans ambiguïté dès le 7 juillet."
+    "notes": "Corrige l'entrée du 2026-07-10 ci-dessus, qui indiquait à tort dans le code 'candidature non officiellement déclarée' — la déclaration était déjà publique et sans ambiguïté dès le 7 juillet.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier après la décision sur le pourvoi en cassation (même échéance que l'entrée précédente)."
   },
   {
     "entityId": "lepen_2027",
@@ -41,7 +47,10 @@
     "publishedAt": "2026-07-08",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "REMPLACE l'entrée du 2026-07-10 ci-dessus ('pourvoi ... formé, sans effet suspensif') — les deux détails étaient inexacts : dépôt non confirmé, et le sens de l'effet suspensif était inversé."
+    "notes": "REMPLACE l'entrée du 2026-07-10 ci-dessus ('pourvoi ... formé, sans effet suspensif') — les deux détails étaient inexacts : dépôt non confirmé, et le sens de l'effet suspensif était inversé.",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-07-17",
+    "nextCheckRule": "Délai légal de dépôt du pourvoi expire ~17 juillet 2026 — vérifier si effectivement déposé et son effet suspensif confirmé."
   },
   {
     "entityId": "lepen_2027",
@@ -52,7 +61,9 @@
     "publishedAt": "2026-07-08",
     "verifiedAt": "2026-07-11",
     "confidence": "medium-high",
-    "notes": "Nuance juridique non confirmée par une source judiciaire primaire (arrêt de la cour, communiqué du parquet général) — recommandé de faire valider par un professionnel du droit avant toute communication publique s'appuyant précisément sur ce mécanisme."
+    "notes": "Nuance juridique non confirmée par une source judiciaire primaire (arrêt de la cour, communiqué du parquet général) — recommandé de faire valider par un professionnel du droit avant toute communication publique s'appuyant précisément sur ce mécanisme.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "Nuance juridique non confirmée par une source judiciaire primaire — à faire valider par un professionnel du droit ; à re-vérifier après la décision sur le pourvoi."
   },
   {
     "entityId": "bardella",
@@ -63,7 +74,9 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-10",
     "confidence": "medium",
-    "notes": "Toujours valide — complétée le 2026-07-11 par l'entrée suivante sur le lancement de campagne commun."
+    "notes": "Toujours valide — complétée le 2026-07-11 par l'entrée suivante sur le lancement de campagne commun.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier si une déclaration officielle du RN sur la répartition candidature/investiture émerge."
   },
   {
     "entityId": "bardella",
@@ -74,7 +87,9 @@
     "publishedAt": "2026-07-08",
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
-    "notes": "'Premier ministre pressenti' est une lecture de la presse, pas un statut constitutionnel ou partisan formalisé — d'où candidacyStatus:'speculative' plutôt que 'declared' pour Bardella dans elections.js."
+    "notes": "'Premier ministre pressenti' est une lecture de la presse, pas un statut constitutionnel ou partisan formalisé — d'où candidacyStatus:'speculative' plutôt que 'declared' pour Bardella dans elections.js.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "'Premier ministre pressenti' reste une lecture de presse, pas un statut formalisé — à re-vérifier si le RN formalise un statut de candidat/Premier ministre pressenti."
   },
   {
     "entityId": "fr_pm_lecornu",
@@ -85,7 +100,10 @@
     "publishedAt": "2026-07-09",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Confirmé également par vie-publique.fr et info.gouv.fr"
+    "notes": "Confirmé également par vie-publique.fr et info.gouv.fr",
+    "freshnessCategory": "volatile",
+    "nextCheckDue": "2026-08-10",
+    "nextCheckRule": "Contexte de majorité parlementaire instable (motions de censure répétées) — recheck périodique recommandé tant que la situation d'assemblée reste sans majorité."
   },
   {
     "entityId": "bayrou",
@@ -96,7 +114,9 @@
     "publishedAt": "2025-09-10",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "frenchFigures.js présente encore Bayrou comme Premier ministre en fonction ; Lecornu absent du fichier"
+    "notes": "frenchFigures.js présente encore Bayrou comme Premier ministre en fonction ; Lecornu absent du fichier",
+    "freshnessCategory": "stable",
+    "actionNote": "RÉSOLU — frenchFigures.js reflète correctement la démission et la succession par Lecornu (vérifié 2026-07-11, entrée datée 'Vérifié le 2026-07-10' déjà présente dans le fichier)."
   },
   {
     "entityId": "paris_2026",
@@ -107,7 +127,8 @@
     "publishedAt": "2026-03",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Corroboré par le ministère de l'Intérieur et Wikipédia FR"
+    "notes": "Corroboré par le ministère de l'Intérieur et Wikipédia FR",
+    "freshnessCategory": "stable"
   },
   {
     "entityId": "paris_2026",
@@ -118,7 +139,8 @@
     "publishedAt": "2026-03",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Bournazel et Knafo absents du tableau candidates structuré de elections.js"
+    "notes": "Bournazel et Knafo absents du tableau candidates structuré de elections.js",
+    "freshnessCategory": "stable"
   },
   {
     "entityId": "merz",
@@ -129,7 +151,10 @@
     "publishedAt": null,
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope le présente correctement comme vainqueur historique de l'élection de_2025 ; aucune erreur"
+    "notes": "Poliscope le présente correctement comme vainqueur historique de l'élection de_2025 ; aucune erreur",
+    "freshnessCategory": "volatile",
+    "nextCheckDue": "2027-01-10",
+    "nextCheckRule": "Chef de gouvernement étranger — recheck périodique annuel par défaut, aucune échéance connue spécifique."
   },
   {
     "entityId": "starmer",
@@ -140,7 +165,10 @@
     "publishedAt": "2026-06-22",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope ne mentionne Starmer que dans le bloc historique uk_2024 ; aucune erreur, simple absence de couverture de la crise 2026"
+    "notes": "Poliscope ne mentionne Starmer que dans le bloc historique uk_2024 ; aucune erreur, simple absence de couverture de la crise 2026",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-07-21",
+    "nextCheckRule": "Prise de fonction attendue d'Andy Burnham ~20 juillet 2026 — vérifier la confirmation officielle après cette date."
   },
   {
     "entityId": "berlusconi",
@@ -151,7 +179,8 @@
     "publishedAt": "2023-06-12",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope le présente uniquement dans le bloc historique it_2022 ; aucune erreur"
+    "notes": "Poliscope le présente uniquement dans le bloc historique it_2022 ; aucune erreur",
+    "freshnessCategory": "stable"
   },
   {
     "entityId": "sanchez",
@@ -162,7 +191,10 @@
     "publishedAt": "2026",
     "verifiedAt": "2026-07-10",
     "confidence": "medium",
-    "notes": "Convergence de plusieurs sources, pas de source officielle unique citée dans le temps imparti"
+    "notes": "Convergence de plusieurs sources, pas de source officielle unique citée dans le temps imparti",
+    "freshnessCategory": "volatile",
+    "nextCheckDue": "2027-01-10",
+    "nextCheckRule": "Pas de source officielle unique citée — recheck périodique annuel par défaut."
   },
   {
     "entityId": "macron",
@@ -173,7 +205,9 @@
     "publishedAt": "2023-04-15",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "candidateDetails.js:19 ajoute une mention ambiguë '(later 65)' non tranchée par cet audit — nécessite relecture humaine"
+    "notes": "candidateDetails.js:19 ajoute une mention ambiguë '(later 65)' non tranchée par cet audit — nécessite relecture humaine",
+    "freshnessCategory": "stable",
+    "nextCheckRule": "Le fait de la promulgation 2023/64 ans est stable. Point distinct non résolu : candidateDetails.js:19 mentionne '(later 65)' en anglais, ambiguïté non tranchée par l'audit d'origine — nécessite relecture humaine/recherche dédiée avant modification, non traité dans ce contrôle de fraîcheur pour éviter une correction non vérifiée."
   },
   {
     "entityId": "bardella",
@@ -184,7 +218,8 @@
     "publishedAt": "2024-06-10",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Cohérent avec elections.js et frenchFigures.js — aucune correction nécessaire"
+    "notes": "Cohérent avec elections.js et frenchFigures.js — aucune correction nécessaire",
+    "freshnessCategory": "stable"
   },
   {
     "entityId": "fr_assembly",
@@ -195,7 +230,11 @@
     "publishedAt": "2026-07-06",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Contredit le cadrage borné 'de 2022 à 2024' de frenchFigures.js:44,48, qui suggère à tort une résolution de la situation"
+    "notes": "Contredit le cadrage borné 'de 2022 à 2024' de frenchFigures.js:44,48, qui suggère à tort une résolution de la situation",
+    "freshnessCategory": "volatile",
+    "nextCheckDue": "2026-08-10",
+    "nextCheckRule": "Situation institutionnelle inédite et évolutive — recheck périodique recommandé.",
+    "actionNote": "RÉSOLU — frenchFigures.js:44 reflète déjà correctement l'absence de majorité même relative après 2024 et l'état 'toujours en cours au 2026-07-10' (pas le cadrage borné 'de 2022 à 2024' que cette note visait à l'origine)."
   },
   {
     "entityId": "ruffin_lapres",
@@ -206,7 +245,10 @@
     "publishedAt": "2026",
     "verifiedAt": "2026-07-10",
     "confidence": "medium",
-    "notes": "Confirme un point déjà exact dans elections.js:851/865 ; 'L'Après' (scission LFI 2024 de Ruffin) n'est pas nommée dans frenchFigures.js:1042 mais correctement décrite comme rupture avec LFI"
+    "notes": "Confirme un point déjà exact dans elections.js:851/865 ; 'L'Après' (scission LFI 2024 de Ruffin) n'est pas nommée dans frenchFigures.js:1042 mais correctement décrite comme rupture avec LFI",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-10-11",
+    "nextCheckRule": "Date de la primaire elle-même — vérifier la tenue effective et le résultat après cette date."
   },
   {
     "entityId": "question_PUB_5_PUB_23",
@@ -217,7 +259,9 @@
     "publishedAt": "2026",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "Remplace l'ancien chiffre '170 à 600 €' (source non datée) dans questions_final.json PUB_5/PUB_23 par une fourchette 2026-2027 sourcée et plus précise (280-500€ environ, CVEC compris)"
+    "notes": "Remplace l'ancien chiffre '170 à 600 €' (source non datée) dans questions_final.json PUB_5/PUB_23 par une fourchette 2026-2027 sourcée et plus précise (280-500€ environ, CVEC compris)",
+    "freshnessCategory": "scheduled",
+    "nextCheckRule": "Tarifs annuels — à re-vérifier avant la rentrée 2027-2028 (nouveaux tarifs probables en fin d'année civile 2027)."
   },
   {
     "entityId": "question_PUB_23",
@@ -228,7 +272,9 @@
     "publishedAt": "2026-05",
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
-    "notes": "Nuance ajoutée à l'explication de PUB_23 (gratuité universitaire) : l'ancienne version ne mentionnait que le tarif français/UE, laissant croire que l'université est uniformément peu chère en France. Confidence 'medium' (source de presse spécialisée, pas un texte réglementaire consulté directement) ; à re-vérifier si publication officielle au Journal Officiel trouvée ultérieurement."
+    "notes": "Nuance ajoutée à l'explication de PUB_23 (gratuité universitaire) : l'ancienne version ne mentionnait que le tarif français/UE, laissant croire que l'université est uniformément peu chère en France. Confidence 'medium' (source de presse spécialisée, pas un texte réglementaire consulté directement) ; à re-vérifier si publication officielle au Journal Officiel trouvée ultérieurement.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier si publication officielle au Journal Officiel trouvée ultérieurement (source actuelle : presse spécialisée, pas un texte réglementaire consulté directement)."
   },
   {
     "entityId": "question_PUB_6",
@@ -239,7 +285,9 @@
     "publishedAt": "2026-07-07",
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
-    "notes": "Remplace l'ancien chiffre 'environ 2 millions de logements sociaux manquants / délais >10 ans dans les grandes villes' (stock-gap non sourcé) par le chiffre de demande en attente, plus précisément documenté. Confidence 'medium' : plusieurs sources de presse convergent (~2,8-2,94M) mais pas de publication officielle DHUP/SDES consultée directement."
+    "notes": "Remplace l'ancien chiffre 'environ 2 millions de logements sociaux manquants / délais >10 ans dans les grandes villes' (stock-gap non sourcé) par le chiffre de demande en attente, plus précisément documenté. Confidence 'medium' : plusieurs sources de presse convergent (~2,8-2,94M) mais pas de publication officielle DHUP/SDES consultée directement.",
+    "freshnessCategory": "scheduled",
+    "nextCheckRule": "À re-vérifier lors de la publication des prochaines statistiques DHUP/SDES (généralement annuelle)."
   },
   {
     "entityId": "question_PUB_9",
@@ -250,7 +298,9 @@
     "publishedAt": "2026",
     "verifiedAt": "2026-07-11",
     "confidence": "low",
-    "notes": "Remplace l'ancien chiffre '400 000 places manquantes' (source non retrouvée) par ~200 000, chiffre le plus explicite trouvé en recherche ciblée. Confidence 'low' : forte variance méthodologique connue entre sources sur ce chiffre (besoin non satisfait vs écart structurel) ; à re-vérifier auprès d'une source officielle (CNAF/ONAPE) si ce point devient central à un usage futur."
+    "notes": "Remplace l'ancien chiffre '400 000 places manquantes' (source non retrouvée) par ~200 000, chiffre le plus explicite trouvé en recherche ciblée. Confidence 'low' : forte variance méthodologique connue entre sources sur ce chiffre (besoin non satisfait vs écart structurel) ; à re-vérifier auprès d'une source officielle (CNAF/ONAPE) si ce point devient central à un usage futur.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "Confidence déjà 'low' — à re-vérifier auprès d'une source officielle (CNAF/ONAPE) si ce point devient central à un usage futur."
   },
   {
     "entityId": "question_ENV_7",
@@ -261,7 +311,9 @@
     "publishedAt": "2025-12",
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
-    "notes": "Remplace la formulation de ENV_7 qui présentait l'interdiction totale 2035 comme entièrement actée. Confidence 'medium' : plusieurs sources de presse convergent sur les mêmes chiffres (90%, exceptions hybrides/e-carburants) mais la proposition n'est pas encore un texte adopté — à re-vérifier si le Parlement/Conseil statue définitivement."
+    "notes": "Remplace la formulation de ENV_7 qui présentait l'interdiction totale 2035 comme entièrement actée. Confidence 'medium' : plusieurs sources de presse convergent sur les mêmes chiffres (90%, exceptions hybrides/e-carburants) mais la proposition n'est pas encore un texte adopté — à re-vérifier si le Parlement/Conseil statue définitivement.",
+    "freshnessCategory": "scheduled",
+    "nextCheckRule": "Proposition non encore adoptée — à re-vérifier si le Parlement européen et le Conseil statuent définitivement."
   },
   {
     "entityId": "question_IMM_1",
@@ -272,7 +324,9 @@
     "publishedAt": "2026-01",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "Remplace l'ancien chiffre 'environ 300 000 immigrés légaux par an' (source non datée) dans IMM_1 (questions_final.json ET questionHints.js). Chiffre officiel publié par la Direction générale des étrangers en France le 27 janvier 2026."
+    "notes": "Remplace l'ancien chiffre 'environ 300 000 immigrés légaux par an' (source non datée) dans IMM_1 (questions_final.json ET questionHints.js). Chiffre officiel publié par la Direction générale des étrangers en France le 27 janvier 2026.",
+    "freshnessCategory": "scheduled",
+    "nextCheckRule": "Chiffre annuel — à re-vérifier lors de la publication des statistiques 2026 par la DGEF (généralement en janvier de l'année suivante)."
   },
   {
     "entityId": "question_IMM_16",
@@ -283,7 +337,8 @@
     "publishedAt": "2024-01-25",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "L'explication précédente de IMM_16 présentait ce mécanisme comme simplement 'débattu' par la loi de 2024, sans mentionner sa censure constitutionnelle — correction factuelle importante, pas seulement une mise à jour de chiffre."
+    "notes": "L'explication précédente de IMM_16 présentait ce mécanisme comme simplement 'débattu' par la loi de 2024, sans mentionner sa censure constitutionnelle — correction factuelle importante, pas seulement une mise à jour de chiffre.",
+    "freshnessCategory": "stable"
   },
   {
     "entityId": "question_IMM_21",
@@ -294,7 +349,10 @@
     "publishedAt": "2026-06-11",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "IMM_21 reformulée pour cibler spécifiquement le caractère contraignant de la répartition (le point réellement disputé), avec la date d'entrée en vigueur exacte et très récente du Pacte (moins d'un mois avant cette session)."
+    "notes": "IMM_21 reformulée pour cibler spécifiquement le caractère contraignant de la répartition (le point réellement disputé), avec la date d'entrée en vigueur exacte et très récente du Pacte (moins d'un mois avant cette session).",
+    "freshnessCategory": "volatile",
+    "nextCheckDue": "2026-12-12",
+    "nextCheckRule": "Entré en vigueur très récemment (12 juin 2026) — à re-vérifier après quelques mois de mise en œuvre effective (ex. premiers cas concrets de mécanisme de solidarité appliqué)."
   },
   {
     "entityId": "question_IMM_23",
@@ -305,7 +363,9 @@
     "publishedAt": "2026",
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
-    "notes": "Ajoute à l'explication de IMM_23 (CORE) un exemple concret et actuel de restriction du droit du sol déjà en vigueur en France (limité à Mayotte), renforçant la neutralité factuelle sans changer la portée nationale de la question."
+    "notes": "Ajoute à l'explication de IMM_23 (CORE) un exemple concret et actuel de restriction du droit du sol déjà en vigueur en France (limité à Mayotte), renforçant la neutralité factuelle sans changer la portée nationale de la question.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier si un projet de réforme constitutionnelle étendant la restriction au niveau national est déposé."
   },
   {
     "entityId": "question_SEC_7",
@@ -316,7 +376,10 @@
     "publishedAt": "2025-06",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "L'explication précédente de SEC_7 présentait la France comme ayant 'atteint l'objectif OTAN de 2%', une référence obsolète depuis le relèvement à 5% en juin 2025 — la France est maintenant sous le nouvel objectif, pas à son niveau, ce qui inverse le sens implicite du contexte."
+    "notes": "L'explication précédente de SEC_7 présentait la France comme ayant 'atteint l'objectif OTAN de 2%', une référence obsolète depuis le relèvement à 5% en juin 2025 — la France est maintenant sous le nouvel objectif, pas à son niveau, ce qui inverse le sens implicite du contexte.",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2027-06-01",
+    "nextCheckRule": "Trajectoire vers l'objectif OTAN de 5% d'ici 2035 — à re-vérifier annuellement (progression du % PIB français)."
   },
   {
     "entityId": "question_GLO_4",
@@ -327,7 +390,10 @@
     "publishedAt": "2025-09",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "Remplace l'ancien chiffre statique '~0,5% du RNB' par la trajectoire réelle et le contexte politique (baisses successives, controverse publique), bien plus informatif que le simple écart au seuil ONU de 0,7%. Confidence haute : chiffres cohérents entre plusieurs sources convergentes (Sénat, Coordination SUD, Focus 2030)."
+    "notes": "Remplace l'ancien chiffre statique '~0,5% du RNB' par la trajectoire réelle et le contexte politique (baisses successives, controverse publique), bien plus informatif que le simple écart au seuil ONU de 0,7%. Confidence haute : chiffres cohérents entre plusieurs sources convergentes (Sénat, Coordination SUD, Focus 2030).",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-12-15",
+    "nextCheckRule": "Chiffre budgétaire annuel — à re-vérifier lors du vote de la loi de finances 2027 (généralement décembre 2026)."
   },
   {
     "entityId": "question_SOC_10",
@@ -338,6 +404,62 @@
     "publishedAt": "2026-06-30",
     "verifiedAt": "2026-07-11",
     "confidence": "high",
-    "notes": "Situation exceptionnellement mouvante : le texte n'était pas encore définitivement adopté à la date de vérification (le Sénat l'ayant rejeté 4 jours plus tôt), avec un vote décisif à l'Assemblée nationale prévu 4 jours après cette session (15 juillet 2026). Formulation de l'explication volontairement hédée (« son sort se joue dans les prochains jours ») plutôt que de trancher. À RE-VÉRIFIER après le 15 juillet 2026 — cette entrée est explicitement signalée comme datée/à courte durée de vie."
+    "notes": "Situation exceptionnellement mouvante : le texte n'était pas encore définitivement adopté à la date de vérification (le Sénat l'ayant rejeté 4 jours plus tôt), avec un vote décisif à l'Assemblée nationale prévu 4 jours après cette session (15 juillet 2026). Formulation de l'explication volontairement hédée (« son sort se joue dans les prochains jours ») plutôt que de trancher. À RE-VÉRIFIER après le 15 juillet 2026 — cette entrée est explicitement signalée comme datée/à courte durée de vie.",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-07-15",
+    "nextCheckRule": "Vote décisif à l'Assemblée nationale prévu le 15 juillet 2026 — situation explicitement signalée comme datée/à courte durée de vie dans les notes d'origine."
+  },
+  {
+    "entityId": "question_ECO_28",
+    "claim": "L'AI Act européen (entré en vigueur en 2024) prévoyait des obligations renforcées pour les systèmes à haut risque à partir d'août 2026 ; un accord européen dit « Digital Omnibus », en cours d'adoption formelle mi-2026, reporterait la plupart de ces obligations à décembre 2027 (systèmes autonomes de l'Annexe III) voire août 2028 (IA intégrée à des produits déjà réglementés, Annexe I) — seules les obligations de transparence de l'article 50 restent prévues pour août 2026",
+    "sourceUrl": "https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/",
+    "sourceTitle": "EU AI Act Omnibus Agreement — Postponed High-Risk Deadlines and Other Key Changes",
+    "sourceType": "legal-analysis",
+    "publishedAt": "2026-06",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium-high",
+    "notes": "Corrige la formulation initiale de ECO_28 (question ajoutée le 2026-07-11, Chantier 2), qui présentait l'échéance d'août 2026 comme s'appliquant à toutes les obligations haut-risque sans mentionner ce report en cours de négociation. Confidence 'medium-high' : convergence de plusieurs cabinets d'avocats/analyses juridiques sur les mêmes échéances (déc. 2027 / août 2028), mais l'adoption formelle et la publication au Journal Officiel de l'UE n'étaient pas encore confirmées à la date de vérification.",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-08-02",
+    "nextCheckRule": "Adoption formelle du Digital Omnibus attendue avant le 2 août 2026 (échéance initiale de l'AI Act) — à re-vérifier après cette date pour confirmer le calendrier définitif."
+  },
+  {
+    "entityId": "question_DEM_26",
+    "claim": "Depuis la loi République numérique du 7 octobre 2016, l'administration doit informer un usager qu'une décision individuelle repose sur un algorithme et lui communiquer sur demande les règles générales de traitement (mais pas la formule de pondération précise) ; Parcoursup a fait l'objet de contentieux répétés sur ce point ; la CAF utilise depuis 2012 un algorithme de notation de risque pour cibler ses contrôles, dont le code source (versions 2010-2018) a été obtenu et publié après plusieurs mois de démarches associatives",
+    "sourceUrl": "https://www.vie-publique.fr/en-bref/274084-parcoursup-plus-de-transparence-sur-les-algorithmes-locaux",
+    "sourceTitle": "Parcoursup : plus de transparence sur les algorithmes locaux - Vie Publique",
+    "sourceType": "official",
+    "publishedAt": null,
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Question ajoutée le 2026-07-11 (Chantier 2). Corroboré par laquadrature.net pour le volet CAF (notation-des-allocataires). La loi de 2016 limite explicitement la publication aux 'critères généraux', pas à la formule de pondération — nuance déjà correctement reflétée dans l'explication de DEM_26, aucune correction nécessaire.",
+    "freshnessCategory": "stable"
+  },
+  {
+    "entityId": "question_SEC_25",
+    "claim": "L'IGPN (Inspection générale de la police nationale) est rattachée à la direction générale de la police nationale, sous l'autorité du ministère de l'Intérieur — pas une autorité indépendante. Une proposition de loi sénatoriale vise à transférer les missions actuellement confiées à l'IGPN vers le Défenseur des droits (autorité administrative indépendante), via son adjoint chargé de la déontologie de la sécurité. Le Défenseur des droits a documenté en 2026 plusieurs manquements déontologiques dans l'usage de la force par les forces de l'ordre",
+    "sourceUrl": "https://www.senat.fr/leg/exposes-des-motifs/ppl20-184-expose.html",
+    "sourceTitle": "Rétablir la confiance entre les citoyens et les forces de l'ordre (exposé des motifs) - Sénat",
+    "sourceType": "official",
+    "publishedAt": null,
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Question ajoutée le 2026-07-11 (Chantier 2). Confirme et précise le fondement de SEC_25 : il existe une proposition de loi concrète et actuelle (pas seulement une comparaison internationale générique) visant exactement le mécanisme décrit par la question. L'explication de SEC_25 reste volontairement générique (« comme il en existe dans d'autres pays européens ») plutôt que de citer cette proposition spécifique, pour ne pas laisser croire à une réforme déjà engagée alors qu'il s'agit d'une proposition parmi d'autres — aucune correction nécessaire, mais ce sourçage permettrait d'enrichir l'explication si le texte progresse.",
+    "freshnessCategory": "volatile",
+    "nextCheckRule": "À re-vérifier si la proposition de loi sénatoriale progresse (inscription à l'ordre du jour, vote) ou si une réforme de l'IGPN est annoncée par le gouvernement."
+  },
+  {
+    "entityId": "question_SOC_27",
+    "claim": "Depuis 2019, l'Index de l'égalité professionnelle (noté sur 100) impose aux entreprises de plus de 50 salariés une pénalité pouvant atteindre 1% de la masse salariale en cas de score insuffisant ; une directive européenne sur la transparence des rémunérations devait être transposée en droit français au plus tard le 7 juin 2026, délai déjà dépassé à la date de vérification ; à poste comparable, l'écart de salaire entre femmes et hommes reste d'environ 4% en France",
+    "sourceUrl": "https://egapro.travail.gouv.fr/",
+    "sourceTitle": "Index de l'égalité professionnelle femmes-hommes - Egapro (site officiel)",
+    "sourceType": "official",
+    "publishedAt": null,
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Question ajoutée le 2026-07-11 (Chantier 2), recherche effectuée par un sous-agent avec citations vérifiées (Egapro officiel, service-public.gouv.fr, FNTP sur le retard de transposition, INSEE Focus 377 pour l'écart de 4%). Corroboré par plusieurs sources convergentes.",
+    "freshnessCategory": "scheduled",
+    "nextCheckDue": "2026-10-01",
+    "nextCheckRule": "À re-vérifier si la directive européenne est transposée (retard déjà significatif au 7 juin 2026) ou si une nouvelle échéance de transposition est fixée."
   }
 ]
