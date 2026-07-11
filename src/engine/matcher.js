@@ -64,16 +64,21 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
   // rare double-rounding artifact that could flip a ranking by one point (~0.04% of pairs).
   const baseAlignment = Math.pow(1 - meanDistance, 2.4) * 100;
 
-  // Multiplicative veto: on 4 clivant themes, a large distance crushes the score.
+  // Multiplicative veto: on 6 clivant themes, a large distance crushes the score.
   // This models the "dealbreaker" effect — e.g. a user strongly opposed to immigration
   // restriction will never align with a far-right candidate, even if they agree on economy.
-  // Thresholds set at 50-55 to avoid crushing moderate profiles (< 20% for too many).
+  // Thresholds set at 30-42 to avoid crushing moderate profiles (< 20% for too many).
+  // GLOBAL added lot 2 (POL-AUDIT-012): the EU/sovereignty axis was the only clearly
+  // identity-defining theme left unprotected — simulation showed 13.1% of random profiles
+  // (18.0% of profiles with a strong EU/sovereignty position) got a corrected top match,
+  // with no new discontinuity introduced. Calibrated by analogy with IMMIGRATION.
   const VETO_THEMES = {
     IMMIGRATION:     { threshold: 30, penalty: 0.62 },
     ECONOMY:         { threshold: 30, penalty: 0.72 },
     SOCIAL:          { threshold: 42, penalty: 0.78 },
     SECURITY:        { threshold: 42, penalty: 0.78 },
     PUBLIC_SERVICES: { threshold: 42, penalty: 0.82 },
+    GLOBAL:          { threshold: 30, penalty: 0.65 },
   };
   // Smooth veto: penalty ramps linearly from 1.0 (at threshold) to full penalty (at dist=100).
   // No cliff: a 1-point movement across the threshold produces only a tiny change.
