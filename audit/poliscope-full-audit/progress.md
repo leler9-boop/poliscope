@@ -95,3 +95,13 @@ Table de synthèse cumulative (avant/après, raison, degré de changement) : [17
 - **`ef7aa98`** — *fix: ECONOMY batch — clarity, neutrality, and factual updates (10 questions)*
 
 **Tests** : régression ×4 PASS (monotonie : 107 questions direction=1, 0 violation), JSON valide (200 entrées), lint ECONOMY (1 faux positif connu), build production OK. Vérification navigateur réelle sur viewport mobile 375×812 (rendu question/contexte, panneau « Comprendre cet enjeu », flux de réponse) — données de test effacées et serveur de dev arrêté après contrôle.
+
+### Lot 2/8 — Protection sociale, santé, services publics (PUBLIC_SERVICES) ✅ COMMITÉ (2026-07-11)
+
+20 questions actives revues, 11 modifiées (dont 3 corrigées une seconde fois après un passage du lint), 9 conformes sans changement. 5 entrées `isDuplicate` vérifiées : stubs vides, aucune action nécessaire. Recherche ciblée sur 4 chiffres potentiellement obsolètes (frais universitaires, dont une nuance importante — frais différenciés hors UE depuis un décret de mai 2026 — jusqu'ici absente ; logement social ; places de crèche) + vérification d'un chiffre déjà à jour (dépenses de protection sociale, ~32 % PIB, confirmé inchangé). 4 nouvelles sources loguées dans `sources.json`. Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-28--protection-sociale-santé-services-publics-public_services).
+
+**Commit** : **`eedb9ea`** — *fix: PUBLIC_SERVICES batch — clarity, neutrality, and factual updates (11 questions)* (pas de bascule de polarité dans ce lot).
+
+**Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint PUBLIC_SERVICES (1 faux positif connu), build production OK. Vérification navigateur réelle : `priorityOrder` positionné sur Services publics en premier via `localStorage` (technique plus fiable que le drag-and-drop tactile), confirmant que PUB_23 (CORE, explication la plus longue du lot) s'affiche en première question et rend correctement sans troncature.
+
+**Effet de bord noté (hors périmètre de ce lot)** : page d'accueil affiche des statistiques obsolètes (« 120+ questions », « 40 figures historiques » vs. 162/60 réels) — signalé séparément, pas corrigé ici pour ne pas interrompre le cycle éditorial.

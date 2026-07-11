@@ -207,5 +207,49 @@
     "verifiedAt": "2026-07-10",
     "confidence": "medium",
     "notes": "Confirme un point déjà exact dans elections.js:851/865 ; 'L'Après' (scission LFI 2024 de Ruffin) n'est pas nommée dans frenchFigures.js:1042 mais correctement décrite comme rupture avec LFI"
+  },
+  {
+    "entityId": "question_PUB_5_PUB_23",
+    "claim": "Droits d'inscription nationaux à l'université pour 2026-2027 (étudiants français/UE) : 178 € en licence, 254 € en master, 398 € en doctorat, plus 105 € de CVEC (soit env. 283 à 503 € au total selon le niveau)",
+    "sourceUrl": "https://www.service-public.gouv.fr/particuliers/vosdroits/F36520/2",
+    "sourceTitle": "Coût d'une inscription dans l'enseignement supérieur - Service-Public.fr",
+    "sourceType": "official",
+    "publishedAt": "2026",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Remplace l'ancien chiffre '170 à 600 €' (source non datée) dans questions_final.json PUB_5/PUB_23 par une fourchette 2026-2027 sourcée et plus précise (280-500€ environ, CVEC compris)"
+  },
+  {
+    "entityId": "question_PUB_23",
+    "claim": "Depuis un décret du 19 mai 2026, les étudiants hors Union européenne primo-arrivants paient des droits d'inscription différenciés nettement plus élevés : 2 895 € en licence, 3 941 € en master (plus CVEC), avec exonérations possibles pour les boursiers, réfugiés et doctorants",
+    "sourceUrl": "https://www.testciviquefrance.fr/articles/frais-inscription-universites-france-etudiants-hors-ue-2026",
+    "sourceTitle": "Frais université 2026 : 2 895 € en licence pour les étudiants hors-UE — ce que change le décret du 19 mai",
+    "sourceType": "press",
+    "publishedAt": "2026-05",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium",
+    "notes": "Nuance ajoutée à l'explication de PUB_23 (gratuité universitaire) : l'ancienne version ne mentionnait que le tarif français/UE, laissant croire que l'université est uniformément peu chère en France. Confidence 'medium' (source de presse spécialisée, pas un texte réglementaire consulté directement) ; à re-vérifier si publication officielle au Journal Officiel trouvée ultérieurement."
+  },
+  {
+    "entityId": "question_PUB_6",
+    "claim": "2,94 millions de ménages étaient en attente d'un logement social en France fin T1 2026 (contre 2,8 millions en 2025 et 1,88 million en 2015) ; délai médian d'attribution de 30,4 mois, davantage dans les zones tendues",
+    "sourceUrl": "https://citoyens.com/2026/ile-de-france-plus-de-2-millions-de-personnes-attendent-un-logement-social,07-07-2026.html",
+    "sourceTitle": "Plus de 2 millions de personnes attendent un logement social (Île-de-France) - Citoyens.com",
+    "sourceType": "press",
+    "publishedAt": "2026-07-07",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium",
+    "notes": "Remplace l'ancien chiffre 'environ 2 millions de logements sociaux manquants / délais >10 ans dans les grandes villes' (stock-gap non sourcé) par le chiffre de demande en attente, plus précisément documenté. Confidence 'medium' : plusieurs sources de presse convergent (~2,8-2,94M) mais pas de publication officielle DHUP/SDES consultée directement."
+  },
+  {
+    "entityId": "question_PUB_9",
+    "claim": "Il manque environ 200 000 places de crèche en France (~660 000 naissances/an pour ~499 000 places recensées par l'ONAPE en 2025), avec une chute historique des créations de places en 2025",
+    "sourceUrl": "https://loopio-recrutement.fr/blog/chiffres-creche-eaje/",
+    "sourceTitle": "22 chiffres à connaître sur les crèches et EAJE en 2026",
+    "sourceType": "press",
+    "publishedAt": "2026",
+    "verifiedAt": "2026-07-11",
+    "confidence": "low",
+    "notes": "Remplace l'ancien chiffre '400 000 places manquantes' (source non retrouvée) par ~200 000, chiffre le plus explicite trouvé en recherche ciblée. Confidence 'low' : forte variance méthodologique connue entre sources sur ce chiffre (besoin non satisfait vs écart structurel) ; à re-vérifier auprès d'une source officielle (CNAF/ONAPE) si ce point devient central à un usage futur."
   }
 ]
