@@ -203,4 +203,29 @@ Les 10 entrées affectées ont été corrigées (ou supprimées pour les 3 morte
 
 ---
 
-*(Les lots 7 et 8 seront ajoutés ici au fur et à mesure.)*
+## Lot 7/8 — Société, éducation, culture, éthique (SOCIAL)
+
+19 questions actives revues. 17 conformes sans modification (SOC_3, 4, 5, 6, 7, 8, 12, 14, 15, 16, 19, 22, 23, 24, 25, 26), 2 modifiées — dont une pour un changement de fond documenté (SOC_21).
+
+| ID | Ancienne formulation | Nouvelle formulation | Raison principale | Explication modifiée | Degré | Validation factuelle |
+|---|---|---|---|---|---|---|
+| SOC_10 | *(texte inchangé)* | *(texte inchangé)* | Explication présentait l'euthanasie comme simplement « interdite », sans mentionner un processus législatif en cours et exceptionnellement proche de son terme | Oui | Modéré | Effectuée (confiance haute, mais **situation à courte durée de vie explicitement signalée**) — la proposition de loi sur l'aide à mourir a été adoptée une 3e fois par l'Assemblée le 30 juin 2026, rejetée par le Sénat le 7 juillet 2026 (4 jours avant cette session), vote décisif à l'Assemblée prévu le 15 juillet 2026 (4 jours après) |
+| SOC_21 | « La possession de drogues pour usage personnel **ne doit pas constituer un délit**. » | « Consommer des drogues doit être considéré comme un **choix personnel relevant de la liberté individuelle**. » | Redondance de fond avec SEC_9 (lot 4, thème différent) : les deux questions mesuraient la même position sur la dépénalisation des drogues, avec la même référence au Portugal et le même cadrage « efficacité de la répression ». Recentrée sur un axe distinct (autonomie personnelle), polarité inchangée (voir note méthodologique) | Oui (réécrite) | Modéré | N/A (claim structurel) |
+
+**Note méthodologique sur SOC_21** (changement de fond inter-thème, cas inédit dans cette mission) : contrairement aux redondances déjà rencontrées (ENV_8/ENV_23 au lot 3, plusieurs paires au lot 6), celle-ci traversait **deux thèmes différents** (SECURITY et SOCIAL), donc invisible au mécanisme `dupOf` qui n'opère qu'au sein d'un même thème. SEC_9 (« la drogue... doit être dépénalisée ») et l'ancienne formulation de SOC_21 (« la possession... ne doit pas constituer un délit ») étaient des quasi-paraphrases l'une de l'autre, y compris dans leurs explications respectives (même référence au Portugal, même cadrage sur l'« efficacité de la répression »). Un répondant tenant compte uniquement de la conclusion politique (pour ou contre la dépénalisation) aurait répondu de façon quasi identique aux deux questions, créant une corrélation artificielle entre les scores SECURITY et SOCIAL. SOC_21 a été recentrée sur l'axe de la liberté individuelle (autonomie corporelle) plutôt que sur l'efficacité de la politique pénale (l'angle de SEC_9), une nuance réellement distincte : on peut juger la dépénalisation efficace sans la considérer comme une question de liberté fondamentale, et inversement. Direction de score vérifiée inchangée (`DIRECTION_MAP.SOC_21 = 1` dans les deux cas, l'accord penchant vers le pôle libéral/permissif). **Cette découverte suggère qu'un balayage inter-thèmes dédié aux quasi-doublons pourrait être utile en fin de mission**, au-delà de la revue thème par thème qui ne capture que les doublons intra-thème.
+
+**Aucune autre recherche factuelle nécessaire** : cannabis (précédent luxembourgeois de 2023, stable), loi Claeys-Leonetti (toujours en vigueur en l'absence d'adoption définitive de la nouvelle loi), loi de 2004 sur les signes religieux à l'école (stable), extension de la PMA en 2021 (stable, distinction correcte avec la GPA toujours interdite), constitutionnalisation de l'IVG en 2024 (déjà correcte dans SOC_24).
+
+**Doublons revus** : SOC_9 (dup de SOC_20), SOC_17 (dup de SOC_4), SOC_18 (dup de SOC_10) sont des stubs vides, aucune action. SOC_1 (`EXCLUDED_LAW_2013`, mariage pour tous) et SOC_13 (`EXCLUDED_LAW_1981`, peine de mort) confirment le même bon usage des sentinelles `EXCLUDED_*` déjà noté pour SEC_17/SEC_18 au lot 4. SOC_11 (`EXCLUDED_USA_FRAMING`, contrôle des armes) confirme également ce même schéma de conception délibérée. SOC_2 (dup de SOC_24, CORE, avortement) est une version moins précise et moins à jour de SOC_24 (qui intègre la constitutionnalisation de 2024) — correctement filtrée.
+
+**Tests exécutés** : `test1`-`test4` PASS (107 questions direction=1, inchangé — confirmant l'absence de bascule de polarité pour SOC_21). `node scripts/lint-questions.mjs SOCIAL` → 1 signalement, faux positif confirmé (`Q_HAS_OU` sur SOC_26, « origine ou couleur de peau » liste deux facettes d'une même catégorie de discrimination, pas deux propositions distinctes). `JSON.parse` → 200 entrées valides. `npm run build` → succès.
+
+**Recherche ciblée effectuée** (1 nouvelle source, `question_SOC_10`) : processus législatif sur le droit à l'aide à mourir, confiance haute mais **explicitement marquée comme à re-vérifier après le 15 juillet 2026** dans `sources.json` — cas rare d'une source dont la date de péremption est connue à l'avance.
+
+**Vérification produit réelle** : `priorityOrder` positionné sur Questions sociales en premier via `localStorage`. SOC_5 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812. Données de test effacées, serveur de dev arrêté après contrôle.
+
+**Commit** : un seul commit éditorial. SOC_21 est un changement de fond documenté (comme ENV_8 au lot 3) mais ne nécessite pas de bascule de `DIRECTION_MAP` ni de commit séparé.
+
+---
+
+*(Le lot 8 sera ajouté ici.)*

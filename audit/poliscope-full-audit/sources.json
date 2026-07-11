@@ -328,5 +328,16 @@
     "verifiedAt": "2026-07-11",
     "confidence": "high",
     "notes": "Remplace l'ancien chiffre statique '~0,5% du RNB' par la trajectoire réelle et le contexte politique (baisses successives, controverse publique), bien plus informatif que le simple écart au seuil ONU de 0,7%. Confidence haute : chiffres cohérents entre plusieurs sources convergentes (Sénat, Coordination SUD, Focus 2030)."
+  },
+  {
+    "entityId": "question_SOC_10",
+    "claim": "Une proposition de loi créant un droit à l'aide à mourir a été adoptée en nouvelle lecture par l'Assemblée nationale le 30 juin 2026 (295 voix contre 232), une troisième adoption après février 2026 et mai 2025 ; le Sénat l'a de nouveau rejetée le 7 juillet 2026 ; un ultime examen à l'Assemblée nationale est prévu le 15 juillet 2026",
+    "sourceUrl": "https://www.assemblee-nationale.fr/dyn/actualites-accueil-hub/adoption-de-la-proposition-de-loi-relative-au-droit-a-l-aide-a-mourir-en-nouvelle-lecture",
+    "sourceTitle": "Adoption de la proposition de loi relative au droit à l'aide à mourir, en nouvelle lecture - Assemblée nationale",
+    "sourceType": "official",
+    "publishedAt": "2026-06-30",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Situation exceptionnellement mouvante : le texte n'était pas encore définitivement adopté à la date de vérification (le Sénat l'ayant rejeté 4 jours plus tôt), avec un vote décisif à l'Assemblée nationale prévu 4 jours après cette session (15 juillet 2026). Formulation de l'explication volontairement hédée (« son sort se joue dans les prochains jours ») plutôt que de trancher. À RE-VÉRIFIER après le 15 juillet 2026 — cette entrée est explicitement signalée comme datée/à courte durée de vie."
   }
 ]

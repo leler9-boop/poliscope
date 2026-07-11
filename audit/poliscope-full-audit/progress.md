@@ -151,3 +151,15 @@ Le plus gros lot (38 questions actives, deux thèmes traités ensemble). 12 ques
 **Suivi hint** : GLO_1 et GLO_3, dont les entrées `questionHints.js` avaient été corrigées au lot 4, confirmées ici avoir un contenu source de bonne qualité.
 
 **Recherche ciblée** : 1 nouvelle source (`question_GLO_4`, chute de l'APD française sur 5 ans consécutifs, confiance haute).
+
+### Lot 7/8 — Société, éducation, culture, éthique (SOCIAL) ✅ COMMITÉ (2026-07-11)
+
+19 questions actives revues, 2 modifiées. **Découverte notable** : SOC_21 était un quasi-doublon inter-thème de SEC_9 (lot 4, thème SECURITY) — même position sur la dépénalisation des drogues, même référence au Portugal, même cadrage, invisible au mécanisme `dupOf` qui n'opère qu'au sein d'un thème. Recentrée sur l'autonomie personnelle (distincte de l'angle efficacité-répressive de SEC_9), polarité vérifiée inchangée. SOC_10 mise à jour avec un développement législatif exceptionnellement récent : la proposition de loi sur l'aide à mourir, adoptée une 3e fois par l'Assemblée le 30 juin 2026, rejetée par le Sénat le 7 juillet, avec un vote décisif à l'Assemblée prévu le 15 juillet (4 jours après cette session) — source explicitement marquée à re-vérifier après cette date. Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-78--société-éducation-culture-éthique-social).
+
+**Commit** : **`823bdde`** — *fix: SOCIAL batch — cross-theme redundancy fix + timely legislative update*.
+
+**Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint SOCIAL (1 faux positif confirmé). Build OK. Vérification navigateur réelle : `priorityOrder` positionné sur Questions sociales en premier, SOC_5 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812.
+
+**Suggestion pour la suite** : un balayage inter-thèmes dédié aux quasi-doublons (au-delà de la revue thème par thème) pourrait valoir la peine une fois les 8 lots terminés, ce cas SOC_21/SEC_9 n'étant peut-être pas isolé.
+
+**Recherche ciblée** : 1 nouvelle source (`question_SOC_10`), explicitement à durée de vie courte.
