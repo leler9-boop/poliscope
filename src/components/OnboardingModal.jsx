@@ -88,6 +88,7 @@ function PillGroup({ options, value, onChange, language }) {
 export default function OnboardingModal() {
   const language           = useStore(s => s.language);
   const setNeedsOnboarding = useStore(s => s.setNeedsOnboarding);
+  const hasConsent         = useStore(s => s.consent?.politicalData === true);
   const { saveDemographics } = useAuth();
   const fr = language === 'fr';
 
@@ -148,9 +149,13 @@ export default function OnboardingModal() {
             {fr ? 'Qui es-tu ?' : 'Tell us about yourself'}
           </h2>
           <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-            {fr
-              ? 'Ces informations aident Poliscop à mieux comprendre les opinions des Français. Elles restent liées à ton compte, mais ne sont jamais analysées individuellement — uniquement en groupe.'
-              : 'This helps Poliscop understand French political opinions. It stays linked to your account, but is never analyzed individually — only in grouped form.'}
+            {hasConsent
+              ? (fr
+                  ? 'Ces informations aident Poliscop à mieux comprendre les opinions des Français. Elles restent liées à ton compte, mais ne sont jamais analysées individuellement — uniquement en groupe.'
+                  : 'This helps Poliscop understand French political opinions. It stays linked to your account, but is never analyzed individually — only in grouped form.')
+              : (fr
+                  ? 'Ces informations restent uniquement sur cet appareil tant que tu n’actives pas la sauvegarde en ligne — elles ne sont pas envoyées à nos serveurs.'
+                  : 'This stays only on this device unless you enable cloud save — it isn’t sent to our servers.')}
           </p>
           {/* Progress dots */}
           {filledCount > 0 && (

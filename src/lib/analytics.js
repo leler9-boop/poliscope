@@ -159,6 +159,9 @@ export function trackLoginCompleted({ method } = {}) {
 
 /**
  * User submits the onboarding demographics form.
+ * Consent-gated: same rationale as saveDemographics() in auth.jsx — this data
+ * is explicitly meant to be cross-referenced with political opinions, so the
+ * joined processing is sensitive even though no single field here is.
  * @param {{ gender, ageRange, communeType, employmentStatus, educationLevel, hasPostalCode }} props
  */
 export function trackDemographicsCompleted({
@@ -169,7 +172,7 @@ export function trackDemographicsCompleted({
   educationLevel,
   hasPostalCode,
 } = {}) {
-  track('demographics_completed', {
+  trackIfConsented('demographics_completed', {
     gender:           gender           ?? null,
     age_range:        ageRange         ?? null,
     commune_type:     communeType      ?? null,

@@ -106,10 +106,11 @@ documentée sur la suppression de compte elle-même.
 
 ## 6. Absence de transmission involontaire
 
-Vérification à deux niveaux : relecture indépendante ciblée (ci-dessous) et
-audit exhaustif par sous-agent de chaque appel d'écriture Supabase du dépôt
-(`insert`/`upsert`/`update`/`rpc`), rapporté séparément dans ce même document
-une fois reçu.
+Vérification à deux niveaux, délibérément menées indépendamment l'une de
+l'autre pour maximiser les chances de détecter un angle mort : relecture
+ciblée par l'auteur de cette étape (ci-dessous), et audit exhaustif par
+sous-agent de chaque appel d'écriture Supabase du dépôt
+(`insert`/`upsert`/`update`/`rpc`), rapporté plus bas.
 
 Points vérifiés directement par l'auteur de cette étape :
 - **Race condition au chargement de page** : `analytics.js` initialise
@@ -149,6 +150,51 @@ Points vérifiés directement par l'auteur de cette étape :
   pour appeler `setSyncConflict()` avant son garde de consentement, ce
   composant deviendrait une brèche silencieuse. À garder à l'esprit pour
   toute future modification de `smartSync()`.
+
+### Audit indépendant par sous-agent (recherche exhaustive de tous les appels d'écriture)
+
+Un sous-agent a recherché systématiquement tous les appels `.insert(`,
+`.upsert(`, `.update(`, `.rpc(` du dépôt (14 sites au total, aucun `.update(`
+n'existe nulle part) et remonté chacun à son déclencheur réel, plutôt que de
+se fier aux commentaires du code. Confirmations et écart trouvé :
+
+**Confirmé conforme**, indépendamment de la relecture ci-dessus : les 11
+autres sites d'écriture (`user_answers`, `user_profiles`, `user_consents` —
+tous les chemins — et les 7 événements `events` porteurs d'opinion listés en
+§ 1 de `01-cartographie-flux-donnees.md`) sont soit correctement gardés par
+`hasPoliticalDataConsent()`/`trackIfConsented()`, soit ne portent aucune
+opinion par nature (écriture du consentement lui-même, heartbeat de session
+anonyme, lectures RPC agrégées du tableau de bord fondateur).
+
+**Écart réel trouvé, corrigé dans la foulée** : `saveDemographics()`
+(`auth.jsx`) et son jumeau analytique `trackDemographicsCompleted()`
+(`analytics.js`) n'avaient **aucun garde de consentement**, alors qu'ils
+écrivent genre/tranche d'âge/commune/emploi/études/code postal liés à
+`user_id` — déclenchés automatiquement dès l'ouverture d'`OnboardingModal`
+(y compris en cliquant « Passer », qui écrivait quand même une ligne de
+valeurs nulles). Prises isolément, ces données ne sont pas une catégorie
+particulière au sens de l'article 9 RGPD — mais le texte même du modal
+d'onboarding et les répartitions `byGender`/`byCommune` du tableau de bord
+fondateur montrent qu'elles sont précisément collectées pour être croisées
+avec les opinions politiques : le traitement croisé rend l'ensemble sensible
+même si aucun champ pris seul ne l'est. Corrigé dans ce même commit :
+- `saveDemographics()` vérifie désormais `hasPoliticalDataConsent()` et
+  n'écrit rien sans consentement (échec silencieux, même logique que
+  `saveProfileMeta()` — ne bloque pas le flux d'onboarding).
+- `trackDemographicsCompleted()` passe par `trackIfConsented()` au lieu de
+  `track()` direct.
+- Le texte d'`OnboardingModal` a été rendu conditionnel : il annonce
+  désormais correctement que rien n'est envoyé au serveur tant que le
+  consentement politique n'a pas été donné, plutôt que d'affirmer
+  inconditionnellement que les données « restent liées à ton compte ».
+
+Cet écart n'a pas été détecté lors de la relecture manuelle initiale
+(Étapes 2-4) parce que l'attention portait sur les données d'opinion
+politique elles-mêmes (réponses, profil, archétype) — la donnée
+démographique n'avait pas été reconsidérée sous cet angle avant cet audit
+croisé. C'est exactement le type d'angle mort qu'une seconde vérification
+indépendante est censée attraper ; conservé ici tel quel plutôt que
+minimisé.
 
 ## 7. Comportement en cas d'échec Supabase
 

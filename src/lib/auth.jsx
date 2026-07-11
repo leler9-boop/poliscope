@@ -410,6 +410,17 @@ export function AuthProvider({ children }) {
    * Save optional demographic data. Creates a record even if all fields are null
    * (used to mark onboarding as seen/skipped).
    *
+   * Requires the same political-data consent as saveAnswers()/saveUserProfile().
+   * Demographics alone (gender/age/commune/employment/education/postal code)
+   * aren't Article 9 special-category data by themselves, but this data is
+   * explicitly collected to be cross-referenced with political opinions (see
+   * this modal's own copy, and FounderDashboard's byGender/byCommune
+   * breakdowns) — combining it with opinion data makes the joined processing
+   * sensitive even though the individual fields aren't. Silently skips the
+   * write (no error surfaced) rather than blocking the onboarding flow — same
+   * fire-and-forget pattern as saveProfileMeta() above. See
+   * audit/rgpd-remediation-2026-07/ for the full rationale.
+   *
    * @param {{ gender, age_range, commune_type, employment_status, education_level, postal_code }} fields
    */
   async function saveDemographics({
@@ -421,6 +432,7 @@ export function AuthProvider({ children }) {
     postal_code      = null,
   } = {}) {
     if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
+    if (!hasPoliticalDataConsent()) return { error: null };
     const { error } = await supabase
       .from('user_demographics')
       .upsert(
