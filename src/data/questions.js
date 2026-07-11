@@ -142,10 +142,10 @@ function processQuestion(raw) {
     id:          raw.id,
     text:        raw.text,       // French string
     axis:        raw.axis,
-    // POL-AUDIT-028: STATUS_WEIGHTS[status] always wins when status is set (true for the
-    // entire live corpus) — raw.weight is a fallback for a missing/invalid status only.
-    // Editing raw.weight in questions_final.json has no effect on scoring in practice.
-    weight:      STATUS_WEIGHTS[raw.status] ?? (raw.weight ?? 2),
+    // POL-AUDIT-028 (lot 2): raw.weight removed from questions_final.json — the field was
+    // vestigial (STATUS_WEIGHTS[status] always won once every question had a status). This
+    // fallback now only guards a genuinely missing/invalid status, which never occurs today.
+    weight:      STATUS_WEIGHTS[raw.status] ?? 2,
     status:      raw.status,
     cluster:     raw.cluster,
     theme:       PREFIX_TO_THEME[prefix] ?? THEMES.ECONOMY,

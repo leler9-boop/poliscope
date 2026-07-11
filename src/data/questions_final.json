@@ -3,7 +3,6 @@
     "id": "ECO_1",
     "text": "Les impôts sur les plus hauts revenus doivent augmenter.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "income redistribution",
     "explanation": "En France, l'impôt sur le revenu est progressif : plus on gagne, plus le taux est élevé. Le débat porte sur le niveau du taux maximum : certains veulent le relever pour financer les services publics ; d'autres estiment que cela décourage l'effort et l'investissement."
@@ -12,7 +11,6 @@
     "id": "ECO_2",
     "text": "Le SMIC doit augmenter significativement.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Le SMIC est le salaire minimum légal en France (environ 1 800 € brut en 2024). Ses partisans estiment qu'il est insuffisant pour vivre dignement ; ses critiques craignent qu'une forte hausse entraîne des suppressions de postes peu qualifiés."
@@ -21,7 +19,6 @@
     "id": "ECO_3",
     "text": "Les impôts sur les bénéfices des entreprises doivent baisser.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "corporate taxes",
     "explanation": "Le taux d'impôt sur les bénéfices des entreprises a été ramené à 25 % en France. Des taux bas peuvent attirer des investisseurs et créer des emplois ; mais certains estiment que cela réduit les recettes fiscales nécessaires aux services publics."
@@ -30,7 +27,6 @@
     "id": "ECO_4",
     "text": "L'impôt sur la fortune doit être élargi aux placements financiers, et pas seulement à l'immobilier.",
     "axis": "economic",
-    "weight": 4,
     "status": "PRIMARY",
     "cluster": "eco",
     "explanation": "L'impôt de solidarité sur la fortune (ISF) a été supprimé en 2018 et remplacé par un impôt uniquement sur l'immobilier. Le débat porte sur la nécessité de taxer aussi les placements financiers pour réduire les inégalités de patrimoine."
@@ -39,7 +35,6 @@
     "id": "ECO_5",
     "text": "L'État doit réduire ses dépenses publiques.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "La France dépense plus qu'elle ne perçoit chaque année, accumulant une dette publique de plus de 3 000 milliards d'euros. Réduire les dépenses permettrait de rééquilibrer les comptes, mais implique des choix difficiles : quels services couper, et pour quels effets sur la vie quotidienne ?"
@@ -48,7 +43,6 @@
     "id": "ECO_6",
     "text": "Les syndicats et la négociation collective doivent être renforcés.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Les syndicats négocient les salaires et conditions de travail au nom des salariés. La France a un faible taux de syndicalisation (~11 %). Certains veulent leur donner plus de pouvoir dans les entreprises ; d'autres préfèrent des accords négociés directement entre employeurs et salariés."
@@ -57,7 +51,6 @@
     "id": "ECO_7",
     "text": "Le libre-échange est bon pour la France.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Le libre-échange permet d'importer et d'exporter sans droits de douane élevés. Il fait baisser les prix pour les consommateurs, mais expose certaines industries françaises à la concurrence étrangère à bas coût, avec des risques de fermetures d'usines et de pertes d'emplois."
@@ -66,7 +59,6 @@
     "id": "ECO_8",
     "text": "L'État doit nationaliser les secteurs stratégiques comme l'énergie et les transports.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "public ownership",
     "explanation": "Nationaliser une entreprise signifie qu'elle devient propriété de l'État. Certains pensent que des secteurs stratégiques comme l'énergie ou le rail ne doivent pas être pilotés par la logique du profit ; d'autres estiment que les nationalisations sont coûteuses et moins efficaces."
@@ -75,7 +67,6 @@
     "id": "ECO_9",
     "text": "La Bourse et les banques doivent être strictement réglementées.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "La crise financière de 2008 a montré les risques d'un secteur bancaire peu contrôlé. Le débat porte sur le niveau de régulation : des règles strictes protègent contre les crises, mais peuvent aussi freiner le financement des entreprises et de l'économie."
@@ -84,7 +75,6 @@
     "id": "ECO_10",
     "text": "Un revenu universel de base doit être versé à tous les citoyens, sans conditions.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "social safety net",
     "explanation": "Le revenu universel est une allocation versée à tous les citoyens, sans condition de ressources ni d'emploi. Il simplifierait le système social et protégerait contre la précarité ; ses critiques estiment qu'il coûterait trop cher et pourrait réduire l'incitation à travailler."
@@ -93,7 +83,6 @@
     "id": "ECO_11",
     "text": "Réduire la dette française doit être la priorité budgétaire.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "La dette publique française dépasse 3 100 milliards d'euros. Certains veulent la réduire en priorité pour alléger les charges d'intérêts ; d'autres estiment qu'en période de crise, s'endetter est nécessaire pour investir dans les services publics et ne pas sacrifier la croissance."
@@ -102,7 +91,6 @@
     "id": "ECO_12",
     "text": "Les géants de la tech (Google, Amazon) doivent être démantélés.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "corporate taxes",
     "explanation": "Quelques grandes entreprises numériques dominent leur marché à l'échelle mondiale. Les démanteler favoriserait la concurrence et le choix des utilisateurs ; mais cela pourrait affaiblir des entreprises importantes pour l'économie numérique et nécessiterait une coordination internationale difficile."
@@ -111,7 +99,6 @@
     "id": "ECO_13",
     "text": "L'économie des plateformes (Uber, Deliveroo...) ne doit pas être soumise à des réglementations supplémentaires.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Les livreurs et chauffeurs de plateformes comme Uber ou Deliveroo travaillent souvent comme indépendants, sans congés payés ni assurance chômage. Le débat porte sur leur statut : faut-il les réguler pour les protéger, ou conserver la flexibilité qui attire leurs services ?"
@@ -120,7 +107,6 @@
     "id": "ECO_14",
     "text": "L'impôt sur les successions doit augmenter fortement.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "En France, les héritages entre parents et enfants bénéficient d'un abattement de 100 000 €, puis sont taxés progressivement. Renforcer cet impôt réduirait les inégalités transmises de génération en génération ; ses opposants y voient une atteinte au droit de transmettre son patrimoine."
@@ -129,7 +115,6 @@
     "id": "ECO_15",
     "text": "Les entreprises publiques doivent être privatisées.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Privatiser signifie vendre une entreprise publique à des acteurs privés. Cela permet à l'État de récupérer des fonds et peut améliorer l'efficacité ; mais cela signifie aussi perdre le contrôle sur des secteurs stratégiques et soumettre des services essentiels à la logique du profit."
@@ -138,7 +123,6 @@
     "id": "ECO_16",
     "text": "L'État doit redistribuer les richesses agressivement.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "isDuplicate": true,
@@ -148,7 +132,6 @@
     "id": "ECO_17",
     "text": "Dans l'ensemble, le commerce international est bénéfique pour la France.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Les importations permettent aux consommateurs d'acheter des produits moins chers. Mais elles mettent en concurrence les travailleurs français avec des pays à bas salaires, ce qui peut mener à des délocalisations. Le débat porte sur l'équilibre entre les gains pour les consommateurs et les pertes pour les travailleurs."
@@ -157,7 +140,6 @@
     "id": "ECO_18",
     "text": "Les grandes entreprises dominent trop la politique française.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Les grandes entreprises financent des lobbyistes qui défendent leurs intérêts auprès des parlementaires et du gouvernement. Ce lobbying est légal, mais il soulève des questions sur l'égalité d'accès au pouvoir entre les citoyens ordinaires et les intérêts économiques puissants."
@@ -166,7 +148,6 @@
     "id": "ECO_19",
     "text": "La semaine de 4 jours doit être imposée par la loi.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "Plusieurs entreprises françaises ont testé la semaine de 4 jours avec des résultats positifs sur la productivité et le bien-être. La rendre obligatoire par la loi est plus controversé : est-elle adaptée à tous les secteurs, notamment ceux qui fonctionnent 7 jours sur 7 ?"
@@ -175,7 +156,6 @@
     "id": "ECO_20",
     "text": "La Banque Centrale Européenne doit être plus contrôlée par les parlements.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "explanation": "La Banque Centrale Européenne fixe les taux d'intérêt en zone euro, influençant directement le coût des crédits et l'inflation. Elle est indépendante des gouvernements pour éviter des décisions à court terme. Le débat porte sur la légitimité démocratique de cette indépendance."
@@ -184,7 +164,6 @@
     "id": "ECO_21",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eco",
     "isDuplicate": true,
@@ -194,7 +173,6 @@
     "id": "ECO_22",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "public ownership",
     "isDuplicate": true,
@@ -204,7 +182,6 @@
     "id": "ECO_23",
     "text": "La priorité économique doit être la croissance, même si elle creuse les inégalités.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "growth vs equality",
     "explanation": "Deux visions s'affrontent : favoriser la croissance en laissant les entreprises prospérer librement, quitte à ce que les inégalités augmentent ; ou redistribuer les richesses pour que tous en bénéficient, même si cela peut freiner l'activité économique."
@@ -213,7 +190,6 @@
     "id": "SOC_1",
     "text": "Le mariage homosexuel et l'adoption doivent être identiques au mariage hétéro.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "isDuplicate": true,
@@ -223,7 +199,6 @@
     "id": "SOC_2",
     "text": "L'avortement doit rester entièrement accessible et gratuit.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "abortion rights",
     "isDuplicate": true,
@@ -233,7 +208,6 @@
     "id": "SOC_3",
     "text": "Le cannabis doit être légalisé et encadré par l'État.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Le cannabis est illégal en France, mais très consommé. Le Luxembourg l'a légalisé en 2023. La légalisation permettrait de réguler la qualité et de financer la prévention ; ses opposants craignent une augmentation de la consommation, notamment chez les jeunes."
@@ -242,7 +216,6 @@
     "id": "SOC_4",
     "text": "Les politiques d'aide aux groupes discriminés sont justifiées.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Des politiques comme les quotas tentent de corriger des inégalités subies par des groupes discriminés. Certains y voient une justice nécessaire pour rétablir l'égalité réelle ; d'autres estiment que le mérite individuel doit primer et que ces mesures peuvent créer de nouvelles inégalités."
@@ -251,7 +224,6 @@
     "id": "SOC_5",
     "text": "La religion doit influencer plus les lois françaises.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "religion in politics",
     "explanation": "La France est un État laïque depuis 1905 : la religion est séparée du pouvoir politique. Certains estiment que les valeurs des grandes religions devraient davantage inspirer la législation ; d'autres considèrent cela comme une atteinte au principe de laïcité."
@@ -260,7 +232,6 @@
     "id": "SOC_6",
     "text": "Les personnes transgenres doivent pouvoir modifier leur identité de genre à l'état civil sans passer par un suivi médical obligatoire.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "En France, le changement d'état civil (prénom, sexe) est possible depuis 2017, mais nécessite une procédure judiciaire. Certains souhaitent la rendre purement administrative ; d'autres estiment qu'un suivi médical ou psychologique garantit une décision éclairée."
@@ -269,7 +240,6 @@
     "id": "SOC_7",
     "text": "L'État doit promouvoir la famille traditionnelle hétérosexuelle.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "traditional values",
     "explanation": "Depuis la légalisation du mariage pour tous en 2013, la définition légale de la famille s'est élargie. Certains estiment que l'État devrait valoriser le modèle de la famille hétérosexuelle ; d'autres considèrent que toutes les configurations familiales méritent une reconnaissance égale."
@@ -278,7 +248,6 @@
     "id": "SOC_8",
     "text": "Les lois contre les discours haineux doivent être renforcées.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "religious expression",
     "explanation": "Les discours incitant à la haine raciale, religieuse ou homophobe sont déjà illégaux en France. Le débat porte sur leur efficacité et leur périmètre : faut-il des sanctions plus sévères, ou le risque est-il de censurer des opinions légitimes au nom d'une définition trop large de la haine ?"
@@ -287,7 +256,6 @@
     "id": "SOC_9",
     "text": "",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "isDuplicate": true,
@@ -297,7 +265,6 @@
     "id": "SOC_10",
     "text": "L'euthanasie doit être légale pour les malades terminaux qui le demandent.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "L'euthanasie active est interdite en France. La loi Claeys-Leonetti permet une sédation profonde jusqu'au décès. Le débat porte sur le droit à mourir dans la dignité, le rôle du corps médical, et le risque de dérives si le cadre légal s'élargit."
@@ -306,7 +273,6 @@
     "id": "SOC_11",
     "text": "Les contrôles d'armes doivent être renforcés pour la sécurité.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "religion in politics",
     "isDuplicate": true,
@@ -316,7 +282,6 @@
     "id": "SOC_12",
     "text": "Les écoles et universités doivent adopter un langage neutre en genre.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Le langage neutre en genre consiste à ne pas marquer systématiquement le masculin ou le féminin (ex. : « étudiant·e·s »). Certains y voient une reconnaissance des identités non binaires ; d'autres estiment que cela alourdit la langue et manque de légitimité institutionnelle."
@@ -325,7 +290,6 @@
     "id": "SOC_13",
     "text": "La peine de mort doit rester abolie.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "isDuplicate": true,
@@ -335,7 +299,6 @@
     "id": "SOC_14",
     "text": "L'accès aux sites pornographiques doit être soumis à une vérification obligatoire de l'âge.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Certains sites pornographiques sont accessibles aux mineurs malgré les dispositions légales. Le débat porte sur comment imposer une vérification d'âge efficace sans compromettre l'anonymat des adultes, et sur la responsabilité des plateformes dans la diffusion de ces contenus."
@@ -344,7 +307,6 @@
     "id": "SOC_15",
     "text": "Les réseaux sociaux doivent être responsables légalement du contenu dangereux.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Les plateformes comme Facebook ou TikTok diffusent des milliards de contenus. L'Union européenne a renforcé leurs obligations avec le Digital Services Act. Le débat porte sur leur responsabilité quand leur algorithme amplifie des contenus dangereux ou faux."
@@ -353,7 +315,6 @@
     "id": "SOC_16",
     "text": "Le port de signes religieux doit être autorisé dans tous les espaces publics, y compris les écoles et les administrations.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "religious expression",
     "explanation": "La loi de 2004 interdit les signes religieux ostensibles dans les écoles publiques. Des débats persistent sur les autres espaces publics. La laïcité à la française est interprétée différemment selon qu'on voit les symboles religieux comme une liberté individuelle ou une rupture de la neutralité."
@@ -362,7 +323,6 @@
     "id": "SOC_17",
     "text": "",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "isDuplicate": true,
@@ -372,7 +332,6 @@
     "id": "SOC_18",
     "text": "",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "isDuplicate": true,
@@ -382,7 +341,6 @@
     "id": "SOC_19",
     "text": "Le genre d'une personne est uniquement déterminé par sa biologie et ne peut pas être modifié.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "gender/biology",
     "explanation": "Les sciences distinguent le sexe biologique et le genre, vécu comme une identité sociale et psychologique. Le débat porte sur la part du biologique et du culturel dans la construction du genre, avec des implications pratiques sur les droits des personnes transgenres."
@@ -391,7 +349,6 @@
     "id": "SOC_20",
     "text": "Le travail du sexe entre adultes consentants doit être décriminalisé.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "La prostitution n'est pas illégale en France, mais acheter des services sexuels l'est depuis 2016. La décriminalisation totale signifierait supprimer cette loi. Le débat oppose ceux qui veulent protéger les travailleuses du sexe via des droits, à ceux qui considèrent la prostitution intrinsèquement exploitatrice."
@@ -400,7 +357,6 @@
     "id": "SOC_21",
     "text": "La possession de drogues pour usage personnel ne doit pas constituer un délit.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "Posséder de la drogue pour son propre usage est illégal en France. Des pays comme le Portugal ont adopté une approche de santé publique : traiter la dépendance sans criminaliser le consommateur. Le débat porte sur l'efficacité de la répression face à l'addiction."
@@ -409,7 +365,6 @@
     "id": "SOC_22",
     "text": "La libre expression prime sur la protection des sentiments religieux.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "La loi française protège à la fois la liberté d'expression et la lutte contre les discriminations. Des tensions surgissent quand des caricatures ou critiques de religions sont jugées offensantes. Le débat porte sur les limites légitimes de la satire et de la critique religieuse."
@@ -418,7 +373,6 @@
     "id": "SOC_23",
     "text": "L'école doit enseigner une éducation à la sexualité complète, incluant le consentement, la contraception et les relations saines.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "soc",
     "explanation": "L'éducation à la sexualité est obligatoire à l'école en France, mais son application est inégale. Le débat porte sur le contenu : doit-elle inclure le consentement, l'identité de genre, la contraception ? Certains parents s'y opposent pour des raisons culturelles ou religieuses."
@@ -427,7 +381,6 @@
     "id": "IMM_1",
     "text": "L'immigration en France doit baisser sensiblement.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "immigration volume",
     "explanation": "La France accueille environ 300 000 immigrés légaux par an. Le débat porte sur ce niveau : certains estiment qu'il est trop élevé et met sous pression les services publics ; d'autres soulignent les contributions économiques et démographiques de l'immigration."
@@ -436,7 +389,6 @@
     "id": "IMM_2",
     "text": "Les demandeurs d'asile doivent avoir le droit de travailler et d'accéder aux services sociaux dès le dépôt de leur dossier.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Les demandeurs d'asile en France ont accès à certaines aides, mais pas au droit de travailler pendant l'instruction de leur dossier, qui peut durer plusieurs mois. Le débat porte sur l'étendue des droits accordés avant qu'une décision définitive soit rendue."
@@ -445,7 +397,6 @@
     "id": "IMM_3",
     "text": "Les étrangers en situation irrégulière installés depuis de nombreuses années en France doivent pouvoir être régularisés.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Des centaines de milliers de personnes vivent en France sans titre de séjour. Certains y sont depuis des années, scolarisent leurs enfants et paient des cotisations. Le débat porte sur la légitimité d'une régularisation pour les personnes bien intégrées, face au risque d'encourager d'autres arrivées irrégulières."
@@ -454,7 +405,6 @@
     "id": "IMM_4",
     "text": "La France doit cibler les immigrés hautement qualifiés.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Des pays comme le Canada sélectionnent les immigrés selon leurs compétences. La France privilégie le regroupement familial et le droit d'asile. Le débat porte sur l'opportunité d'adopter une logique de sélection par les qualifications professionnelles."
@@ -463,7 +413,6 @@
     "id": "IMM_5",
     "text": "La France doit rétablir des contrôles systématiques à ses frontières pour réguler les entrées.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "L'espace Schengen permet la libre circulation sans contrôles aux frontières entre 27 pays. Face aux flux migratoires, certains États ont rétabli des contrôles temporaires. Le débat porte sur l'équilibre entre libre circulation et sécurité des frontières extérieures."
@@ -472,7 +421,6 @@
     "id": "IMM_6",
     "text": "L'obtention ou le renouvellement d'un titre de séjour doit être conditionné à une évaluation de l'intégration.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Les immigrés souhaitant rester en France doivent déjà signer un contrat d'intégration républicaine. Certains veulent renforcer ces conditions ; d'autres estiment que l'intégration est un processus long qui ne peut pas être évalué par des tests administratifs."
@@ -481,7 +429,6 @@
     "id": "IMM_7",
     "text": "L'État doit valoriser et préserver les cultures d'origine des immigrés installés en France.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "multiculturalism",
     "explanation": "Le multiculturalisme valorise la coexistence de cultures distinctes dans une même société. La France a traditionnellement privilégié l'assimilation (une culture commune partagée). Le débat porte sur la manière dont une société plurielle peut maintenir une identité nationale cohérente."
@@ -490,7 +437,6 @@
     "id": "IMM_8",
     "text": "Les étrangers en situation régulière qui travaillent et cotisent en France doivent avoir les mêmes droits sociaux que les citoyens.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Des travailleurs étrangers contribuent aux cotisations sociales et paient des impôts en France, sans toujours bénéficier des mêmes protections que les citoyens. Le débat porte sur l'équité de ce traitement différencié."
@@ -499,7 +445,6 @@
     "id": "IMM_9",
     "text": "La France doit accueillir plus de réfugiés climatiques.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Le dérèglement climatique pousse des populations à fuir des zones inhabitables. Ces personnes ne sont pas reconnues comme réfugiés au sens de la Convention de Genève. Le débat porte sur la création d'un statut légal protégeant ces migrations, amenées à s'amplifier."
@@ -508,7 +453,6 @@
     "id": "IMM_10",
     "text": "Les centres de rétention des migrants doivent fermer.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Les Centres de Rétention Administrative permettent de détenir des personnes en situation irrégulière avant leur expulsion. Certains dénoncent des conditions indignes et leur inefficacité ; d'autres les considèrent nécessaires pour appliquer les décisions d'éloignement."
@@ -517,7 +461,6 @@
     "id": "IMM_11",
     "text": "Les immigrés apportent des bénéfices économiques importants.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Les études économiques montrent globalement une contribution positive de l'immigration (cotisations, consommation, secteurs en tension), mais des effets négatifs localisés sur les travailleurs peu qualifiés sont aussi documentés. L'impact dépend du profil des immigrés et du contexte."
@@ -526,7 +469,6 @@
     "id": "IMM_12",
     "text": "Les étrangers condamnés pour crimes graves doivent être expulsés.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Un étranger condamné pour un crime grave peut faire l'objet d'une expulsion, mais des protections existent (né en France, long séjour légal). Le débat porte sur l'équilibre entre sanction et respect des droits fondamentaux, notamment quand la personne a des attaches familiales en France."
@@ -535,7 +477,6 @@
     "id": "IMM_13",
     "text": "Les enfants d'immigrés doivent s'identifier à la France d'abord.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Les enfants d'immigrés nés en France ont souvent plusieurs appartenances culturelles. Le débat porte sur ce que signifie « être Français » et sur la place de l'identité nationale : doit-elle être la première appartenance revendiquée, ou peut-on assumer plusieurs identités simultanément ?"
@@ -544,7 +485,6 @@
     "id": "IMM_14",
     "text": "Les demandes d'asile doivent être traitées hors de France.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Certains pays européens envisagent de traiter les demandes d'asile dans des pays tiers avant toute entrée en Europe. Ses partisans estiment que cela découragerait les traversées dangereuses ; ses critiques craignent que cela expose les demandeurs à des conditions indignes."
@@ -553,7 +493,6 @@
     "id": "IMM_15",
     "text": "Les immigrés qui demandent un titre de séjour doivent passer un test de langue et de valeurs républicaines.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Un contrat d'intégration républicaine impose déjà un niveau minimal de français et une formation aux valeurs de la République. Certains veulent durcir ces exigences pour les titres de séjour ; d'autres estiment qu'un test ne mesure pas réellement l'intégration et peut être discriminatoire."
@@ -562,7 +501,6 @@
     "id": "IMM_16",
     "text": "La France doit fixer chaque année un plafond d'immigration légale, voté par le Parlement.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "La loi immigration de 2024 a introduit un débat sur un quota d'immigration économique voté par le Parlement. Ce système existe au Royaume-Uni et en Australie. Le débat porte sur la pertinence de fixer un chiffre annuel et les critères qui le définiraient."
@@ -571,7 +509,6 @@
     "id": "IMM_17",
     "text": "L'immigration renforce l'économie et culture françaises.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "isDuplicate": true,
@@ -581,7 +518,6 @@
     "id": "IMM_18",
     "text": "La France doit renforcer le contrôle de ses frontières pour limiter les entrées irrégulières.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "isDuplicate": true,
@@ -591,7 +527,6 @@
     "id": "IMM_19",
     "text": "L'immigration doit privilégier la compatibilité culturelle avec la France.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "isDuplicate": true,
@@ -601,7 +536,6 @@
     "id": "IMM_20",
     "text": "Les immigrants doivent apprendre le français pour résider en France.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "La maîtrise du français est généralement considérée comme un facteur clé d'intégration. Des cours sont déjà proposés, mais leur accès est inégal. Le débat porte sur la possibilité de conditionner le droit au séjour à un niveau de langue, et à partir de quel seuil."
@@ -610,7 +544,6 @@
     "id": "IMM_21",
     "text": "L'UE doit créer une politique d'asile commune et contraignante.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "explanation": "Chaque pays de l'UE gère actuellement ses demandes d'asile de façon indépendante, avec des disparités importantes. Le Pacte européen sur la migration de 2024 tente d'harmoniser les règles. Le débat porte sur la solidarité entre États membres et le partage des responsabilités."
@@ -619,7 +552,6 @@
     "id": "IMM_22",
     "text": "Les contrôles de frontière stricts sont nécessaires.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "imm",
     "isDuplicate": true,
@@ -629,7 +561,6 @@
     "id": "SEC_1",
     "text": "La surveillance de masse des communications doit être arrêtée.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "privacy/surveillance",
     "explanation": "Les agences de renseignement collectent massivement des données numériques pour prévenir des attentats. Le débat porte sur la proportionnalité : cette surveillance peut anticiper des menaces terroristes, mais représente aussi une atteinte à la vie privée de millions de citoyens."
@@ -638,7 +569,6 @@
     "id": "SEC_2",
     "text": "La police doit avoir plus de pouvoirs et de budgets.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "isDuplicate": true,
@@ -648,7 +578,6 @@
     "id": "SEC_3",
     "text": "Les lois antiterroristes qui limitent les libertés sont justifiées.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "security/liberty",
     "explanation": "Après les attentats de 2015, la France a adopté des lois élargissant les pouvoirs de surveillance et d'arrestation préventive. Ces mesures ont permis de neutraliser des menaces ; mais certains juristes estiment qu'elles fragilisent les libertés fondamentales et l'État de droit."
@@ -657,7 +586,6 @@
     "id": "SEC_4",
     "text": "La reconnaissance faciale par la police doit être interdite.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La reconnaissance faciale identifie des personnes dans l'espace public en temps réel. Elle est utilisée par des États autoritaires pour surveiller les populations. La France l'expérimente dans certains contextes. Le débat porte sur les risques pour les libertés civiles et les biais algorithmiques."
@@ -666,7 +594,6 @@
     "id": "SEC_5",
     "text": "Les peines de prison doivent augmenter et être plus strictes.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Des études montrent que la certitude d'être puni est plus dissuasive que la sévérité de la peine. Pourtant, certains estiment que des peines plus longues protègent mieux la société. Le débat porte sur l'efficacité réelle de la sévérité pénale pour réduire la criminalité."
@@ -675,7 +602,6 @@
     "id": "SEC_6",
     "text": "La justice doit se concentrer sur la réinsertion, pas la punition.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Le taux de récidive en France est d'environ 60 % pour les personnes libérées. Deux approches s'affrontent : une justice punitive qui protège la société par l'incarcération ; une justice orientée vers la réhabilitation, qui cherche à éviter la récidive en aidant à la réinsertion."
@@ -684,7 +610,6 @@
     "id": "SEC_7",
     "text": "Les dépenses militaires doivent augmenter fortement.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La France a atteint l'objectif OTAN de consacrer 2 % de son PIB à la défense. Face aux tensions en Europe (guerre en Ukraine), certains veulent accélérer ce réarmement ; d'autres estiment que les priorités sociales sont plus urgentes."
@@ -693,7 +618,6 @@
     "id": "SEC_8",
     "text": "Les services secrets doivent être plus contrôlés par le parlement.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Les services de renseignement français sont contrôlés par une délégation parlementaire. Certains estiment ce contrôle insuffisant ; d'autres craignent que trop de transparence nuise à l'efficacité des opérations."
@@ -702,7 +626,6 @@
     "id": "SEC_9",
     "text": "La drogue pour usage personnel doit être dépénalisée.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La consommation de drogues est illégale en France, mais rarement sanctionnée par de la prison. Le Portugal a dépénalisé tous les usages personnels avec des résultats positifs en matière de santé publique. Le débat porte sur l'efficacité de la pénalisation pour réduire les dépendances."
@@ -711,7 +634,6 @@
     "id": "SEC_10",
     "text": "Diffuser de fausses informations en ligne doit avoir des conséquences légales.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La désinformation circule rapidement sur les réseaux sociaux. La France a adopté une loi contre les « fake news » avant les élections. Le débat porte sur les limites de ce que l'État peut qualifier de « fausse information » sans risquer de censurer des opinions légitimes."
@@ -720,7 +642,6 @@
     "id": "SEC_11",
     "text": "L'État doit pouvoir retirer la nationalité aux terroristes.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La déchéance de nationalité pour les terroristes binationaux a été débattue après les attentats de 2015. Ses partisans y voient une sanction symbolique forte ; ses opposants estiment qu'elle crée deux catégories de citoyens et viole des principes fondamentaux."
@@ -729,7 +650,6 @@
     "id": "SEC_12",
     "text": "Les services secrets doivent accéder aux messages chiffrés des suspects.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Le chiffrement des communications (WhatsApp, Signal) protège la vie privée mais complique les enquêtes. Créer des « portes dérobées » pour les services de l'État affaiblirait la sécurité de tous en créant des failles exploitables par des acteurs malveillants."
@@ -738,7 +658,6 @@
     "id": "SEC_13",
     "text": "Les policiers doivent porter des caméras corporelles en permanence.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Des études montrent que les caméras piétons réduisent les incidents lors des interventions policières. Elles sont déjà obligatoires en France. Le débat porte sur leur usage systématique, la conservation des enregistrements et l'accès à ces images en cas de litige."
@@ -747,7 +666,6 @@
     "id": "SEC_14",
     "text": "Les jeunes délinquants doivent être jugés moins sévèrement.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Le droit pénal des mineurs distingue enfants et adultes, avec une priorité à l'éducation. La réforme de 2021 a modernisé ce régime. Le débat porte sur la limite d'âge de la responsabilité pénale et la sévérité des sanctions pour les mineurs récidivistes."
@@ -756,7 +674,6 @@
     "id": "SEC_15",
     "text": "",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "isDuplicate": true,
@@ -766,7 +683,6 @@
     "id": "SEC_16",
     "text": "La surveillance de masse est acceptable pour combattre le terrorisme.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "privacy/surveillance",
     "explanation": "Face à la menace terroriste, les États ont renforcé la surveillance de masse. Le débat porte sur son efficacité réelle (a-t-elle prévenu des attentats ?) et sur son coût en termes de libertés civiles pour l'ensemble de la population."
@@ -775,7 +691,6 @@
     "id": "SEC_17",
     "text": "La peine de mort doit rester interdite.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "isDuplicate": true,
@@ -785,7 +700,6 @@
     "id": "SEC_18",
     "text": "Le droit aux armes à feu doit être protégé, pas restreint.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "isDuplicate": true,
@@ -795,7 +709,6 @@
     "id": "SEC_19",
     "text": "Les terroristes doivent rester détenus longtemps après leur peine.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "La France dispose de mesures de sûreté pour les détenus terroristes après leur libération. Le débat porte sur leur constitutionnalité : peut-on restreindre la liberté d'une personne qui a purgé sa peine sur la seule base d'un risque de récidive ?"
@@ -804,7 +717,6 @@
     "id": "SEC_20",
     "text": "La police doit avoir plus de pouvoirs de contrôle et de fouille.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "explanation": "Les contrôles d'identité et fouilles par la police sont encadrés par la loi. Certains veulent élargir ces pouvoirs pour lutter contre l'insécurité ; d'autres soulignent les risques de contrôles discriminatoires et d'atteintes aux libertés dans les quartiers populaires."
@@ -813,7 +725,6 @@
     "id": "SEC_21",
     "text": "Les lanceurs d'alerte doivent être protégés légalement.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "whistleblower protection",
     "explanation": "Les lanceurs d'alerte signalent des comportements illégaux au sein d'organisations. La loi Sapin 2 les protège partiellement. Des affaires comme celle d'Edward Snowden illustrent leur vulnérabilité. Le débat porte sur l'étendue de leur protection légale en France."
@@ -822,7 +733,6 @@
     "id": "SEC_22",
     "text": "",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sec",
     "isDuplicate": true,
@@ -832,7 +742,6 @@
     "id": "ENV_1",
     "text": "Lutter contre le changement climatique doit être une priorité absolue pour le gouvernement.",
     "axis": "economic",
-    "weight": 5,
     "status": "SECONDARY",
     "cluster": "climate urgency",
     "explanation": "Le consensus scientifique est clair : les activités humaines provoquent le réchauffement climatique. Le débat politique porte sur l'urgence et l'ampleur des mesures à prendre, leur coût économique, et leur répartition entre pays riches et pauvres."
@@ -841,7 +750,6 @@
     "id": "ENV_2",
     "text": "La France doit construire de nouveaux réacteurs nucléaires.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Le nucléaire produit très peu de CO₂ mais génère des déchets radioactifs durables et présente des risques d'accidents. La France produit environ 70 % de son électricité via le nucléaire. Le débat porte sur sa place dans la transition énergétique face aux renouvelables."
@@ -850,7 +758,6 @@
     "id": "ENV_3",
     "text": "Une taxe sur les émissions de CO₂ doit être mise en place pour décourager l'usage des carburants fossiles.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "La taxe carbone renchérit le prix des carburants fossiles pour inciter à les consommer moins. La hausse de 2018 a déclenché le mouvement des Gilets jaunes. Le débat porte sur son efficacité et sa justice sociale, son impact étant plus fort sur les ménages modestes."
@@ -859,7 +766,6 @@
     "id": "ENV_4",
     "text": "Des réglementations environnementales strictes doivent être maintenues, même si elles entraînent des pertes d'emplois dans certains secteurs.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Des normes environnementales strictes peuvent forcer des industries polluantes à se transformer ou fermer. Le débat porte sur l'équilibre entre protection de l'environnement et maintien des emplois dans les régions dépendantes de ces industries."
@@ -868,7 +774,6 @@
     "id": "ENV_5",
     "text": "La transition énergétique doit être rapide, même à coût économique.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -878,7 +783,6 @@
     "id": "ENV_6",
     "text": "L'agriculture intensive doit être fortement réglementée.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "L'agriculture intensive maximise les rendements mais pollue les sols et les nappes phréatiques. Le débat porte sur la vitesse de la transition vers des pratiques plus durables et sur son impact économique pour des agriculteurs souvent déjà fragilisés."
@@ -887,7 +791,6 @@
     "id": "ENV_7",
     "text": "Les voitures thermiques doivent être interdites avant 2035.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "L'UE a décidé d'interdire la vente de voitures neuves à moteur thermique à partir de 2035. Le débat porte sur la faisabilité (réseau de recharge, prix des voitures électriques) et sur les alternatives pour les ménages qui ne peuvent pas se les permettre."
@@ -896,7 +799,6 @@
     "id": "ENV_8",
     "text": "Pour vraiment protéger l'environnement, il faut accepter de réduire la croissance économique.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Augmenter la production génère des émissions et consomme des ressources. Certains pensent que la technologie permettra de « décarboner » la croissance ; d'autres estiment qu'il faut réduire la production et la consommation pour respecter les limites planétaires."
@@ -905,7 +807,6 @@
     "id": "ENV_9",
     "text": "La viande doit être taxée pour son impact environnemental.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "L'élevage est responsable d'environ 15 % des émissions mondiales de gaz à effet de serre. Taxer la viande inciterait à réduire sa consommation. Ses partisans y voient un outil efficace ; ses critiques estiment que cela pénalise surtout les ménages modestes."
@@ -914,7 +815,6 @@
     "id": "ENV_10",
     "text": "Les pays riches doivent payer les pays pauvres pour les dommages climatiques.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Les pays riches ont émis la majorité des gaz à effet de serre depuis l'industrialisation, causant des dommages dans des pays qui ont peu contribué. Le fonds « pertes et préjudices » créé lors de la COP27 tente d'y répondre, mais son financement reste insuffisant."
@@ -923,7 +823,6 @@
     "id": "ENV_11",
     "text": "Des militants qui bloquent des routes ou s'enchaînent à des machines pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Des militants écologistes bloquent des routes ou s'enchaînent à des machines pour attirer l'attention sur l'urgence climatique. Certains soutiennent cette désobéissance civile ; d'autres la jugent illégale et contre-productive pour rallier l'opinion publique."
@@ -932,7 +831,6 @@
     "id": "ENV_12",
     "text": "L'environnement doit primer sur le développement économique.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -942,7 +840,6 @@
     "id": "ENV_13",
     "text": "Les traités écologiques doivent pouvoir forcer les États à agir.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "Les accords climatiques internationaux fixent des objectifs, mais leur respect repose sur la bonne volonté des États. Certains souhaitent des mécanismes de sanction contraignants ; d'autres s'y opposent au nom de la souveraineté nationale."
@@ -951,7 +848,6 @@
     "id": "ENV_14",
     "text": "La géo-ingénierie doit être étudiée comme solution climatique.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "La géo-ingénierie désigne des technologies d'intervention sur le climat : injection de particules dans la stratosphère, capture directe de CO₂. Ces solutions sont expérimentales, risquées, et soulèvent des questions de gouvernance internationale sur qui décide de les activer."
@@ -960,7 +856,6 @@
     "id": "ENV_15",
     "text": "Les plastiques à usage unique doivent être complètement interdits.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "L'UE a déjà interdit de nombreux plastiques à usage unique. Le débat porte sur l'élargissement de ces interdictions, la disponibilité des alternatives et la gestion des plastiques déjà répandus dans l'environnement."
@@ -969,7 +864,6 @@
     "id": "ENV_16",
     "text": "",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -979,7 +873,6 @@
     "id": "ENV_17",
     "text": "",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -989,7 +882,6 @@
     "id": "ENV_18",
     "text": "La taxe carbone est l'outil le plus efficace contre les émissions.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -999,7 +891,6 @@
     "id": "ENV_19",
     "text": "",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -1009,7 +900,6 @@
     "id": "ENV_20",
     "text": "",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "isDuplicate": true,
@@ -1019,7 +909,6 @@
     "id": "ENV_21",
     "text": "La biodiversité doit avoir la même urgence que le climat.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "La sixième extinction de masse des espèces est en cours, principalement due à la destruction des habitats. La biodiversité reçoit moins d'attention politique que le climat, bien que les deux crises soient liées. Le débat porte sur les moyens d'en faire une priorité politique équivalente."
@@ -1028,7 +917,6 @@
     "id": "ENV_22",
     "text": "L'usage des voitures personnelles en ville doit être limité pour favoriser les transports en commun.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "La voiture individuelle contribue fortement aux émissions. Des zones à faibles émissions et des péages urbains poussent à préférer les transports en commun, mais soulèvent des questions d'équité pour les personnes qui n'ont pas accès à ces alternatives."
@@ -1037,7 +925,6 @@
     "id": "ENV_23",
     "text": "Une réduction volontaire de la production et de la consommation est nécessaire pour respecter les limites de la planète.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "env",
     "explanation": "La décroissance propose de réduire volontairement la production et la consommation pour respecter les limites écologiques. Ses partisans la présentent comme la seule réponse cohérente ; ses opposants estiment qu'elle est politiquement inapplicable et socialement dangereuse."
@@ -1046,7 +933,6 @@
     "id": "DEM_1",
     "text": "Le vote doit être obligatoire pour tous.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "L'abstention aux élections françaises dépasse souvent 50 %. Le vote obligatoire existe en Belgique et en Australie. Ses partisans estiment qu'il renforcerait la légitimité démocratique ; ses critiques soulignent qu'obliger à voter est contraire à la liberté individuelle."
@@ -1055,7 +941,6 @@
     "id": "DEM_2",
     "text": "Les réseaux sociaux ont trop de pouvoir politique.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Les algorithmes des réseaux sociaux amplifient les contenus qui suscitent des réactions fortes, favorisant souvent les positions extrêmes. Le débat porte sur la façon de réguler ces plateformes sans porter atteinte à la liberté d'expression."
@@ -1064,7 +949,6 @@
     "id": "DEM_3",
     "text": "Les citoyens doivent pouvoir déclencher un référendum sur n'importe quelle loi par voie de pétition.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "La France utilise rarement le référendum. Certains veulent introduire un Référendum d'Initiative Citoyenne (RIC) permettant aux citoyens de proposer un vote sur n'importe quelle loi. Les partisans y voient de la démocratie directe ; les critiques craignent la manipulation et la simplification."
@@ -1073,7 +957,6 @@
     "id": "DEM_4",
     "text": "Les juges doivent être totalement indépendants de la politique.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "En France, le Parquet reste sous l'autorité du gouvernement, contrairement aux juges du siège. Cette dépendance soulève des questions sur l'impartialité dans les affaires politiquement sensibles. Le débat porte sur une réforme pour garantir une indépendance complète de la magistrature."
@@ -1082,7 +965,6 @@
     "id": "DEM_5",
     "text": "Le système électoral doit utiliser la proportionnelle.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Le scrutin majoritaire à deux tours favorise les grands partis et assure une majorité stable. La proportionnelle donne une représentation fidèle des votes mais produit souvent des coalitions fragiles. Le débat porte sur l'équilibre entre gouvernabilité et représentativité."
@@ -1091,7 +973,6 @@
     "id": "DEM_6",
     "text": "L'âge du vote doit être abaissé à 16 ans.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "L'Autriche et l'Écosse permettent déjà le vote à 16 ans. Ses partisans estiment que les jeunes sont directement concernés par les décisions politiques et capables de voter ; ses opposants considèrent que la maturité civique s'acquiert à 18 ans, âge légal de la majorité."
@@ -1100,7 +981,6 @@
     "id": "DEM_7",
     "text": "Un élu qui ment délibérément à ses concitoyens sur un sujet important doit pouvoir être révoqué.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Les politiciens peuvent tenir des propos faux sans sanction légale directe. Certains souhaitent des mécanismes de vérification et de révocation pour les élus qui mentent délibérément. Le débat porte sur la définition du mensonge politique et les risques d'usage partisan."
@@ -1109,7 +989,6 @@
     "id": "DEM_8",
     "text": "Les dons privés importants aux partis politiques doivent être interdits.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "campaign finance",
     "explanation": "Le financement des partis est encadré en France : les dons d'entreprises sont interdits depuis 1995. Le débat porte sur l'influence résiduelle des grands donateurs individuels et la nécessité d'un financement encore plus public et transparent."
@@ -1118,7 +997,6 @@
     "id": "DEM_9",
     "text": "Le Sénat doit être profondément réformé pour être plus représentatif des citoyens.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Le Sénat français est élu au suffrage indirect par des élus locaux, ce qui le rend structurellement plus conservateur que l'Assemblée nationale. Le débat porte sur sa légitimité démocratique et son rôle dans l'équilibre institutionnel."
@@ -1127,7 +1005,6 @@
     "id": "DEM_10",
     "text": "Les pouvoirs d'urgence doivent expirer automatiquement après 30 jours.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Les pouvoirs d'urgence donnent au gouvernement des capacités exceptionnelles en cas de crise grave. L'état d'urgence sanitaire lié au Covid a duré près de deux ans. Le débat porte sur des limites temporelles automatiques pour éviter que ces régimes d'exception ne se normalisent."
@@ -1136,7 +1013,6 @@
     "id": "DEM_11",
     "text": "Les mandats politiques doivent être limités en durée.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "En France, seul le Président est limité à deux mandats. Certains souhaitent étendre cette règle aux parlementaires et maires pour renouveler la classe politique ; d'autres estiment que l'expérience des élus est précieuse et que le renouvellement doit venir des électeurs."
@@ -1145,7 +1021,6 @@
     "id": "DEM_12",
     "text": "Les citoyens doivent pouvoir révoquer leurs élus avant la fin du mandat.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "La révocation permet aux citoyens de mettre fin au mandat d'un élu par pétition et vote. Elle existe en Suisse et dans certains États américains. Ses partisans y voient un outil de contrôle démocratique ; ses critiques craignent des usages déstabilisateurs ou politiquement partisans."
@@ -1154,7 +1029,6 @@
     "id": "DEM_13",
     "text": "Les médias doivent être régulés pour garantir un équilibre politique.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "La France dispose de l'ARCOM pour garantir le pluralisme dans les médias. Des études montrent une concentration croissante de la propriété médiatique. Le débat porte sur les pouvoirs du régulateur et sur la définition légale du pluralisme politique."
@@ -1163,7 +1037,6 @@
     "id": "DEM_14",
     "text": "Les immunités parlementaires doivent être réduites.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Les parlementaires bénéficient d'une immunité protégeant leur liberté d'expression dans l'hémicycle. Mais elle peut aussi protéger des élus accusés de faits sans rapport avec leur mandat. Le débat porte sur le périmètre de cette immunité et les conditions de la lever."
@@ -1172,7 +1045,6 @@
     "id": "DEM_15",
     "text": "Le lobbying d'entreprises doit être strictement régulé et transparent.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "campaign finance",
     "explanation": "Les lobbyistes représentent des intérêts privés auprès des décideurs politiques. Un registre existe en France. Le débat porte sur le pantouflage (passage du public au privé), la transparence des rencontres et la frontière entre conseil légitime et capture politique."
@@ -1181,7 +1053,6 @@
     "id": "DEM_16",
     "text": "Les juges doivent pouvoir annuler les lois du parlement.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Le Conseil constitutionnel peut censurer des lois votées par le Parlement si elles violent la Constitution. Certains veulent renforcer ce contrôle pour protéger les droits fondamentaux ; d'autres estiment que cela donne trop de pouvoir à des juges non élus."
@@ -1190,7 +1061,6 @@
     "id": "DEM_17",
     "text": "",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "isDuplicate": true,
@@ -1200,7 +1070,6 @@
     "id": "DEM_18",
     "text": "",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "isDuplicate": true,
@@ -1210,7 +1079,6 @@
     "id": "DEM_19",
     "text": "Les partis politiques doivent être financés publiquement.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Les partis politiques français reçoivent déjà une aide publique proportionnelle à leurs résultats. Certains souhaitent renforcer ce financement et réduire l'influence des dons privés ; d'autres y voient un financement contraint de partis auxquels les contribuables ne souscrivent pas."
@@ -1219,7 +1087,6 @@
     "id": "DEM_20",
     "text": "",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "isDuplicate": true,
@@ -1229,7 +1096,6 @@
     "id": "DEM_21",
     "text": "Les gouvernements doivent pouvoir révoquer les juges.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "Dans certains pays comme la Pologne sous le PiS, les gouvernements ont limogé des juges dont ils n'approuvaient pas les décisions. Cela fragilise l'État de droit. Le débat porte sur le niveau de protection nécessaire pour garantir l'indépendance de la magistrature."
@@ -1238,7 +1104,6 @@
     "id": "DEM_22",
     "text": "Les réseaux sociaux sont responsables du contenu qu'ils amplifient.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "isDuplicate": true,
@@ -1248,7 +1113,6 @@
     "id": "DEM_23",
     "text": "Les institutions internationales doivent pouvoir forcer les États à agir.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "dem",
     "explanation": "L'ONU ou la Cour pénale internationale peuvent émettre des résolutions et des jugements, mais peinent à les faire respecter. Le débat porte sur les mécanismes d'application : sanctions, pression diplomatique, coopération judiciaire internationale."
@@ -1257,7 +1121,6 @@
     "id": "GLO_1",
     "text": "L'intérêt national doit primer sur les engagements internationaux.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "nationalism",
     "explanation": "La France est membre de l'UE, de l'OTAN et signataire de nombreux traités. Parfois, les engagements internationaux contraignent les choix nationaux. Le débat porte sur le niveau de souveraineté nationale que la France doit préserver face à ses obligations."
@@ -1266,7 +1129,6 @@
     "id": "GLO_2",
     "text": "Les institutions mondiales (ONU, OMC, FMI) ont trop de pouvoir.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Le FMI, l'OMC et l'ONU établissent des règles qui s'imposent aux États membres. Leurs partisans y voient un garde-fou contre les nationalismes ; leurs critiques estiment qu'elles servent surtout les pays riches et manquent de légitimité démocratique."
@@ -1275,7 +1137,6 @@
     "id": "GLO_3",
     "text": "L'OTAN est une alliance militaire essentielle pour la sécurité de la France.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "L'OTAN est une alliance militaire de défense collective entre pays occidentaux. Depuis l'invasion de l'Ukraine en 2022, son rôle est central en Europe. Le débat porte sur le niveau d'engagement de la France et son autonomie stratégique au sein de l'alliance."
@@ -1284,7 +1145,6 @@
     "id": "GLO_4",
     "text": "La France doit augmenter son aide publique au développement versée aux pays en développement.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La France consacre environ 0,5 % de son revenu national brut à l'aide publique au développement, en deçà de l'objectif ONU de 0,7 %. Le débat porte sur le niveau et les conditions de cette aide : sert-elle réellement les pays bénéficiaires ou les intérêts diplomatiques français ?"
@@ -1293,7 +1153,6 @@
     "id": "GLO_5",
     "text": "Les intérêts nationaux de la France doivent toujours passer avant les obligations des traités internationaux.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Les traités européens encadrent la politique budgétaire et commerciale de la France. Certains souhaitent que la France puisse s'en affranchir quand ses intérêts divergent ; d'autres estiment que respecter ses engagements est indispensable à la crédibilité diplomatique."
@@ -1302,7 +1161,6 @@
     "id": "GLO_6",
     "text": "La France doit utiliser des barrières douanières pour protéger ses industries, même au risque de tensions commerciales.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Le protectionnisme consiste à taxer les importations pour protéger les industries locales. L'UE a imposé des droits de douane sur les voitures électriques chinoises. Le débat porte sur son efficacité à long terme et les risques de représailles commerciales."
@@ -1311,7 +1169,6 @@
     "id": "GLO_7",
     "text": "La France et ses alliés doivent imposer des sanctions économiques aux régimes autoritaires.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Les sanctions économiques visent à pénaliser des régimes autoritaires sans recourir à la guerre. Des études montrent des résultats mitigés : elles peuvent affaiblir une économie, mais ne changent pas toujours la politique du régime et pèsent d'abord sur les populations."
@@ -1320,7 +1177,6 @@
     "id": "GLO_8",
     "text": "L'Union européenne doit renforcer son intégration politique, même si cela réduit les pouvoirs des États membres.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "eu integration",
     "explanation": "L'UE a une monnaie commune et des règles budgétaires partagées. Certains souhaitent aller plus loin : budget européen plus important, politique étrangère commune, harmonisation fiscale. Ses opposants craignent une perte de souveraineté nationale supplémentaire."
@@ -1329,7 +1185,6 @@
     "id": "GLO_9",
     "text": "L'État devrait mieux protéger la culture française face à l'influence culturelle américaine (films, séries, réseaux sociaux).",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "L'influence culturelle américaine (films, séries, réseaux sociaux) est dominante. La France a des politiques de protection (quotas, subventions au cinéma). Le débat porte sur la nécessité et la faisabilité de protéger une identité culturelle nationale à l'ère numérique."
@@ -1338,7 +1193,6 @@
     "id": "GLO_10",
     "text": "Les multinationales doivent payer un impôt minimum mondial.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Certaines multinationales transfèrent leurs bénéfices dans des paradis fiscaux pour payer moins d'impôts. Un accord de 2021 a établi un taux minimum de 15 %. Certains jugent ce taux insuffisant ; d'autres s'y opposent au nom de la concurrence fiscale entre États."
@@ -1347,7 +1201,6 @@
     "id": "GLO_11",
     "text": "La France doit réduire sa dépendance à la Chine.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La France et l'UE dépendent de la Chine pour des produits stratégiques (batteries, terres rares, médicaments). La pandémie et les tensions géopolitiques ont révélé ces risques. Le débat porte sur les investissements nécessaires pour diversifier les approvisionnements."
@@ -1356,7 +1209,6 @@
     "id": "GLO_12",
     "text": "Les pays colonisateurs doivent des réparations aux anciennes colonies.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La colonisation a engendré des richesses pour les métropoles et des traumatismes durables pour les pays colonisés. Certains demandent des réparations financières ; d'autres estiment que les États actuels ne peuvent pas être tenus responsables d'actes passés."
@@ -1365,7 +1217,6 @@
     "id": "GLO_13",
     "text": "Les tribunaux internationaux (CPI) doivent juger les crimes de guerre.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La Cour Pénale Internationale juge les crimes contre l'humanité et crimes de guerre. Elle a émis un mandat d'arrêt contre Vladimir Poutine en 2023. Certains pays (États-Unis, Russie, Chine) ne reconnaissent pas sa juridiction. Le débat porte sur son autorité internationale."
@@ -1374,7 +1225,6 @@
     "id": "GLO_14",
     "text": "Les pays doivent restreindre la propriété étrangère des secteurs stratégiques.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Des entreprises ou fonds étrangers investissent dans des secteurs comme l'énergie ou la défense. La France dispose de mécanismes de contrôle. Le débat porte sur la définition de ce qui est « stratégique » et la frontière entre ouverture économique et protection nationale."
@@ -1383,7 +1233,6 @@
     "id": "GLO_15",
     "text": "La communauté internationale doit intervenir militairement pour stopper un génocide, même sans mandat de l'ONU.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La communauté internationale n'est pas intervenue lors du génocide rwandais (1994). Elle est intervenue en Libye (2011) avec des résultats controversés. Le débat porte sur le « droit d'ingérence » humanitaire : quand une intervention extérieure est-elle légitime face aux crimes de masse ?"
@@ -1392,7 +1241,6 @@
     "id": "GLO_16",
     "text": "La France doit réduire ses dépendances stratégiques en produisant davantage localement, notamment en alimentation et en énergie.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La pandémie a révélé la dépendance française en médicaments et équipements médicaux. L'autosuffisance offre une sécurité stratégique, mais a un coût économique : produire localement est souvent plus cher qu'importer."
@@ -1401,7 +1249,6 @@
     "id": "GLO_17",
     "text": "La France doit adopter une politique étrangère plus neutre et réduire ses engagements militaires à l'étranger.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La France est membre de l'OTAN et engagée dans de nombreuses opérations à l'étranger. Certains prônent une politique étrangère plus neutre. Le débat porte sur la compatibilité de cette neutralité avec les obligations d'alliance et les intérêts diplomatiques français."
@@ -1410,7 +1257,6 @@
     "id": "GLO_18",
     "text": "Les pays doivent intervenir militairement pour les droits humains ailleurs.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "isDuplicate": true,
@@ -1420,7 +1266,6 @@
     "id": "GLO_19",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "isDuplicate": true,
@@ -1430,7 +1275,6 @@
     "id": "GLO_20",
     "text": "Les pays doivent sanctionner les violations de droits humains.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "Les gouvernements peuvent sanctionner des États qui violent les droits humains. La France adopte parfois ces mesures, parfois pas, selon ses intérêts économiques. Le débat porte sur la cohérence de la politique étrangère française en matière de droits humains."
@@ -1439,7 +1283,6 @@
     "id": "GLO_21",
     "text": "",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "eu integration",
     "isDuplicate": true,
@@ -1449,7 +1292,6 @@
     "id": "GLO_22",
     "text": "L'État doit financer activement la préservation de la culture et des traditions françaises.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "glo",
     "explanation": "La mondialisation homogénéise les cultures. La France défend l'exception culturelle via des subventions et des quotas. Le débat porte sur l'efficacité de ces protections et leur adéquation à l'ère des plateformes numériques mondiales."
@@ -1458,7 +1300,6 @@
     "id": "PUB_1",
     "text": "L'État doit garantir un accès aux soins gratuit et de qualité égale pour tous.",
     "axis": "economic",
-    "weight": 5,
     "status": "SECONDARY",
     "cluster": "public healthcare",
     "explanation": "La France dispose de la Sécurité sociale, qui rembourse une grande partie des soins. Des inégalités d'accès persistent (déserts médicaux, restes à charge). Le débat porte sur la place du privé dans le système de santé et les moyens d'assurer une couverture vraiment universelle."
@@ -1467,7 +1308,6 @@
     "id": "PUB_2",
     "text": "Les écoles publiques doivent recevoir beaucoup plus de financement.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "L'école publique souffre d'un manque de moyens dans certaines zones : classes surchargées, bâtiments vétustes. Le débat porte sur le niveau de financement nécessaire et la répartition des ressources entre établissements des quartiers favorisés et défavorisés."
@@ -1476,7 +1316,6 @@
     "id": "PUB_3",
     "text": "Les entreprises privées doivent pouvoir concurrencer la santé et l'éducation publiques.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Des entreprises privées opèrent déjà dans la santé et l'éducation. Le débat porte sur les limites de cette privatisation : améliore-t-elle le service ou crée-t-elle un système à deux vitesses où les plus aisés accèdent à de meilleurs soins et à de meilleures écoles ?"
@@ -1485,7 +1324,6 @@
     "id": "PUB_4",
     "text": "Le système de retraite par répartition doit être renforcé.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Le système français fonctionne par répartition : les cotisations des actifs financent directement les retraites. Le vieillissement de la population le fragilise. Le débat porte sur les solutions : allonger le temps de travail, augmenter les cotisations, ou introduire une part de capitalisation."
@@ -1494,7 +1332,6 @@
     "id": "PUB_5",
     "text": "Les frais d'inscription à l'université doivent être supprimés ou très fortement réduits.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "L'université française est peu chère (170 à 600 € par an), mais reste coûteuse quand on intègre le logement et la vie quotidienne. Le débat porte sur la gratuité totale ou le soutien aux étudiants précaires via des bourses ou des prêts à remboursement conditionnel."
@@ -1503,7 +1340,6 @@
     "id": "PUB_6",
     "text": "Le logement social doit être massivement étendu.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "La France manque d'environ 2 millions de logements sociaux. Les délais d'attente dépassent 10 ans dans les grandes villes. Le débat porte sur les moyens de relancer la construction et sur l'accès : faut-il réserver les HLM aux plus précaires ou maintenir une mixité sociale ?"
@@ -1512,7 +1348,6 @@
     "id": "PUB_7",
     "text": "Un revenu de base doit remplacer les allocations actuelles.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Le revenu universel remplacerait les multiples allocations existantes (RSA, chômage) par une somme versée à tous, sans conditions. Ses partisans y voient une simplification et une sécurité pour tous ; ses critiques doutent de sa faisabilité financière et de son effet sur l'emploi."
@@ -1521,7 +1356,6 @@
     "id": "PUB_8",
     "text": "L'État doit maintenir et augmenter ses subventions aux bibliothèques, musées et théâtres publics.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Les bibliothèques, musées et théâtres subventionnés permettent à tous d'accéder à la culture, quel que soit leur revenu. Leur financement est parfois remis en question lors de coupes budgétaires. Le débat porte sur la priorité à accorder à la culture dans les dépenses publiques."
@@ -1530,7 +1364,6 @@
     "id": "PUB_9",
     "text": "La garde d'enfants doit être gratuite et accessible à toutes les familles.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "La France manque d'environ 400 000 places en crèche. La garde d'enfants conditionne la possibilité pour les parents, souvent les mères, de travailler. Le débat porte sur le financement et la gestion de ce service : faut-il plus de crèches publiques ou développer aussi les modes de garde privés ?"
@@ -1539,7 +1372,6 @@
     "id": "PUB_10",
     "text": "La santé mentale doit recevoir autant de financement que la santé physique.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "La santé mentale est le parent pauvre du système de soins : les délais pour un rendez-vous psychiatrique dépassent souvent plusieurs mois. Les psychologues sont partiellement remboursés depuis 2022. Le débat porte sur l'alignement des financements avec la réalité des troubles psychiques."
@@ -1548,7 +1380,6 @@
     "id": "PUB_11",
     "text": "L'État doit plafonner les loyers dans les grandes villes.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "L'encadrement des loyers existe déjà dans plusieurs grandes villes (Paris, Bordeaux). Il plafonne les hausses. Ses partisans estiment qu'il protège les locataires ; ses critiques affirment qu'il décourage la construction et peut réduire l'offre de logements disponibles."
@@ -1557,7 +1388,6 @@
     "id": "PUB_12",
     "text": "Les transports en commun doivent être gratuits ou quasi-gratuits pour les usagers.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Certaines villes françaises (Dunkerque, Montpellier) ont rendu les transports en commun gratuits. Cela augmente leur usage mais représente un coût pour les collectivités. Le débat porte sur qui doit financer les transports et si la gratuité est le meilleur outil pour réduire la place de la voiture."
@@ -1566,7 +1396,6 @@
     "id": "PUB_13",
     "text": "Les dépenses de protection sociale françaises devraient être significativement réduites.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "La France a l'un des systèmes de protection sociale les plus étendus au monde (~32 % du PIB). Certains estiment qu'il est trop coûteux et freine la compétitivité ; d'autres y voient la garantie d'une société cohésive où personne n'est laissé sans filet de sécurité."
@@ -1575,7 +1404,6 @@
     "id": "PUB_14",
     "text": "L'État doit garantir un emploi à qui veut travailler.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "L'emploi garanti est un programme où l'État propose un emploi à toute personne qui en cherche un, dans des activités d'utilité sociale. Des expériences ont eu lieu en Inde et aux États-Unis. Ses partisans y voient une réponse au chômage ; ses critiques estiment le coût trop élevé."
@@ -1584,7 +1412,6 @@
     "id": "PUB_15",
     "text": "Limiter l'accès aux soins coûteux est acceptable pour les finances publiques.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Les dépenses de santé augmentent avec le vieillissement de la population. Des débats existent sur le remboursement de certains traitements très coûteux. Le débat porte sur les critères éthiques et économiques qui devraient guider les décisions de remboursement."
@@ -1593,7 +1420,6 @@
     "id": "PUB_16",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "isDuplicate": true,
@@ -1603,7 +1429,6 @@
     "id": "PUB_17",
     "text": "Les services publics essentiels comme l'eau, l'électricité et la santé ne doivent pas être gérés par des entreprises privées à but lucratif.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Des entreprises privées gèrent des services comme l'eau, les autoroutes ou les prisons dans certains pays. Le débat porte sur leur capacité à gérer des services d'intérêt général sans en dégrader la qualité au profit de leurs actionnaires."
@@ -1612,7 +1437,6 @@
     "id": "PUB_18",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "isDuplicate": true,
@@ -1622,7 +1446,6 @@
     "id": "PUB_19",
     "text": "Garantir le niveau des pensions de retraite doit être une priorité, même si cela implique d'augmenter les cotisations.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "explanation": "Les pensions de retraite représentent ~14 % du PIB en France. Face au déficit du système, certains proposent de les indexer différemment. Le débat porte sur l'équité intergénérationnelle entre retraités actuels et actifs qui cotiseront pour des pensions futures incertaines."
@@ -1631,7 +1454,6 @@
     "id": "PUB_20",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "isDuplicate": true,
@@ -1641,7 +1463,6 @@
     "id": "PUB_21",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "isDuplicate": true,
@@ -1651,7 +1472,6 @@
     "id": "PUB_22",
     "text": "",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "pub",
     "isDuplicate": true,
@@ -1661,7 +1481,6 @@
     "id": "PUB_23",
     "text": "Les universités doivent être totalement gratuites pour tous les étudiants français.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "education",
     "explanation": "Les universités françaises facturent des frais modestes (170 à 600 € par an). La gratuité totale permettrait un accès sans barrière financière. Le débat porte sur son financement et son équité : les études supérieures profitent surtout aux enfants de milieux favorisés."
@@ -1670,7 +1489,6 @@
     "id": "ECO_24",
     "text": "Un impôt mondial minimum sur les bénéfices des multinationales doit être instauré.",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "corporate taxes",
     "explanation": "Certaines multinationales déplacent leurs bénéfices dans des pays à faible fiscalité. Un accord de 2021 a fixé un taux minimum de 15 % pour les multinationales. Certains jugent ce taux insuffisant pour financer les services publics ; d'autres s'opposent à toute harmonisation fiscale internationale."
@@ -1679,7 +1497,6 @@
     "id": "ECO_25",
     "text": "Le partage obligatoire des bénéfices avec les salariés doit être imposé aux grandes entreprises.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "income redistribution",
     "explanation": "En France, la participation aux bénéfices est obligatoire au-delà de 50 salariés, mais son montant varie. Certains veulent la rendre plus généreuse pour réduire les écarts entre dividendes versés aux actionnaires et salaires des employés."
@@ -1688,7 +1505,6 @@
     "id": "SOC_24",
     "text": "Le droit à l'avortement doit être garanti et accessible à toutes les femmes sur tout le territoire.",
     "axis": "cultural",
-    "weight": 5,
     "status": "CORE",
     "cluster": "social rights",
     "explanation": "Le droit à l'avortement est inscrit dans la Constitution française depuis 2024. Des restrictions persistent dans d'autres pays démocratiques. Le débat en France porte sur l'accès réel : délais légaux, disponibilité dans les déserts médicaux, remboursement par la Sécurité sociale."
@@ -1697,7 +1513,6 @@
     "id": "SOC_25",
     "text": "La procréation médicalement assistée (PMA) doit être accessible aux couples de femmes et aux femmes seules.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "social rights",
     "explanation": "La PMA (Procréation Médicalement Assistée) a été étendue aux couples de femmes et aux femmes seules en 2021. Certains souhaitent aller plus loin, notamment vers la GPA (gestation pour autrui), qui reste interdite en France et fait l'objet d'un débat éthique et juridique complexe."
@@ -1706,7 +1521,6 @@
     "id": "IMM_23",
     "text": "Tout enfant né en France doit pouvoir obtenir la nationalité française, quelle que soit l'origine de ses parents.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "citizenship",
     "explanation": "Le droit du sol permet à un enfant né en France d'acquérir la nationalité française sous certaines conditions. Certains veulent le supprimer ou le conditionner à la nationalité des parents ; d'autres considèrent qu'il est fondamental à l'identité républicaine française."
@@ -1715,7 +1529,6 @@
     "id": "SEC_23",
     "text": "La police doit avoir plus de pouvoirs pour maintenir l'ordre dans les quartiers difficiles.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "law and order",
     "explanation": "Dans les quartiers défavorisés, la délinquance et le sous-investissement public coexistent. Deux approches s'affrontent : renforcer la présence policière pour rétablir l'ordre ; ou investir massivement dans l'éducation et l'emploi pour traiter les causes profondes."
@@ -1724,7 +1537,6 @@
     "id": "ENV_24",
     "text": "La France doit sortir du nucléaire dans les vingt prochaines années.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "energy transition",
     "explanation": "La France est le pays le plus dépendant du nucléaire au monde (~70 % de son électricité). En sortir implique de développer massivement les renouvelables et probablement d'utiliser plus de gaz pendant la transition. Le débat porte sur les délais, les coûts et la sécurité d'approvisionnement."
@@ -1733,7 +1545,6 @@
     "id": "DEM_24",
     "text": "Le référendum d'initiative citoyenne (RIC) doit être introduit dans la Constitution française.",
     "axis": "authority",
-    "weight": 5,
     "status": "CORE",
     "cluster": "direct democracy",
     "explanation": "Le RIC (Référendum d'Initiative Citoyenne) est une demande portée notamment par les Gilets jaunes. Il permettrait à des citoyens de forcer l'organisation d'un référendum via une pétition. Ses partisans y voient un correctif démocratique ; ses critiques craignent des votes sur les droits des minorités."
@@ -1742,7 +1553,6 @@
     "id": "GLO_23",
     "text": "La France doit quitter le commandement militaire intégré de l'OTAN.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "sovereignty",
     "explanation": "La France a quitté le commandement militaire intégré de l'OTAN en 1966 avant d'y revenir en 2009. Certains souhaitent un nouveau retrait pour préserver l'autonomie stratégique française ; d'autres considèrent que l'alliance est indispensable face aux menaces actuelles."
@@ -1751,7 +1561,6 @@
     "id": "GLO_24",
     "text": "L'Union européenne doit avoir davantage de compétences et de budget pour agir au-delà des capacités individuelles des États membres.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "EU federalism",
     "explanation": "L'UE décide à l'unanimité sur les questions fiscales et de politique étrangère, ce qui bloque souvent les décisions. Certains souhaitent plus de vote à la majorité et un budget européen plus important ; d'autres craignent une perte de contrôle des États membres."
@@ -1760,7 +1569,6 @@
     "id": "ECO_26",
     "text": "L'âge légal de départ à la retraite devrait être abaissé par rapport au niveau actuel (64 ans).",
     "axis": "economic",
-    "weight": 5,
     "status": "CORE",
     "cluster": "pensions",
     "explanation": "La réforme des retraites de 2023 a repoussé l'âge légal de départ de 62 à 64 ans, malgré une forte opposition sociale. Ses partisans l'estiment nécessaire pour équilibrer le système ; ses opposants jugent qu'elle pénalise les travailleurs aux carrières longues et aux métiers pénibles."
@@ -1769,7 +1577,6 @@
     "id": "GLO_25",
     "text": "La France doit continuer à soutenir militairement et financièrement l'Ukraine face à la Russie.",
     "axis": "global",
-    "weight": 5,
     "status": "CORE",
     "cluster": "ukraine",
     "explanation": "Depuis l'invasion russe de 2022, la France a fourni une aide militaire et financière à l'Ukraine. Le débat porte sur le niveau et la nature de ce soutien : armes offensives, instructeurs ? Certains craignent une escalade ; d'autres estiment que ce soutien est une nécessité pour la sécurité européenne."
@@ -1778,7 +1585,6 @@
     "id": "ENV_25",
     "text": "Les normes environnementales européennes sur l'agriculture devraient être assouplies pour mieux tenir compte des réalités des agriculteurs français.",
     "axis": "global",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "agriculture",
     "explanation": "Les agriculteurs français dénoncent une concurrence déloyale avec des pays soumis à des normes moins strictes. Le débat porte sur l'équilibre entre les objectifs environnementaux de l'UE (réduction des pesticides, biodiversité) et la compétitivité du modèle agricole français."
@@ -1787,7 +1593,6 @@
     "id": "PUB_24",
     "text": "L'État doit obliger les médecins à s'installer dans les déserts médicaux.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "healthcare access",
     "explanation": "Les déserts médicaux touchent des millions de Français, notamment en zone rurale. L'obligation d'installation dans ces zones existe dans certains pays. Le débat porte sur l'équilibre entre la liberté d'installation des médecins et le droit à la santé de tous les citoyens."
@@ -1796,7 +1601,6 @@
     "id": "PUB_25",
     "text": "L'État doit investir massivement dans les hôpitaux publics, notamment aux urgences et dans les lits d'hospitalisation.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "public healthcare",
     "explanation": "Les hôpitaux publics manquent de lits, de personnel et de matériel selon de nombreux soignants. Des fermetures de services et des temps d'attente aux urgences illustrent cette crise. Le débat porte sur le financement, la gouvernance et la place du secteur privé dans l'organisation des soins."
@@ -1805,7 +1609,6 @@
     "id": "SOC_26",
     "text": "L'État doit prendre des mesures concrètes pour réduire les discriminations liées à l'origine ou à la couleur de peau.",
     "axis": "cultural",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "anti-discrimination",
     "explanation": "Des études montrent que des personnes à nom à consonance étrangère ont moins de chances d'être rappelées après un envoi de CV. L'État peut agir via des contrôles (testing), des sanctions ou des politiques d'égalité. Le débat porte sur l'efficacité de ces mesures et leur compatibilité avec l'égalité républicaine."
@@ -1814,7 +1617,6 @@
     "id": "DEM_25",
     "text": "La détention de nombreux médias par quelques grandes fortunes nuit à la pluralité de l'information en France.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "media plurality",
     "explanation": "Quelques milliardaires contrôlent une grande partie des médias français. Le risque est une orientation éditoriale au service de leurs intérêts économiques ou politiques. Le débat porte sur les seuils de concentration acceptables et les conditions de cession des médias."
@@ -1823,7 +1625,6 @@
     "id": "SEC_24",
     "text": "Face à la délinquance dans les quartiers difficiles, la priorité doit être le renforcement policier plutôt que les aides sociales.",
     "axis": "authority",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "law and order",
     "explanation": "Dans les quartiers défavorisés, la délinquance est souvent liée au chômage et aux inégalités. Le débat oppose ceux qui veulent d'abord rétablir l'ordre par la police, à ceux qui estiment que les investissements sociaux et éducatifs sont la réponse durable."
@@ -1832,7 +1633,6 @@
     "id": "ECO_27",
     "text": "La France doit imposer des droits de douane sur les importations pour protéger ses industries.",
     "axis": "economic",
-    "weight": 3,
     "status": "SECONDARY",
     "cluster": "protectionism",
     "explanation": "Les droits de douane sont des taxes sur les importations. Ils protègent les industries locales de la concurrence étrangère et peuvent préserver des emplois ; mais ils renchérissent les produits pour les consommateurs et peuvent provoquer des mesures de rétorsion commerciales."
