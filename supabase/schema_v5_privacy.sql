@@ -111,3 +111,41 @@ CREATE POLICY "quiz_sessions: update own row (best-effort)"
 --
 -- user_consents révoqués depuis longtemps : conserver (c'est la preuve d'audit du
 -- retrait de consentement), ne pas purger.
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 5. Données déjà stockées avant ce correctif (« legacy ») — repérage, non
+--    exécuté automatiquement.
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Avant cette migration, user_answers/user_profiles étaient écrits sur simple
+-- connexion, sans passer par un enregistrement de consentement dans
+-- user_consents (la table existait depuis schema_v3.sql mais n'était pas
+-- encore lue/écrite par le code applicatif — voir § 3 ci-dessus). Toute ligne
+-- user_answers/user_profiles pour un user_id n'ayant PAS de ligne
+-- user_consents(consent_type='political_data', granted=true) est donc une
+-- donnée « historique » : stockée légitimement selon les règles en vigueur au
+-- moment de l'écriture, mais sans la preuve de consentement qu'on exigerait
+-- aujourd'hui.
+--
+-- Le projet Supabase actuellement lié à ce dépôt est inactif (voir
+-- INTELLIGENCE_AUDIT_V2.md) — cette requête n'a donc pas pu être exécutée pour
+-- mesurer l'ampleur réelle du problème. Avant la mise en production sur le
+-- prochain projet actif, exécuter ceci pour lister les comptes concernés :
+--
+--   SELECT ua.user_id, count(*) AS answer_rows
+--   FROM public.user_answers ua
+--   LEFT JOIN public.user_consents uc
+--     ON uc.user_id = ua.user_id AND uc.consent_type = 'political_data' AND uc.granted = true
+--   WHERE uc.user_id IS NULL
+--   GROUP BY ua.user_id;
+--
+-- Deux options pour ces comptes, à trancher par une personne habilitée (pas
+-- une décision purement technique) avant mise en production :
+--   (a) leur redemander un consentement explicite au prochain login (ré-afficher
+--       ConsentModal même si des données existent déjà — nécessiterait de ne
+--       plus traiter "aucune ligne user_consents" comme équivalent à
+--       "jamais demandé" côté UI, ce qui est son comportement actuel) ;
+--   (b) purger ces lignes historiques faute de preuve de consentement.
+-- Nous recommandons (a) par défaut — moins destructif — sauf avis juridique
+-- contraire. Non tranché ici : nécessite une validation professionnelle, pas
+-- seulement technique (voir le rapport de mission, chantier 1 étape 5).

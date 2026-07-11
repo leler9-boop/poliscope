@@ -308,6 +308,38 @@ export function AuthProvider({ children }) {
     return { error };
   }
 
+  /**
+   * Permanently delete this account's cloud-stored data: answers, profile
+   * snapshot + archetype/candidate meta (user_answers, user_profiles), and
+   * optional demographics (user_demographics). Also withdraws consent, since
+   * there is nothing left to consent to. Irreversible — the UI must confirm
+   * with the user before calling this (see the confirmation step in
+   * Profile.jsx).
+   *
+   * Deliberately does NOT touch this device's local answers/profile — that's
+   * resetProfile() in useStore.js, a separate, already-existing action with
+   * its own confirmation UI. Deliberately does NOT delete the Supabase Auth
+   * account itself (login/email) — that requires service_role access this
+   * client-side app does not have; users are directed to email us instead
+   * (see the account-deletion note in Profile.jsx). See
+   * audit/rgpd-remediation-2026-07/ for the full rationale.
+   */
+  async function deleteMyData() {
+    if (!isSupabaseEnabled || !supabase || !user) return { error: 'Not authenticated' };
+    const [answersRes, profileRes, demographicsRes] = await Promise.all([
+      supabase.from('user_answers').delete().eq('user_id', user.id),
+      supabase.from('user_profiles').delete().eq('user_id', user.id),
+      supabase.from('user_demographics').delete().eq('user_id', user.id),
+    ]);
+    const error = answersRes.error?.message ?? profileRes.error?.message ?? demographicsRes.error?.message ?? null;
+    if (error) {
+      console.error('[Poliscop] deleteMyData error:', error);
+      return { error };
+    }
+    await revokeConsent();
+    return { error: null };
+  }
+
   // ── Data persistence ──────────────────────────────────────────────────────
 
   /**
@@ -467,6 +499,7 @@ export function AuthProvider({ children }) {
     saveProfileMeta,
     grantConsent,
     revokeConsent,
+    deleteMyData,
     // Legacy alias used by the Profile.jsx cloud-save button
     saveProfile: async (answers) => saveAnswers(answers),
   };

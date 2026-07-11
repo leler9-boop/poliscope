@@ -35,6 +35,7 @@ import AxisBar from '../components/AxisBar.jsx';
 import ProfileShareModal from '../components/ProfileShareModal.jsx';
 import ProfileReveal from '../components/ProfileReveal.jsx';
 import ConsentModal from '../components/ConsentModal.jsx';
+import DataControlsModal from '../components/DataControlsModal.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { isSupabaseEnabled } from '../lib/supabase.js';
 import { trackProfileViewed, trackProfileExported } from '../lib/analytics.js';
@@ -182,6 +183,7 @@ export default function Profile() {
   // ── RGPD consent gate for cloud save (main button + migration banner) ─────
   const consent = useStore(s => s.consent);
   const [showConsentModal, setShowConsentModal] = useState(false);
+  const [showDataControls, setShowDataControls] = useState(false);
   // Which button opened the modal, so we know what to resume on "I agree" —
   // both currently do the exact same save, kept distinct for setPendingMigration(false).
   const pendingSaveKind = useRef(null); // 'save' | 'migrate'
@@ -465,6 +467,15 @@ export default function Profile() {
               ↑ {t('profile_import')}
             </button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+            {user && (
+              <button
+                onClick={() => setShowDataControls(true)}
+                className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+                title={language === 'fr' ? 'Tes données en ligne' : 'Your online data'}
+              >
+                🔒 {language === 'fr' ? 'Confidentialité' : 'Privacy'}
+              </button>
+            )}
             <button
               onClick={() => setShowResetConfirm(true)}
               className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-red-400 border border-red-100 px-3 py-2.5 rounded-xl hover:bg-red-50 transition-colors min-h-[40px]"
@@ -478,6 +489,9 @@ export default function Profile() {
 
       {/* RGPD consent — before any cloud save of political answers */}
       {showConsentModal && <ConsentModal onDecided={handleConsentDecided} />}
+
+      {/* RGPD data controls — withdraw consent, delete cloud data, export */}
+      {showDataControls && <DataControlsModal onClose={() => setShowDataControls(false)} />}
 
       {/* Reset confirmation */}
       {showResetConfirm && (
