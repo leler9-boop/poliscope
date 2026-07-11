@@ -174,4 +174,33 @@ Les 10 entrées affectées ont été corrigées (ou supprimées pour les 3 morte
 
 ---
 
-*(Les lots 6 à 8 seront ajoutés ici au fur et à mesure.)*
+## Lot 6/8 — Europe, international, défense (GLOBAL)
+
+22 questions actives revues. Qualité de base élevée comme au lot 5 : 21 conformes sans modification, 1 seule modifiée.
+
+| ID | Ancienne formulation | Nouvelle formulation | Raison principale | Explication modifiée | Degré | Validation factuelle |
+|---|---|---|---|---|---|---|
+| GLO_4 | « La France doit augmenter son aide publique au développement **versée aux pays en développement**. » | « La France doit augmenter son aide publique au développement. » | Clause finale redondante (« aide publique au développement » est par définition versée aux pays en développement) ; explication mise à jour avec une trajectoire budgétaire nettement plus informative que l'ancien chiffre statique | Oui (mise à jour) | Mineur | Effectuée — 5 coupes budgétaires consécutives (0,56 % du RNB en 2022 → ~0,43 % en 2025 → ~0,38 % prévu en 2026), loin de l'objectif de 0,7 % pour 2025 |
+
+**Faux positif de lint confirmé** : GLO_3 (`EXPL_ECHOES_QUESTION`) — même schéma qu'ECO_20 au lot 1 : l'explication commence par définir le sujet avec les mêmes premiers mots que la question (« L'OTAN est une alliance militaire... ») avant de diverger vers un contenu réellement distinct. Aucune action.
+
+**Cas limites documentés (chevauchement thématique, pas doublons)** — ce lot en comporte plusieurs, plus que les précédents, tous jugés légitimement distincts après examen individuel :
+- **GLO_1** *(CORE)* (« l'intérêt national doit primer sur les engagements internationaux ») et **GLO_5** (« ...doit **toujours** passer avant les obligations des traités internationaux ») : même axe (souverainisme vs. internationalisme), mais GLO_5 ajoute un qualificatif absolu (« toujours ») qui en fait une position plus extrême — quelqu'un peut favoriser l'intérêt national en général (GLO_1) sans adhérer à sa primauté absolue et inconditionnelle (GLO_5). Poids différents (CORE vs SECONDARY) limitant la sur-pondération.
+- **GLO_8** *(CORE)* (intégration politique européenne en général, avec arbitrage explicite de souveraineté) et **GLO_24** (compétences et budget de l'UE, motivés spécifiquement par le blocage du vote à l'unanimité) : la seconde cible un mécanisme institutionnel précis (unanimité vs. majorité qualifiée) plutôt que l'intégration en général.
+- **GLO_9** (protection de la culture française **spécifiquement face à l'influence américaine**) et **GLO_22** (financement actif de la culture et des traditions françaises **en général**) : quelqu'un peut soutenir un financement culturel général sans viser spécifiquement l'influence américaine, ou l'inverse.
+- **GLO_11** (réduire la dépendance **à la Chine spécifiquement**) et **GLO_16** (produire davantage **localement en général**, alimentation/énergie) : diversifier loin de la Chine n'implique pas nécessairement de relocaliser en France, et vice-versa.
+- **GLO_7** (sanctionner les **régimes autoritaires**, cadrage par type de régime) et **GLO_20** (sanctionner les **violations de droits humains**, cadrage par type de violation, applicable même à des régimes non autoritaires) : déclencheurs différents.
+
+**Doublons revus** : GLO_19 (dup de GLO_4, stub vide), GLO_21 (dup de GLO_8, stub vide) — aucune action. GLO_18 (dup de GLO_15, texte réel : « Les pays doivent intervenir militairement pour les droits humains ailleurs. ») est une version générique et moins précise de GLO_15 (qui ancre la même idée dans deux exemples historiques concrets et contrastés, Rwanda 1994 / Libye 2011) — correctement laissée filtrée, GLO_15 étant la version la plus riche et pédagogique du même principe.
+
+**Recherche ciblée effectuée** (1 nouvelle source, `question_GLO_4`) : chute de l'aide publique au développement française, confirmée par plusieurs sources convergentes (Sénat, Coordination SUD, Focus 2030), confiance haute. Chiffres jugés stables et non re-vérifiés (accord OCDE 2021 sur l'impôt minimum mondial à 15 %, GLO_10 ; tarifs douaniers UE sur les véhicules électriques chinois, GLO_6 ; mandat d'arrêt de la CPI contre Poutine en 2023, GLO_13 ; guerre en Ukraine toujours en cours, GLO_3/GLO_25 — contexte géopolitique volontairement laissé ouvert plutôt que figé sur un état précis, cohérent avec la nature évolutive du conflit).
+
+**Tests exécutés** : `test1`-`test4` PASS (107 questions direction=1, inchangé). `node scripts/lint-questions.mjs GLOBAL` → 1 signalement, faux positif confirmé. `JSON.parse` → 200 entrées valides. `npm run build` → succès.
+
+**Vérification produit réelle** : `priorityOrder` positionné sur Mondialisation en premier via `localStorage`. GLO_1 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812. Données de test effacées, serveur de dev arrêté après contrôle.
+
+**Commit** : un seul commit éditorial (une seule modification, aucune bascule de polarité).
+
+---
+
+*(Les lots 7 et 8 seront ajoutés ici au fur et à mesure.)*

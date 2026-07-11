@@ -139,3 +139,15 @@ Le plus gros lot (38 questions actives, deux thèmes traités ensemble). 12 ques
 **Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint DEMOCRACY → **0 signalement**. Build OK. Vérification navigateur réelle : `priorityOrder` positionné sur Démocratie en premier, DEM_8 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812.
 
 **Suivi hint** : DEM_1 et DEM_4, dont les entrées `questionHints.js` avaient été corrigées au lot précédent (bug de désynchronisation), confirmées ici avoir aussi un contenu source (texte + explication) de bonne qualité — aucun changement nécessaire.
+
+### Lot 6/8 — Europe, international, défense (GLOBAL) ✅ COMMITÉ (2026-07-11)
+
+22 questions actives revues, 1 seule modifiée (GLO_4, chiffre d'aide au développement obsolète). 5 cas limites de chevauchement thématique documentés (GLO_1/GLO_5, GLO_8/GLO_24, GLO_9/GLO_22, GLO_11/GLO_16, GLO_7/GLO_20 — plus que les lots précédents, tous jugés légitimement distincts après examen individuel). Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-68--europe-international-défense-global).
+
+**Commit** : **`415823a`** — *fix: GLOBAL batch — update GLO_4's aid-budget figure*.
+
+**Tests** : régression ×4 PASS (107 questions direction=1, inchangé), JSON valide (200 entrées), lint GLOBAL (1 faux positif confirmé, même schéma qu'ECO_20). Build OK. Vérification navigateur réelle : `priorityOrder` positionné sur Mondialisation en premier, GLO_1 *(CORE)* confirmé en première question, rendu propre sur mobile 375×812.
+
+**Suivi hint** : GLO_1 et GLO_3, dont les entrées `questionHints.js` avaient été corrigées au lot 4, confirmées ici avoir un contenu source de bonne qualité.
+
+**Recherche ciblée** : 1 nouvelle source (`question_GLO_4`, chute de l'APD française sur 5 ans consécutifs, confiance haute).

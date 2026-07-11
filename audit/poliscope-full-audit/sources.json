@@ -317,5 +317,16 @@
     "verifiedAt": "2026-07-11",
     "confidence": "high",
     "notes": "L'explication précédente de SEC_7 présentait la France comme ayant 'atteint l'objectif OTAN de 2%', une référence obsolète depuis le relèvement à 5% en juin 2025 — la France est maintenant sous le nouvel objectif, pas à son niveau, ce qui inverse le sens implicite du contexte."
+  },
+  {
+    "entityId": "question_GLO_4",
+    "claim": "L'aide publique au développement française a connu 5 coupes budgétaires consécutives, passant de 0,56% du RNB en 2022 à environ 0,43% en 2025, avec une nouvelle baisse prévue à environ 0,38% en 2026 (budget APD de 4,373 à 3,569 milliards d'euros, -18%) — loin de l'objectif de 0,7% que la France s'était fixé pour 2025",
+    "sourceUrl": "https://focus2030.org/en/2026-finance-bill-a-fifth-cut-in-french-official-development-assistance/",
+    "sourceTitle": "2026 Finance Bill: A Fifth Cut in French Official Development Assistance - Focus 2030",
+    "sourceType": "press",
+    "publishedAt": "2025-09",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Remplace l'ancien chiffre statique '~0,5% du RNB' par la trajectoire réelle et le contexte politique (baisses successives, controverse publique), bien plus informatif que le simple écart au seuil ONU de 0,7%. Confidence haute : chiffres cohérents entre plusieurs sources convergentes (Sénat, Coordination SUD, Focus 2030)."
   }
 ]
