@@ -58,7 +58,7 @@ export const frenchFigures = [
       en: `His positioning has shifted toward more security-focused and sovereignist stances on immigration since 2022, blurring his initial liberal line.`,
     },
     profile: {
-      ECONOMY: 70, SOCIAL: 65, IMMIGRATION: 42, SECURITY: 42,
+      ECONOMY: 70, SOCIAL: 65, IMMIGRATION: 58, SECURITY: 58,
       ENVIRONMENT: 55, DEMOCRACY: 48, GLOBAL: 80, PUBLIC_SERVICES: 38,
     },
   },
@@ -115,7 +115,7 @@ export const frenchFigures = [
       en: `His positions on secularism and security have at times created tensions with the progressive wing of Renaissance.`,
     },
     profile: {
-      ECONOMY: 68, SOCIAL: 68, IMMIGRATION: 40, SECURITY: 42,
+      ECONOMY: 68, SOCIAL: 68, IMMIGRATION: 60, SECURITY: 58,
       ENVIRONMENT: 55, DEMOCRACY: 55, GLOBAL: 78, PUBLIC_SERVICES: 40,
     },
   },
@@ -172,7 +172,7 @@ export const frenchFigures = [
       en: `Coming from LR, his profile is further right than the average Macronist, particularly on economic and security issues.`,
     },
     profile: {
-      ECONOMY: 72, SOCIAL: 50, IMMIGRATION: 38, SECURITY: 40,
+      ECONOMY: 72, SOCIAL: 50, IMMIGRATION: 62, SECURITY: 60,
       ENVIRONMENT: 50, DEMOCRACY: 52, GLOBAL: 72, PUBLIC_SERVICES: 38,
     },
   },
@@ -229,7 +229,7 @@ export const frenchFigures = [
       en: `Her time in government is primarily defined by the pension reform, passed without a vote via Article 49.3.`,
     },
     profile: {
-      ECONOMY: 62, SOCIAL: 60, IMMIGRATION: 48, SECURITY: 45,
+      ECONOMY: 62, SOCIAL: 60, IMMIGRATION: 52, SECURITY: 55,
       ENVIRONMENT: 60, DEMOCRACY: 52, GLOBAL: 75, PUBLIC_SERVICES: 48,
     },
   },
@@ -286,7 +286,7 @@ export const frenchFigures = [
       en: `His liberal economic positions contrast with his more conservative stance on social issues, inherited from his years in the UMP.`,
     },
     profile: {
-      ECONOMY: 80, SOCIAL: 55, IMMIGRATION: 45, SECURITY: 45,
+      ECONOMY: 80, SOCIAL: 55, IMMIGRATION: 55, SECURITY: 55,
       ENVIRONMENT: 45, DEMOCRACY: 48, GLOBAL: 75, PUBLIC_SERVICES: 30,
     },
   },
@@ -343,7 +343,7 @@ export const frenchFigures = [
       en: `His profile is markedly further right than the average Macronist on immigration and security.`,
     },
     profile: {
-      ECONOMY: 65, SOCIAL: 40, IMMIGRATION: 22, SECURITY: 22,
+      ECONOMY: 65, SOCIAL: 40, IMMIGRATION: 78, SECURITY: 78,
       ENVIRONMENT: 45, DEMOCRACY: 38, GLOBAL: 62, PUBLIC_SERVICES: 42,
     },
   },
@@ -400,7 +400,7 @@ export const frenchFigures = [
       en: `His positions are hard to classify on the left-right axis: liberal on economics, yet attached to Christian social values on certain social issues.`,
     },
     profile: {
-      ECONOMY: 60, SOCIAL: 52, IMMIGRATION: 42, SECURITY: 50,
+      ECONOMY: 60, SOCIAL: 52, IMMIGRATION: 58, SECURITY: 50,
       ENVIRONMENT: 55, DEMOCRACY: 58, GLOBAL: 72, PUBLIC_SERVICES: 50,
     },
   },
@@ -459,7 +459,7 @@ export const frenchFigures = [
       en: `His rightward shift has been seen as an attempt to recapture RN voters, fuelling debate over LR's identity.`,
     },
     profile: {
-      ECONOMY: 78, SOCIAL: 28, IMMIGRATION: 18, SECURITY: 20,
+      ECONOMY: 78, SOCIAL: 28, IMMIGRATION: 82, SECURITY: 80,
       ENVIRONMENT: 35, DEMOCRACY: 40, GLOBAL: 38, PUBLIC_SERVICES: 28,
     },
   },
@@ -516,7 +516,7 @@ export const frenchFigures = [
       en: `He is seen as less ideological than Wauquiez, with more focus on managerial effectiveness and social dialogue.`,
     },
     profile: {
-      ECONOMY: 72, SOCIAL: 38, IMMIGRATION: 28, SECURITY: 28,
+      ECONOMY: 72, SOCIAL: 38, IMMIGRATION: 72, SECURITY: 72,
       ENVIRONMENT: 42, DEMOCRACY: 48, GLOBAL: 52, PUBLIC_SERVICES: 38,
     },
   },
@@ -573,7 +573,7 @@ export const frenchFigures = [
       en: `Her catastrophic presidential score symbolised the decline of the traditional centre-right in the face of Macronist and RN polarisation.`,
     },
     profile: {
-      ECONOMY: 75, SOCIAL: 35, IMMIGRATION: 22, SECURITY: 28,
+      ECONOMY: 75, SOCIAL: 35, IMMIGRATION: 78, SECURITY: 72,
       ENVIRONMENT: 40, DEMOCRACY: 48, GLOBAL: 55, PUBLIC_SERVICES: 30,
     },
   },
@@ -630,7 +630,7 @@ export const frenchFigures = [
       en: `His alliance with the RN divided the traditional right and illustrates the ongoing shift of part of conservatism toward the far right.`,
     },
     profile: {
-      ECONOMY: 75, SOCIAL: 18, IMMIGRATION: 12, SECURITY: 15,
+      ECONOMY: 75, SOCIAL: 18, IMMIGRATION: 88, SECURITY: 85,
       ENVIRONMENT: 30, DEMOCRACY: 32, GLOBAL: 22, PUBLIC_SERVICES: 25,
     },
   },
@@ -687,7 +687,7 @@ export const frenchFigures = [
       en: `His statements on the rule of law and positions against certain civil liberties have sparked controversy even within the governing coalition.`,
     },
     profile: {
-      ECONOMY: 72, SOCIAL: 22, IMMIGRATION: 15, SECURITY: 15,
+      ECONOMY: 72, SOCIAL: 22, IMMIGRATION: 85, SECURITY: 85,
       ENVIRONMENT: 35, DEMOCRACY: 38, GLOBAL: 32, PUBLIC_SERVICES: 28,
     },
   },
@@ -746,7 +746,7 @@ export const frenchFigures = [
       en: `Her "de-demonisation" of the RN enabled an electoral rise. Her conviction for misappropriating European funds (upheld on appeal 7 July 2026) is expected to be challenged via a cassation appeal, announced but not confirmed filed; the ineligibility sentence has already been served, however, making her eligible for 2027 — she declared her candidacy the same evening as the verdict.`,
     },
     profile: {
-      ECONOMY: 40, SOCIAL: 15, IMMIGRATION: 5, SECURITY: 10,
+      ECONOMY: 40, SOCIAL: 15, IMMIGRATION: 95, SECURITY: 90,
       ENVIRONMENT: 28, DEMOCRACY: 30, GLOBAL: 10, PUBLIC_SERVICES: 55,
     },
   },
@@ -803,7 +803,7 @@ export const frenchFigures = [
       en: `His very polished public profile conceals an ideological positioning aligned with the RN's hard lines on immigration and rejection of multiculturalism.`,
     },
     profile: {
-      ECONOMY: 45, SOCIAL: 12, IMMIGRATION: 5, SECURITY: 8,
+      ECONOMY: 45, SOCIAL: 12, IMMIGRATION: 95, SECURITY: 92,
       ENVIRONMENT: 22, DEMOCRACY: 28, GLOBAL: 10, PUBLIC_SERVICES: 52,
     },
   },
@@ -860,7 +860,7 @@ export const frenchFigures = [
       en: `Convicted several times for incitement to racial hatred, his positions on Islam and immigration are the subject of intense judicial and academic debate.`,
     },
     profile: {
-      ECONOMY: 72, SOCIAL: 5, IMMIGRATION: 3, SECURITY: 5,
+      ECONOMY: 72, SOCIAL: 5, IMMIGRATION: 97, SECURITY: 95,
       ENVIRONMENT: 20, DEMOCRACY: 22, GLOBAL: 5, PUBLIC_SERVICES: 22,
     },
   },
@@ -917,7 +917,7 @@ export const frenchFigures = [
       en: `Her departure from the FN and positions inspired by American conservatism distinguish her from her aunt Marine Le Pen, with whom relations are distant.`,
     },
     profile: {
-      ECONOMY: 68, SOCIAL: 8, IMMIGRATION: 5, SECURITY: 8,
+      ECONOMY: 68, SOCIAL: 8, IMMIGRATION: 95, SECURITY: 92,
       ENVIRONMENT: 22, DEMOCRACY: 28, GLOBAL: 8, PUBLIC_SERVICES: 28,
     },
   },
@@ -974,7 +974,7 @@ export const frenchFigures = [
       en: `His support for Marine Le Pen in 2017 and his anti-vaccine positions have marginalised him despite a solid local base.`,
     },
     profile: {
-      ECONOMY: 48, SOCIAL: 22, IMMIGRATION: 18, SECURITY: 22,
+      ECONOMY: 48, SOCIAL: 22, IMMIGRATION: 82, SECURITY: 78,
       ENVIRONMENT: 35, DEMOCRACY: 42, GLOBAL: 10, PUBLIC_SERVICES: 52,
     },
   },
@@ -1033,7 +1033,7 @@ export const frenchFigures = [
       en: `His positions on foreign policy (Russia, Venezuela, Palestine) are highly controversial, including within the French left.`,
     },
     profile: {
-      ECONOMY: 8, SOCIAL: 85, IMMIGRATION: 88, SECURITY: 82,
+      ECONOMY: 8, SOCIAL: 85, IMMIGRATION: 12, SECURITY: 18,
       ENVIRONMENT: 78, DEMOCRACY: 72, GLOBAL: 35, PUBLIC_SERVICES: 92,
     },
   },
@@ -1090,7 +1090,7 @@ export const frenchFigures = [
       en: `His departure from LFI reflects tensions over political strategy and Mélenchon's leadership style.`,
     },
     profile: {
-      ECONOMY: 12, SOCIAL: 72, IMMIGRATION: 72, SECURITY: 75,
+      ECONOMY: 12, SOCIAL: 72, IMMIGRATION: 28, SECURITY: 25,
       ENVIRONMENT: 72, DEMOCRACY: 80, GLOBAL: 52, PUBLIC_SERVICES: 90,
     },
   },
@@ -1147,7 +1147,7 @@ export const frenchFigures = [
       en: `Her statements on the Middle East conflict and her positions on anti-Zionism have fuelled controversy and reinforced the isolation of the LFI group in the Assembly.`,
     },
     profile: {
-      ECONOMY: 10, SOCIAL: 88, IMMIGRATION: 90, SECURITY: 85,
+      ECONOMY: 10, SOCIAL: 88, IMMIGRATION: 10, SECURITY: 15,
       ENVIRONMENT: 80, DEMOCRACY: 70, GLOBAL: 40, PUBLIC_SERVICES: 92,
     },
   },
@@ -1204,7 +1204,7 @@ export const frenchFigures = [
       en: `His Europhilia and Atlanticism clearly distinguish him from the Mélenchonist current, raising questions about left-wing unity.`,
     },
     profile: {
-      ECONOMY: 28, SOCIAL: 80, IMMIGRATION: 78, SECURITY: 72,
+      ECONOMY: 28, SOCIAL: 80, IMMIGRATION: 22, SECURITY: 28,
       ENVIRONMENT: 72, DEMOCRACY: 78, GLOBAL: 82, PUBLIC_SERVICES: 75,
     },
   },
@@ -1261,7 +1261,7 @@ export const frenchFigures = [
       en: `His strategy of left-wing unity with LFI is contested within the PS itself by those who fear the party being marginalised by Mélenchonist radicalism.`,
     },
     profile: {
-      ECONOMY: 22, SOCIAL: 78, IMMIGRATION: 76, SECURITY: 70,
+      ECONOMY: 22, SOCIAL: 78, IMMIGRATION: 24, SECURITY: 30,
       ENVIRONMENT: 68, DEMOCRACY: 75, GLOBAL: 72, PUBLIC_SERVICES: 80,
     },
   },
@@ -1318,7 +1318,7 @@ export const frenchFigures = [
       en: `Her Paris management is contested by the right as costly and insufficiently security-focused, but acclaimed by her voters.`,
     },
     profile: {
-      ECONOMY: 25, SOCIAL: 82, IMMIGRATION: 82, SECURITY: 68,
+      ECONOMY: 25, SOCIAL: 82, IMMIGRATION: 18, SECURITY: 32,
       ENVIRONMENT: 78, DEMOCRACY: 72, GLOBAL: 78, PUBLIC_SERVICES: 82,
     },
   },
@@ -1375,7 +1375,7 @@ export const frenchFigures = [
       en: `His positions on secularism and working-class traditions earn him criticism from LFI and the Greens at times.`,
     },
     profile: {
-      ECONOMY: 5, SOCIAL: 72, IMMIGRATION: 65, SECURITY: 68,
+      ECONOMY: 5, SOCIAL: 72, IMMIGRATION: 35, SECURITY: 32,
       ENVIRONMENT: 60, DEMOCRACY: 65, GLOBAL: 42, PUBLIC_SERVICES: 95,
     },
   },
@@ -1432,7 +1432,7 @@ export const frenchFigures = [
       en: `Her profile as an effective regional manager is sometimes less visible on the national stage.`,
     },
     profile: {
-      ECONOMY: 28, SOCIAL: 72, IMMIGRATION: 72, SECURITY: 65,
+      ECONOMY: 28, SOCIAL: 72, IMMIGRATION: 28, SECURITY: 35,
       ENVIRONMENT: 65, DEMOCRACY: 68, GLOBAL: 68, PUBLIC_SERVICES: 78,
     },
   },
@@ -1491,7 +1491,7 @@ export const frenchFigures = [
       en: `His positioning at the centre-left of political ecology leads to tensions with the more radical wing of his party on the LFI alliance strategy.`,
     },
     profile: {
-      ECONOMY: 38, SOCIAL: 82, IMMIGRATION: 85, SECURITY: 78,
+      ECONOMY: 38, SOCIAL: 82, IMMIGRATION: 15, SECURITY: 22,
       ENVIRONMENT: 92, DEMOCRACY: 80, GLOBAL: 80, PUBLIC_SERVICES: 68,
     },
   },
@@ -1548,7 +1548,7 @@ export const frenchFigures = [
       en: `Her strongly progressive profile may put off voters sensitive to ecology without subscribing to all social positions.`,
     },
     profile: {
-      ECONOMY: 28, SOCIAL: 88, IMMIGRATION: 90, SECURITY: 80,
+      ECONOMY: 28, SOCIAL: 88, IMMIGRATION: 10, SECURITY: 20,
       ENVIRONMENT: 95, DEMOCRACY: 85, GLOBAL: 80, PUBLIC_SERVICES: 78,
     },
   },
@@ -1605,7 +1605,7 @@ export const frenchFigures = [
       en: `Her positions on degrowth and her publicised interventions on gender issues make her polarising, including within her own party and the left more broadly.`,
     },
     profile: {
-      ECONOMY: 18, SOCIAL: 95, IMMIGRATION: 92, SECURITY: 90,
+      ECONOMY: 18, SOCIAL: 95, IMMIGRATION: 8, SECURITY: 10,
       ENVIRONMENT: 95, DEMOCRACY: 88, GLOBAL: 82, PUBLIC_SERVICES: 85,
     },
   },
