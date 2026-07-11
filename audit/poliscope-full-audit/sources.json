@@ -262,5 +262,60 @@
     "verifiedAt": "2026-07-11",
     "confidence": "medium",
     "notes": "Remplace la formulation de ENV_7 qui présentait l'interdiction totale 2035 comme entièrement actée. Confidence 'medium' : plusieurs sources de presse convergent sur les mêmes chiffres (90%, exceptions hybrides/e-carburants) mais la proposition n'est pas encore un texte adopté — à re-vérifier si le Parlement/Conseil statue définitivement."
+  },
+  {
+    "entityId": "question_IMM_1",
+    "claim": "La France a délivré environ 384 000 nouveaux titres de séjour en 2025 (+11% sur un an), un niveau record, en hausse notamment du fait des motifs humanitaires (+65%)",
+    "sourceUrl": "https://www.vie-publique.fr/en-bref/301795-immigration-les-chiffres-2025",
+    "sourceTitle": "Immigration : les premiers chiffres pour l'année 2025 - Vie Publique",
+    "sourceType": "official",
+    "publishedAt": "2026-01",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "Remplace l'ancien chiffre 'environ 300 000 immigrés légaux par an' (source non datée) dans IMM_1 (questions_final.json ET questionHints.js). Chiffre officiel publié par la Direction générale des étrangers en France le 27 janvier 2026."
+  },
+  {
+    "entityId": "question_IMM_16",
+    "claim": "La loi immigration de 2024 prévoyait un débat annuel au Parlement sur un objectif chiffré d'immigration ; cette disposition a été censurée par le Conseil constitutionnel le 25 janvier 2024 (décision n° 2023-863 DC), qui a jugé qu'aucune exigence constitutionnelle ne permet d'imposer un tel débat ou de tels objectifs chiffrés au Parlement",
+    "sourceUrl": "https://www.conseil-constitutionnel.fr/actualites/communique/decision-n-2023-863-dc-du-25-janvier-2024-communique-de-presse",
+    "sourceTitle": "Décision n° 2023-863 DC du 25 janvier 2024 - Communiqué de presse - Conseil constitutionnel",
+    "sourceType": "official",
+    "publishedAt": "2024-01-25",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "L'explication précédente de IMM_16 présentait ce mécanisme comme simplement 'débattu' par la loi de 2024, sans mentionner sa censure constitutionnelle — correction factuelle importante, pas seulement une mise à jour de chiffre."
+  },
+  {
+    "entityId": "question_IMM_21",
+    "claim": "Le Pacte européen sur la migration et l'asile, adopté en mai 2024, est entré en vigueur le 12 juin 2026. Il instaure un mécanisme de solidarité entre États membres laissant le choix entre accueil, compensation financière ou soutien opérationnel, sans obligation d'accueil",
+    "sourceUrl": "https://france.representation.ec.europa.eu/informations/le-pacte-asile-et-migration-entre-en-vigueur-le-12-juin-2026-06-11_fr",
+    "sourceTitle": "Le Pacte Asile et migration entre en vigueur le 12 juin - Représentation de la Commission européenne en France",
+    "sourceType": "official",
+    "publishedAt": "2026-06-11",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "IMM_21 reformulée pour cibler spécifiquement le caractère contraignant de la répartition (le point réellement disputé), avec la date d'entrée en vigueur exacte et très récente du Pacte (moins d'un mois avant cette session)."
+  },
+  {
+    "entityId": "question_IMM_23",
+    "claim": "Une dérogation restreignant le droit du sol existe à Mayotte depuis 2018, durcie en 2025-2026 : la nationalité par le droit du sol y est désormais conditionnée à la résidence régulière des DEUX parents (contre un seul auparavant) pendant trois ans (contre trois mois). Une extension nationale nécessiterait une réforme constitutionnelle selon le ministre de la Justice",
+    "sourceUrl": "https://www.maire-info.com/la-loi-durcissant-le-droit-du-sol-%EF%BF%BD-mayotte-promulguee-avec-une-petite-reserve-du-conseil-constitutionnel-article2-29692",
+    "sourceTitle": "La loi durcissant le droit du sol à Mayotte promulguée, avec une petite réserve du Conseil constitutionnel - Maire-Info",
+    "sourceType": "press",
+    "publishedAt": "2026",
+    "verifiedAt": "2026-07-11",
+    "confidence": "medium",
+    "notes": "Ajoute à l'explication de IMM_23 (CORE) un exemple concret et actuel de restriction du droit du sol déjà en vigueur en France (limité à Mayotte), renforçant la neutralité factuelle sans changer la portée nationale de la question."
+  },
+  {
+    "entityId": "question_SEC_7",
+    "claim": "Au sommet de l'OTAN de La Haye (juin 2025), les pays membres se sont engagés à porter leurs dépenses de défense et sécurité à 5% du PIB d'ici 2035 (3,5% défense stricte + 1,5% sécurité élargie), contre l'ancien objectif de 2%. La France est actuellement à environ 2% du PIB",
+    "sourceUrl": "https://www.touteleurope.eu/l-ue-dans-le-monde/sommet-de-l-otan-en-approuvant-une-hausse-des-depenses-militaires-l-europe-franchit-un-seuil-strategique/",
+    "sourceTitle": "Sommet de l'OTAN : en approuvant une hausse des dépenses militaires, l'Europe franchit un seuil stratégique - Toute l'Europe",
+    "sourceType": "press",
+    "publishedAt": "2025-06",
+    "verifiedAt": "2026-07-11",
+    "confidence": "high",
+    "notes": "L'explication précédente de SEC_7 présentait la France comme ayant 'atteint l'objectif OTAN de 2%', une référence obsolète depuis le relèvement à 5% en juin 2025 — la France est maintenant sous le nouvel objectif, pas à son niveau, ce qui inverse le sens implicite du contexte."
   }
 ]
