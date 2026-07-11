@@ -1113,8 +1113,8 @@ export const elections = [
     flag: `🇫🇷`,
     year: 2026,
     description: {
-      en: `Paris held its municipal election in March 2026 with a renewed field. Anne Hidalgo announced in November 2024 that she would not seek a third term. Emmanuel Grégoire (PS) ran as head of a unified left coalition (PS, EELV, PCF), Rachida Dati (LR) led the right-wing opposition, and Sophia Chikirou carried the LFI banner.`,
-      fr: `Paris a tenu ses élections municipales en mars 2026 avec un renouvellement du champ politique. Anne Hidalgo a annoncé en novembre 2024 qu'elle ne briguerait pas un troisième mandat. Emmanuel Grégoire (PS) a conduit une liste d'union de la gauche (PS, EELV, PCF), Rachida Dati (LR) a porté l'opposition de droite, et Sophia Chikirou a représenté LFI.`,
+      en: `Paris held its municipal election in March 2026 with a renewed field. Anne Hidalgo announced in November 2024 that she would not seek a third term. Emmanuel Grégoire (PS) ran as head of a unified left coalition (PS, EELV, PCF), Rachida Dati (LR) led the right-wing opposition, and Sophia Chikirou carried the LFI banner. Grégoire won the run-off on 22 March 2026 with over 50% of the vote, about 9 points ahead of Dati, and was elected mayor.`,
+      fr: `Paris a tenu ses élections municipales en mars 2026 avec un renouvellement du champ politique. Anne Hidalgo a annoncé en novembre 2024 qu'elle ne briguerait pas un troisième mandat. Emmanuel Grégoire (PS) a conduit une liste d'union de la gauche (PS, EELV, PCF), Rachida Dati (LR) a porté l'opposition de droite, et Sophia Chikirou a représenté LFI. Grégoire a remporté le second tour le 22 mars 2026 avec plus de 50 % des voix, environ 9 points devant Dati, et a été élu maire.`,
     },
     context: {
       en: [
