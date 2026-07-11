@@ -14,8 +14,8 @@ import { trackFigureViewed } from '../lib/analytics.js';
 const THEME_AXES = {
   ECONOMY:         { en: { left: 'Redistrib.', right: 'Free market' }, fr: { left: 'Redistrib.', right: 'Marché libre' } },
   SOCIAL:          { en: { left: 'Traditional', right: 'Progressive' }, fr: { left: 'Trad.', right: 'Progressiste' } },
-  IMMIGRATION:     { en: { left: 'Restrictive', right: 'Open' }, fr: { left: 'Restrictif', right: 'Ouverture' } },
-  SECURITY:        { en: { left: 'State sec.', right: 'Civil lib.' }, fr: { left: 'État', right: 'Libertés' } },
+  IMMIGRATION:     { en: { left: 'Open', right: 'Restrictive' }, fr: { left: 'Ouverture', right: 'Restrictif' } },
+  SECURITY:        { en: { left: 'Civil lib.', right: 'State sec.' }, fr: { left: 'Libertés', right: 'État' } },
   ENVIRONMENT:     { en: { left: 'Growth', right: 'Ecology' }, fr: { left: 'Croissance', right: 'Écologie' } },
   DEMOCRACY:       { en: { left: 'Strong state', right: 'Participative' }, fr: { left: 'État fort', right: 'Participatif' } },
   GLOBAL:          { en: { left: 'Sovereignty', right: 'Multilateral.' }, fr: { left: 'Souverain.', right: 'Multilatér.' } },

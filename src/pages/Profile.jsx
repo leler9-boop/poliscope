@@ -11,8 +11,8 @@ import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engi
 const THEME_AXES = {
   ECONOMY:         { en: { left: 'Redistribution', right: 'Free market'    }, fr: { left: 'Redistribution', right: 'Marché libre'      } },
   SOCIAL:          { en: { left: 'Traditional',     right: 'Progressive'    }, fr: { left: 'Traditionnel',   right: 'Progressiste'      } },
-  IMMIGRATION:     { en: { left: 'Restrictive',     right: 'Open'           }, fr: { left: 'Restrictive',    right: 'Ouverte'           } },
-  SECURITY:        { en: { left: 'State security',  right: 'Civil liberties'}, fr: { left: 'Sécurité d\'État', right: 'Libertés civiles'} },
+  IMMIGRATION:     { en: { left: 'Open',            right: 'Restrictive'    }, fr: { left: 'Ouverte',        right: 'Restrictive'       } },
+  SECURITY:        { en: { left: 'Civil liberties', right: 'State security' }, fr: { left: 'Libertés civiles', right: 'Sécurité d\'État'} },
   ENVIRONMENT:     { en: { left: 'Growth first',    right: 'Ecology first'  }, fr: { left: 'Croissance',     right: 'Écologie'          } },
   DEMOCRACY:       { en: { left: 'Strong state',    right: 'Participative'  }, fr: { left: 'État fort',      right: 'Participatif'      } },
   GLOBAL:          { en: { left: 'Sovereignty',     right: 'Multilateralism'}, fr: { left: 'Souveraineté',   right: 'Multilatéralisme'  } },
