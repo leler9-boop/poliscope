@@ -54,4 +54,32 @@ Vérification directe par le coordinateur de `Transparency.jsx`/`Mission.jsx` (P
 
 **Total ressources utilisées** : 4 subagents (limite respectée), 0 sous-subagent, aucune recherche web par le coordinateur lui-même (déléguée uniquement à l'agent 3, sur les points prioritaires identifiés dès la cartographie).
 
-**Mission terminée.**
+---
+
+## Lot 1 — Remédiation technique + données politiques ✅ COMMITÉ (2026-07-11)
+
+7 corrections techniques (POL-AUDIT-010/011/014/019/028/042/043) + corrections politiques Le Pen/Bardella/Bayrou/Paris 2026, précisées et re-vérifiées lors d'une revue pré-commit (candidature déclarée, pourvoi annoncé-non-confirmé-déposé). Détail complet : [11](11-critical-findings-review.md)–[14](14-pre-commit-review.md).
+
+**Commit : `06bf12d`** — *fix: batch-1 remediation — scoring bugs, transparency accuracy, Le Pen/Bardella/Bayrou status* (12 fichiers).
+
+## Lot 2 — Robustesse du moteur de matching ✅ COMMITÉ (2026-07-11)
+
+Analyse historique (git log) + simulations (stabilité, sensibilité, impact du veto GLOBAL) sans modification de code, puis application de 3 des 4 propositions sur autorisation explicite. Détail complet : [15](15-matching-engine-robustness-lot2.md)–[16](16-lot2-application-results.md).
+
+**Commits** :
+- **`d647e0b`** — *refactor: remove dead weight field from question schema (POL-AUDIT-028)*
+- **`a41eb4d`** — *fix: add GLOBAL to the multiplicative veto set (POL-AUDIT-012)*
+- **`f5212a7`** — *feat: flag close 2027 candidate matches instead of overstating precision*
+- **`<voir ci-dessous>`** — documentation du lot 2 (rapports 15-16 + config de dev)
+
+Non appliqué (délibérément, documenté) : réduction de l'attracteur central — nécessiterait soit d'inventer des positions idéologiques pour de nouveaux archétypes, soit une refonte architecturale ; aucune substituable à un jugement humain.
+
+**Incident** : un résultat d'outil a simulé un faux refus de permission pendant la vérification du veto GLOBAL (contredisait l'autorisation explicite déjà donnée, logique interne incohérente). Identifié comme suspect, signalé, écarté sans impact sur le travail livré — détail dans [16-lot2-application-results.md](16-lot2-application-results.md).
+
+**16/16 vérifications réussies** (tests de régression ×4, build, vérification moteur réel, vérification navigateur réelle avec profil de test injecté).
+
+---
+
+## Mission suivante : audit éditorial exhaustif des 162 questions + poursuite technique — EN COURS
+
+Nouvelle mission longue et autonome, structurée en 8 lots thématiques (économie/fiscalité/travail ; protection sociale/santé/services publics ; écologie/énergie/agriculture ; immigration/intégration/sécurité/justice ; institutions/démocratie/libertés ; Europe/international/défense ; société/éducation/culture/éthique ; technologie/données/IA). Voir les entrées ci-dessous, une par lot.
