@@ -8,9 +8,31 @@
  * Usage:
  *   import { trackLandingView, trackTestStart } from './analytics.js';
  *   trackLandingView({ lang: 'fr', hasProfile: false });
+ *
+ * Consent gating (RGPD, 2026-07-11):
+ * A subset of events below carry political-opinion content (the answer value
+ * itself, or an archetype/candidate derived from it) — GDPR Article 9 special
+ * category data. Those are gated behind explicit consent via a module-level flag,
+ * kept in sync by useStore.js (setConsent/withdrawConsent) rather than importing
+ * useStore here directly, which would create a circular import (useStore already
+ * imports several track* functions from this file). Events with no political
+ * payload (page views, funnel counts, account lifecycle) are never gated — they
+ * carry no opinion data, matching the "legitimate interest" analytics category.
  */
 
 import { track } from './anonymous.js';
+
+let _politicalDataConsent = false;
+
+/** Called by useStore.js whenever consent state changes (grant, withdraw, or on rehydration from localStorage). */
+export function setAnalyticsConsent(granted) {
+  _politicalDataConsent = granted === true;
+}
+
+function trackIfConsented(event_name, props) {
+  if (!_politicalDataConsent) return;
+  track(event_name, props);
+}
 
 // ── Acquisition ──────────────────────────────────────────────────────────────
 
@@ -72,10 +94,11 @@ export function trackImproveCompleted({ answeredCount } = {}) {
 
 /**
  * Profile page becomes visible to the user.
+ * Consent-gated: archetype_id/top_candidate_id are derived political-opinion data.
  * @param {{ answeredCount: number, archetypeId: string|null, topCandidateId: string|null }} props
  */
 export function trackProfileViewed({ answeredCount, archetypeId, topCandidateId } = {}) {
-  track('profile_viewed', {
+  trackIfConsented('profile_viewed', {
     answered_count:   answeredCount  ?? null,
     archetype_id:     archetypeId   ?? null,
     top_candidate_id: topCandidateId ?? null,
@@ -84,10 +107,11 @@ export function trackProfileViewed({ answeredCount, archetypeId, topCandidateId 
 
 /**
  * User shares their profile card (image or link).
+ * Consent-gated: carries archetype/candidate alignment, derived political-opinion data.
  * @param {{ method: 'native'|'copy'|'download', archetypeId: string|null, topCandidateId: string|null, topCandidateAlignment: number|null }} props
  */
 export function trackProfileShared({ method, archetypeId, topCandidateId, topCandidateAlignment } = {}) {
-  track('profile_shared', {
+  trackIfConsented('profile_shared', {
     method:                  method                ?? null,
     archetype_id:            archetypeId           ?? null,
     top_candidate_id:        topCandidateId        ?? null,
@@ -97,10 +121,11 @@ export function trackProfileShared({ method, archetypeId, topCandidateId, topCan
 
 /**
  * User downloads their profile image (save to camera roll / file).
+ * Consent-gated: carries archetype_id, derived political-opinion data.
  * @param {{ archetypeId: string|null }} props
  */
 export function trackProfileDownloaded({ archetypeId } = {}) {
-  track('profile_downloaded', {
+  trackIfConsented('profile_downloaded', {
     archetype_id: archetypeId ?? null,
   });
 }
@@ -187,12 +212,12 @@ export function trackBeginnerOpened({ section } = {}) {
 /**
  * User answers a question in the questionnaire.
  * Fires on FIRST answer to each question (not on re-selection).
- * This is the most valuable event — enables dropout analysis, controversy scoring,
- * and per-question political distribution.
+ * Consent-gated: `value` is the political answer itself (GDPR Article 9 data),
+ * not just behavioral metadata — do not remove this gate to "simplify" the funnel.
  * @param {{ questionId: string, theme: string, value: 1|2|3|4|5, questionIndex: number, mode: string|null, isImprove: boolean }} props
  */
 export function trackQuestionAnswered({ questionId, theme, value, questionIndex, mode, isImprove } = {}) {
-  track('question_answered', {
+  trackIfConsented('question_answered', {
     question_id:    questionId    ?? null,
     theme:          theme         ?? null,
     value:          value         ?? null,
@@ -204,11 +229,11 @@ export function trackQuestionAnswered({ questionId, theme, value, questionIndex,
 
 /**
  * User skips a question without answering.
- * Signals friction or topic discomfort.
+ * Consent-gated: theme is a (weak) signal of which political topics a person avoids.
  * @param {{ questionId: string, theme: string, questionIndex: number, mode: string|null }} props
  */
 export function trackQuestionSkipped({ questionId, theme, questionIndex, mode } = {}) {
-  track('question_skipped', {
+  trackIfConsented('question_skipped', {
     question_id:    questionId    ?? null,
     theme:          theme         ?? null,
     question_index: questionIndex ?? null,
@@ -230,11 +255,11 @@ export function trackRetakeStarted() {
 
 /**
  * User opens the share modal (intent, before taking any action).
- * Enables measuring modal open → actual share conversion.
+ * Consent-gated: carries archetype_id, derived political-opinion data.
  * @param {{ archetypeId: string|null }} props
  */
 export function trackShareModalOpened({ archetypeId } = {}) {
-  track('share_modal_opened', {
+  trackIfConsented('share_modal_opened', {
     archetype_id: archetypeId ?? null,
   });
 }
@@ -243,11 +268,11 @@ export function trackShareModalOpened({ archetypeId } = {}) {
 
 /**
  * User confirms their priority ranking on the PriorityRanking page.
- * Measures feature adoption: what % of users customise priorities?
+ * Consent-gated: which themes someone weighs most is itself a values signal.
  * @param {{ priorityOrder: string[] }} props
  */
 export function trackPriorityCompleted({ priorityOrder } = {}) {
-  track('priority_ranking_completed', {
+  trackIfConsented('priority_ranking_completed', {
     priority_order: priorityOrder ?? null,
   });
 }

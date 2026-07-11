@@ -6,14 +6,19 @@ import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../da
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
-import { getOrCreateAnonymousId } from '../lib/anonymous.js';
 import {
   trackTestStart,
   trackTestComplete,
   trackImproveStarted,
   trackImproveCompleted,
   trackRetakeStarted,
+  setAnalyticsConsent,
 } from '../lib/analytics.js';
+
+// Consent text version — bump this if the consent copy shown to users changes
+// materially, so previously-granted consent can be distinguished from consent
+// to the current wording (mirrors user_consents.version in schema_v3.sql).
+export const CONSENT_VERSION = '2026-07';
 
 /**
  * Pick the next question for improve mode.
@@ -78,6 +83,17 @@ export const useStore = create(
 
       // ── Onboarding (session-only) ──
       needsOnboarding: false,
+
+      // ── RGPD consent for storing/transmitting political-opinion data (persisted) ──
+      // politicalData: null = never decided (default — nothing is sent anywhere) |
+      //                true = granted | false = explicitly declined.
+      // This is the single gate checked before any Supabase write of answers,
+      // computed profile, or archetype/candidate-carrying analytics events.
+      consent: { politicalData: null, grantedAt: null, version: null },
+
+      // ── Consent prompt (session-only) — true when an action needs a consent
+      // decision the user hasn't made yet (mirrors needsOnboarding's pattern) ──
+      needsConsent: false,
 
       // ── Profile reveal (session-only) — true once after quiz completion ──
       profileRevealPending: false,
@@ -184,6 +200,27 @@ export const useStore = create(
 
       setNeedsOnboarding: (v) => set({ needsOnboarding: v }),
 
+      setNeedsConsent: (v) => set({ needsConsent: v }),
+
+      /**
+       * Record a consent decision (grant or decline). Also mirrors the decision
+       * into analytics.js's module-level flag so trackQuestionAnswered() and
+       * friends start/stop firing immediately, in the same tick. Persisting to
+       * Supabase's user_consents table (for logged-in users) happens separately
+       * in auth.jsx — this action only updates local/device state.
+       */
+      setConsent: (granted) => {
+        const consent = { politicalData: granted === true, grantedAt: new Date().toISOString(), version: CONSENT_VERSION };
+        set({ consent, needsConsent: false });
+        setAnalyticsConsent(granted === true);
+      },
+
+      /** Explicit withdrawal — distinct action from setConsent(false) only for readability at call sites. */
+      withdrawConsent: () => {
+        set({ consent: { politicalData: false, grantedAt: new Date().toISOString(), version: CONSENT_VERSION } });
+        setAnalyticsConsent(false);
+      },
+
       setSyncConflict: (v) => set({ syncConflict: v }),
 
       applyRefinement: (themeDeltas) => {
@@ -242,21 +279,21 @@ export const useStore = create(
         const now = new Date().toISOString();
         set({ answers: newAnswers, profile, profileLastUpdated: now });
 
-        // Persist to Supabase — logged-in or anonymous
-        const { userId } = get();
-        if (isSupabaseEnabled && supabase && !userId) {
-          // Anonymous user → save to anonymous_answers
-          supabase
-            .from('anonymous_answers')
-            .upsert(
-              { anonymous_id: getOrCreateAnonymousId(), question_id: questionId, answer_value: value },
-              { onConflict: 'anonymous_id,question_id' }
-            )
-            .then(({ error }) => {
-              if (error) console.error('[Poliscop] Anonymous answer save error:', error.message);
-            });
-        }
-        if (isSupabaseEnabled && supabase && userId) {
+        // RGPD (2026-07-11): political answers are local-only by default. Nothing is
+        // sent to Supabase — for anonymous OR logged-in users — without explicit,
+        // affirmative consent (consent.politicalData === true). Account creation or
+        // login alone is NOT sufficient consent. See audit/rgpd-remediation-2026-07/
+        // for the full design. Do not remove this check to "fix" sync — that would
+        // reintroduce silent transmission of GDPR Article 9 data.
+        //
+        // Anonymous users are intentionally never written to Supabase at all: the
+        // local `answers` state above is already the complete, authoritative copy,
+        // so there is nothing to gain from also mirroring it to anonymous_answers
+        // pre-consent. If they later sign up and consent, saveAnswers()/
+        // saveUserProfile() (auth.jsx) push this same local state to their account.
+        const { userId, consent } = get();
+        const hasConsent = consent?.politicalData === true;
+        if (isSupabaseEnabled && supabase && userId && hasConsent) {
           // Save individual answer
           supabase
             .from('user_answers')
@@ -403,7 +440,14 @@ export const useStore = create(
         profileAdjustments: state.profileAdjustments,
         themeWeights: state.themeWeights,
         profileLastUpdated: state.profileLastUpdated,
+        consent: state.consent,
       }),
+      // Sync analytics.js's module-level consent flag as soon as the persisted
+      // state is available — before this runs, it defaults to false (fail-closed:
+      // no tracking of political content until we positively know consent was granted).
+      onRehydrateStorage: () => (state) => {
+        setAnalyticsConsent(state?.consent?.politicalData === true);
+      },
     }
   )
 );
