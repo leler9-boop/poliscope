@@ -70,7 +70,7 @@ Analyse historique (git log) + simulations (stabilité, sensibilité, impact du 
 - **`d647e0b`** — *refactor: remove dead weight field from question schema (POL-AUDIT-028)*
 - **`a41eb4d`** — *fix: add GLOBAL to the multiplicative veto set (POL-AUDIT-012)*
 - **`f5212a7`** — *feat: flag close 2027 candidate matches instead of overstating precision*
-- **`<voir ci-dessous>`** — documentation du lot 2 (rapports 15-16 + config de dev)
+- **`2702e92`** — documentation du lot 2 (rapports 15-16 + config de dev)
 
 Non appliqué (délibérément, documenté) : réduction de l'attracteur central — nécessiterait soit d'inventer des positions idéologiques pour de nouveaux archétypes, soit une refonte architecturale ; aucune substituable à un jugement humain.
 
@@ -83,3 +83,15 @@ Non appliqué (délibérément, documenté) : réduction de l'attracteur central
 ## Mission suivante : audit éditorial exhaustif des 162 questions + poursuite technique — EN COURS
 
 Nouvelle mission longue et autonome, structurée en 8 lots thématiques (économie/fiscalité/travail ; protection sociale/santé/services publics ; écologie/énergie/agriculture ; immigration/intégration/sécurité/justice ; institutions/démocratie/libertés ; Europe/international/défense ; société/éducation/culture/éthique ; technologie/données/IA). Voir les entrées ci-dessous, une par lot.
+
+Table de synthèse cumulative (avant/après, raison, degré de changement) : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md), mise à jour à chaque lot. Nouvel outil `scripts/lint-questions.mjs` (signalements heuristiques bas-rappel : explication manquante/trop courte/trop longue, question trop longue, anglicismes, formulations vagues connues, etc. — ne remplace pas la revue humaine, sert de filet de sécurité anti-régression).
+
+### Lot 1/8 — Économie, fiscalité, travail (ECONOMY) ✅ COMMITÉ (2026-07-11)
+
+24 questions actives revues, 11 modifiées (10 éditoriales + 1 méthodologique), 13 conformes sans changement. Détail complet : [17-editorial-batches-synthesis.md](17-editorial-batches-synthesis.md#lot-18--économie-fiscalité-travail-economy).
+
+**Commits** :
+- **`e99dd0f`** — *fix: ECO_13 rewritten to avoid double negation, direction flipped to match* (bascule de polarité, committée séparément avec test de monotonie dédié)
+- **`ef7aa98`** — *fix: ECONOMY batch — clarity, neutrality, and factual updates (10 questions)*
+
+**Tests** : régression ×4 PASS (monotonie : 107 questions direction=1, 0 violation), JSON valide (200 entrées), lint ECONOMY (1 faux positif connu), build production OK. Vérification navigateur réelle sur viewport mobile 375×812 (rendu question/contexte, panneau « Comprendre cet enjeu », flux de réponse) — données de test effacées et serveur de dev arrêté après contrôle.
