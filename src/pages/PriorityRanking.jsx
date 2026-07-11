@@ -36,6 +36,7 @@ export default function PriorityRanking() {
   const testMode       = useStore(s => s.testMode);
   const startTest      = useStore(s => s.startTest);
   const setPriority    = useStore(s => s.setPriorityOrder);
+  const setThemeWeights = useStore(s => s.setThemeWeights);
   const storedPriority = useStore(s => s.priorityOrder);
   const t = createTranslator(language);
 
@@ -44,11 +45,18 @@ export default function PriorityRanking() {
   const handleConfirm = () => {
     trackPriorityCompleted({ priorityOrder: order });
     setPriority(order);
+    // An explicit ranking replaces any previous equal/custom weight allocation.
+    setThemeWeights(null);
     startTest(testMode ?? 'medium');
   };
 
   const handleSkip = () => {
     setPriority([...THEMES_ORDER]);
+    // The button promises "all themes count equally" — without this, the matcher
+    // falls back to priorityOrder and silently applies 8→1 declaration-order weights.
+    const equal = {};
+    THEMES_ORDER.forEach(theme => { equal[theme] = 100 / THEMES_ORDER.length; });
+    setThemeWeights(equal);
     startTest(testMode ?? 'medium');
   };
 
