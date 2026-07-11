@@ -298,7 +298,7 @@ export const frenchFigures = [
     emoji: `🔒`,
     family: `center`,
     party: { fr: `Renaissance`, en: `Renaissance` },
-    role: { fr: `Ancien ministre de l'Intérieur`, en: `Former Minister of the Interior` },
+    role: { fr: `Ministre de la Justice`, en: `Minister of Justice` },
     short_summary: {
       fr: `Ministre de l'Intérieur de 2020 à 2024, incarnation de la ligne sécuritaire et régalienne au sein du macronisme.`,
       en: `Interior Minister from 2020 to 2024, embodiment of the security-focused line within Macronism.`,
@@ -414,7 +414,7 @@ export const frenchFigures = [
     emoji: `🦅`,
     family: `right`,
     party: { fr: `Les Républicains`, en: `The Republicans` },
-    role: { fr: `Président de LR, Président de la Région Auvergne-Rhône-Alpes`, en: `LR President, President of Auvergne-Rhône-Alpes Region` },
+    role: { fr: `Président du groupe Droite Républicaine à l'Assemblée nationale`, en: `President of the Droite Républicaine group in the National Assembly` },
     short_summary: {
       fr: `Chef de file de la droite dure, président de la région AuRA et de LR depuis 2017.`,
       en: `Leader of the hard right, president of the AuRA region and LR since 2017.`,
@@ -642,7 +642,7 @@ export const frenchFigures = [
     emoji: `⚖️`,
     family: `right`,
     party: { fr: `Les Républicains`, en: `The Republicans` },
-    role: { fr: `Ministre de l'Intérieur`, en: `Minister of the Interior` },
+    role: { fr: `Président des Républicains, ancien ministre de l'Intérieur`, en: `President of Les Républicains, former Minister of the Interior` },
     short_summary: {
       fr: `Ministre de l'Intérieur depuis 2024, représentant de l'aile catholique et conservatrice de LR.`,
       en: `Interior Minister since 2024, representing the Catholic and conservative wing of LR.`,
@@ -1273,7 +1273,7 @@ export const frenchFigures = [
     emoji: `🗼`,
     family: `left`,
     party: { fr: `Parti socialiste`, en: `Socialist Party` },
-    role: { fr: `Maire de Paris`, en: `Mayor of Paris` },
+    role: { fr: `Ancienne maire de Paris (2014-2026)`, en: `Former Mayor of Paris (2014-2026)` },
     short_summary: {
       fr: `Maire de Paris depuis 2014, connue pour ses politiques de mobilité douce et la gestion des JO 2024.`,
       en: `Mayor of Paris since 2014, known for her soft mobility policies and management of the 2024 Olympics.`,
