@@ -166,7 +166,7 @@ function VraiFauxCard({ language }) {
 /* ── page ────────────────────────────────────────────────────────────────── */
 
 const REPERES = ['gauche', 'droite', 'centre', 'president-de-la-republique', 'elections', 'partis'];
-const ACTUALITE = ['retraites', 'oqtf', 'dette-publique'];
+const ACTUALITE = ['retraites', 'oqtf', 'inflation'];
 const MOTS_PARTOUT = ['oqtf', '49-3', 'dette-publique', 'proportionnelle', 'motion-de-censure'];
 
 const PARCOURS = [

@@ -23,18 +23,19 @@ const DOSSIERS_IDEOLOGIES = [
 ];
 
 const DOSSIERS_DEBATS = [
+  { slug: 'oqtf', live: true },
+  { slug: 'inflation', live: true },
   { slug: 'retraites', live: true },
   { slug: 'immigration', icon: '🌍', title: { fr: `L'immigration` }, hook: { fr: `Chiffres sourcés, droit réel, positions de chaque famille : le débat sans les slogans.` } },
   { slug: 'laicite', icon: '🕊️', title: { fr: 'La laïcité' }, hook: { fr: `Ce que dit vraiment la loi de 1905 — et pourquoi tout le monde s'en réclame.` } },
   { slug: 'union-europeenne', icon: '🇪🇺', title: { fr: `L'Union européenne` }, hook: { fr: `Qui décide quoi à Bruxelles, et les différentes visions de l'Europe.` } },
-  { slug: 'inflation', icon: '💶', title: { fr: `L'inflation` }, hook: { fr: `D'où viennent les hausses de prix, qui elles frappent, et ce que peut vraiment un gouvernement.` } },
 ];
 
 const PRESIDENTS = [
   { nom: 'Charles de Gaulle', annees: '1959-1969' },
   { nom: 'Georges Pompidou', annees: '1969-1974' },
   { nom: `Valéry Giscard d'Estaing`, annees: '1974-1981' },
-  { nom: 'François Mitterrand', annees: '1981-1995' },
+  { nom: 'François Mitterrand', annees: '1981-1995', to: '/learn/presidents/francois-mitterrand?niveau=3' },
   { nom: 'Jacques Chirac', annees: '1995-2007' },
   { nom: 'Nicolas Sarkozy', annees: '2007-2012' },
   { nom: 'François Hollande', annees: '2012-2017' },
@@ -55,6 +56,12 @@ const RESSOURCES = [
   { nom: 'Assemblée nationale', desc: { fr: `Textes en discussion, votes, comptes rendus des débats.` }, url: 'https://www.assemblee-nationale.fr' },
   { nom: 'Sénat', desc: { fr: `Travaux, rapports et vidéos de la seconde chambre.` }, url: 'https://www.senat.fr' },
   { nom: 'Conseil constitutionnel', desc: { fr: `Les décisions qui vérifient la conformité des lois à la Constitution.` }, url: 'https://www.conseil-constitutionnel.fr' },
+];
+
+const DOSSIERS_INSTITUTIONS = [
+  { slug: 'president-de-la-republique', live: true },
+  { slug: 'assemblee-nationale', icon: '🏛️', title: { fr: `L'Assemblée nationale` }, hook: { fr: `Qui vote les lois, comment tombe un gouvernement — le cœur du pouvoir législatif.` } },
+  { slug: 'conseil-constitutionnel', icon: '⚖️', title: { fr: `Le Conseil constitutionnel` }, hook: { fr: `Les neuf personnes qui peuvent annuler une loi votée — et pourquoi c'est voulu.` } },
 ];
 
 /* ── composants ───────────────────────────────────────────────────────────── */
@@ -148,6 +155,14 @@ export default function LearnAcademy() {
         </div>
       </motion.div>
 
+      {/* Les institutions */}
+      <motion.div {...fadeUp(0.12)} className="mb-10">
+        <SectionLabel>{language === 'fr' ? 'Comment fonctionne vraiment la France' : 'How France actually works'}</SectionLabel>
+        <div className="space-y-2.5">
+          {DOSSIERS_INSTITUTIONS.map(d => <DossierCard key={d.slug} item={d} language={language} />)}
+        </div>
+      </motion.div>
+
       {/* Les grands débats */}
       <motion.div {...fadeUp(0.14)} className="mb-10">
         <SectionLabel>{language === 'fr' ? 'Les débats qui structurent la France' : 'The debates that shape France'}</SectionLabel>
@@ -161,20 +176,27 @@ export default function LearnAcademy() {
         <SectionLabel>{language === 'fr' ? 'Les présidents de la Ve République' : 'Presidents of the Fifth Republic'}</SectionLabel>
         <div className="bg-white border border-gray-200 rounded-2xl p-5">
           <div className="flex gap-3 overflow-x-auto pb-2 -mb-2">
-            {PRESIDENTS.map((p, i) => (
-              <div key={i} className="shrink-0 w-24 text-center">
-                <div className="w-12 h-12 mx-auto rounded-full bg-gray-100 border border-gray-200 text-gray-500 text-xs font-bold flex items-center justify-center mb-1.5">
-                  {p.nom.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase()}
-                </div>
-                <p className="text-[11px] font-semibold text-gray-700 leading-tight">{p.nom.split(' ').slice(-1)[0]}</p>
-                <p className="text-[10px] text-gray-400 tabular-nums">{p.annees}</p>
-              </div>
-            ))}
+            {PRESIDENTS.map((p, i) => {
+              const inner = (
+                <>
+                  <div className={`w-12 h-12 mx-auto rounded-full text-xs font-bold flex items-center justify-center mb-1.5 ${p.to ? 'bg-gray-900 text-white' : 'bg-gray-100 border border-gray-200 text-gray-500'}`}>
+                    {p.nom.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase()}
+                  </div>
+                  <p className="text-[11px] font-semibold text-gray-700 leading-tight">{p.nom.split(' ').slice(-1)[0]}</p>
+                  <p className="text-[10px] text-gray-400 tabular-nums">{p.annees}</p>
+                </>
+              );
+              return p.to ? (
+                <Link key={i} to={p.to} className="shrink-0 w-24 text-center hover:opacity-80 transition-opacity">{inner}</Link>
+              ) : (
+                <div key={i} className="shrink-0 w-24 text-center">{inner}</div>
+              );
+            })}
           </div>
           <p className="text-[11px] text-gray-400 mt-3">
             {language === 'fr'
-              ? `Une fiche complète par président — élection, mesures, bilan, idées reçues — arrive dans l'Academy. Première fiche prévue : François Mitterrand.`
-              : `A complete page per president — election, record, legacy, myths — is coming to the Academy. First up: François Mitterrand.`}
+              ? `Une fiche complète par président — élection, mesures, bilan, idées reçues. Première fiche disponible : François Mitterrand (cliquez sur son avatar). Les autres arrivent.`
+              : `A complete page per president — election, record, legacy, myths. First one available: François Mitterrand (click his avatar). More coming.`}
           </p>
         </div>
       </motion.div>

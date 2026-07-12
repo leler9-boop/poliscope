@@ -71,6 +71,17 @@ export default {
         ],
       },
       {
+        id: 'mesures-prises',
+        titre: { fr: `Ce qui a déjà été fait en France` },
+        corps: {
+          fr: `Trois grandes réformes en quinze ans. 2010 (Sarkozy-Woerth) : l'âge légal passe de 60 à 62 ans, malgré de fortes mobilisations. 2014 (Hollande-Touraine) : allongement progressif de la durée de cotisation vers 43 ans. 2023 (Macron-Borne) : âge légal porté à 64 ans et accélération du calendrier des 43 annuités — réforme adoptée sans vote final grâce à l'article 49.3, validée pour l'essentiel par le Conseil constitutionnel, après le plus grand mouvement social depuis des décennies.\n\nUn projet de « système universel par points » (2019-2020) a été abandonné pendant la crise du Covid. À la date de cette fiche, l'application de la réforme de 2023 se poursuit par génération — et sa remise en cause (abrogation, suspension ou référendum) reste un thème central du débat politique.`,
+        },
+        sources: [
+          { label: `Vie-publique.fr — dossiers des réformes des retraites de 2010, 2014 et 2023`, url: 'https://www.vie-publique.fr', year: 2023 },
+          { label: `Conseil constitutionnel — décision n° 2023-849 DC du 14 avril 2023 (réforme des retraites)`, url: 'https://www.conseil-constitutionnel.fr', year: 2023 },
+        ],
+      },
+      {
         id: 'positions',
         titre: { fr: `Les grandes positions — pourquoi ils ne s'accordent pas` },
         brique: 'visions',
@@ -91,6 +102,13 @@ export default {
             corps: { fr: `La répartition ne peut pas tout porter seule : il faut développer l'épargne retraite individuelle et complémentaire (le PER existe déjà). Un système mixte, comme au Canada ou en Suède, résiste mieux aux chocs démographiques. Moins de dépendance à l'État, plus de liberté individuelle.` },
           },
         ],
+      },
+      {
+        id: 'se-faire-une-opinion',
+        titre: { fr: `Questions pour se faire sa propre opinion` },
+        corps: {
+          fr: `Face au vieillissement, quel levier vous semble le plus juste : travailler plus longtemps, cotiser davantage, recevoir un peu moins, ou financer autrement (capital, hauts revenus) ? La pénibilité des métiers doit-elle donner des droits à partir plus tôt — et lesquels ? Un système qui dépend autant de la démographie doit-il s'ajuster automatiquement (comme au Danemark, où l'âge suit l'espérance de vie), ou chaque ajustement doit-il rester un choix politique ? Et accepteriez-vous une dose d'épargne individuelle en complément de la répartition ? Vos réponses dessinent votre position — les trois visions ci-dessus n'en sont que les combinaisons les plus courantes.`,
+        },
       },
     ],
   },

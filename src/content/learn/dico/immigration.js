@@ -17,7 +17,7 @@ export const TERMS = {
     famille: 'intermediaire',
     updatedAt: '2026-07-12',
     freshness: { type: 'live', reviewEveryMonths: 3, lastReviewedAt: '2026-07-12' },
-    parentFiche: null, // → pointera vers la fiche débat OQTF (PROTO-1 suivant)
+    parentFiche: 'oqtf', // → la grande fiche débat (section debats)
     level1: {
       fr: `Une OQTF — obligation de quitter le territoire français — est une décision administrative demandant à une personne étrangère de quitter la France. C'est une décision du préfet, pas une condamnation pénale.`,
     },
@@ -45,7 +45,7 @@ export const TERMS = {
         {
           titre: { fr: 'Ce qui fait débat' },
           corps: {
-            fr: `Les uns mettent en avant la fermeté : une décision de l'État doit être appliquée, sinon elle perd son sens. Les autres mettent en avant les droits fondamentaux : le juge annule une partie des OQTF précisément parce qu'elles étaient illégales ou touchaient des personnes protégées. S'y ajoutent des difficultés diplomatiques (coopération des pays d'origine) et pratiques (moyens des préfectures et de la justice). La grande fiche débat OQTF détaillera ces positions — avec les chiffres publics, leurs sources et leurs limites.`,
+            fr: `Les uns mettent en avant la fermeté : une décision de l'État doit être appliquée, sinon elle perd son sens. Les autres mettent en avant les droits fondamentaux : le juge annule une partie des OQTF précisément parce qu'elles étaient illégales ou touchaient des personnes protégées. S'y ajoutent des difficultés diplomatiques (coopération des pays d'origine) et pratiques (moyens des préfectures et de la justice). La grande fiche débat OQTF (lien en haut de page) détaille ces positions — avec les chiffres publics, leurs sources et leurs limites.`,
           },
         },
       ],

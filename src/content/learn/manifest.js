@@ -21,6 +21,74 @@ export const SECTIONS = {
 
 export const LEARN_MANIFEST = [
   {
+    slug: 'oqtf',
+    section: 'debats',
+    type: 'debat',
+    title: { fr: `L'OQTF`, en: 'OQTF' },
+    hook: { fr: `Décision administrative, pas condamnation pénale : qui décide, qui est protégé, pourquoi tant ne sont pas exécutées — et ce que chaque camp propose.` },
+    icon: '📄',
+    difficulty: 2,
+    famille: 'dossier',
+    updatedAt: '2026-07-12',
+    lastReviewedAt: '2026-07-12',
+    freshnessType: 'live',
+    hasLevels: [1, 2, 3],
+    langs: ['fr'],
+    aliases: { fr: [`c'est quoi une oqtf`, `obligation de quitter le territoire`, `oqtf expulsion`, `pourquoi les oqtf ne sont pas exécutées`, `taux d'exécution oqtf`] },
+    load: () => import('./debats/oqtf.js').then(m => m.default),
+  },
+  {
+    slug: 'president-de-la-republique',
+    section: 'institutions',
+    type: 'institution',
+    title: { fr: `Le président de la République`, en: 'The President of the Republic' },
+    hook: { fr: `Ce qu'il peut faire, ce qu'il ne peut pas faire — et pourquoi il est si puissant… quand il a une majorité.` },
+    icon: '🏛️',
+    difficulty: 1,
+    famille: 'dossier',
+    updatedAt: '2026-07-12',
+    lastReviewedAt: '2026-07-12',
+    freshnessType: 'periodic',
+    hasLevels: [1, 2, 3],
+    langs: ['fr'],
+    aliases: { fr: [`à quoi sert le président`, `pouvoirs du président`, `pourquoi le président peut dissoudre l'assemblée`, `cohabitation`, `destitution`, `article 16`, `chef de l'état`] },
+    load: () => import('./institutions/president-de-la-republique.js').then(m => m.default),
+  },
+  {
+    slug: 'francois-mitterrand',
+    section: 'presidents',
+    type: 'president',
+    title: { fr: `François Mitterrand`, en: 'François Mitterrand' },
+    hook: { fr: `1981-1995 : l'alternance, l'abolition, le tournant de 1983, Maastricht — quatorze années qui divisent encore.` },
+    icon: '🌹',
+    difficulty: 2,
+    famille: 'dossier',
+    updatedAt: '2026-07-12',
+    lastReviewedAt: '2026-07-12',
+    freshnessType: 'periodic',
+    hasLevels: [1, 2, 3, 4],
+    langs: ['fr'],
+    aliases: { fr: [`mitterrand`, `qu'a fait mitterrand`, `10 mai 1981`, `tournant de la rigueur`, `abolition de la peine de mort`, `bilan mitterrand`] },
+    load: () => import('./presidents/francois-mitterrand.js').then(m => m.default),
+  },
+  {
+    slug: 'inflation',
+    section: 'debats',
+    type: 'debat',
+    title: { fr: `L'inflation`, en: 'Inflation' },
+    hook: { fr: `D'où viennent les hausses de prix, qui elles frappent, ce que peut vraiment un gouvernement — et pourquoi les prix ne « redescendent » pas.` },
+    icon: '💶',
+    difficulty: 2,
+    famille: 'dossier',
+    updatedAt: '2026-07-12',
+    lastReviewedAt: '2026-07-12',
+    freshnessType: 'live',
+    hasLevels: [1, 2, 3],
+    langs: ['fr'],
+    aliases: { fr: [`c'est quoi l'inflation`, `hausse des prix`, `pouvoir d'achat`, `pourquoi tout augmente`, `déflation`, `désinflation`, `bouclier tarifaire`] },
+    load: () => import('./debats/inflation.js').then(m => m.default),
+  },
+  {
     slug: 'droite',
     section: 'familles',
     type: 'ideologie',
@@ -59,6 +127,7 @@ export const LEARN_MANIFEST = [
     section: 'dico',
     categorie: 'immigration',
     type: 'definition',
+    searchable: false,
     title: { fr: `L'OQTF`, en: 'OQTF' },
     hook: { fr: `Une décision administrative, pas une condamnation pénale — ce qu'elle est, qui décide, pourquoi toutes ne sont pas exécutées.` },
     icon: '📄',
@@ -168,7 +237,6 @@ export const LEARN_MANIFEST = [
 export const UPCOMING = [
   { slug: 'gauche', section: 'familles', title: { fr: `La gauche` }, icon: '📕', hook: { fr: `Égalité, solidarité, services publics… et de nombreuses gauches. Le dossier complet.` } },
   { slug: 'centre', section: 'familles', title: { fr: `Le centre` }, icon: '📙', hook: { fr: `Ni neutre ni sans opinion : ce que veut dire être centriste.` } },
-  { slug: 'president-de-la-republique', section: 'institutions', title: { fr: `Le président de la République` }, icon: '🏛️', hook: { fr: `Ce qu'il peut faire, ce qu'il ne peut pas faire — et pourquoi il a autant de pouvoir.` } },
   { slug: 'elections', section: 'bases', title: { fr: `Les élections` }, icon: '🗳️', hook: { fr: `Scrutins, tours, parrainages : comment la France vote.` } },
   { slug: 'partis', section: 'partis', title: { fr: `Les partis` }, icon: '🎪', hook: { fr: `Qui est qui : les principaux partis français, un par un.` } },
 ];
@@ -198,7 +266,7 @@ export function searchLearn(query, { limit = 6 } = {}) {
   const q = normalize(query).replace(QUESTION_PREFIXES, '').replace(/^(la |le |les |l |une? |des |du |de la )/, '').trim();
   if (q.length < 2) return [];
   const tokens = q.split(' ').filter(w => w.length > 1);
-  const scored = LEARN_MANIFEST.map(entry => {
+  const scored = LEARN_MANIFEST.filter(e => e.searchable !== false).map(entry => {
     const title = normalize(entry.title.fr);
     const aliases = (entry.aliases?.fr || []).map(normalize);
     const hook = normalize(entry.hook?.fr || '');

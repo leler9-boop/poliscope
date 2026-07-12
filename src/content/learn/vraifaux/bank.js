@@ -91,6 +91,179 @@ export const VRAIFAUX_BANK = {
     sources: [{ label: `Code de l'entrée et du séjour des étrangers et du droit d'asile (CESEDA), livre VI (Légifrance)`, url: 'https://www.legifrance.gouv.fr', year: 2026 }],
     related: ['oqtf'],
   },
+  /* ── OQTF (fiche débat) ── */
+
+  'vf-oqtf-expulsion-immediate': {
+    categorie: 'immigration',
+    enonce: { fr: `Toute personne sous OQTF est immédiatement expulsée.` },
+    verdict: 'faux',
+    explication: {
+      fr: `La plupart des OQTF prévoient un délai de départ volontaire (en général 30 jours), et une grande partie n'est jamais exécutée : annulation par le juge, absence de laissez-passer consulaire, personne introuvable, protections familiales ou médicales, capacités de rétention limitées. Les chiffres publics situent le taux d'exécution mesuré le plus souvent entre 5 % et 15 % selon les années et les modes de calcul.`,
+    },
+    sources: [{ label: `Cour des comptes — rapport sur la lutte contre l'immigration irrégulière, janvier 2024`, url: 'https://www.ccomptes.fr', year: 2024 }],
+    related: ['oqtf'],
+  },
+
+  'vf-oqtf-recours': {
+    categorie: 'immigration',
+    enonce: { fr: `Une personne sous OQTF ne peut exercer aucun recours.` },
+    verdict: 'faux',
+    explication: {
+      fr: `L'OQTF peut être contestée devant le tribunal administratif, dans des délais courts qui dépendent de la procédure. Le recours suspend en général l'éloignement jusqu'à la décision du juge — et le juge annule une partie significative des décisions, ce qui est le fonctionnement normal du contrôle de l'administration dans un État de droit.`,
+    },
+    sources: [{ label: `CESEDA, livre VI — procédures contentieuses (Légifrance)`, url: 'https://www.legifrance.gouv.fr', year: 2026 }],
+    related: ['oqtf'],
+  },
+
+  'vf-oqtf-dangereux': {
+    categorie: 'immigration',
+    enonce: { fr: `Toutes les OQTF concernent des personnes dangereuses.` },
+    verdict: 'faux',
+    explication: {
+      fr: `Une OQTF sanctionne une situation administrative — l'absence de droit au séjour — pas un comportement. La grande majorité des personnes visées n'a commis aucune infraction pénale : déboutés de l'asile, titres non renouvelés, personnes jamais enregistrées. Les cas de menace à l'ordre public existent et relèvent de dispositions spécifiques, mais ils sont minoritaires dans la masse des décisions.`,
+    },
+    sources: [{ label: `Ministère de l'Intérieur — statistiques de l'éloignement ; CESEDA, livre VI`, url: 'https://www.interieur.gouv.fr', year: 2024 }],
+    related: ['oqtf'],
+  },
+
+  'vf-oqtf-refus-agir': {
+    categorie: 'immigration',
+    enonce: { fr: `Si une OQTF n'est pas exécutée, c'est que l'État refuse d'agir.` },
+    verdict: 'trompeur',
+    explication: {
+      fr: `La non-exécution résulte le plus souvent de causes que l'État ne contrôle que partiellement : annulations par le juge, refus de laissez-passer par les pays d'origine, personnes introuvables, contraintes matérielles. On peut critiquer les choix (prononcer massivement, moyens insuffisants, diplomatie inefficace) — mais présenter chaque OQTF non exécutée comme un simple refus d'agir déforme un problème documenté comme multifactoriel, en France comme chez ses voisins.`,
+    },
+    sources: [{ label: `Cour des comptes (2024) ; Eurostat — retours effectifs dans l'UE`, url: 'https://www.ccomptes.fr', year: 2024 }],
+    related: ['oqtf'],
+  },
+
+  /* ── Président de la République ── */
+
+  'vf-president-ecrit-lois': {
+    categorie: 'institutions',
+    enonce: { fr: `Le président écrit et vote les lois.` },
+    verdict: 'faux',
+    explication: {
+      fr: `Les projets de loi sont préparés par le gouvernement, les propositions par les parlementaires — et seul le Parlement vote. Le président promulgue les lois votées (il ne peut pas s'y opposer durablement : il peut seulement demander une nouvelle délibération ou saisir le Conseil constitutionnel). Son influence réelle passe par sa majorité parlementaire, pas par un pouvoir législatif propre.`,
+    },
+    sources: [{ label: `Constitution de 1958, articles 10, 24, 39 (Légifrance)`, url: 'https://www.legifrance.gouv.fr', year: 1958 }],
+    related: ['president-de-la-republique'],
+  },
+
+  'vf-president-regime-us': {
+    categorie: 'institutions',
+    enonce: { fr: `La France est un régime présidentiel, comme les États-Unis.` },
+    verdict: 'faux',
+    explication: {
+      fr: `La France est un régime dit « semi-présidentiel » : le président élu au suffrage direct coexiste avec un Premier ministre responsable devant l'Assemblée — qui peut être renversé par une motion de censure, ce qui n'existe pas aux États-Unis. Inversement, le président français peut dissoudre l'Assemblée, ce que le président américain ne peut pas faire avec le Congrès. Les deux systèmes ne fonctionnent pas du tout de la même façon.`,
+    },
+    sources: [{ label: `Vie-publique.fr — régimes présidentiel, parlementaire et semi-présidentiel`, url: 'https://www.vie-publique.fr', year: 2025 }],
+    related: ['president-de-la-republique'],
+  },
+
+  'vf-president-demission-pm': {
+    categorie: 'institutions',
+    enonce: { fr: `Le président peut révoquer le Premier ministre quand il le veut.` },
+    verdict: 'partiel',
+    explication: {
+      fr: `Juridiquement, la Constitution prévoit que le président met fin aux fonctions du Premier ministre « sur la présentation par celui-ci de la démission du gouvernement » : il ne peut pas le révoquer unilatéralement. En pratique, hors cohabitation, les Premiers ministres remettent leur démission quand le président le demande — c'est une convention politique solidement établie, pas une obligation juridique. En cohabitation, le président ne peut pas se débarrasser d'un Premier ministre soutenu par l'Assemblée.`,
+    },
+    sources: [{ label: `Constitution de 1958, article 8`, url: 'https://www.legifrance.gouv.fr', year: 1958 }],
+    related: ['president-de-la-republique'],
+  },
+
+  /* ── François Mitterrand ── */
+
+  'vf-mitterrand-programme-14-ans': {
+    categorie: 'presidents',
+    enonce: { fr: `Mitterrand a intégralement appliqué un programme socialiste pendant quatorze ans.` },
+    verdict: 'faux',
+    explication: {
+      fr: `La politique de rupture (nationalisations, retraite à 60 ans, hausse des salaires) n'a duré que deux ans : face à l'inflation, aux déficits et à trois dévaluations du franc, le « tournant de la rigueur » de mars 1983 réoriente la politique vers la désinflation et le maintien dans le système monétaire européen. Suivront deux cohabitations avec la droite (1986-1988, 1993-1995) et des privatisations. Les quatorze années Mitterrand contiennent en réalité plusieurs politiques économiques successives, parfois opposées.`,
+    },
+    sources: [{ label: `Vie-publique.fr — le tournant de la rigueur de 1983`, url: 'https://www.vie-publique.fr', year: 2025 }],
+    related: ['francois-mitterrand'],
+  },
+
+  'vf-abolition-opinion': {
+    categorie: 'presidents',
+    enonce: { fr: `La peine de mort a été abolie parce que l'opinion publique le réclamait.` },
+    verdict: 'faux',
+    explication: {
+      fr: `En 1981, les sondages donnaient une majorité de Français favorables au maintien de la peine de mort (environ 60 % selon les enquêtes de l'époque). Mitterrand avait annoncé sa position abolitionniste pendant la campagne, en assumant d'aller contre l'opinion majoritaire ; la loi portée par Robert Badinter a été votée le 9 octobre 1981. C'est un exemple classique de décision prise contre l'opinion du moment et jamais remise en cause depuis — l'abolition est constitutionnalisée depuis 2007.`,
+    },
+    sources: [{ label: `Vie-publique.fr — l'abolition de la peine de mort (loi du 9 octobre 1981) ; révision constitutionnelle de 2007 (article 66-1)`, url: 'https://www.vie-publique.fr', year: 2025 }],
+    related: ['francois-mitterrand'],
+  },
+
+  'vf-mitterrand-renie-1981': {
+    categorie: 'presidents',
+    enonce: { fr: `Le tournant de la rigueur de 1983 a annulé tout ce qui avait été fait en 1981-1982.` },
+    verdict: 'partiel',
+    explication: {
+      fr: `Le tournant de 1983 a bien enterré la politique de relance et la logique de rupture avec le capitalisme. Mais l'essentiel des réformes de société et de structure est resté : abolition de la peine de mort, retraite à 60 ans, cinquième semaine de congés payés, 39 heures, décentralisation, lois Auroux, radios libres, remboursement de l'IVG. Ce qui a changé, c'est la politique macroéconomique — pas les acquis sociaux et sociétaux des deux premières années.`,
+    },
+    sources: [{ label: `Vie-publique.fr — chronologie des réformes 1981-1983`, url: 'https://www.vie-publique.fr', year: 2025 }],
+    related: ['francois-mitterrand'],
+  },
+
+  'vf-mitterrand-fondateur-europe': {
+    categorie: 'presidents',
+    enonce: { fr: `Mitterrand a fait entrer la France dans l'Union européenne.` },
+    verdict: 'trompeur',
+    explication: {
+      fr: `La France est un pays fondateur de la construction européenne (traité de Rome, 1957) — bien avant Mitterrand. En revanche, il a joué un rôle décisif dans son approfondissement : relance avec Helmut Kohl, Acte unique (1986), et surtout traité de Maastricht (1992), qu'il a soumis à référendum et qui a créé l'Union européenne et programmé l'euro. Dire qu'il a « fait entrer la France dans l'UE » confond fondation et approfondissement.`,
+    },
+    sources: [{ label: `Vie-publique.fr — les traités européens ; Conseil constitutionnel — référendum du 20 septembre 1992 (oui : 51,04 %)`, url: 'https://www.vie-publique.fr', year: 1992 }],
+    related: ['francois-mitterrand'],
+  },
+
+  /* ── Inflation ── */
+
+  'vf-monnaie-inflation': {
+    categorie: 'economie',
+    enonce: { fr: `Créer de la monnaie provoque toujours immédiatement de l'inflation.` },
+    verdict: 'trompeur',
+    explication: {
+      fr: `Le lien entre création monétaire et inflation existe mais n'est ni automatique ni immédiat. Les banques centrales ont créé des quantités massives de monnaie après 2008 sans inflation notable pendant une décennie ; l'inflation de 2021-2023 s'explique d'abord par les prix de l'énergie, les chaînes d'approvisionnement et la reprise post-Covid — la politique monétaire y a contribué, dans des proportions débattues par les économistes. Tout dépend d'où va la monnaie créée et de l'état de l'économie.`,
+    },
+    sources: [{ label: `Banque de France / BCE — analyses des causes de l'inflation 2021-2023`, url: 'https://www.banque-france.fr', year: 2023 }],
+    related: ['inflation'],
+  },
+
+  'vf-inflation-tous-pareil': {
+    categorie: 'economie',
+    enonce: { fr: `L'inflation appauvrit tout le monde de la même façon.` },
+    verdict: 'faux',
+    explication: {
+      fr: `L'inflation frappe très inégalement. Les ménages modestes consacrent une part plus grande de leur budget à l'énergie et à l'alimentation — les postes qui ont le plus augmenté en 2021-2023 — et ont moins d'épargne pour amortir. À l'inverse, l'inflation allège le poids réel des dettes : elle avantage les emprunteurs (dont l'État) au détriment des épargnants. Il y a des perdants et des gagnants — c'est précisément pour cela que c'est un sujet politique.`,
+    },
+    sources: [{ label: `INSEE — inflation par catégorie de ménages (analyses 2022-2023)`, url: 'https://www.insee.fr', year: 2023 }],
+    related: ['inflation'],
+  },
+
+  'vf-inflation-baisse-prix': {
+    categorie: 'economie',
+    enonce: { fr: `Quand l'inflation baisse, les prix baissent.` },
+    verdict: 'faux',
+    explication: {
+      fr: `Quand l'inflation passe de 6 % à 2 %, les prix continuent d'augmenter — simplement moins vite. C'est la désinflation. Une vraie baisse des prix s'appelle la déflation ; elle est rare et redoutée des économistes (elle pousse à reporter les achats et peut paralyser l'économie). Les prix atteints pendant la poussée de 2021-2023 sont donc, pour l'essentiel, restés acquis — ce qui explique que le ressenti reste dégradé même quand « l'inflation est vaincue ».`,
+    },
+    sources: [{ label: `INSEE — indice des prix à la consommation, définitions`, url: 'https://www.insee.fr', year: 2025 }],
+    related: ['inflation'],
+  },
+
+  'vf-inflation-salaires': {
+    categorie: 'economie',
+    enonce: { fr: `Les salaires ont suivi l'inflation de 2021-2023.` },
+    verdict: 'sans-contexte',
+    explication: {
+      fr: `Impossible de répondre en bloc : cela dépend du salaire, du secteur et de la période. Le SMIC est indexé sur l'inflation et a suivi mécaniquement ; les salaires proches du SMIC ont été tirés vers le haut. En revanche, le salaire moyen réel (corrigé de l'inflation) a reculé en 2022 avant de se redresser ensuite — avec de grandes différences entre branches. Toute affirmation générale sur « les salaires » sans préciser lesquels et sur quelle période est invérifiable.`,
+    },
+    sources: [{ label: `INSEE / DARES — évolution des salaires réels 2021-2024`, url: 'https://www.insee.fr', year: 2024 }],
+    related: ['inflation'],
+  },
+
 };
 
 /** Résout une liste d'ids en items ; ignore les ids inconnus. */
