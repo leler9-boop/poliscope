@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { findEntry, findBySlug, SECTIONS } from '../content/learn/manifest.js';
@@ -105,6 +105,130 @@ function SectionBody({ section, language }) {
     );
   }
   return <Paragraphs text={L(section.corps, language)} />;
+}
+
+/* ── barre de progression de lecture ─────────────────────────────────────── */
+
+function ReadingProgress() {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setPct(h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div className="fixed top-0 left-0 right-0 z-40 h-0.5 bg-transparent pointer-events-none">
+      <div className="h-full bg-gray-900 transition-[width] duration-150" style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+/* ── navigation sticky entre niveaux ─────────────────────────────────────── */
+
+const LEVEL_LABELS = {
+  1: { fr: '20 secondes', en: '20 seconds' },
+  2: { fr: '3 minutes', en: '3 minutes' },
+  3: { fr: 'Tout comprendre', en: 'Full picture' },
+  4: { fr: 'Aller plus loin', en: 'Go further' },
+};
+
+function LevelNav({ hasLevels, maxLevel, language, onJump }) {
+  return (
+    <div className="sticky top-0 z-30 -mx-4 sm:mx-0 px-4 sm:px-0 py-2 bg-[#f7f7f5]/90 backdrop-blur border-b border-gray-200/60 mb-5">
+      <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+        {hasLevels.filter(l => l <= 3 || hasLevels.includes(4)).map(l => {
+          const active = l <= maxLevel;
+          return (
+            <button
+              key={l}
+              onClick={() => onJump(l)}
+              className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                active
+                  ? 'bg-gray-900 border-gray-900 text-white'
+                  : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
+              }`}
+            >
+              {l === 1 ? '⏱' : l === 2 ? '📖' : l === 3 ? '🔍' : '📚'} {L(LEVEL_LABELS[l], language)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── chronologie ─────────────────────────────────────────────────────────── */
+
+function Chronologie({ chrono, language }) {
+  const [open, setOpen] = useState(null);
+  return (
+    <section className="bg-white border border-gray-200 rounded-2xl p-5 mb-4">
+      <p className="text-xs font-bold uppercase tracking-wide text-indigo-600 mb-1">
+        {language === 'fr' ? '📜 Chronologie' : '📜 Timeline'}
+      </p>
+      <h3 className="text-sm font-bold text-gray-900 mb-4">{L(chrono.titre, language)}</h3>
+      <div className="relative pl-5 border-l-2 border-gray-200 space-y-1">
+        {chrono.events.map((ev, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={i} className="relative">
+              <span className={`absolute -left-[27px] top-2 w-3 h-3 rounded-full border-2 ${isOpen ? 'bg-gray-900 border-gray-900' : 'bg-white border-gray-300'}`} />
+              <button
+                onClick={() => setOpen(isOpen ? null : i)}
+                className="w-full text-left rounded-lg px-2 py-1.5 hover:bg-gray-50 transition-colors"
+              >
+                <span className="text-xs font-bold text-gray-400 tabular-nums mr-2">{ev.date}</span>
+                <span className="text-sm font-semibold text-gray-800">{L(ev.titre, language)}</span>
+              </button>
+              {isOpen && (
+                <p className="text-sm text-gray-600 leading-relaxed px-2 pb-2">{L(ev.detail, language)}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/* ── tableau comparatif ──────────────────────────────────────────────────── */
+
+function TableauComparatif({ tableau, language }) {
+  return (
+    <section className="bg-white border border-gray-200 rounded-2xl p-5 mb-4">
+      <p className="text-xs font-bold uppercase tracking-wide text-teal-600 mb-1">
+        {language === 'fr' ? '⚖️ Comparaison' : '⚖️ Comparison'}
+      </p>
+      <h3 className="text-sm font-bold text-gray-900 mb-3">{L(tableau.titre, language)}</h3>
+      <div className="overflow-x-auto -mx-5 px-5">
+        <table className="w-full text-sm border-separate border-spacing-0 min-w-[560px]">
+          <thead>
+            <tr>
+              <th className="text-left text-xs font-semibold text-gray-400 pb-2 pr-3 w-28"></th>
+              {tableau.colonnes.map((c, i) => (
+                <th key={i} className="text-left text-xs font-bold text-gray-800 pb-2 pr-3">{L(c, language)}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {tableau.lignes.map((row, ri) => (
+              <tr key={ri}>
+                <td className="text-xs font-semibold text-gray-500 py-2 pr-3 border-t border-gray-100 align-top">{L(row.label, language)}</td>
+                {row.cells.map((cell, ci) => (
+                  <td key={ci} className="text-[13px] text-gray-700 leading-snug py-2 pr-3 border-t border-gray-100 align-top">{L(cell, language)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {tableau.note && <p className="text-[11px] text-gray-400 italic mt-3">{L(tableau.note, language)}</p>}
+    </section>
+  );
 }
 
 /* ── accordéon N3 ────────────────────────────────────────────────────────── */
@@ -228,6 +352,7 @@ function LinkChip({ slugOrObj, language }) {
 
 export default function LearnPage() {
   const { section, slug } = useParams();
+  const [searchParams] = useSearchParams();
   const language = useStore(s => s.language);
   const setLastLearn = useStore(s => s.setLastLearn);
 
@@ -235,15 +360,20 @@ export default function LearnPage() {
   const [content, setContent] = useState(null);
   const [maxLevel, setMaxLevel] = useState(1); // passage de niveau toujours explicite (bouton)
   const [openSections, setOpenSections] = useState({});
+  const [sommaireOpen, setSommaireOpen] = useState(false);
   const level2Ref = useRef(null);
   const level3Ref = useRef(null);
   const anchorRefs = useRef({});
 
+  // ?niveau=2|3 : deep-link depuis l'Academy ou la recherche — ouvre directement le bon niveau
+  const wantedLevel = parseInt(searchParams.get('niveau'), 10) || 1;
+
   useEffect(() => {
     let alive = true;
     setContent(null);
-    setMaxLevel(1);
+    setMaxLevel(wantedLevel >= 3 ? 4 : wantedLevel);
     setOpenSections({});
+    setSommaireOpen(false);
     if (entry) {
       entry.load().then(c => { if (alive) setContent(c); });
       setLastLearn({ section, slug, title: entry.title.fr, ts: Date.now() });
@@ -258,7 +388,7 @@ export default function LearnPage() {
           {language === 'fr' ? `Cette fiche n'existe pas (encore).` : `This page doesn't exist (yet).`}
         </p>
         <Link to="/learn" className="text-sm font-semibold text-blue-600 hover:text-blue-800">
-          ← {language === 'fr' ? 'Comprendre la politique' : 'Understanding politics'}
+          ← {language === 'fr' ? `J'y connais rien` : 'Politics 101'}
         </Link>
       </div>
     );
@@ -282,15 +412,32 @@ export default function LearnPage() {
     setTimeout(() => level3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
 
+  const jumpToLevel = (l) => {
+    if (l > maxLevel) setMaxLevel(l >= 3 ? 4 : l);
+    setTimeout(() => {
+      if (l === 1) window.scrollTo({ top: 0, behavior: 'smooth' });
+      else if (l === 2) level2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else level3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
+  const setAllSections = (open) => {
+    const next = {};
+    (content?.level3?.sections || []).forEach(s => { if (s.id) next[s.id] = open; });
+    setOpenSections(next);
+  };
+
   const vfItems = content ? getVraiFaux(content.vraiFaux) : [];
+  const allOpen = content?.level3?.sections?.every(s => !s.id || openSections[s.id]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <ReadingProgress />
 
       {/* Fil d'Ariane */}
       <motion.nav initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-gray-400 mb-6 flex flex-wrap items-center gap-1.5">
         <Link to="/learn" className="hover:text-gray-600 transition-colors">
-          {language === 'fr' ? 'Comprendre la politique' : 'Understanding politics'}
+          {language === 'fr' ? `J'y connais rien` : 'Politics 101'}
         </Link>
         <span>›</span>
         <span>{L(SECTIONS[entry.section], language)}</span>
@@ -325,6 +472,11 @@ export default function LearnPage() {
         </div>
       ) : (
         <>
+          {/* Navigation entre niveaux (sticky) */}
+          {(entry.hasLevels || []).length > 1 && (
+            <LevelNav hasLevels={entry.hasLevels} maxLevel={maxLevel} language={language} onJump={jumpToLevel} />
+          )}
+
           {/* N1 — En 20 secondes */}
           <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white border border-gray-200 rounded-2xl p-5 mb-4">
             <p className="text-xs font-bold uppercase tracking-wide text-amber-600 mb-2">
@@ -372,10 +524,47 @@ export default function LearnPage() {
 
           {/* N3 — Tout comprendre */}
           {content.level3?.sections?.length > 0 && maxLevel >= 3 && (
-            <section ref={level3Ref} className="mb-4 scroll-mt-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-purple-600 mb-3 px-1">
-                {language === 'fr' ? '🔍 Tout comprendre' : '🔍 The full picture'}
-              </p>
+            <section ref={level3Ref} className="mb-4 scroll-mt-12">
+              <div className="flex items-center justify-between gap-2 mb-3 px-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-purple-600">
+                  {language === 'fr' ? '🔍 Tout comprendre' : '🔍 The full picture'}
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSommaireOpen(o => !o)}
+                    className="text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors"
+                  >
+                    {language === 'fr' ? 'Sommaire' : 'Contents'}
+                  </button>
+                  <span className="text-gray-300">·</span>
+                  <button
+                    onClick={() => setAllSections(!allOpen)}
+                    className="text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors"
+                  >
+                    {allOpen
+                      ? (language === 'fr' ? 'Tout replier' : 'Collapse all')
+                      : (language === 'fr' ? 'Tout ouvrir' : 'Expand all')}
+                  </button>
+                </div>
+              </div>
+
+              {/* Sommaire */}
+              {sommaireOpen && (
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+                    {content.level3.sections.map((s, i) => (
+                      <button
+                        key={s.id || i}
+                        onClick={() => { if (s.id) openAnchor(s.id); setSommaireOpen(false); }}
+                        className="text-left text-[13px] text-gray-600 hover:text-gray-900 py-1 border-b border-gray-50 last:border-0 transition-colors"
+                      >
+                        <span className="text-gray-300 font-semibold tabular-nums mr-1.5">{String(i + 1).padStart(2, '0')}</span>
+                        {L(s.titre, language)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Cartographie (dossiers-pivots) */}
               {content.carte?.length > 0 && (
@@ -411,6 +600,16 @@ export default function LearnPage() {
                 ))}
               </div>
             </section>
+          )}
+
+          {/* Chronologie */}
+          {content.chronologie && maxLevel >= 3 && (
+            <Chronologie chrono={content.chronologie} language={language} />
+          )}
+
+          {/* Tableau comparatif */}
+          {content.tableauComparatif && maxLevel >= 3 && (
+            <TableauComparatif tableau={content.tableauComparatif} language={language} />
           )}
 
           {/* N4 — Pour aller encore plus loin */}
@@ -471,12 +670,17 @@ export default function LearnPage() {
                   <p className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-2">
                     {language === 'fr' ? 'Les figures' : 'Key figures'}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {content.figuresLiees.map((f, i) => (
-                      <span key={i} className="inline-flex flex-col bg-gray-50 border border-dashed border-gray-300 px-3 py-1.5 rounded-xl">
-                        <span className="text-sm text-gray-700 font-medium">{f.nom}</span>
-                        <span className="text-[10px] text-gray-400">{L(f.note, language)}</span>
-                      </span>
+                      <div key={i} className="flex items-center gap-2.5 bg-gray-50 border border-gray-200 px-3 py-2 rounded-xl">
+                        <span className="shrink-0 w-8 h-8 rounded-full bg-gray-900 text-white text-[11px] font-bold flex items-center justify-center">
+                          {f.nom.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-sm text-gray-800 font-semibold truncate">{f.nom}</span>
+                          <span className="block text-[11px] text-gray-400 truncate">{L(f.note, language)}</span>
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

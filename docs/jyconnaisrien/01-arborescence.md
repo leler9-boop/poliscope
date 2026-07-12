@@ -5,11 +5,11 @@
 La page d'entrée `/learn` est un **hub éditorialisé** (§1bis) donnant accès à 9 portes d'entrée +
 3 outils transverses. Chaque porte correspond à une catégorie de contenu avec son type de fiche
 (fichier 02) et son préfixe d'URL. Tous les contenus partagent le système de niveaux N1→N4 et les
-trois familles éditoriales (fichier 00, §2). Nom public de la base : **« Comprendre la politique »**
-(« J'y connais rien » n'est que le nom de la porte et du parcours débutant — fichier 00, §1).
+trois familles éditoriales (fichier 00, §2). Deux marques (fichier 00, §1) : **« J'y connais rien »**
+(le hub débutant, `/learn`) et **« Poliscop Academy »** (la section avancée, `/learn/academy`).
 
 ```
-Comprendre la politique (/learn)
+J'y connais rien (/learn) · Poliscop Academy (/learn/academy)
 │
 ├── A. Les bases de la politique            /learn/bases/:slug         (type: fiche-base)
 ├── B. Les familles politiques              /learn/familles/:slug      (type: ideologie)
@@ -320,7 +320,7 @@ lecture N1-N4 (internes à chaque page).
 
 ## 12. Navigation et maillage
 
-- **Fil d'Ariane** : Comprendre la politique → porte → fiche.
+- **Fil d'Ariane** : J'y connais rien → porte → fiche (l'Academy a son propre fil).
 - **Bloc « Les mots associés »** en bas de chaque fiche (liens dictionnaire).
 - **Bloc « Continuer avec »** : 2-3 pages liées (champ `related[]`).
 - **Bloc « Testez-vous »** : 3-5 questions vrai/faux liées.

@@ -38,8 +38,9 @@ Prototypage en **deux temps** (détail fichier 04) :
 2. **Second lot** `[PROTO-2]` après validation : la gauche · immigration · laïcité ·
    Union européenne · de Gaulle · Chirac · Sarkozy · Hollande · Macron.
 
-## Note sur le nom
+## Note sur le nom (correction de cap 2026-07-12)
 
-Nom public arrêté : **« Comprendre la politique »**. « J'y connais rien » reste uniquement le nom
-de la porte et du parcours débutant (« J'y connais rien — Commencer de zéro »). URL `/learn`
-conservée. Voir fichier 00, §1.
+Deux marques : **« J'y connais rien »** = le nom public de la partie débutante (`/learn`) ;
+**« Poliscop Academy »** = la section avancée (`/learn/academy`, grandes fiches complètes,
+présidents, comparateurs, chronologies). Le projet s'appelle **Poliscop** (sans « e ») —
+contrôle automatique : `node scripts/check-brand.mjs`. Voir fichier 00, §1.

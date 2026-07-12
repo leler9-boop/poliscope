@@ -169,31 +169,39 @@ const REPERES = ['gauche', 'droite', 'centre', 'president-de-la-republique', 'el
 const ACTUALITE = ['retraites', 'oqtf', 'dette-publique'];
 const MOTS_PARTOUT = ['oqtf', '49-3', 'dette-publique', 'proportionnelle', 'motion-de-censure'];
 
+const PARCOURS = [
+  { icon: '🌱', label: { fr: 'Je pars de zéro' }, hook: { fr: `7 étapes : la politique, la gauche et la droite, les institutions, le vote, les partis, les débats, vérifier une info.` }, to: '/learn/familles/droite' },
+  { icon: '🗳️', label: { fr: 'Comprendre les élections' }, hook: { fr: `Scrutins, candidats, sondages, premier et second tour, vote utile, abstention.` } },
+  { icon: '💶', label: { fr: `Comprendre l'économie politique` }, hook: { fr: `PIB, inflation, impôts, dette, chômage, retraites, commerce international.` } },
+  { icon: '🌍', label: { fr: `Comprendre l'immigration` }, hook: { fr: `Étranger, immigré, réfugié, asile, OQTF, données migratoires, le débat.` } },
+  { icon: '🇪🇺', label: { fr: `Comprendre l'Union européenne` }, hook: { fr: `Pourquoi l'UE existe, qui décide, l'euro, Schengen, les critiques, les visions.` } },
+  { icon: '🔬', label: { fr: 'Comment le sait-on ?' }, hook: { fr: `Lire un sondage, une statistique, un graphique. Fait, opinion, prédiction.` } },
+];
+
 export default function LearnHub() {
   const language = useStore(s => s.language);
   const lastLearn = useStore(s => s.lastLearn);
 
-  const explorer = [
-    { icon: '🧭', label: { fr: 'Parcours guidés' }, hook: { fr: 'Apprendre dans le bon ordre' }, soon: true },
-    { icon: '⚖️', label: { fr: 'Comparateurs' }, hook: { fr: 'Deux idées côte à côte' }, soon: true },
-    { icon: '📜', label: { fr: 'Chronologies' }, hook: { fr: `L'histoire en frises` }, soon: true },
-    { icon: '👤', label: { fr: 'Personnalités' }, hook: { fr: 'Figures et présidents' }, soon: true },
-    { icon: '📖', label: { fr: 'Dictionnaire' }, hook: { fr: 'Tous les mots expliqués' }, to: '/learn/dico' },
-    { icon: '🔬', label: { fr: 'Comment le sait-on ?' }, hook: { fr: 'Sondages, chiffres, sources' }, soon: true },
-  ];
-
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
 
-      {/* 1. En-tête */}
+      {/* 1. En-tête — identité « J'y connais rien » */}
       <motion.div {...fadeUp(0)} className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">
-          {language === 'fr' ? 'Comprendre la politique' : 'Understanding politics'}
+        <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+          <span>💡</span>Poliscop
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+          {language === 'fr' ? `J'y connais rien` : 'Politics 101'}
         </h1>
-        <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
+        <p className="text-gray-600 text-[15px] leading-relaxed max-w-lg">
           {language === 'fr'
-            ? `Chaque sujet expliqué simplement, du plus court au plus profond. Sans jargon, sans parti pris.`
-            : `Every topic explained simply, from the shortest read to the deepest dive. No jargon, no spin.`}
+            ? `La politique expliquée simplement, sans vous prendre pour un idiot.`
+            : `Politics explained simply — without treating you like an idiot.`}
+        </p>
+        <p className="text-gray-400 text-sm leading-relaxed max-w-lg mt-1">
+          {language === 'fr'
+            ? `Chaque sujet en 20 secondes, en 3 minutes, ou en profondeur. À vous de choisir.`
+            : `Every topic in 20 seconds, 3 minutes, or in depth. Your call.`}
         </p>
       </motion.div>
 
@@ -264,7 +272,14 @@ export default function LearnHub() {
 
       {/* 6. J'entends ce mot partout */}
       <motion.div {...fadeUp(0.22)} className="mb-10">
-        <SectionLabel>{language === 'fr' ? `J'entends ce mot partout` : 'I keep hearing this word'}</SectionLabel>
+        <div className="flex items-baseline justify-between gap-2 mb-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
+            {language === 'fr' ? `J'entends ce mot partout` : 'I keep hearing this word'}
+          </p>
+          <Link to="/learn/dico" className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+            {language === 'fr' ? 'Tout le dictionnaire →' : 'Full dictionary →'}
+          </Link>
+        </div>
         <div className="flex flex-wrap gap-2">
           {MOTS_PARTOUT.map(slug => {
             const entry = findBySlug(slug);
@@ -288,34 +303,51 @@ export default function LearnHub() {
         <VraiFauxCard language={language} />
       </motion.div>
 
-      {/* 8. Explorer autrement */}
-      <motion.div {...fadeUp(0.3)} className="mb-4">
-        <SectionLabel>{language === 'fr' ? 'Explorer autrement' : 'Explore differently'}</SectionLabel>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-          {explorer.map((e, i) => {
-            const inner = (
-              <>
-                <span className="text-xl block mb-1">{e.icon}</span>
-                <span className="text-sm font-semibold text-gray-800 flex items-center gap-1.5 flex-wrap">
-                  {L(e.label, language)}
-                  {e.soon && (
-                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                      {language === 'fr' ? 'bientôt' : 'soon'}
-                    </span>
-                  )}
-                </span>
-                <span className="text-[11px] text-gray-400 block mt-0.5 leading-snug">{L(e.hook, language)}</span>
-              </>
-            );
-            return e.to ? (
-              <Link key={i} to={e.to} className="bg-white border border-gray-200 hover:border-gray-400 rounded-2xl px-4 py-3.5 transition-colors">
-                {inner}
-              </Link>
-            ) : (
-              <div key={i} className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl px-4 py-3.5">{inner}</div>
-            );
-          })}
+      {/* 8. Parcours guidés */}
+      <motion.div {...fadeUp(0.3)} className="mb-10">
+        <SectionLabel>{language === 'fr' ? 'Les parcours guidés' : 'Guided paths'}</SectionLabel>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {PARCOURS.map((p, i) => (
+            <div key={i} className={`rounded-2xl px-4 py-3.5 ${p.to ? 'bg-white border border-gray-200' : 'bg-gray-50 border border-dashed border-gray-200'}`}>
+              <p className="text-sm font-semibold flex items-center gap-1.5 flex-wrap">
+                <span>{p.icon}</span>
+                <span className={p.to ? 'text-gray-900' : 'text-gray-500'}>{L(p.label, language)}</span>
+                {!p.to && (
+                  <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                    {language === 'fr' ? 'bientôt' : 'soon'}
+                  </span>
+                )}
+              </p>
+              <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">{L(p.hook, language)}</p>
+              {p.to && (
+                <Link to={p.to} className="inline-block text-xs font-semibold text-blue-600 hover:text-blue-800 mt-1.5 transition-colors">
+                  {language === 'fr' ? 'Commencer →' : 'Start →'}
+                </Link>
+              )}
+            </div>
+          ))}
         </div>
+      </motion.div>
+
+      {/* 9. Accès aux contenus avancés — Poliscop Academy */}
+      <motion.div {...fadeUp(0.34)} className="mb-4">
+        <Link
+          to="/learn/academy"
+          className="group relative block overflow-hidden bg-gray-900 hover:bg-gray-800 rounded-3xl px-6 py-7 transition-colors"
+        >
+          <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-white/5" />
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Poliscop</p>
+          <p className="text-2xl font-bold text-white tracking-tight mb-2">Academy</p>
+          <p className="text-sm text-gray-300 leading-relaxed max-w-md mb-3">
+            {language === 'fr'
+              ? `Prêt à aller plus loin ? Les grands dossiers complets : idéologies, débats, présidents, chronologies — tout sourcé, tout vérifié.`
+              : `Ready for more? The complete dossiers: ideologies, debates, presidents, timelines — all sourced, all verified.`}
+          </p>
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+            {language === 'fr' ? `Entrer dans l'Academy` : 'Enter the Academy'}
+            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+          </span>
+        </Link>
       </motion.div>
 
       {/* Lien discret vers l'ancienne version pendant la migration */}

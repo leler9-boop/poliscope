@@ -23,7 +23,7 @@ export default function LearnDico() {
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
       <motion.nav initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-gray-400 mb-6">
         <Link to="/learn" className="hover:text-gray-600 transition-colors">
-          {language === 'fr' ? 'Comprendre la politique' : 'Understanding politics'}
+          {language === 'fr' ? `J'y connais rien` : 'Politics 101'}
         </Link>
         <span className="mx-1.5">›</span>
         <span className="text-gray-600 font-medium">{language === 'fr' ? 'Dictionnaire' : 'Dictionary'}</span>

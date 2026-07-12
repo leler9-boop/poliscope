@@ -6,12 +6,19 @@ Faire de cette rubrique la base de connaissances politique la plus accessible, p
 complète pour le grand public français. Pas un glossaire : un **parcours de compréhension** allant
 du plus simple au plus approfondi.
 
-### Nom public — arrêté
+### Nom public — arrêté (correction de cap 2026-07-12)
 
-- **Nom global de la base : « Comprendre la politique »** (décision actée le 2026-07-12).
-- **« J'y connais rien »** reste uniquement le nom de la **porte et du parcours débutant** :
-  « J'y connais rien — Commencer de zéro » (pointe vers le parcours P1).
+- **« J'y connais rien »** est le **nom public de la partie débutante** (`/learn`) : direct,
+  accessible, assumé. Promesse : « La politique expliquée simplement, sans vous prendre pour
+  un idiot. »
+- **« Poliscop Academy »** (`/learn/academy`) est la **section avancée** : grandes fiches
+  complètes, idéologies, dossiers historiques, présidents, comparateurs, chronologies, sources.
+- Articulation : J'y connais rien = commencer simplement, apprendre progressivement ;
+  Academy = accéder aux dossiers approfondis (les fiches sont partagées — l'Academy ouvre
+  directement le niveau « Tout comprendre » via `?niveau=3`).
 - La structure d'URL `/learn` est conservée telle quelle.
+- ⚠️ Le projet s'appelle **Poliscop** (sans « e »), site poliscop.org — contrôle automatique
+  `scripts/check-brand.mjs`.
 
 Logique centrale : **Je découvre → je comprends → j'approfondis → je maîtrise.**
 

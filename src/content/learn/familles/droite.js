@@ -309,6 +309,41 @@ export default {
     ],
   },
 
+  // ── Chronologie interactive ──────────────────────────────────────────────────
+  chronologie: {
+    titre: { fr: `Deux siècles de droites françaises` },
+    events: [
+      { date: '1789', titre: { fr: `Naissance des mots « gauche » et « droite »` }, detail: { fr: `À l'Assemblée constituante, les partisans du veto royal se placent à droite du président de séance. Une habitude de placement devient une identité politique.` } },
+      { date: '1815-1848', titre: { fr: `Légitimistes contre orléanistes` }, detail: { fr: `Sous la Restauration puis la monarchie de Juillet, deux droites s'affrontent : celle de la tradition monarchique et celle des libertés économiques et parlementaires. C'est le point de départ de la grille de René Rémond.` } },
+      { date: '1852', titre: { fr: `Le bonapartisme` }, detail: { fr: `Louis-Napoléon Bonaparte fonde le Second Empire : un chef fort, appuyé directement sur le peuple par le plébiscite. Cette troisième droite laissera des traces durables dans la culture politique française.` } },
+      { date: '1894-1906', titre: { fr: `L'affaire Dreyfus recompose les camps` }, detail: { fr: `L'affaire divise la France et redessine la frontière gauche-droite autour de la République, de l'armée et de l'antisémitisme. Une partie de la droite catholique se rallie progressivement à la République.` } },
+      { date: '1940-1944', titre: { fr: `Vichy et la Résistance : la droite déchirée` }, detail: { fr: `Des hommes de droite collaborent au régime de Vichy ; d'autres, de Gaulle en tête, incarnent la Résistance. Réduire « la droite » à l'un ou l'autre camp est une erreur historique.` } },
+      { date: '1946', titre: { fr: `Le discours de Bayeux` }, detail: { fr: `De Gaulle expose sa vision des institutions : un exécutif fort au-dessus des partis. Rejetée sur le moment, elle deviendra la Constitution de 1958.` } },
+      { date: '1958', titre: { fr: `La Ve République` }, detail: { fr: `De retour au pouvoir, de Gaulle fonde la Ve République. Le gaullisme domine la droite — et la vie politique — pendant une quinzaine d'années.` } },
+      { date: '1974', titre: { fr: `Giscard : la droite libérale à l'Élysée` }, detail: { fr: `Valéry Giscard d'Estaing, non gaulliste, l'emporte. Majorité à 18 ans, loi Veil sur l'IVG : la droite libérale réforme la société. Le RPR de Jacques Chirac naît en 1976 en réaction.` } },
+      { date: '1986-1988', titre: { fr: `Privatisations et première cohabitation` }, detail: { fr: `Le gouvernement Chirac privatise de grandes entreprises publiques pendant la première cohabitation avec François Mitterrand — le tournant libéral assumé de la droite française.` } },
+      { date: '1992', titre: { fr: `Maastricht coupe la droite en deux` }, detail: { fr: `Le référendum sur le traité de Maastricht (oui à ~51 %) fracture la droite : Philippe Séguin et Charles Pasqua mènent le « non » contre la ligne de leur propre camp. La fracture européenne ne s'est jamais refermée.` } },
+      { date: '2002', titre: { fr: `L'UMP unifie la droite de gouvernement` }, detail: { fr: `Après le choc du 21 avril (Jean-Marie Le Pen au second tour), la droite se rassemble dans l'UMP derrière Jacques Chirac, réélu avec 82 % des voix.` } },
+      { date: '2007-2012', titre: { fr: `Les années Sarkozy` }, detail: { fr: `Nicolas Sarkozy incarne une droite « décomplexée » : travail, autorité, identité nationale. Battu en 2012, il laisse une droite qui cherche sa ligne.` } },
+      { date: '2017', titre: { fr: `L'explosion du système` }, detail: { fr: `Emmanuel Macron attire l'aile libérale et modérée de la droite ; le RN progresse sur son aile droite. Prise en étau, la droite de gouvernement perd son rôle central.` } },
+      { date: '2024', titre: { fr: `La scission des Républicains` }, detail: { fr: `Le président de LR, Éric Ciotti, annonce une alliance avec le RN : le parti se déchire. L'épisode le plus récent du débat sur la frontière entre droite et extrême droite.` } },
+    ],
+  },
+
+  // ── Tableau comparatif (simplification pédagogique assumée) ──────────────────
+  tableauComparatif: {
+    titre: { fr: `Quatre droites en un coup d'œil` },
+    note: { fr: `Simplification pédagogique : chaque case résume une tendance dominante, pas la position de chaque personne ou parti.` },
+    colonnes: [{ fr: 'Libérale' }, { fr: 'Conservatrice' }, { fr: 'Gaulliste' }, { fr: 'Nationale' }],
+    lignes: [
+      { label: { fr: `L'État` }, cells: [{ fr: `Le réduire au nécessaire` }, { fr: `Garant des institutions` }, { fr: `Stratège et fort` }, { fr: `Protecteur de l'identité` }] },
+      { label: { fr: `L'économie` }, cells: [{ fr: `Marché, libre-échange` }, { fr: `Marché encadré par la morale` }, { fr: `Marché + grands programmes publics` }, { fr: `Protectionnisme, priorité nationale` }] },
+      { label: { fr: `L'Europe` }, cells: [{ fr: `Intégration favorable` }, { fr: `Europe prudente des États` }, { fr: `Europe des nations` }, { fr: `Souveraineté d'abord, UE contestée` }] },
+      { label: { fr: `L'immigration` }, cells: [{ fr: `Sélection économique` }, { fr: `Réduction, intégration exigeante` }, { fr: `Maîtrise par l'État` }, { fr: `Réduction drastique, enjeu central` }] },
+      { label: { fr: `Le mot-clé` }, cells: [{ fr: `Liberté` }, { fr: `Transmission` }, { fr: `Nation` }, { fr: `Identité` }] },
+    ],
+  },
+
   // ── Modules liés ─────────────────────────────────────────────────────────────
   vraiFaux: ['vf-droite-etat-minimal', 'vf-droite-extreme', 'vf-droite-impots', 'vf-degaulle-classique', 'vf-droite-ecologie'],
 
