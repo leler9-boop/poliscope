@@ -1,4 +1,4 @@
-# Poliscope — Cartographie du projet
+# Poliscop — Cartographie du projet
 
 ## Stack et architecture générale
 
@@ -38,7 +38,7 @@
 | Documentation racine | `CLAUDE.md`, `DEPLOYMENT.md` | Guidance projet | Élevé (gouvernance) | **Toutes deux périmées** sur plusieurs points structurels (routing, nombre de questions ~120 vs 158 réelles, absence des modes 16/32/64, absence de `frenchFigures.js`/`candidatePolicies.js`/`archetypes.js` dans l'architecture décrite) |
 | Audits internes existants | `supabase/INTELLIGENCE_AUDIT.md`, `INTELLIGENCE_AUDIT_V2.md` (2026-06-14) | Audit data/analytics/RGPD déjà réalisé | Info | Cité comme source, non dupliqué ; sert à vérifier si les correctifs recommandés ont été appliqués (Phase 11) |
 | Pages résultat/méthodologie | `src/pages/Profile.jsx`, `Transparency.jsx`, `Beginner.jsx`, `Mission.jsx` | Affichage du résultat, page méthodologie publique, contenu pédagogique | Élevé | Support direct de la Phase 10 (explicabilité) — à lire directement par le coordinateur |
-| Dépôt imbriqué hors périmètre | `notebooklm-py/` (`.git` propre) | Client Python NotebookLM, sans rapport avec Poliscope | Faible (hygiène) | Exclu de l'audit ; probable ajout accidentel au repo |
+| Dépôt imbriqué hors périmètre | `notebooklm-py/` (`.git` propre) | Client Python NotebookLM, sans rapport avec Poliscop | Faible (hygiène) | Exclu de l'audit ; probable ajout accidentel au repo |
 | Artefacts égarés | `./assets/*.js`/`*.css` (racine), `vite.config.js.timestamp-*.mjs` (×7) | Build output / fichiers temporaires Vite | Faible (hygiène) | Ne devraient pas être versionnés — correctif trivial à lister en fin de plan de remédiation |
 
 ## Sources de vérité identifiées

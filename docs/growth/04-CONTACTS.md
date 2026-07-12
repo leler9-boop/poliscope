@@ -90,7 +90,7 @@ Légende : [V] = email vérifié dans une source publique · [F] = format d'adre
 | Nom | Média | Pourquoi | Contact | Note |
 |---|---|---|---|---|
 | **Amandine Jonniaux** | Journal du Geek (rédac chef adjointe 2026) | **A écrit le papier « Elyze dans le viseur de la CNIL » (19/01/2022)** — pitch : « l'app qui corrige tout ce que vous aviez pointé » | X/Bluesky @amandinejonniaux, LinkedIn | ★★★★★ |
-| **Mathilde Roche** | Libération / CheckNews | Couverture Elyze CheckNews 2022 ; CheckNews répond aux questions lecteurs (une question posée sur Poliscope est une porte d'entrée légitime) | [F] initialeduprenom.nom@liberation.fr ; X @Roche__Mathilde | ★★★★★ |
+| **Mathilde Roche** | Libération / CheckNews | Couverture Elyze CheckNews 2022 ; CheckNews répond aux questions lecteurs (une question posée sur Poliscop est une porte d'entrée légitime) | [F] initialeduprenom.nom@liberation.fr ; X @Roche__Mathilde | ★★★★★ |
 | **Elise Viniacourt** | Libération (tech) | Beat exact | [F] Libé ; X @EliseViniacourt | ★★★★ |
 | **Aurore Gayte** | ex-Numerama → **L'Express** | Couvrait la tech à l'époque Elyze | LinkedIn d'abord | ★★★★ |
 | **Nicolas Lellouche** | Numerama (chef de rubrique tech) | Le média qui a le plus creusé Elyze | X @LelloucheNico ; LinkedIn | ★★★★ |
@@ -110,4 +110,4 @@ Légende : [V] = email vérifié dans une source publique · [F] = format d'adre
 
 **Étudiants** : La Péniche (Sciences Po — lapeniche.net) ★★★★ · **Radio Campus France (1 passage = 30 antennes locales, radiocampus.fr)** ★★★★ · Le Figaro Étudiant ([V] redacetudiant@lefigaro.fr — porte d'entrée Figaro) ★★★★ · L'Étudiant ([V] redaction@letudiant.fr) ★★★ · Agence Presse Jeune ([V] agencepressesjeune@gmail.com) ★★.
 
-Fenêtres calendaires et angles : [05](05-EARNED-MEDIA.md). Fenêtre supplémentaire vérifiée : **la période des parrainages (~5 février-5 mars 2027)** — publications hebdomadaires du Conseil constitutionnel = actualité data récurrente où Poliscope se positionne en outil compagnon.
+Fenêtres calendaires et angles : [05](05-EARNED-MEDIA.md). Fenêtre supplémentaire vérifiée : **la période des parrainages (~5 février-5 mars 2027)** — publications hebdomadaires du Conseil constitutionnel = actualité data récurrente où Poliscop se positionne en outil compagnon.

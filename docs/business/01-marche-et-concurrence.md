@@ -21,13 +21,13 @@ Retour au [sommaire](02-positionnement.md). Synthèse d'une recherche web dédi�
 | **16personalities** | NERIS (<20 salariés) | >1,5 Md de tests, 49 langues ; revenus estimés 15-25 M$/an | Pub + premium ; **le résultat identitaire partageable EST le marketing** |
 | **Elyze** | France, bénévoles | **>2 M téléchargements en ~3 semaines (janv. 2022)**, n°1 des stores | Aucun. Morte en nov. 2022. |
 
-**Lecture** : l'acquisition en période électorale n'est jamais le problème (le marché la fournit gratuitement) ; le problème que personne n'a résolu en France est la **survie entre deux élections** — et c'est précisément le positionnement de Poliscope (panel longitudinal, observatoire, écoles).
+**Lecture** : l'acquisition en période électorale n'est jamais le problème (le marché la fournit gratuitement) ; le problème que personne n'a résolu en France est la **survie entre deux élections** — et c'est précisément le positionnement de Poliscop (panel longitudinal, observatoire, écoles).
 
 ## Elyze : le précédent fondateur, dans les deux sens
 
 Trajectoire : lancée le 2 janvier 2022 (Grégoire Cazcarra, François Mari, ~30 bénévoles, zéro budget), swipe façon Tinder, viralité TikTok pure (« je teste Elyze, résultat choquant »), n°1 des stores en une semaine. Puis, en 72 h : autosaisine CNIL (collecte âge/genre/code postal sans consentement adapté, opinions = données sensibles art. 9), clause de revente des données dans les CGU révélée par la presse, biais d'affichage (Macron premier en cas d'égalité — un tri dans le code), faille de sécurité, code fermé. Réponse sous pression : suppression de toute la base + open source. Adaptée aux législatives, puis abandonnée — dernière mise à jour 16 nov. 2022 ; personne n'a repris le créneau.
 
-**Chaque faiblesse d'Elyze est une force déjà construite de Poliscope** : conformité RGPD architecturale (ledger de consentement, k-anonymat), méthodologie documentée, profondeur (166 questions vs swipe binaire), permanence. C'est le récit presse à préparer tel quel : *« l'anti-Elyze »* — à condition que la page Transparence soit irréprochable (compléter veto + stretchScore avant le lancement public).
+**Chaque faiblesse d'Elyze est une force déjà construite de Poliscop** : conformité RGPD architecturale (ledger de consentement, k-anonymat), méthodologie documentée, profondeur (166 questions vs swipe binaire), permanence. C'est le récit presse à préparer tel quel : *« l'anti-Elyze »* — à condition que la page Transparence soit irréprochable (compléter veto + stretchScore avant le lancement public).
 
 ## France : qui occupe le terrain en 2026 ?
 

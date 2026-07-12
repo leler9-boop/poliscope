@@ -17,8 +17,8 @@ Grille d'évaluation de chaque variable sur 4 critères : **valeur analytique** 
 | **Type de commune** | grande ville / ville moyenne / petite ville / rural | Le clivage géographique est LE clivage français post-2017 (métropoles vs périphéries). Plus discriminant que la région. |
 | **Département** | code dept (44, 2A, 976) | Assez fin pour les cartes et le rural/urbain vérifié, assez large pour la minimisation (≥ ~300 k hab/dept). Remplace le code postal brut de v1 (qui identifie un village). |
 | **Niveau d'études** | 7 niveaux (brevet → doctorat) | 2e variable la plus prédictive du vote en France (cf. clivage diplômés/non-diplômés). |
-| **Statut d'activité** | étudiant / salarié privé / salarié public / indépendant / chef d'entreprise / sans emploi / retraité / au foyer | Sépare les grands blocs électoraux (étudiants, retraités, fonction publique). Public/privé est un clivage français spécifique et sous-étudié → différenciant pour Poliscope. |
-| **Intérêt pour la politique** | faible/moyen/fort/très fort | Variable de **qualité** autant que d'analyse : permet de segmenter « grand public » vs « politisés » (l'échantillon Poliscope sera biaisé politisé — il faut pouvoir le mesurer). |
+| **Statut d'activité** | étudiant / salarié privé / salarié public / indépendant / chef d'entreprise / sans emploi / retraité / au foyer | Sépare les grands blocs électoraux (étudiants, retraités, fonction publique). Public/privé est un clivage français spécifique et sous-étudié → différenciant pour Poliscop. |
+| **Intérêt pour la politique** | faible/moyen/fort/très fort | Variable de **qualité** autant que d'analyse : permet de segmenter « grand public » vs « politisés » (l'échantillon Poliscop sera biaisé politisé — il faut pouvoir le mesurer). |
 
 ## Tier 2 — Forte valeur (proposées plus tard, jamais en bloc : 8 variables)
 
@@ -45,7 +45,7 @@ Grille d'évaluation de chaque variable sur 4 critères : **valeur analytique** 
 | Variable | Raison du rejet |
 |---|---|
 | **Religion / pratique religieuse** | Art. 9 supplémentaire. Croisement religion×opinions politiques = la combinaison la plus explosive possible en France. La valeur analytique est réelle mais le risque (juridique, réputationnel, sécurité des données) la dépasse largement au stade actuel. Réexaminable un jour avec AIPD dédiée, consentement séparé et avis DPO — pas avant. |
-| **Vote passé (2022…) / proximité partisane déclarée** | Art. 9. Redondant avec ce que Poliscope **mesure déjà** mieux (166 questions > 1 déclaration). Le seul usage sérieux serait la calibration/redressement politique — à ce moment-là seulement, en opt-in séparé, anonymisé à la source. Pas dans le socle. |
+| **Vote passé (2022…) / proximité partisane déclarée** | Art. 9. Redondant avec ce que Poliscop **mesure déjà** mieux (166 questions > 1 déclaration). Le seul usage sérieux serait la calibration/redressement politique — à ce moment-là seulement, en opt-in séparé, anonymisé à la source. Pas dans le socle. |
 | **Origine / nationalité des parents** | Art. 9 (origine ethnique). Rejet net. |
 | **Santé / handicap** | Art. 9, hors sujet produit. |
 | **Orientation sexuelle** | Art. 9, la valeur analytique ne justifie pas le risque. |
@@ -53,7 +53,7 @@ Grille d'évaluation de chaque variable sur 4 critères : **valeur analytique** 
 | **Animaux de compagnie, sport, conso de viande, usages culturels** | Amusants pour du contenu viral, mais : friction (chaque question coûte), n requis énormes pour des corrélations qui s'effondrent après contrôle (cf. doc 07), et image « sondage gadget » qui abîme le positionnement sérieux. À traiter éventuellement en **mini-sondages ponctuels thématiques** (opt-in, jetables) plutôt qu'en variables de profil permanentes. |
 
 ## Correspondance avec les référentiels externes
-Chaque variable Tier 1-2 est alignée sur une nomenclature comparable : tranches d'âge INSEE, PCS niveau 1, type de commune (grille communale de densité INSEE simplifiée), niveaux de diplôme (nomenclature nationale). **But : pouvoir comparer chaque distribution Poliscope au recensement** — c'est ce qui permet (a) de mesurer les biais d'échantillon, (b) de redresser, (c) de dire honnêtement en quoi l'échantillon diffère de la France (cf. doc 07).
+Chaque variable Tier 1-2 est alignée sur une nomenclature comparable : tranches d'âge INSEE, PCS niveau 1, type de commune (grille communale de densité INSEE simplifiée), niveaux de diplôme (nomenclature nationale). **But : pouvoir comparer chaque distribution Poliscop au recensement** — c'est ce qui permet (a) de mesurer les biais d'échantillon, (b) de redresser, (c) de dire honnêtement en quoi l'échantillon diffère de la France (cf. doc 07).
 
 ## Ce que ça change au schéma
 Le schéma v6 (`user_demographics`) implémente Tier 1 + Tier 2 en colonnes typées avec CHECK — voir DDL. Tier 3 s'ajoutera par `ALTER TABLE ADD COLUMN` sans casse. Les mini-sondages ponctuels (Tier 4 récréatif) utiliseraient une table dédiée `micro_survey_responses(survey_id, user_id, answers jsonb)` à créer le moment venu — hors socle.

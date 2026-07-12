@@ -42,7 +42,7 @@ Basé sur les 44 constats consolidés dans `issues.json` (3 critiques, 10 élev�
 ## Maintenance continue
 
 26. **POL-AUDIT-044, 045** — Régénérer `CLAUDE.md`/`DEPLOYMENT.md` à partir de l'état réel du code ; documenter explicitement quel schéma Supabase fait foi et vérifier l'état réel du projet en production (signalé « INACTIVE » au 2026-06-14, non re-vérifié dans cette session).
-27. **POL-AUDIT-046** — Hygiène du dépôt : retirer `notebooklm-py/` (dépôt git imbriqué sans rapport avec Poliscope) et gitignorer les artefacts de build égarés (`./assets/*` racine, `vite.config.js.timestamp-*.mjs`).
+27. **POL-AUDIT-046** — Hygiène du dépôt : retirer `notebooklm-py/` (dépôt git imbriqué sans rapport avec Poliscop) et gitignorer les artefacts de build égarés (`./assets/*` racine, `vite.config.js.timestamp-*.mjs`).
 28. Mettre en place la politique de fraîcheur hebdomadaire pour les données électorales critiques en période électorale, recommandée dans [07-sources-and-freshness.md](07-sources-and-freshness.md) — le cas Le Pen/Bardella (donnée fausse 3 jours après l'événement) est l'exemple concret qui justifie cette cadence.
 29. Revue éditoriale périodique des profils de référence (au-delà de la validation de schéma automatique) — POL-AUDIT-010 était structurellement invisible à toute validation technique, seule une relecture humaine du sens l'a révélé.
 

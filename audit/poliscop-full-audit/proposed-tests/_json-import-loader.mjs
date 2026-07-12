@@ -1,4 +1,4 @@
-// Poliscope — audit QA — loader partage par les 4 scripts de test de ce dossier.
+// Poliscop — audit QA — loader partage par les 4 scripts de test de ce dossier.
 //
 // Pourquoi ce fichier existe :
 //   src/data/questions.js fait `import rawQuestions from './questions_final.json';`

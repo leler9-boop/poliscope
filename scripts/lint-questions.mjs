@@ -3,7 +3,7 @@
 import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
 const ROOT = '/Users/arnaudlery/Desktop/poliscope copy';
-register(pathToFileURL(`${ROOT}/audit/poliscope-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
+register(pathToFileURL(`${ROOT}/audit/poliscop-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
 
 const { questions, THEMES_ORDER } = await import(`${ROOT}/src/data/questions.js`);
 const rawAll = (await import(`${ROOT}/src/data/questions_final.json`, { with: { type: 'json' } })).default;

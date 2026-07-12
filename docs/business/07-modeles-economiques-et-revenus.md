@@ -4,7 +4,7 @@ Retour au [sommaire](02-positionnement.md). Ce chapitre répond aux questions 3 
 
 ## 1. Les 16 modèles passés en revue
 
-Notation : marché adressable réaliste pour Poliscope (pas le marché théorique), effort, délai avant premier euro. Verdicts : **CŒUR** (le modèle en fait partie), **APPOINT** (oui, sans en dépendre), **PLUS TARD**, **NON**.
+Notation : marché adressable réaliste pour Poliscop (pas le marché théorique), effort, délai avant premier euro. Verdicts : **CŒUR** (le modèle en fait partie), **APPOINT** (oui, sans en dépendre), **PLUS TARD**, **NON**.
 
 | Modèle | Acheteur | Problème résolu | Prix réaliste | Marge | Cycle | Risques | Délai 1er € | Verdict |
 |---|---|---|---|---|---|---|---|---|
@@ -31,7 +31,7 @@ Notation : marché adressable réaliste pour Poliscope (pas le marché théoriqu
 
 - **Startup VC classique** : inadaptée aujourd'hui — marché français seul trop petit, revenus saisonniers, actif data volontairement non cessible (doc 08 structure). Redevient discutable en 2028 si le modèle « Vote Compass européen » (licences multi-pays) se prouve : c'est la seule trajectoire VC-compatible.
 - **Association pure** : viable années 1-2 (voir doc 08), plafonne ensuite (rémunération fondateur, investissement produit).
-- **SaaS B2B pur / institut d'études pur / média pur** : chacun abandonne un étage du système (l'acquisition grand public, la crédibilité civique, ou le panel). Le modèle Poliscope est précisément l'*empilement*.
+- **SaaS B2B pur / institut d'études pur / média pur** : chacun abandonne un étage du système (l'acquisition grand public, la crédibilité civique, ou le panel). Le modèle Poliscop est précisément l'*empilement*.
 - **Freemium utilisateur** : non — voir tableau. La gratuité totale côté utilisateur est un choix stratégique (panel non biaisé par le paiement), pas une naïveté.
 - **Mission-first (intuition 6.9)** : c'est le bon cadre, à une correction près — « mission-first » ne veut pas dire « revenus plus tard » : le doc 01 (enseignement 10) montre que les projets civiques meurent d'absence de revenus récurrents, pas d'excès de commerce. Le premier contrat média est une décision de survie de la mission.
 
@@ -55,7 +55,7 @@ Pessimiste **~15 k€** (subventions seules, audience retombée — le scénario
 ### Année 3 — 2028-2029 (européennes 2029 en ligne de mire)
 Médian **~150-250 k€** ; optimiste **~400-600 k€** si licences multi-médias européennes ou internationalisation du modèle. C'est le premier moment où une équipe de 2-4 personnes se finance sur les revenus.
 
-**Ce que ces chiffres disent sans fard** : Poliscope peut devenir une **très bonne PME de mission** (150-500 k€/an à horizon 3 ans, résiliente, à marges élevées) finançant 2-4 personnes — pas une licorne. La seule trajectoire au-delà est l'export du modèle par licences (Vote Compass l'a prouvé sur 50+ éditions). Le fondateur doit choisir en connaissance : les projections « plateforme à millions d'utilisateurs payants » seraient exactement les projections irréalistes que la mission demande d'éviter.
+**Ce que ces chiffres disent sans fard** : Poliscop peut devenir une **très bonne PME de mission** (150-500 k€/an à horizon 3 ans, résiliente, à marges élevées) finançant 2-4 personnes — pas une licorne. La seule trajectoire au-delà est l'export du modèle par licences (Vote Compass l'a prouvé sur 50+ éditions). Le fondateur doit choisir en connaissance : les projections « plateforme à millions d'utilisateurs payants » seraient exactement les projections irréalistes que la mission demande d'éviter.
 
 ## 4. La valeur d'un utilisateur (pour arbitrer les canaux)
 

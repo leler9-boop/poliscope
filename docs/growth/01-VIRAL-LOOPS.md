@@ -4,7 +4,7 @@ Retour au [playbook](00-PLAYBOOK.md). Tu codes vite : voici les specs, dans l'or
 
 ## §1. Carte de résultat partageable — S1 septembre (le socle)
 
-- **Mécanique** : à la fin du quiz, génération d'une image (canvas côté client ou endpoint OG) en 2 formats : story 9:16 et post 1:1. Contenu : **archétype nommé** (réutiliser les 18 archétypes existants — c'est l'équivalent du « INFJ » de 16personalities : identitaire, mémorisable, discutable) + mini-radar 8 thèmes + « poliscope.fr » + QR discret. **Jamais de candidat sur l'image** (risque politique : la carte circule hors contexte).
+- **Mécanique** : à la fin du quiz, génération d'une image (canvas côté client ou endpoint OG) en 2 formats : story 9:16 et post 1:1. Contenu : **archétype nommé** (réutiliser les 18 archétypes existants — c'est l'équivalent du « INFJ » de 16personalities : identitaire, mémorisable, discutable) + mini-radar 8 thèmes + « poliscop.fr » + QR discret. **Jamais de candidat sur l'image** (risque politique : la carte circule hors contexte).
 - **Incentive** : l'identité. On partage « qui on est », pas une pub.
 - **UX critique** : le bouton « Partager mon profil » est LE CTA de l'écran de résultat (pas un icône perdu). Prévisualisation de l'image avant partage. Web Share API mobile + téléchargement desktop.
 - **Instrumentation** : % quiz terminés → partage (cible ≥8 %) ; sessions arrivées par QR/lien de carte.
@@ -22,7 +22,7 @@ Retour au [playbook](00-PLAYBOOK.md). Tu codes vite : voici les specs, dans l'or
 
 - **Mécanique** : une question Likert votable **sans inscription** sur une URL dédiée ; le résultat agrégé s'affiche *après* le vote (« 62 % des 8 342 votants pensent que… — et toi, où es-tu vraiment ? → test complet »). Version **iframe embeddable** fournie (médias étudiants, blogs de profs, newsletters → distribution + backlinks).
 - **Incentive** : coût d'entrée nul + curiosité du « où est tout le monde ».
-- **Garde-fou légal** : questions de fond (jamais « pour qui voteriez-vous »), terminologie « les votants Poliscope », jamais « les Français ». Pas de question électorale les week-ends de scrutin (gel codé).
+- **Garde-fou légal** : questions de fond (jamais « pour qui voteriez-vous »), terminologie « les votants Poliscop », jamais « les Français ». Pas de question électorale les week-ends de scrutin (gel codé).
 - **Instrumentation** : votes → clics « test complet » (cible ≥15 %).
 
 ## §4. Mode duel « Devine mes réponses » — novembre

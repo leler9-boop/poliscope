@@ -33,7 +33,7 @@ L'intuition « asso mission + société data » est la bonne cible, mais **pas l
 | Dispositif | Montant | Deadline | Conditions clés | Réalisme /10 |
 |---|---|---|---|---|
 | **EYF « Living and building democracy » (Conseil de l'Europe)** | 8 k€ | **1er sept. 2026** (dépôt dès fin juillet, sessions d'info 23/07 et 11/08) | asso déclarée **dirigée par des jeunes (15-30 ans)** ; activités oct.-déc. 2026 | 5-7 selon gouvernance |
-| **Erasmus+ KA154 (participation des jeunes)** | ≤60 k€ | **1er oct. 2026** (projets à partir de janv. 2027) | asso OU groupe informel de 4 jeunes ; financer des *activités de participation* (ateliers-débats Poliscope, dialogues jeunes-élus), pas du dev logiciel | 7 |
+| **Erasmus+ KA154 (participation des jeunes)** | ≤60 k€ | **1er oct. 2026** (projets à partir de janv. 2027) | asso OU groupe informel de 4 jeunes ; financer des *activités de participation* (ateliers-débats Poliscop, dialogues jeunes-élus), pas du dev logiciel | 7 |
 | **FDVA 2 (fonctionnement-innovation)** | 3-15 k€ (souvent 2-8) | dépôts **déc. 2026-févr. 2027** | asso déclarée (RNA+SIREN) ; dossier léger ; taux de succès départemental souvent >50 % | 7 |
 | **AAP EMI — DRAC (éducation aux médias)** | ≤10 k€ | vagues régionales **T1 2027** | fit fort (esprit critique, désinformation, jeunes) | 6 |
 | **Édu-Up (DGESCO)** | ≤70 k€ (max 50 % du coût) | commissions 3×/an, dossier **automne 2026** | ressource numérique éducative — présenter la version pédagogique | 5 |

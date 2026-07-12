@@ -1,4 +1,4 @@
-# Progress log — Poliscope full audit
+# Progress log — Poliscop full audit
 
 ## Phase 1 — Cartographie ✅ TERMINÉE (2026-07-10)
 
@@ -50,7 +50,7 @@
 
 Vérification directe par le coordinateur de `Transparency.jsx`/`Mission.jsx` (Phase 10) et confirmation du gap RGPD (Phase 11, déjà documenté ci-dessus). Rédaction de l'ensemble des 13 livrables restants : `02` à `10` + `00-executive-summary.md`, `issues.json` (44 constats consolidés, validé JSON, 0 doublon d'ID), `sources.json` (15 sources, validé JSON), 3 patches dans `proposed-patches/` (générés via `diff -u` sur copies temporaires plutôt qu'à la main, puis vérifiés `git apply --check` — deux tentatives initiales à la main avaient produit des patches corrompus à cause d'erreurs d'indentation/numérotation, corrigées par cette méthode plus fiable).
 
-**Vérification finale** : `git status --porcelain` ne montre que `audit/` comme nouveau contenu — aucun fichier source du dépôt n'a été modifié à aucun moment de la mission. Mémoire de session (`MEMORY.md` + nouveau fichier `project_poliscope_full_audit_2026_07.md`) mise à jour avec les coefficients corrects du matcher et les 3 constats critiques.
+**Vérification finale** : `git status --porcelain` ne montre que `audit/` comme nouveau contenu — aucun fichier source du dépôt n'a été modifié à aucun moment de la mission. Mémoire de session (`MEMORY.md` + nouveau fichier `project_poliscop_full_audit_2026_07.md`) mise à jour avec les coefficients corrects du matcher et les 3 constats critiques.
 
 **Total ressources utilisées** : 4 subagents (limite respectée), 0 sous-subagent, aucune recherche web par le coordinateur lui-même (déléguée uniquement à l'agent 3, sur les points prioritaires identifiés dès la cartographie).
 

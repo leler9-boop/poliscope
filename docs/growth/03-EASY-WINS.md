@@ -6,7 +6,7 @@ Retour au [playbook](00-PLAYBOOK.md). Chaque ligne : action ≤2 h, classée par
 
 1. **Créer 2-3 comptes Reddit et les faire vieillir** (30 min) ★★★★★ — karma et ancienneté conditionnent le droit de poster en politique sur r/france (2,5 M). La seule ressource qui ne s'achète pas en janvier.
 2. Créer le compte JVC (forum 18-25) et le faire vivre un peu (30 min) ★★★ — même logique, pour le topic de janvier.
-3. Réserver les handles @poliscope partout (TikTok, IG, YT, X, Threads, Bluesky, LinkedIn) (30 min) ★★★.
+3. Réserver les handles @poliscop partout (TikTok, IG, YT, X, Threads, Bluesky, LinkedIn) (30 min) ★★★.
 4. Google Alerts + recherche sauvegardée X sur « test politique », « Elyze », « boussole électorale », « MonVote2027 », « TestPolitique » (20 min) ★★★ — veille concurrents et newsjacking.
 5. Compte Google Ads gratuit → Keyword Planner pour les volumes réels des requêtes cibles (1 h) ★★★ — remplace les estimations par des données.
 6. S'inscrire à la session d'info EYF du 23/07 (10 min) ★★ (dossier business).
@@ -43,7 +43,7 @@ Retour au [playbook](00-PLAYBOOK.md). Chaque ligne : action ≤2 h, classée par
 28. Message aux admins de 10 serveurs Discord débat (L'Hémicycle, Rebâtir, Senatus, Culture-RIC…) : soirée test collectif (2 h) ★★★★ (sept.-oct.).
 29. Proposer la soirée test aux Discord des créateurs déjà relais (30 min/serveur) ★★★★ (après chaque collab).
 30. Groupes FB étudiants des 20 plus grosses facs (1 h) ★★.
-31. Serveur Discord Poliscope propre avec canal ambassadeurs (2 h setup) ★★★ (nov.).
+31. Serveur Discord Poliscop propre avec canal ambassadeurs (2 h setup) ★★★ (nov.).
 
 ## E. Annuaires, backlinks, référencements (1 h chacun, oct.)
 
@@ -69,14 +69,14 @@ Retour au [playbook](00-PLAYBOOK.md). Chaque ligne : action ≤2 h, classée par
 55. FAGE (contact@fage.org) : proposition de relais campagne citoyenne (30 min) ★★★★★ — 2 000 assos, 300 k étudiants.
 56. Animafac (formulaire) (30 min) ★★★.
 57. CNJE (vice-president@cnje.org) : 200 écoles (30 min) ★★★.
-58. FFD : Poliscope comme matière de la Coupe de débat automne 2026 + concours Périclès (nov.) (1 h) ★★★★ — timing immédiat.
+58. FFD : Poliscop comme matière de la Coupe de débat automne 2026 + concours Périclès (nov.) (1 h) ★★★★ — timing immédiat.
 59. Conférence Lysias (antennes facs de droit) (30 min) ★★★.
 60. CINUP : un contact = 23 clubs MUN parisiens (30 min) ★★★.
 61. Info Jeunes France / CIDJ : proposition d'accord national + 2 CRIJ pilotes (1 h) ★★★★★ — 1 100 structures ; ils relayaient la Boussole en 2022.
 62. A Voté / Plan Procu : partenariat croisé « inscris-toi (avant le 12 mars) ↔ situe-toi » (1 h) ★★★★★ — cadrer comme strictement logistique (voir note de neutralité au [04](04-CONTACTS.md)).
 63. Anacej : proposition de co-enquête « jeunes et vote 2027 » (1 h) ★★★.
 64. AJEF (jeunes élus, transpartisan) (30 min) ★★.
-65. Junior-entreprises des écoles de com : proposer Poliscope comme cas d'étude growth gratuit (1 h) ★★ — ils travaillent gratuitement sur de vrais projets.
+65. Junior-entreprises des écoles de com : proposer Poliscop comme cas d'étude growth gratuit (1 h) ★★ — ils travaillent gratuitement sur de vrais projets.
 
 ## I. Contenu / newsjacking / social (récurrent)
 

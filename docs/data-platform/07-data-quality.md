@@ -12,16 +12,16 @@ Objectif : que chaque chiffre publié survive à la question « comment savez-vo
 | **Multi-comptes / doublons** | Même device → plusieurs uid anonymes ; patterns de réponses identiques à >95 % sur 30+ questions rapprochées dans le temps | Flag `duplicate_suspect`. **Choix assumé : pas de fingerprinting invasif** (contradictoire avec le positionnement confiance) — on accepte un taux de doublons résiduel et on le documente dans la méthodo publiée |
 | **Bots / flood** | Rafales d'INSERT par IP (visible dans les logs Supabase), sessions sans aucun app_event de navigation | Rate limiting Supabase (config projet) + CAPTCHA invisible **uniquement** sur l'écriture serveur si abus constaté (jamais sur le quiz local) ; flag `bot_suspect` |
 | **Brigading** (raid coordonné pour fausser « les stats ») | Pic d'inscriptions atypique + distribution des réponses anormalement bimodale sur une fenêtre courte + source d'acquisition concentrée | Alerte cockpit (croissance × divergence de distribution) ; en cas de raid avéré : fenêtre exclue des publications, mention méthodo. C'est LE risque spécifique d'un produit politique — le monitoring d'anomalies temporelles n'est pas optionnel |
-| **VPN / hors de France** | Pas de géo-IP stockée (minimisation) | Assumé : Poliscope mesure « ses répondants », pas « les résidents français ». Une question déclarative « je réside : France / étranger » peut s'ajouter au Tier 2 si le besoin émerge |
+| **VPN / hors de France** | Pas de géo-IP stockée (minimisation) | Assumé : Poliscop mesure « ses répondants », pas « les résidents français ». Une question déclarative « je réside : France / étranger » peut s'ajouter au Tier 2 si le besoin émerge |
 
 Tous les flags convergent dans `user_quality.quality_score` (0–1). La règle d'usage : `v_research_population` exclut score < 0,5 et les suspects — **les flags dégradent silencieusement, ils ne bannissent jamais l'utilisateur du produit** (son profil local/cloud reste intact ; seule sa contribution statistique est écartée).
 
 ## 2. Représentativité : la doctrine
 
-L'échantillon Poliscope sera durablement : plus jeune, plus diplômé, plus urbain, plus politisé que la France. Doctrine en trois niveaux :
+L'échantillon Poliscop sera durablement : plus jeune, plus diplômé, plus urbain, plus politisé que la France. Doctrine en trois niveaux :
 
 1. **Mesurer** : tableau de bord permanent « échantillon vs recensement » sur âge×genre×commune×diplôme (les nomenclatures du doc 03 sont alignées INSEE exprès). Publié en toute transparence dans la page méthodologie.
-2. **Formuler** : par défaut, tout chiffre public dit « des répondants Poliscope ». L'expression « les Français » est interdite éditorialement sans redressement.
+2. **Formuler** : par défaut, tout chiffre public dit « des répondants Poliscop ». L'expression « les Français » est interdite éditorialement sans redressement.
 3. **Redresser (plus tard)** : post-stratification simple sur âge×genre×commune×diplôme (ou raking si cellules creuses) quand n ≥ ~10 000 consentants recherche. Colonne de pondération calculée par job, stockée à part (`user_weights`), jamais appliquée en douce : chaque publication dit « brut » ou « redressé sur X critères ». Même redressé, un panel volontaire n'est pas un sondage aléatoire — la méthodo le dira toujours.
 
 ## 3. Protocole de publication (le contrat que chaque chiffre respecte)
@@ -33,7 +33,7 @@ L'échantillon Poliscope sera durablement : plus jeune, plus diplômé, plus urb
 5. **Multi-comparaisons** : si l'analyse crible >10 croisements, correction FDR (Benjamini-Hochberg) ou pré-enregistrement des hypothèses du baromètre.
 6. **Stabilité** : le signe de l'effet doit tenir sur deux sous-périodes disjointes de l'échantillon.
 7. **Provenance** : chaque publication = une ligne `stats_releases` (requête exacte, résultat figé, n, versions questionnaire/scoring, canal).
-8. **Formulation** : « parmi les répondants Poliscope » + lien méthodo permanent.
+8. **Formulation** : « parmi les répondants Poliscop » + lien méthodo permanent.
 
 Ce protocole tient en une checklist d'une page à côté de l'explorateur de segments (doc 05 §D) — l'outil applique mécaniquement 1-2-7, l'humain valide 3-6.
 

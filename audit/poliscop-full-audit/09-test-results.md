@@ -6,7 +6,7 @@
 
 ## 2. Tests écrits et **réellement exécutés** pendant cet audit
 
-Quatre scripts Node.js purs (ES modules, sans dépendance React/JSX puisque `scorer.js`/`matcher.js` sont des modules purs) ont été écrits **et exécutés** dans `audit/poliscope-full-audit/proposed-tests/` :
+Quatre scripts Node.js purs (ES modules, sans dépendance React/JSX puisque `scorer.js`/`matcher.js` sont des modules purs) ont été écrits **et exécutés** dans `audit/poliscop-full-audit/proposed-tests/` :
 
 | Script | Propriété testée | Résultat réel | Détail |
 |---|---|---|---|

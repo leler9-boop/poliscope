@@ -7,7 +7,7 @@ exhaustive »).
 
 ## Ce qui existait déjà
 
-`audit/poliscope-full-audit/sources.json` (créé lors de l'audit d'origine, 31
+`audit/poliscop-full-audit/sources.json` (créé lors de l'audit d'origine, 31
 entrées) trackait déjà : la donnée sourcée, l'URL, le type de source, la date
 de publication, la date de vérification et un niveau de confiance. Il manquait
 deux champs explicitement demandés par cette mission : une **catégorie de

@@ -14,8 +14,8 @@ Ce que la plateforme pourra produire, classé par format éditorial et par exige
 | Propriétaires vs locataires face à la fiscalité | housing × ECO/PUB | Infographie | Patrimoine ↔ âge : ajuster |
 | La carte de France des 8 thèmes | dept × thèmes | Carte interactive (le produit d'appel du site) | Planchers par département ; griser sous le seuil |
 
-## B. Les originaux Poliscope (personne d'autre ne peut les faire)
-Ces analyses exploitent ce que Poliscope a d'unique : un profil **multidimensionnel continu** (pas un sondage binaire) + la granularité question par question.
+## B. Les originaux Poliscop (personne d'autre ne peut les faire)
+Ces analyses exploitent ce que Poliscop a d'unique : un profil **multidimensionnel continu** (pas un sondage binaire) + la granularité question par question.
 
 1. **« La question qui coupe la France en deux »** — question à la plus forte variance chaque mois (mv_question_stats). Rubrique récurrente auto-générable.
 2. **Les incohérences assumées** — paires de questions où les mêmes répondants tiennent des positions en tension (ex. baisser les impôts ET augmenter les services). Très fort éditorialement, jamais moralisateur si bien écrit.
@@ -32,8 +32,8 @@ Ces analyses exploitent ce que Poliscope a d'unique : un profil **multidimension
 - **Hebdo** : « La question de la semaine » (auto : top controverse) — tweet/LinkedIn.
 - **Mensuel** : baromètre 8 thèmes (moyennes, mouvements, question du mois) — article + PDF.
 - **Trimestriel** : un « Regard » thématique approfondi (Europe, sécurité…) croisé sur 3-4 démographies — rapport 15 pages, partenariat média possible.
-- **Annuel** : « L'année politique des répondants Poliscope » — le rapport de référence, base des partenariats académiques.
-- **Événementiel** : à chaque séquence politique majeure, la lecture Poliscope en 24-48 h (vitesse = avantage concurrentiel vs instituts).
+- **Annuel** : « L'année politique des répondants Poliscop » — le rapport de référence, base des partenariats académiques.
+- **Événementiel** : à chaque séquence politique majeure, la lecture Poliscop en 24-48 h (vitesse = avantage concurrentiel vs instituts).
 
 ## E. Infrastructure nécessaire (déjà prévue en v6)
 Chaque produit ci-dessus se réduit à : `v_research_population` (consentement + qualité) → mv dédiée → fonction d'accès k-anonyme → `stats_releases` (provenance). La seule brique à ajouter au fil de l'eau : une mv par famille d'analyse (pattern §10b du DDL, copier-coller discipliné).

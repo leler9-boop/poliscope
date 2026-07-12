@@ -21,7 +21,7 @@ Aucune de ces colonnes n'existe dans les schémas v1→v5. À spécifier dans un
 ## Discipline de publication proposée (pour l'observatoire/baromètres/contenus viraux)
 1. **Seuil de publication** : aucun croisement publié sous n ≥ 200 par cellule (et n ≥ 50 pour un simple univarié), aucune cellule < 5 même en agrégat téléchargeable.
 2. **Toujours l'incertitude** : IC 95 % ou fourchette sur chaque chiffre publié ; pas de décimales trompeuses.
-3. **Formulation contrainte** : « parmi les répondants Poliscope » obligatoire ; interdiction éditoriale de « les Français », sauf redressement documenté (quotas âge×sexe×région×diplôme + note méthodo).
+3. **Formulation contrainte** : « parmi les répondants Poliscop » obligatoire ; interdiction éditoriale de « les Français », sauf redressement documenté (quotas âge×sexe×région×diplôme + note méthodo).
 4. **Contrôles avant tout titre du type « les propriétaires de chiens sont plus à gauche »** : (a) taille des sous-groupes ; (b) ajustement systématique sur âge, territoire, diplôme, revenu (une régression simple suffit) — la plupart des corrélations « virales » disparaissent après contrôle de l'âge ; (c) correction pour comparaisons multiples si l'on crible des dizaines de croisements (FDR de Benjamini-Hochberg, ou pré-enregistrement des hypothèses de chaque baromètre) ; (d) test de stabilité : re-calculer sur deux sous-périodes, ne publier que si le signe tient.
 5. **Registre des analyses** : consigner requête + date + version du questionnaire pour chaque chiffre publié — c'est la traçabilité qui protège la réputation en cas de contestation.
 

@@ -22,7 +22,7 @@ Découplage total : on peut sauvegarder sans contribuer, contribuer sans sauvega
 **Moment 2 — après la révélation du résultat** (l'utilisateur vient de recevoir de la valeur ; il a vu des stats « X % des répondants ») : une carte discrète sous le profil, pas un modal bloquant :
 
 > **Faire compter vos réponses ?**
-> Poliscope publie des statistiques anonymisées sur ce que pensent ses répondants — jamais rien d'individuel. Vous pouvez y ajouter les vôtres.
+> Poliscop publie des statistiques anonymisées sur ce que pensent ses répondants — jamais rien d'individuel. Vous pouvez y ajouter les vôtres.
 > [ Ajouter mes réponses aux statistiques ] [ Non merci ]
 > *Révocable à tout moment. Aucune donnée n'est vendue. [Comment ça marche →]*
 
@@ -35,7 +35,7 @@ Découplage total : on peut sauvegarder sans contribuer, contribuer sans sauvega
 
 **Moment 4 — quelques jours plus tard** (retour sur le profil, ou email si marketing accordé) : la relance douce unique, **une seule fois**, adossée à de la valeur rendue :
 
-> « Votre profil vous situe parmi les répondants Poliscope. Complétez 3 informations (études, activité, logement) pour découvrir comment votre groupe pense — et affiner nos statistiques. »
+> « Votre profil vous situe parmi les répondants Poliscop. Complétez 3 informations (études, activité, logement) pour découvrir comment votre groupe pense — et affiner nos statistiques. »
 
 **Moment 5 — au fil de l'eau** : les variables Tier 2 restantes, UNE à la fois, contextualisées à ce que l'utilisateur regarde (il consulte la carte de France → « votre département ? » ; il lit le baromètre médias → « votre source d'info principale ? »). Plafond global : jamais plus d'une sollicitation par session.
 

@@ -151,7 +151,7 @@
     "publishedAt": null,
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope le présente correctement comme vainqueur historique de l'élection de_2025 ; aucune erreur",
+    "notes": "Poliscop le présente correctement comme vainqueur historique de l'élection de_2025 ; aucune erreur",
     "freshnessCategory": "volatile",
     "nextCheckDue": "2027-01-10",
     "nextCheckRule": "Chef de gouvernement étranger — recheck périodique annuel par défaut, aucune échéance connue spécifique."
@@ -165,7 +165,7 @@
     "publishedAt": "2026-06-22",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope ne mentionne Starmer que dans le bloc historique uk_2024 ; aucune erreur, simple absence de couverture de la crise 2026",
+    "notes": "Poliscop ne mentionne Starmer que dans le bloc historique uk_2024 ; aucune erreur, simple absence de couverture de la crise 2026",
     "freshnessCategory": "scheduled",
     "nextCheckDue": "2026-07-21",
     "nextCheckRule": "Prise de fonction attendue d'Andy Burnham ~20 juillet 2026 — vérifier la confirmation officielle après cette date."
@@ -179,7 +179,7 @@
     "publishedAt": "2023-06-12",
     "verifiedAt": "2026-07-10",
     "confidence": "high",
-    "notes": "Poliscope le présente uniquement dans le bloc historique it_2022 ; aucune erreur",
+    "notes": "Poliscop le présente uniquement dans le bloc historique it_2022 ; aucune erreur",
     "freshnessCategory": "stable"
   },
   {

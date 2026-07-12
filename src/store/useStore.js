@@ -33,7 +33,9 @@ function pickNextQuestion(answers, recentThemes = []) {
   return source[Math.floor(Math.random() * source.length)];
 }
 
-const OLD_STORAGE_KEY = 'poliscope_state';
+// Clé localStorage historique (ancienne orthographe) : ne PAS renommer, elle identifie
+// les données déjà écrites dans les navigateurs des utilisateurs existants.
+const OLD_STORAGE_KEY = 'poliscope_state'; // brand-check:allow
 const STORAGE_KEY = 'poliscop_state';
 
 // Migrate localStorage data from old key to new key (runs once)

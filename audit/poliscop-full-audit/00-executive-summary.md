@@ -1,4 +1,4 @@
-# Résumé exécutif — Audit intégral de Poliscope
+# Résumé exécutif — Audit intégral de Poliscop
 
 **Date d'exécution : 2026-07-10.** Audit mené par un coordinateur principal + 4 subagents spécialisés (code/architecture, scoring/matchmaking, contenu politique/factualité, questions/biais/tests), conformément aux limites fixées (max 4 subagents, max 2 en parallèle, aucun sous-subagent). **44 constats consolidés** dans `issues.json` (3 critiques, 10 élevés, 20 moyens, 11 faibles), 15 sources externes vérifiées dans `sources.json`, 4 tests automatisés écrits et réellement exécutés dans `proposed-tests/`, 3 correctifs vérifiés `git apply --check` dans `proposed-patches/`. **Aucun fichier source n'a été modifié pendant cet audit** (confirmé par `git status --porcelain` à chaque étape).
 

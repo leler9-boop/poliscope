@@ -5,17 +5,17 @@ Cadre invariant : **on vend des analyses, jamais des personnes.** Aucune donnée
 ## Produits envisageables, par maturité
 
 ### Horizon 1 — Crédibilité (ne rapporte pas d'argent, rapporte tout le reste)
-1. **Observatoire Poliscope** (public, gratuit) : baromètre mensuel + carte + « question de la semaine » (doc 04 §D). C'est le produit d'appel : il crée la marque « données Poliscope », attire les médias et les répondants. À faire en premier, sans exception.
+1. **Observatoire Poliscop** (public, gratuit) : baromètre mensuel + carte + « question de la semaine » (doc 04 §D). C'est le produit d'appel : il crée la marque « données Poliscop », attire les médias et les répondants. À faire en premier, sans exception.
 2. **Page méthodologie publique** (échantillon vs recensement, protocole du doc 07) : l'actif de confiance qui conditionne tout le reste.
 
 ### Horizon 2 — Revenus B2B éditoriaux (dès ~20-50 k consentants recherche)
-3. **Partenariats médias** : exclusivités d'angle (pas de données brutes) — « la lecture Poliscope » d'une séquence politique en 48 h, co-signée. Modèle : licence éditoriale/abonnement rédaction. C'est le produit le plus naturel : rapide, récurrent, et chaque parution recrute des répondants (boucle vertueuse).
+3. **Partenariats médias** : exclusivités d'angle (pas de données brutes) — « la lecture Poliscop » d'une séquence politique en 48 h, co-signée. Modèle : licence éditoriale/abonnement rédaction. C'est le produit le plus naturel : rapide, récurrent, et chaque parution recrute des répondants (boucle vertueuse).
 4. **Rapports thématiques sponsorisés** (think tanks, fondations, ONG) : un « Regard » trimestriel approfondi financé, avec indépendance éditoriale contractuelle (le financeur choisit le thème, pas les résultats). Risque image si financeur partisan → grille d'acceptation à écrire le moment venu.
 5. **Accès chercheurs** : agrégats sur mesure ou microdonnées **anonymisées au sens fort** (agrégation/perturbation, jamais de lignes brutes pseudonymes) sous convention. Modèle : gratuit contre co-publication (crédibilité) d'abord, payant pour les instituts privés ensuite. Un comité/référent scientifique devient nécessaire à ce stade.
 
 ### Horizon 3 — Produits data récurrents (100 k+, après redressement)
 6. **Abonnement API d'agrégats** (médias, instituts) : les mv exposées proprement, versionnées, avec SLA. C'est l'industrialisation de 3.
-7. **Panel longitudinal** : la vraie rareté de Poliscope (response_events = les mêmes individus dans le temps). Études d'évolution d'opinion vendables aux académiques/fondations — aucun institut de sondage ne possède ça en continu.
+7. **Panel longitudinal** : la vraie rareté de Poliscop (response_events = les mêmes individus dans le temps). Études d'évolution d'opinion vendables aux académiques/fondations — aucun institut de sondage ne possède ça en continu.
 
 ### Lignes rouges (à écrire dans les CGV le jour venu)
 - Pas de vente/location de fichiers, même « anonymisés », à des partis, candidats, ou fins de ciblage électoral. (Au-delà du RGPD : c'est la mort réputationnelle du produit si ça fuite.)

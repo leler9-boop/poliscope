@@ -232,7 +232,7 @@ tout au long de cette session, pas seulement déduit du code).
 Exécutés après chaque commit de ce chantier (Étapes 2, 3, 4) :
 - `npm run build` : succès à chaque fois, seul avertissement pré-existant
   (chunk principal > 500 kB, sans lien avec ce travail).
-- Les 4 tests de régression (`audit/poliscope-full-audit/proposed-tests/`) :
+- Les 4 tests de régression (`audit/poliscop-full-audit/proposed-tests/`) :
   PASS à chaque exécution — déterminisme, indépendance à l'ordre des clés,
   protection contre poids nuls, monotonie. Ces tests couvrent le moteur de
   scoring/matching, pas le nouveau code de consentement (aucun framework de

@@ -5,7 +5,7 @@ Dossier growth : 00 playbook (ce fichier) · [01 boucles virales](01-VIRAL-LOOPS
 ## Doctrine (5 règles, tout le reste en découle)
 
 1. **Le produit est la campagne.** Chaque heure de dev sur une boucle de partage vaut plus que 10 h d'outreach. Ordre de bataille permanent : boucles virales > contenu > relais (créateurs/profs/assos) > presse > communautés.
-2. **On ne poste pas, on équipe.** Poliscope gagne quand *d'autres* montrent leur résultat. Créateurs, profs, BDE, rédactions : à chacun on donne un objet prêt à l'emploi (résultat filmable, kit classe, agrégat exclusif, widget), jamais « parlez de nous ».
+2. **On ne poste pas, on équipe.** Poliscop gagne quand *d'autres* montrent leur résultat. Créateurs, profs, BDE, rédactions : à chacun on donne un objet prêt à l'emploi (résultat filmable, kit classe, agrégat exclusif, widget), jamais « parlez de nous ».
 3. **500 contacts personnalisés > 50 000 spams.** Le volume d'emails n'est pas le levier ; le taux de réponse l'est. Tout message part personnalisé ([02](02-MESSAGES.md)), tout contact entre au CRM, toute relance est J+4.
 4. **La conformité est un actif de vitesse, pas un frein.** Elyze a failli mourir à J+7 (CNIL). Trois interdits absolus même en mode agressif : jamais le mot « sondage » (75 k€ d'amende), silence total les week-ends de scrutin (17-18/04, 1-2/05), jamais de collecte hors consentement. Un scandale = la fenêtre se referme.
 5. **Kill vite.** Chaque canal a une métrique et une date de verdict. On coupe sans état d'âme (§ verdicts en bas de chaque mois).

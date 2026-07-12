@@ -13,7 +13,7 @@
 // Ce script détecte mécaniquement ce type de dérive. Exécution : node scripts/check-profile-conventions.mjs
 
 import { register } from 'node:module';
-register(new URL('../audit/poliscope-full-audit/proposed-tests/_json-import-loader.mjs', import.meta.url));
+register(new URL('../audit/poliscop-full-audit/proposed-tests/_json-import-loader.mjs', import.meta.url));
 
 const { frenchFigures } = await import('../src/data/frenchFigures.js');
 const { elections } = await import('../src/data/elections.js');

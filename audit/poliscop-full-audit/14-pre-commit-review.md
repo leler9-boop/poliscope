@@ -28,7 +28,7 @@ Ma formulation du lot 1 (« candidature non formellement déclarée », « a for
 
 - `src/data/elections.js` : description (844-845), contexte EN (851) et FR (856), deeperContext FR (865), fiche `lepen_2027` (999-1003), fiche `bardella` (1077-1080) — 6 emplacements.
 - `src/data/frenchFigures.js` : description (710-711), key_facts FR/EN (731, 735), disclaimer (745-746) — 4 emplacements.
-- `audit/poliscope-full-audit/sources.json` : 5 nouvelles entrées ajoutées (déclaration de candidature, statut du pourvoi, absence d'exécution provisoire, lancement de campagne commun) ; 2 entrées existantes conservées mais annotées comme superseded plutôt que supprimées, conformément à la politique de fraîcheur du dossier (ne jamais remplacer silencieusement une donnée antérieure).
+- `audit/poliscop-full-audit/sources.json` : 5 nouvelles entrées ajoutées (déclaration de candidature, statut du pourvoi, absence d'exécution provisoire, lancement de campagne commun) ; 2 entrées existantes conservées mais annotées comme superseded plutôt que supprimées, conformément à la politique de fraîcheur du dossier (ne jamais remplacer silencieusement une donnée antérieure).
 
 ## 2. Liste exacte des fichiers source modifiés (arbre de travail, non commité)
 
@@ -102,7 +102,7 @@ behavior — default priority weighting is not equal, and anonymous answers may 
 Supabase rather than staying strictly on-device.
 
 Political data (POL-AUDIT-023/024/025/026), verified against convergent national press,
-see audit/poliscope-full-audit/sources.json for full sourcing:
+see audit/poliscop-full-audit/sources.json for full sourcing:
 - Marine Le Pen: conviction upheld on appeal (7 Jul 2026), ineligibility already served
   and no provisional enforcement ordered; she publicly declared her candidacy the same
   day. Cassation appeal announced, not confirmed filed (10-day legal deadline).
@@ -116,7 +116,7 @@ see audit/poliscope-full-audit/sources.json for full sourcing:
 Verified: 4/4 regression tests pass, production build clean (557 modules, 0 errors),
 issues.json (44) and sources.json (19) both valid with no missing required fields.
 
-Full audit trail: audit/poliscope-full-audit/00 through 14.
+Full audit trail: audit/poliscop-full-audit/00 through 14.
 
 Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```

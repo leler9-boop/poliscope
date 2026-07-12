@@ -4,7 +4,7 @@
 
 ## Le fait qui commande tout : le calendrier
 
-Nous sommes en juillet 2026. La présidentielle est fixée aux 18 avril et 2 mai 2027 — et **il n'y a pas de législatives ordinaires en 2027** : l'Assemblée élue en juillet 2024 court jusqu'en 2029, sauf dissolution surprise (le précédent de 2024 — trois semaines de campagne — récompenserait l'acteur déjà en ligne). **La fenêtre février–avril 2027 est donc le seul moment quasi certain des trois prochaines années où des millions de Français chercheront spontanément un outil comme Poliscope** (précédent Elyze : >1 M de téléchargements en trois semaines, janvier 2022 — voir doc 01). Toute la stratégie 2026-2027 doit se lire comme : *construire d'ici décembre 2026 les actifs (produit, confiance, relais) qui transformeront la vague de 2027 en base durable*, au lieu de la subir comme un one-shot à la Elyze.
+Nous sommes en juillet 2026. La présidentielle est fixée aux 18 avril et 2 mai 2027 — et **il n'y a pas de législatives ordinaires en 2027** : l'Assemblée élue en juillet 2024 court jusqu'en 2029, sauf dissolution surprise (le précédent de 2024 — trois semaines de campagne — récompenserait l'acteur déjà en ligne). **La fenêtre février–avril 2027 est donc le seul moment quasi certain des trois prochaines années où des millions de Français chercheront spontanément un outil comme Poliscop** (précédent Elyze : >1 M de téléchargements en trois semaines, janvier 2022 — voir doc 01). Toute la stratégie 2026-2027 doit se lire comme : *construire d'ici décembre 2026 les actifs (produit, confiance, relais) qui transformeront la vague de 2027 en base durable*, au lieu de la subir comme un one-shot à la Elyze.
 
 Corollaire assumé : entre juillet et décembre 2026, la croissance utilisateur sera lente. C'est normal. On n'achète pas des utilisateurs en 2026 ; on fabrique les multiplicateurs de 2027.
 
@@ -23,7 +23,7 @@ Critères notés /5 (potentiel d'audience, revenus 3 ans, vitesse d'exécution, 
 
 ## Recommandation : F, séquencée A → C/D → B, avec E en financement
 
-**Positionnement public (la marque)** : *« Poliscope — comprenez où vous vous situez, vraiment. »* Le test politique français de référence : rigoureux, transparent, gratuit, sans parti pris. Face au souvenir d'Elyze (viral mais bricolé, mort en trois mois), Poliscope se définit par ce qu'Elyze n'avait pas : méthodologie publique, profondeur (courants, figures, priorités), permanence, conformité irréprochable.
+**Positionnement public (la marque)** : *« Poliscop — comprenez où vous vous situez, vraiment. »* Le test politique français de référence : rigoureux, transparent, gratuit, sans parti pris. Face au souvenir d'Elyze (viral mais bricolé, mort en trois mois), Poliscop se définit par ce qu'Elyze n'avait pas : méthodologie publique, profondeur (courants, figures, priorités), permanence, conformité irréprochable.
 
 **Positionnement économique (le modèle, invisible du grand public)** : le produit grand public gratuit est le moteur d'acquisition d'un panel d'opinion consenti ; les revenus viennent des couches B2B (médias, études, éducation, subventions) — jamais de l'utilisateur, jamais de ses données individuelles (lignes rouges du doc data 08).
 
@@ -40,7 +40,7 @@ Critères notés /5 (potentiel d'audience, revenus 3 ans, vitesse d'exécution, 
 - Pas de campagne d'emailing à 10 000 établissements (doc 04 : l'unité de décision est l'enseignant, pas l'établissement, et la conversion du froid institutionnel ne justifie pas le risque réputationnel).
 - Pas de dépendance à la pub payante dans le plan de base : le cadre UE sur la publicité politique la rend incertaine pour ce type de produit (doc 05 et recherche acquisition) — elle est un bonus si elle s'avère possible, jamais une hypothèse du plan.
 - Pas d'international avant 2028.
-- Pas de « pivot sondages » : Poliscope ne promet jamais la représentativité (doctrine doc data 07) ; c'est à la fois une contrainte légale (régime des sondages, doc 06) et le cœur de la crédibilité.
+- Pas de « pivot sondages » : Poliscop ne promet jamais la représentativité (doctrine doc data 07) ; c'est à la fois une contrainte légale (régime des sondages, doc 06) et le cœur de la crédibilité.
 
 ## L'avantage compétitif défendable, nommé
 

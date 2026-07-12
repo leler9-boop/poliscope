@@ -1,4 +1,4 @@
-# 05 — Earned media : faire parler de Poliscope gratuitement
+# 05 — Earned media : faire parler de Poliscop gratuitement
 
 Retour au [playbook](00-PLAYBOOK.md). Principe : un journaliste n'écrit pas sur un produit, il écrit une **histoire avec un chiffre, un conflit ou un calendrier**. On lui livre les trois, prêts à l'emploi. Contrainte permanente : terminologie légale (« baromètre des utilisateurs », jamais « sondage » — 75 k€ d'amende ; jamais de popularité de personnalités vivantes sans avis juridique ; jamais de pronostic).
 
@@ -9,7 +9,7 @@ Retour au [playbook](00-PLAYBOOK.md). Principe : un journaliste n'écrit pas sur
 | **Anniversaire Elyze** | 1re quinzaine de janvier 2027 | « Il y a 5 ans, Elyze explosait puis s'effondrait. Voici l'app qui a retenu la leçon. » Les journalistes qui ont couvert Elyze en 2022 reçoivent le papier clé en main ([02](02-MESSAGES.md) §journaliste). |
 | **J-100** | ~8 janvier 2027 | Marronnier « où en sont les jeunes ? » → notre baromètre est LA donnée fraîche disponible. |
 | **Clôture des inscriptions électorales** | **vendredi 12 mars 2027** (vérifié : 6e vendredi avant le scrutin, règle unifiée depuis le 01/07/2026) | « Dernier jour pour s'inscrire — et pour savoir où on se situe » ; co-communiqué avec les assos d'inscription (A Voté/Plan Procu). |
-| **Fenêtre des parrainages** | ~5 février-5 mars 2027 | Publications hebdomadaires du Conseil constitutionnel = actualité data récurrente ; Poliscope en « outil compagnon » de chaque point d'étape. |
+| **Fenêtre des parrainages** | ~5 février-5 mars 2027 | Publications hebdomadaires du Conseil constitutionnel = actualité data récurrente ; Poliscop en « outil compagnon » de chaque point d'étape. |
 | **Liste officielle des candidats** (Conseil constitutionnel) | ~mi-mars 2027 | « Le test à jour des N candidats officiels le jour même » — avantage solo-codeur, personne d'autre ne sera à jour en 24 h. C'est le moment exact où Elyze avait explosé en 2022. |
 | **Dernière ligne droite** | 5-16 avril 2027 | Chaque rédaction fait son papier « les outils pour choisir » — il faut être dans la liste, ce qui se joue AVANT (relations établies dès octobre). |
 

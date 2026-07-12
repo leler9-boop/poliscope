@@ -1,9 +1,9 @@
-# Poliscope Data Platform — Vision et feuille de route
+# Poliscop Data Platform — Vision et feuille de route
 
 **Mission 2026-07-11.** Dossier complet : [01 audit de l'existant](01-current-state-audit.md) · [02 architecture cible](02-target-architecture.md) + [`schema_v6_data_platform.sql`](../../supabase/schema_v6_data_platform.sql) · [03 catalogue démographique](03-demographics-catalog.md) · [04 catalogue d'analyses](04-insights-catalog.md) · [05 dashboards](05-dashboards-spec.md) · [06 consentements & UX](06-rgpd-consent-ux.md) · [07 qualité & discipline scientifique](07-data-quality.md) · [08 valorisation](08-monetization.md).
 
 ## La thèse
-L'actif de Poliscope n'est pas « des réponses sauvegardées », c'est un **panel longitudinal consenti d'opinions politiques multidimensionnelles, versionné et documenté** — une chose qu'aucun institut français ne possède en continu. Toute l'architecture découle de trois invariants :
+L'actif de Poliscop n'est pas « des réponses sauvegardées », c'est un **panel longitudinal consenti d'opinions politiques multidimensionnelles, versionné et documenté** — une chose qu'aucun institut français ne possède en continu. Toute l'architecture découle de trois invariants :
 
 1. **Une réponse est un fait immuable** (journal append-only, versions de question/scoring) — jamais un champ écrasé.
 2. **Le consentement est une preuve** (ledger, garde serveur dans le RLS) — jamais une case en mémoire.

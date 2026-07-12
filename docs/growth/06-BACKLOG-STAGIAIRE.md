@@ -40,7 +40,7 @@ Retour au [playbook](00-PLAYBOOK.md). Profil à recruter : étudiant·e en com/m
 
 ## Ce que le stagiaire ne fait JAMAIS
 
-Parler à un journaliste au nom de Poliscope · publier un agrégat ou un chiffre d'opinion · répondre à une polémique (escalade fondateur systématique) · contacter un créateur ★★★★+ · toucher aux données (il n'a pas accès à la base, uniquement aux dashboards agrégés) · improviser sur la terminologie légale.
+Parler à un journaliste au nom de Poliscop · publier un agrégat ou un chiffre d'opinion · répondre à une polémique (escalade fondateur systématique) · contacter un créateur ★★★★+ · toucher aux données (il n'a pas accès à la base, uniquement aux dashboards agrégés) · improviser sur la terminologie légale.
 
 ## Charge fondateur associée
 

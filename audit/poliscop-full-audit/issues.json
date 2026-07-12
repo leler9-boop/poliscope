@@ -589,7 +589,7 @@
     "severity": "low",
     "confidence": "high",
     "title": "Hygiène du dépôt : dépôt git imbriqué hors périmètre et artefacts de build égarés",
-    "description": "notebooklm-py/ est un dépôt git complet et sans rapport avec Poliscope (client Python NotebookLM), probablement ajouté par accident. ./assets/*.js/css à la racine et 7 fichiers vite.config.js.timestamp-*.mjs sont des artefacts de build/temporaires qui ne devraient pas être versionnés.",
+    "description": "notebooklm-py/ est un dépôt git complet et sans rapport avec Poliscop (client Python NotebookLM), probablement ajouté par accident. ./assets/*.js/css à la racine et 7 fichiers vite.config.js.timestamp-*.mjs sont des artefacts de build/temporaires qui ne devraient pas être versionnés.",
     "evidence": [{ "file": "notebooklm-py", "line": 1 }, { "file": ".gitignore", "line": 1 }],
     "userImpact": "Aucun impact fonctionnel ; alourdit le dépôt et peut créer de la confusion pour de futurs contributeurs.",
     "recommendedFix": "Supprimer notebooklm-py/ du dépôt (ou le documenter s'il est utilisé intentionnellement comme outil), ajouter vite.config.js.timestamp-*.mjs et ./assets/ racine au .gitignore.",

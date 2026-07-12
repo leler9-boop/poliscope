@@ -1,8 +1,8 @@
-# Poliscope — Plan d'audit intégral
+# Poliscop — Plan d'audit intégral
 
 **Date d'exécution de l'audit :** 2026-07-10
 **Périmètre :** application Poliscop (React + Vite SPA), questionnaire, moteur de scoring, moteur de matching, données politiques (candidats, partis, personnalités, courants, élections), infrastructure de données utilisateur.
-**Hors périmètre (signalé mais non audité) :** `notebooklm-py/` (dépôt git imbriqué, outil Python sans rapport avec Poliscope), `./assets/*` à la racine (artefacts de build égarés), fichiers `vite.config.js.timestamp-*.mjs`.
+**Hors périmètre (signalé mais non audité) :** `notebooklm-py/` (dépôt git imbriqué, outil Python sans rapport avec Poliscop), `./assets/*` à la racine (artefacts de build égarés), fichiers `vite.config.js.timestamp-*.mjs`.
 
 ## 1. Constat de départ
 

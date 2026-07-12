@@ -6,10 +6,10 @@
 import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
 const ROOT = '/Users/arnaudlery/Desktop/poliscope copy';
-register(pathToFileURL(`${ROOT}/audit/poliscope-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
+register(pathToFileURL(`${ROOT}/audit/poliscop-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
 
 const { questions } = await import(`${ROOT}/src/data/questions.js`);
-const sources = (await import(`${ROOT}/audit/poliscope-full-audit/sources.json`, { with: { type: 'json' } })).default;
+const sources = (await import(`${ROOT}/audit/poliscop-full-audit/sources.json`, { with: { type: 'json' } })).default;
 
 // This script has no reliable notion of "today" other than the machine clock —
 // unlike Workflow scripts, plain `node` execution is fine using Date directly.

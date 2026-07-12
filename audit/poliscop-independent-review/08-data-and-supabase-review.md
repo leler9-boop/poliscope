@@ -1,7 +1,7 @@
 # 08 — Contre-audit données / Supabase / RGPD
 
 ## État réel du backend (vérifié en direct par ce contre-audit)
-`list_projects` (MCP Supabase, 2026-07-11) : projet **« Poliscope v1 » (xjpzqaqzoygcwtcpumfo), eu-west-1, statut INACTIVE** (base Postgres 17.6). Conclusion identique aux rapports précédents, mais cette fois vérifiée par appel API réussi (le projet existe et est en pause, il n'est pas supprimé). Conséquences :
+`list_projects` (MCP Supabase, 2026-07-11) : projet **« Poliscop v1 » (xjpzqaqzoygcwtcpumfo), eu-west-1, statut INACTIVE** (base Postgres 17.6). Conclusion identique aux rapports précédents, mais cette fois vérifiée par appel API réussi (le projet existe et est en pause, il n'est pas supprimé). Conséquences :
 - Aucun flux compte/consentement/suppression n'a JAMAIS été testé contre une vraie base — toutes les validations sont des revues de code. C'est le blocage n°1 avant toute bêta avec comptes.
 - Les migrations `schema.sql`→`v5_privacy.sql` ne sont appliquées nulle part. Option : restaurer le projet (`restore_project`) ou en créer un neuf — décision humaine (facturation), non prise ici.
 
@@ -25,6 +25,6 @@ Le parcours sans compte est réellement local-only (aucune donnée ne part) : c'
 ## Ambition data / exploitation commerciale (défis à retenir)
 - Les données seront **pseudonymes, pas anonymes** (user_id/anonymous_id + opinions + démographie dans le même écosystème) : toute communication doit dire « pseudonymisé », et l'« anonymisation réelle » pour publication exige agrégation + seuils (voir rapport 09).
 - Le consentement actuel (« données politiques ») ne couvre pas la finalité « études/baromètres/produits médiatiques » : il faudra une finalité distincte, opt-in séparé, avant toute exploitation. Créer un compte ≠ contribuer à la recherche — le code actuel respecte cette séparation, la conserver.
-- Aucun échantillon Poliscope ne sera représentatif sans redressement — interdire par principe éditorial toute formulation « les Français pensent » (voir rapport 09).
+- Aucun échantillon Poliscop ne sera représentatif sans redressement — interdire par principe éditorial toute formulation « les Français pensent » (voir rapport 09).
 
 ## Verdict : travail RGPD **réel et bien fait au niveau code** (le contre-audit n'a trouvé aucune faille dans le gating) ; il reste **non prouvé en conditions réelles** (backend inactif) et **non validé juridiquement**. Comptes/cloud : INTERNAL ALPHA au mieux.
