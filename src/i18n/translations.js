@@ -15,7 +15,7 @@ export const translations = {
     nav_french_figures: `French Figures`,
     nav_mission: `Mission`,
     nav_transparency: `Transparency`,
-    nav_beginner: `Politics 101`,
+    nav_beginner: `Understand politics`,
 
     // ── Landing page ──
     landing_hero_title: `Understand your political beliefs`,
@@ -186,7 +186,7 @@ export const translations = {
     nav_french_figures: `Figures françaises`,
     nav_mission: `Mission`,
     nav_transparency: `Transparence`,
-    nav_beginner: `J'y connais rien`,
+    nav_beginner: `Comprendre la politique`,
 
     // ── Landing page ──
     landing_hero_title: `Comprenez vos convictions politiques`,

@@ -98,6 +98,10 @@ export const useStore = create(
       // null | { remoteAnswers, remoteCount, localCount, userId }
       syncConflict: null,
 
+      // ── « Comprendre la politique » : dernière fiche consultée (persisté) ──
+      // null | { section, slug, title, ts }
+      lastLearn: null,
+
       // ── Profile last updated timestamp (persisted for cross-device sync) ──
       profileLastUpdated: null,
 
@@ -117,6 +121,8 @@ export const useStore = create(
 
       // ── Actions ──
       setLanguage: (lang) => set({ language: lang }),
+
+      setLastLearn: (v) => set({ lastLearn: v }),
 
       navigate: (page) => {
         set({ currentPage: page });
@@ -445,6 +451,7 @@ export const useStore = create(
         themeWeights: state.themeWeights,
         profileLastUpdated: state.profileLastUpdated,
         consent: state.consent,
+        lastLearn: state.lastLearn,
       }),
       // Sync analytics.js's module-level consent flag as soon as the persisted
       // state is available — before this runs, it defaults to false (fail-closed:
