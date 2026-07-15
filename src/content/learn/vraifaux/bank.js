@@ -6,6 +6,15 @@
  * Jamais de réponse binaire forcée — l'explication précise en quoi c'est nuancé.
  */
 
+
+import VF_DEGAULLE from './presidents/charles-de-gaulle.js';
+import VF_POMPIDOU from './presidents/georges-pompidou.js';
+import VF_VGE from './presidents/valery-giscard-destaing.js';
+import VF_CHIRAC from './presidents/jacques-chirac.js';
+import VF_SARKOZY from './presidents/nicolas-sarkozy.js';
+import VF_HOLLANDE from './presidents/francois-hollande.js';
+import VF_MACRON from './presidents/emmanuel-macron.js';
+
 export const VERDICT_LABELS = {
   vrai: { fr: 'Vrai', en: 'True' },
   faux: { fr: 'Faux', en: 'False' },
@@ -264,6 +273,15 @@ export const VRAIFAUX_BANK = {
     related: ['inflation'],
   },
 
+
+  /* ── Items des fiches présidents (un fichier par président) ── */
+  ...VF_DEGAULLE,
+  ...VF_POMPIDOU,
+  ...VF_VGE,
+  ...VF_CHIRAC,
+  ...VF_SARKOZY,
+  ...VF_HOLLANDE,
+  ...VF_MACRON,
 };
 
 /** Résout une liste d'ids en items ; ignore les ids inconnus. */

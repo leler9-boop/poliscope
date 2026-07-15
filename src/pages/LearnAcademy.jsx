@@ -32,14 +32,14 @@ const DOSSIERS_DEBATS = [
 ];
 
 const PRESIDENTS = [
-  { nom: 'Charles de Gaulle', annees: '1959-1969' },
-  { nom: 'Georges Pompidou', annees: '1969-1974' },
-  { nom: `Valéry Giscard d'Estaing`, annees: '1974-1981' },
+  { nom: 'Charles de Gaulle', annees: '1959-1969', to: '/learn/presidents/charles-de-gaulle?niveau=3' },
+  { nom: 'Georges Pompidou', annees: '1969-1974', to: '/learn/presidents/georges-pompidou?niveau=3' },
+  { nom: `Valéry Giscard d'Estaing`, annees: '1974-1981', to: '/learn/presidents/valery-giscard-destaing?niveau=3' },
   { nom: 'François Mitterrand', annees: '1981-1995', to: '/learn/presidents/francois-mitterrand?niveau=3' },
-  { nom: 'Jacques Chirac', annees: '1995-2007' },
-  { nom: 'Nicolas Sarkozy', annees: '2007-2012' },
-  { nom: 'François Hollande', annees: '2012-2017' },
-  { nom: 'Emmanuel Macron', annees: '2017-' },
+  { nom: 'Jacques Chirac', annees: '1995-2007', to: '/learn/presidents/jacques-chirac?niveau=3' },
+  { nom: 'Nicolas Sarkozy', annees: '2007-2012', to: '/learn/presidents/nicolas-sarkozy?niveau=3' },
+  { nom: 'François Hollande', annees: '2012-2017', to: '/learn/presidents/francois-hollande?niveau=3' },
+  { nom: 'Emmanuel Macron', annees: '2017-', to: '/learn/presidents/emmanuel-macron?niveau=3' },
 ];
 
 const OUTILS = [
@@ -195,8 +195,8 @@ export default function LearnAcademy() {
           </div>
           <p className="text-[11px] text-gray-400 mt-3">
             {language === 'fr'
-              ? `Une fiche complète par président — élection, mesures, bilan, idées reçues. Première fiche disponible : François Mitterrand (cliquez sur son avatar). Les autres arrivent.`
-              : `A complete page per president — election, record, legacy, myths. First one available: François Mitterrand (click his avatar). More coming.`}
+              ? `Les huit fiches complètes sont disponibles — élection, mesures, bilan, chronologie, idées reçues. Cliquez sur un président.`
+              : `All eight complete pages are available — election, record, legacy, timeline, myths. Click a president.`}
           </p>
         </div>
       </motion.div>
