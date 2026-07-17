@@ -7,7 +7,6 @@
 export const questionHints = {
   // ── ÉCONOMIE ────────────────────────────────────────────────────────────
   ECO_1: "En France, les gens qui gagnent beaucoup paient un pourcentage plus élevé d'impôts. Certains veulent augmenter encore cet écart pour financer les services publics. D'autres pensent que ça décourage les entreprises de créer des emplois.",
-  ECO_2: "Le SMIC est le salaire minimum légal en France (1 867 € brut par mois depuis juin 2026). L'augmenter aide les travailleurs pauvres, mais certains craignent que ça coûte trop cher aux petites entreprises.",
   ECO_3: "Quand les impôts sur les entreprises baissent, certaines viennent s'installer en France et créent des emplois. Mais ça réduit les recettes de l'État, donc il peut moins financer les hôpitaux ou les écoles.",
   ECO_8: "Nationaliser = l'État rachète et gère une entreprise (comme SNCF ou EDF). Avantage : les profits servent à tous. Inconvénient : l'État est souvent moins efficace qu'une entreprise privée.",
   ECO_10: "Un revenu de base = l'État donne chaque mois un montant fixe à chaque citoyen, sans condition. L'idée : garantir la survie de tous. Le débat : est-ce que ça décourage de travailler ?",
@@ -35,14 +34,13 @@ export const questionHints = {
 
   // ── DÉMOCRATIE ──────────────────────────────────────────────────────────
   DEM_1: "Dans certains pays (Belgique, Australie), voter est obligatoire, avec parfois une amende en cas d'abstention. Cela pourrait renforcer la légitimité des élus, mais certains y voient une atteinte à la liberté de ne pas voter.",
-  DEM_4: "En France, le Conseil supérieur de la magistrature encadre la nomination des juges, mais le ministre de la Justice garde un rôle pour le parquet. Certains veulent une indépendance totale ; d'autres estiment qu'un lien avec le pouvoir élu reste légitime.",
 
   // ── MONDIALISATION ──────────────────────────────────────────────────────
   GLO_1: "La France a des engagements internationaux (traités, UE, ONU) qui peuvent limiter certaines décisions nationales. Faut-il toujours les respecter, ou l'intérêt national doit-il parfois passer avant ?",
   GLO_3: "L'OTAN est une alliance militaire entre pays européens et nord-américains, fondée en 1949. Elle garantit une défense commune, mais certains estiment qu'elle limite l'indépendance stratégique de la France.",
 
   // ── SERVICES PUBLICS ────────────────────────────────────────────────────
-  PUB_1: "La sécurité sociale rembourse les soins médicaux de tous les Français. La renforcer coûte de l'argent public. La privatiser partiellement peut réduire les coûts mais crée des inégalités d'accès aux soins.",
+  PUB_1: "La Sécurité sociale rembourse une grande partie des soins, mais les restes à charge peuvent encore freiner certains patients. Réduire ces obstacles améliore l'accès aux soins, mais demande davantage de financement public ou de solidarité entre assurés.",
   PUB_4: "En France, les retraites sont payées par les cotisations des actifs (système par répartition), pas par une épargne individuelle (capitalisation). Certains veulent introduire une part de capitalisation ; d'autres défendent la solidarité entre générations du système actuel.",
 };
 

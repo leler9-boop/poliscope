@@ -1,5 +1,6 @@
 // POLISCOP — Question Bank
-// Source: questions_final.json (180 questions, 22 duplicates excluded from quiz/scoring)
+// Source: questions_final.json. The live bank is deliberately capped at 16 items
+// per theme; legacy and retired items remain in the JSON for traceability.
 
 import rawQuestions from './questions_final.json';
 
@@ -93,7 +94,7 @@ const DIRECTION_MAP = {
   SEC_16: 1, SEC_17:-1, SEC_18: 1, SEC_19: 1, SEC_20: 1, SEC_21:-1, SEC_22: 1,
 
   ENV_1:  1, ENV_2:  1, ENV_3:  1, ENV_4:  1, ENV_5:  1, ENV_6:  1, ENV_7:  1,
-  ENV_8:  1, ENV_9:  1, ENV_10: 1, ENV_11: 1, ENV_12: 1, ENV_13: 1, ENV_14: 1, ENV_15: 1,
+  ENV_8:  1, ENV_9:  1, ENV_10: 1, ENV_11:-1, ENV_12: 1, ENV_13: 1, ENV_14: 1, ENV_15: 1,
   ENV_16: 1, ENV_17: 1, ENV_18: 1, ENV_19: 1, ENV_20: 1, ENV_21: 1, ENV_22: 1, ENV_23: 1,
 
   DEM_1:  1, DEM_2:  1, DEM_3:  1, DEM_4:  1, DEM_5:  1, DEM_6:  1, DEM_7:  1,
@@ -142,8 +143,32 @@ const DIRECTION_MAP = {
 // This sharpens discrimination between profiles
 const STATUS_WEIGHTS = { CORE: 10, PRIMARY: 5, SECONDARY: 2 };
 
+const EDITORIAL_CORE_IDS = new Set([
+  'ECO_8', 'ECO_23', 'SOC_7', 'SOC_24', 'IMM_1', 'IMM_23',
+  'SEC_3', 'SEC_25', 'ENV_3', 'ENV_25', 'DEM_8', 'DEM_21',
+  'GLO_1', 'GLO_8', 'PUB_13', 'PUB_25',
+]);
+
+// Low-signal, redundant, composite or off-theme items retired by the July 2026
+// editorial review. Their IDs remain readable for historical answer data.
+const EDITORIALLY_RETIRED_IDS = new Set([
+  'ECO_2', 'ECO_7', 'ECO_12', 'ECO_14', 'ECO_17', 'ECO_18', 'ECO_20', 'ECO_25', 'ECO_27',
+  'SOC_4', 'SOC_12', 'SOC_15', 'SOC_21',
+  'IMM_4', 'IMM_10', 'IMM_11',
+  'SEC_7', 'SEC_10', 'SEC_16', 'SEC_24',
+  'ENV_13', 'ENV_21',
+  'DEM_2', 'DEM_4', 'DEM_9', 'DEM_11', 'DEM_12', 'DEM_23',
+  'GLO_2', 'GLO_5', 'GLO_9', 'GLO_10', 'GLO_20', 'GLO_24',
+  'PUB_2', 'PUB_5', 'PUB_8', 'PUB_10',
+]);
+
 function processQuestion(raw) {
   const prefix = raw.id.split('_')[0];
+  const status = EDITORIAL_CORE_IDS.has(raw.id)
+    ? 'CORE'
+    : raw.status === 'CORE'
+    ? 'SECONDARY'
+    : raw.status;
   return {
     id:          raw.id,
     text:        raw.text,       // French string
@@ -151,8 +176,8 @@ function processQuestion(raw) {
     // POL-AUDIT-028 (lot 2): raw.weight removed from questions_final.json — the field was
     // vestigial (STATUS_WEIGHTS[status] always won once every question had a status). This
     // fallback now only guards a genuinely missing/invalid status, which never occurs today.
-    weight:      STATUS_WEIGHTS[raw.status] ?? 2,
-    status:      raw.status,
+    weight:      STATUS_WEIGHTS[status] ?? 2,
+    status,
     cluster:     raw.cluster,
     theme:       PREFIX_TO_THEME[prefix] ?? THEMES.ECONOMY,
     direction:   DIRECTION_MAP[raw.id] ?? 1,
@@ -165,7 +190,9 @@ function processQuestion(raw) {
 const allQuestionsRaw = rawQuestions.map(processQuestion);
 
 // questions: non-duplicates only — used by scorer and quiz queue
-export const questions = allQuestionsRaw.filter(q => !q.isDuplicate);
+export const questions = allQuestionsRaw.filter(q =>
+  !q.isDuplicate && !EDITORIALLY_RETIRED_IDS.has(q.id)
+);
 
 // coreQuestions: CORE status only (fast mode)
 export const coreQuestions = questions.filter(q => q.status === 'CORE');
@@ -214,15 +241,19 @@ export function getQuestionQueue(mode, priorityOrder) {
     byTheme[t] = pool;
   });
 
-  // Interleave themes round-robin by priority order
+  // Serve two-question thematic blocks: enough continuity without a long
+  // single-theme sequence that would amplify response-context effects.
+  const blockSize = 2;
   const maxRounds = Math.max(...THEMES_ORDER.map(t => byTheme[t].length));
   const themeOrder = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
     ? priorityOrder
     : THEMES_ORDER;
   const queue = [];
-  for (let round = 0; round < maxRounds; round++) {
+  for (let round = 0; round < maxRounds; round += blockSize) {
     themeOrder.forEach(theme => {
-      if (byTheme[theme]?.[round]) queue.push(byTheme[theme][round]);
+      for (let offset = 0; offset < blockSize; offset++) {
+        if (byTheme[theme]?.[round + offset]) queue.push(byTheme[theme][round + offset]);
+      }
     });
   }
   return queue;

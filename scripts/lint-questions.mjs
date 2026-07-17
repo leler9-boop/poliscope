@@ -62,6 +62,7 @@ const byId = new Map(questions.map(q => [q.id, q]));
 const results = rawAll.map(raw => ({
   id: raw.id,
   isDuplicate: !!raw.isDuplicate,
+  isLive: byId.has(raw.id),
   theme: byId.get(raw.id)?.theme ?? null,
   status: raw.status,
   flags: lintOne(raw, byId.get(raw.id)),
@@ -71,15 +72,16 @@ const themeArg = process.argv[2];
 const filtered = themeArg ? results.filter(r => r.theme === themeArg || (themeArg === 'DUPLICATES' && r.isDuplicate)) : results;
 
 const flagged = filtered.filter(r => r.flags.length > 0);
-console.log(`Total questions inspectées: ${filtered.length} (actives: ${filtered.filter(r=>!r.isDuplicate).length}, isDuplicate: ${filtered.filter(r=>r.isDuplicate).length})`);
-console.log(`Questions avec au moins un signalement: ${flagged.length}\n`);
+console.log(`Total entrées inspectées: ${filtered.length} (actives: ${filtered.filter(r=>r.isLive).length}, exclues: ${filtered.filter(r=>!r.isLive).length})`);
+console.log(`Questions actives avec au moins un signalement éditorial: ${flagged.filter(r=>r.isLive).length}`);
+console.log(`Entrées exclues signalées pour traçabilité: ${flagged.filter(r=>!r.isLive).length}\n`);
 
 const counts = {};
 flagged.forEach(r => r.flags.forEach(f => { const k = f.split(':')[0]; counts[k] = (counts[k]||0)+1; }));
 console.log('Repartition des signalements:', JSON.stringify(counts, null, 2));
 
 console.log('\nDetail (id, theme, flags):');
-flagged.forEach(r => console.log(`${r.id}\t${r.theme ?? '(dup)'}\t${r.flags.join(', ')}`));
+flagged.forEach(r => console.log(`${r.id}\t${r.theme ?? '(exclue)'}\t${r.flags.join(', ')}`));
 
 // questionHints.js overrides the "Comprendre cet enjeu" panel entirely when present
 // (see Questionnaire.jsx) — an orphaned entry (retired/renamed ID, or now pointing at a
@@ -92,7 +94,7 @@ if (!themeArg) {
     .map(id => {
       const raw = rawAll.find(r => r.id === id);
       if (!raw) return `${id}\tHINT_ORPHANED_MISSING (no such question id)`;
-      if (raw.isDuplicate) return `${id}\tHINT_ORPHANED_DUPLICATE (points at a filtered-out duplicate)`;
+      if (!byId.has(id)) return `${id}\tHINT_ORPHANED_EXCLUDED (points at an excluded question)`;
       return null;
     })
     .filter(Boolean);

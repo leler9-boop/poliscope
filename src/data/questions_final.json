@@ -154,7 +154,7 @@
   },
   {
     "id": "ECO_20",
-    "text": "La Banque Centrale Européenne doit être plus contrôlée par les parlements.",
+    "text": "La Banque centrale européenne doit rendre davantage de comptes aux parlements nationaux et européen.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "eco",
@@ -263,7 +263,7 @@
   },
   {
     "id": "SOC_10",
-    "text": "L'euthanasie doit être légale pour les malades terminaux qui le demandent.",
+    "text": "L'euthanasie doit être légale pour les personnes atteintes d'une maladie incurable à un stade avancé qui la demandent.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
@@ -280,7 +280,7 @@
   },
   {
     "id": "SOC_12",
-    "text": "Les écoles et universités doivent adopter un langage neutre en genre.",
+    "text": "Les écoles et universités doivent employer un langage inclusif dans leurs communications officielles.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
@@ -305,7 +305,7 @@
   },
   {
     "id": "SOC_15",
-    "text": "Les réseaux sociaux doivent être responsables légalement du contenu dangereux.",
+    "text": "Les réseaux sociaux doivent être juridiquement responsables des contenus dangereux que leurs algorithmes recommandent.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
@@ -313,11 +313,11 @@
   },
   {
     "id": "SOC_16",
-    "text": "Le port de signes religieux doit être autorisé dans tous les espaces publics, y compris les écoles et les administrations.",
+    "text": "Les élèves doivent pouvoir porter des signes religieux visibles dans les établissements scolaires publics.",
     "axis": "cultural",
     "status": "CORE",
     "cluster": "religious expression",
-    "explanation": "La loi de 2004 interdit les signes religieux ostensibles dans les écoles publiques. Des débats persistent sur les autres espaces publics. La laïcité à la française est interprétée différemment selon qu'on voit les symboles religieux comme une liberté individuelle ou une rupture de la neutralité."
+    "explanation": "Depuis la loi de 2004, les signes religieux ostensibles sont interdits aux élèves des écoles, collèges et lycées publics. Certains considèrent cette règle nécessaire à la neutralité scolaire ; d'autres estiment qu'elle limite excessivement la liberté religieuse des élèves."
   },
   {
     "id": "SOC_17",
@@ -339,11 +339,11 @@
   },
   {
     "id": "SOC_19",
-    "text": "Le genre d'une personne est uniquement déterminé par sa biologie et ne peut pas être modifié.",
+    "text": "L'identité de genre reconnue par l'état civil doit correspondre au sexe inscrit à la naissance.",
     "axis": "cultural",
     "status": "CORE",
     "cluster": "gender/biology",
-    "explanation": "Les sciences distinguent le sexe biologique et le genre, vécu comme une identité sociale et psychologique. Le débat porte sur la part du biologique et du culturel dans la construction du genre, avec des implications pratiques sur les droits des personnes transgenres."
+    "explanation": "En France, une personne peut demander la modification de la mention de son sexe à l'état civil sans traitement médical obligatoire. Certains souhaitent conserver cette possibilité pour respecter l'identité vécue ; d'autres estiment que l'état civil doit rester fondé sur le sexe inscrit à la naissance."
   },
   {
     "id": "SOC_20",
@@ -363,7 +363,7 @@
   },
   {
     "id": "SOC_22",
-    "text": "La libre expression prime sur la protection des sentiments religieux.",
+    "text": "La liberté d'expression doit permettre de critiquer les religions, même lorsque cela offense certains croyants.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
@@ -371,7 +371,7 @@
   },
   {
     "id": "SOC_23",
-    "text": "L'école doit enseigner une éducation à la sexualité complète, incluant le consentement, la contraception et les relations saines.",
+    "text": "L'école doit enseigner la notion de consentement dans le cadre de l'éducation à la sexualité.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "soc",
@@ -419,7 +419,7 @@
   },
   {
     "id": "IMM_6",
-    "text": "L'obtention ou le renouvellement d'un titre de séjour doit être conditionné à une évaluation de l'intégration.",
+    "text": "La délivrance d'un titre de séjour durable doit être conditionnée à une évaluation de l'intégration.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
@@ -475,7 +475,7 @@
   },
   {
     "id": "IMM_13",
-    "text": "Les enfants d'immigrés doivent s'identifier à la France d'abord.",
+    "text": "L'identité nationale française doit primer sur les autres appartenances culturelles dans l'intégration des enfants d'immigrés.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
@@ -534,7 +534,7 @@
   },
   {
     "id": "IMM_20",
-    "text": "Les immigrants doivent apprendre le français pour résider en France.",
+    "text": "Les immigrés doivent apprendre le français pour résider durablement en France.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "imm",
@@ -600,11 +600,11 @@
   },
   {
     "id": "SEC_6",
-    "text": "La justice doit se concentrer sur la réinsertion, pas la punition.",
+    "text": "Les peines de prison doivent donner la priorité à la réinsertion des détenus.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
-    "explanation": "Le taux de récidive en France est d'environ 60 % pour les personnes libérées. Deux approches s'affrontent : une justice punitive qui protège la société par l'incarcération ; une justice orientée vers la réhabilitation, qui cherche à éviter la récidive en aidant à la réinsertion."
+    "explanation": "La prison poursuit plusieurs objectifs : sanctionner, protéger la société et préparer la sortie. Certains veulent donner la priorité à la réinsertion pour réduire la récidive ; d'autres estiment que la peine doit d'abord rester proportionnée à la gravité de l'infraction."
   },
   {
     "id": "SEC_7",
@@ -624,11 +624,11 @@
   },
   {
     "id": "SEC_9",
-    "text": "La drogue pour usage personnel doit être dépénalisée.",
+    "text": "La possession de drogues destinées à un usage personnel doit être dépénalisée.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "sec",
-    "explanation": "La consommation de drogues est illégale en France, mais rarement sanctionnée par de la prison. Le Portugal a dépénalisé tous les usages personnels avec des résultats positifs en matière de santé publique. Le débat porte sur l'efficacité de la pénalisation pour réduire les dépendances."
+    "explanation": "La possession de drogues pour un usage personnel est sanctionnée en France. Les partisans de la dépénalisation privilégient la prévention et les soins ; ses opposants estiment que la sanction pénale contribue à décourager la consommation et à protéger la santé publique."
   },
   {
     "id": "SEC_10",
@@ -821,7 +821,7 @@
   },
   {
     "id": "ENV_11",
-    "text": "Les militants qui pratiquent la désobéissance civile pour alerter sur l'urgence climatique ne doivent pas être poursuivis en justice.",
+    "text": "La désobéissance civile pour le climat doit pouvoir être sanctionnée lorsqu'elle enfreint la loi.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "env",
@@ -1207,7 +1207,7 @@
   },
   {
     "id": "GLO_12",
-    "text": "Les pays colonisateurs doivent des réparations aux anciennes colonies.",
+    "text": "Les anciens pays colonisateurs doivent verser des réparations à leurs anciennes colonies.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "glo",
@@ -1298,11 +1298,11 @@
   },
   {
     "id": "PUB_1",
-    "text": "L'État doit garantir un accès aux soins gratuit et de qualité égale pour tous.",
+    "text": "Toute personne doit pouvoir accéder aux soins nécessaires sans obstacle financier.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "public healthcare",
-    "explanation": "La France dispose de la Sécurité sociale, qui rembourse une grande partie des soins. Des inégalités d'accès persistent (déserts médicaux, restes à charge). Ses partisans veulent réduire encore ces inégalités ; ses opposants soulignent le coût déjà élevé du système et le risque d'allonger les délais d'attente si la gratuité totale augmente la demande sans accroître l'offre de soins."
+    "explanation": "La Sécurité sociale rembourse une grande partie des soins, mais les restes à charge peuvent encore décourager certains patients. Supprimer ces obstacles améliorerait l'accès aux soins ; ses critiques soulignent le coût supplémentaire et la nécessité d'augmenter aussi l'offre médicale pour éviter des délais plus longs."
   },
   {
     "id": "PUB_2",
@@ -1314,7 +1314,7 @@
   },
   {
     "id": "PUB_3",
-    "text": "Les services publics comme la santé ou l'éducation doivent être ouverts à la concurrence du secteur privé.",
+    "text": "Les services publics essentiels doivent être ouverts à la concurrence du secteur privé.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
@@ -1322,7 +1322,7 @@
   },
   {
     "id": "PUB_4",
-    "text": "Le système de retraite français doit rester exclusivement par répartition, sans aucune part de capitalisation.",
+    "text": "Le système de retraite français doit reposer principalement sur la répartition plutôt que sur la capitalisation.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "pub",
@@ -1479,7 +1479,7 @@
   },
   {
     "id": "PUB_23",
-    "text": "Les universités doivent être totalement gratuites pour tous les étudiants français.",
+    "text": "L'inscription à l'université publique doit être gratuite pour les étudiants français.",
     "axis": "economic",
     "status": "CORE",
     "cluster": "education",
@@ -1575,11 +1575,11 @@
   },
   {
     "id": "GLO_25",
-    "text": "La France doit continuer à soutenir militairement et financièrement l'Ukraine face à la Russie.",
+    "text": "La France doit continuer à fournir une aide militaire à l'Ukraine face à la Russie.",
     "axis": "global",
     "status": "CORE",
     "cluster": "ukraine",
-    "explanation": "Depuis l'invasion russe de 2022, la France a fourni une aide militaire et financière à l'Ukraine. Le débat porte sur le niveau et la nature de ce soutien : armes offensives, instructeurs ? Certains craignent une escalade ; d'autres estiment que ce soutien est une nécessité pour la sécurité européenne."
+    "explanation": "Depuis l'invasion russe de 2022, la France fournit du matériel militaire et forme des soldats ukrainiens. Certains estiment que cette aide est nécessaire à la sécurité européenne ; d'autres craignent qu'elle prolonge la guerre ou augmente le risque d'escalade avec la Russie."
   },
   {
     "id": "ENV_25",
@@ -1607,7 +1607,7 @@
   },
   {
     "id": "SOC_26",
-    "text": "L'État doit prendre des mesures concrètes pour réduire les discriminations liées à l'origine ou à la couleur de peau.",
+    "text": "L'État doit prendre des mesures concrètes pour réduire les discriminations liées à l'origine ethnique.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "anti-discrimination",
@@ -1623,7 +1623,7 @@
   },
   {
     "id": "DEM_25",
-    "text": "La détention de nombreux médias par quelques grandes fortunes nuit à la pluralité de l'information en France.",
+    "text": "La loi doit limiter la concentration de plusieurs grands médias entre les mains d'un même propriétaire.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "media plurality",
