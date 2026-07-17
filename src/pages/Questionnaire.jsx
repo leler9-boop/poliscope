@@ -320,6 +320,7 @@ export default function Questionnaire() {
                   }
                   currentAnswer={currentAnswer}
                   onAnswer={handleAnswer}
+                  onSkip={improveMode ? undefined : handleSkip}
                   language={language}
                   concepts={QUESTION_CONCEPTS[question.id] ?? []}
                   onConceptClick={setActiveConceptKey}
@@ -368,14 +369,6 @@ export default function Questionnaire() {
                   <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
                     <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </button>
-
-                {/* Passer */}
-                <button
-                  onClick={handleSkip}
-                  className="min-h-[56px] px-4 text-sm text-slate-400 hover:text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors"
-                >
-                  {t('q_skip')}
                 </button>
 
                 {/* Suivant / Terminer */}

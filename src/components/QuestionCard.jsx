@@ -4,8 +4,8 @@ import { THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CONCEPTS } from '../data/conceptMap.js';
 
 const LIKERT_LABELS = {
-  en: ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'],
-  fr: ['Pas du tout d\'accord', 'Pas d\'accord', 'Neutre', 'D\'accord', 'Tout à fait d\'accord'],
+  en: ['Strongly disagree', 'Disagree', 'In between', 'Agree', 'Strongly agree'],
+  fr: ['Pas du tout d\'accord', 'Pas d\'accord', 'Entre les deux', 'D\'accord', 'Tout à fait d\'accord'],
 };
 
 const REPORT_OPTIONS = {
@@ -15,11 +15,11 @@ const REPORT_OPTIONS = {
 
 /* Valeur 1–5 → label court pour mobile */
 const SHORT_LABELS = {
-  en: ['No', '–', '~', '+', 'Yes'],
-  fr: ['Non', '–', '~', '+', 'Oui'],
+  en: ['No ++', 'No', 'Between', 'Yes', 'Yes ++'],
+  fr: ['Non ++', 'Non', 'Entre 2', 'Oui', 'Oui ++'],
 };
 
-export default function QuestionCard({ question, currentAnswer, onAnswer, language = 'en', concepts = [], onConceptClick }) {
+export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip, language = 'en', concepts = [], onConceptClick }) {
   const [showInfo,     setShowInfo]     = useState(false);
   const [reportOpen,   setReportOpen]   = useState(false);
   const [reportChoice, setReportChoice] = useState(null);
@@ -201,6 +201,28 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, langua
               <p key={i} className="text-[11px] text-center text-slate-400 leading-tight px-0.5">{label}</p>
             ))}
           </div>
+
+          {onSkip && (
+            <button
+              type="button"
+              onClick={onSkip}
+              className="mt-5 w-full min-h-[52px] px-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+            >
+              <span aria-hidden="true">?</span>
+              <span>
+                {language === 'fr'
+                  ? 'Je ne sais pas · Passer cette question'
+                  : "I don't know · Skip this question"}
+              </span>
+            </button>
+          )}
+          {onSkip && (
+            <p className="mt-2 text-[11px] text-center text-slate-400 leading-relaxed">
+              {language === 'fr'
+                ? 'Cette question ne comptera pas dans votre profil.'
+                : 'This question will not count toward your profile.'}
+            </p>
+          )}
         </div>
 
         {/* ── Report ── */}
