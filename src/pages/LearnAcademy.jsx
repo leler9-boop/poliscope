@@ -16,19 +16,19 @@ const fadeUp = (delay = 0) => ({
 
 const DOSSIERS_IDEOLOGIES = [
   { slug: 'droite', live: true },
-  { slug: 'gauche', icon: '📕', title: { fr: 'La gauche' }, hook: { fr: `Égalité, solidarité… et de nombreuses gauches, de la révolution au réformisme.` } },
-  { slug: 'extreme-droite', icon: '📓', title: { fr: `L'extrême droite` }, hook: { fr: `Histoire, critères de classement, différences avec la droite : comprendre au lieu de subir le débat.` } },
-  { slug: 'extreme-gauche', icon: '📔', title: { fr: `L'extrême gauche` }, hook: { fr: `Trotskisme, communisme révolutionnaire, anarchisme : la gauche de la gauche.` } },
-  { slug: 'centre', icon: '📙', title: { fr: 'Le centre' }, hook: { fr: `Ni neutre ni sans opinion : la tradition centriste française, de la démocratie chrétienne au macronisme.` } },
+  { slug: 'gauche', live: true },
+  { slug: 'extreme-droite', live: true },
+  { slug: 'extreme-gauche', live: true },
+  { slug: 'centre', live: true },
 ];
 
 const DOSSIERS_DEBATS = [
   { slug: 'oqtf', live: true },
   { slug: 'inflation', live: true },
   { slug: 'retraites', live: true },
-  { slug: 'immigration', icon: '🌍', title: { fr: `L'immigration` }, hook: { fr: `Chiffres sourcés, droit réel, positions de chaque famille : le débat sans les slogans.` } },
-  { slug: 'laicite', icon: '🕊️', title: { fr: 'La laïcité' }, hook: { fr: `Ce que dit vraiment la loi de 1905 — et pourquoi tout le monde s'en réclame.` } },
-  { slug: 'union-europeenne', icon: '🇪🇺', title: { fr: `L'Union européenne` }, hook: { fr: `Qui décide quoi à Bruxelles, et les différentes visions de l'Europe.` } },
+  { slug: 'immigration', live: true },
+  { slug: 'laicite', live: true },
+  { slug: 'union-europeenne', live: true },
 ];
 
 const PRESIDENTS = [
@@ -60,8 +60,8 @@ const RESSOURCES = [
 
 const DOSSIERS_INSTITUTIONS = [
   { slug: 'president-de-la-republique', live: true },
-  { slug: 'assemblee-nationale', icon: '🏛️', title: { fr: `L'Assemblée nationale` }, hook: { fr: `Qui vote les lois, comment tombe un gouvernement — le cœur du pouvoir législatif.` } },
-  { slug: 'conseil-constitutionnel', icon: '⚖️', title: { fr: `Le Conseil constitutionnel` }, hook: { fr: `Les neuf personnes qui peuvent annuler une loi votée — et pourquoi c'est voulu.` } },
+  { slug: 'assemblee-nationale', live: true },
+  { slug: 'conseil-constitutionnel', live: true },
 ];
 
 /* ── composants ───────────────────────────────────────────────────────────── */

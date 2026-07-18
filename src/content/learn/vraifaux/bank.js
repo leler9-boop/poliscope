@@ -15,6 +15,17 @@ import VF_SARKOZY from './presidents/nicolas-sarkozy.js';
 import VF_HOLLANDE from './presidents/francois-hollande.js';
 import VF_MACRON from './presidents/emmanuel-macron.js';
 
+import VF_GAUCHE from './familles/gauche.js';
+import VF_ED from './familles/extreme-droite.js';
+import VF_EG from './familles/extreme-gauche.js';
+import VF_CENTRE from './familles/centre.js';
+import VF_IMMIGRATION from './debats/immigration.js';
+import VF_LAICITE from './debats/laicite.js';
+import VF_UE from './debats/union-europeenne.js';
+import VF_AN from './institutions/assemblee-nationale.js';
+import VF_CC from './institutions/conseil-constitutionnel.js';
+import VF_ELECTIONS from './bases/elections.js';
+
 export const VERDICT_LABELS = {
   vrai: { fr: 'Vrai', en: 'True' },
   faux: { fr: 'Faux', en: 'False' },
@@ -282,6 +293,18 @@ export const VRAIFAUX_BANK = {
   ...VF_SARKOZY,
   ...VF_HOLLANDE,
   ...VF_MACRON,
+
+  /* ── Items des fiches familles / débats / institutions / bases ── */
+  ...VF_GAUCHE,
+  ...VF_ED,
+  ...VF_EG,
+  ...VF_CENTRE,
+  ...VF_IMMIGRATION,
+  ...VF_LAICITE,
+  ...VF_UE,
+  ...VF_AN,
+  ...VF_CC,
+  ...VF_ELECTIONS,
 };
 
 /** Résout une liste d'ids en items ; ignore les ids inconnus. */
