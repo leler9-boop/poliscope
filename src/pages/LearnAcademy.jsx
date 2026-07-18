@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { findBySlug } from '../content/learn/manifest.js';
+import { setPageMeta } from '../lib/seo.js';
 
 const L = (field, language) => field?.[language] ?? field?.fr ?? '';
 
@@ -116,6 +117,14 @@ function DossierCard({ item, language }) {
 
 export default function LearnAcademy() {
   const language = useStore(s => s.language);
+
+  React.useEffect(() => {
+    setPageMeta({
+      title: `Poliscop Academy — les grands dossiers de la politique française`,
+      description: `Familles politiques, grands débats, institutions, les 8 présidents de la Ve République : des dossiers complets, sourcés et vérifiés, du résumé au niveau expert.`,
+      path: '/learn/academy',
+    });
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">

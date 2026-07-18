@@ -5,6 +5,7 @@ import { useStore } from '../store/useStore.js';
 import { findEntry, findBySlug, SECTIONS } from '../content/learn/manifest.js';
 import { getVraiFaux } from '../content/learn/vraifaux/bank.js';
 import { L, formatDate, DIFFICULTY } from '../components/learn/helpers.js';
+import { setPageMeta, ficheTitle } from '../lib/seo.js';
 import { SectionBody } from '../components/learn/Briques.jsx';
 import {
   ReadingProgress, LevelNav, Accordion, Chronologie, TableauComparatif,
@@ -43,6 +44,7 @@ export default function LearnPage() {
     if (entry) {
       entry.load().then(c => { if (alive) setContent(c); });
       setLastLearn({ section, slug, title: entry.title.fr, ts: Date.now() });
+      setPageMeta({ title: ficheTitle(entry), description: entry.hook?.fr, path: `/learn/${section}/${slug}` });
     }
     return () => { alive = false; };
   }, [section, slug]); // eslint-disable-line react-hooks/exhaustive-deps

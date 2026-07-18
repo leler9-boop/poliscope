@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { LEARN_MANIFEST } from '../content/learn/manifest.js';
+import { setPageMeta } from '../lib/seo.js';
 
 const L = (field, language) => field?.[language] ?? field?.fr ?? '';
 
@@ -14,6 +15,14 @@ const CATEGORIES = {
 
 export default function LearnDico() {
   const language = useStore(s => s.language);
+
+  React.useEffect(() => {
+    setPageMeta({
+      title: `Dictionnaire politique — chaque mot expliqué simplement | Poliscop`,
+      description: `OQTF, 49.3, motion de censure, dette publique, proportionnelle… chaque mot du débat politique français expliqué en trois niveaux, avec sources officielles.`,
+      path: '/learn/dico',
+    });
+  }, []);
   const defs = LEARN_MANIFEST.filter(e => e.type === 'definition');
 
   const byCat = {};

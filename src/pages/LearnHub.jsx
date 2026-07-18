@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { LEARN_MANIFEST, UPCOMING, findBySlug, searchLearn } from '../content/learn/manifest.js';
 import { VRAIFAUX_BANK, VRAIFAUX_IDS, VERDICT_LABELS } from '../content/learn/vraifaux/bank.js';
+import { setPageMeta } from '../lib/seo.js';
 
 const L = (field, language) => field?.[language] ?? field?.fr ?? '';
 
@@ -181,6 +182,14 @@ const PARCOURS = [
 export default function LearnHub() {
   const language = useStore(s => s.language);
   const lastLearn = useStore(s => s.lastLearn);
+
+  React.useEffect(() => {
+    setPageMeta({
+      title: `J'y connais rien — la politique expliquée simplement | Poliscop`,
+      description: `Comprendre la politique sans jargon : chaque sujet en 20 secondes, 3 minutes ou en profondeur. Gauche, droite, institutions, immigration, laïcité — expliqués simplement et sourcés.`,
+      path: '/learn',
+    });
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
