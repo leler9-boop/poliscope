@@ -224,8 +224,23 @@ export function trackExplanationToggled({ questionId, theme, open } = {}) {
 }
 
 /**
- * User clicks an inline Academy concept link inside a question's explanation.
- * Opens Poliscop Academy in a new tab; carries only topic identifiers, never
+ * User clicks an inline Academy concept term inside a question's explanation,
+ * revealing its short definition popover (first step — no navigation yet).
+ * No opinion payload — not consent-gated, same rubric as trackConceptOpened.
+ * @param {{ conceptId: string, questionId: string, theme: string, position: number|null }} props
+ */
+export function trackAcademyDefinitionOpened({ conceptId, questionId, theme, position } = {}) {
+  track('academy_definition_opened', {
+    concept_id:  conceptId  ?? null,
+    question_id: questionId ?? null,
+    theme:       theme      ?? null,
+    position:    position   ?? null,
+  });
+}
+
+/**
+ * User clicks through to Poliscop Academy from a concept's definition popover
+ * (second step). Opens in a new tab; carries only topic identifiers, never
  * the user's answer — not consent-gated, same rubric as trackConceptOpened.
  * @param {{ conceptId: string, questionId: string, theme: string, position: number|null }} props
  */

@@ -325,7 +325,10 @@ export default function Questionnaire() {
                   onAnswer={handleAnswer}
                   onSkip={improveMode ? undefined : handleSkip}
                   language={language}
-                  concepts={QUESTION_CONCEPTS[question.id] ?? []}
+                  // "Pour aller plus loin" is suppressed once a question has been migrated to
+                  // inline Academy terms (QUESTION_EXPLANATIONS) — otherwise the same concept
+                  // could appear both inline and as a separate card underneath, duplicated.
+                  concepts={QUESTION_EXPLANATIONS[question.id] ? [] : (QUESTION_CONCEPTS[question.id] ?? [])}
                   onConceptClick={(key) => {
                     trackConceptOpened({ conceptKey: key, questionIndex: currentIndex });
                     setActiveConceptKey(key);

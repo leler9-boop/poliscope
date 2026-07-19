@@ -8,8 +8,9 @@
  * actuelle de LEARN_MANIFEST (section+slug), chaque ancre par défaut ou
  * surchargée existe bien parmi les sections N3 réellement chargées de la
  * fiche visée, chaque question migrée existe encore dans la banque de
- * questions live, chaque segment a la forme attendue, et qu'un concept n'est
- * jamais lié plus d'une fois dans la même explication.
+ * questions live, chaque segment a la forme attendue, qu'un concept n'est
+ * jamais lié plus d'une fois dans la même explication, et que chaque concept
+ * publié a une définition et un libellé de CTA réels (jamais de popover vide).
  *
  * Sortie : erreurs (exit 1) + warnings (exit 0) — jamais de lien cassé publié.
  */
@@ -42,11 +43,24 @@ async function sectionIdsOf(concept) {
 // ── 1. Registre des concepts ────────────────────────────────────────────────
 const anchorCache = new Map(); // conceptId -> Set<sectionId> | null (null = manifest entry missing)
 
+const MIN_DEFINITION_LENGTH = 15;
+
 for (const [id, concept] of Object.entries(ACADEMY_CONCEPTS)) {
   for (const field of ['label', 'section', 'slug']) {
     if (!concept[field]) err(id, `champ requis manquant : ${field}`);
   }
   if (concept.status === 'draft') continue; // jamais lié — pas besoin de résoudre plus loin
+
+  // Chaque concept publié doit pouvoir remplir un popover : jamais de définition
+  // vide/générique, jamais de CTA sans libellé (l'accord grammatical français —
+  // « le »/« la »/« les »/« l' » — ne peut pas être dérivé automatiquement du
+  // label, donc ctaLabel est rédigé à la main pour chaque concept).
+  if (!concept.definition || concept.definition.trim().length < MIN_DEFINITION_LENGTH) {
+    err(id, `definition manquante ou trop courte (< ${MIN_DEFINITION_LENGTH} caractères) — le popover ne doit jamais être vide`);
+  }
+  if (!concept.ctaLabel || !concept.ctaLabel.trim().length) {
+    err(id, `ctaLabel manquant — nécessaire au CTA « ... dans l'Academy » du popover`);
+  }
 
   const entry = findEntry(concept.section, concept.slug);
   if (!entry) {
