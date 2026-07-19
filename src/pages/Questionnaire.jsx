@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
-import { trackQuestionAnswered, trackQuestionSkipped } from '../lib/analytics.js';
+import { trackQuestionAnswered, trackQuestionSkipped, trackConceptOpened } from '../lib/analytics.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
 import ConceptModal from '../components/ConceptModal.jsx';
 import { questionHints } from '../data/questionHints.js';
+import { QUESTION_EXPLANATIONS } from '../data/questionExplanations.js';
 import { QUESTION_CONCEPTS, THEME_INTROS } from '../data/conceptMap.js';
 import { THEME_COLORS } from '../data/questions.js';
 
@@ -312,7 +313,9 @@ export default function Questionnaire() {
               >
                 <QuestionCard
                   question={
-                    questionHints[question.id]
+                    QUESTION_EXPLANATIONS[question.id]
+                      ? { ...question, info: QUESTION_EXPLANATIONS[question.id] }
+                      : questionHints[question.id]
                       ? { ...question, info: questionHints[question.id] }
                       : question.explanation
                       ? { ...question, info: question.explanation }
@@ -323,7 +326,10 @@ export default function Questionnaire() {
                   onSkip={improveMode ? undefined : handleSkip}
                   language={language}
                   concepts={QUESTION_CONCEPTS[question.id] ?? []}
-                  onConceptClick={setActiveConceptKey}
+                  onConceptClick={(key) => {
+                    trackConceptOpened({ conceptKey: key, questionIndex: currentIndex });
+                    setActiveConceptKey(key);
+                  }}
                 />
               </motion.div>
             )}

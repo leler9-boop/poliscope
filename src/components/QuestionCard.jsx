@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CONCEPTS } from '../data/conceptMap.js';
+import ExplanationContent from './ExplanationContent.jsx';
+import { trackExplanationToggled } from '../lib/analytics.js';
 
 const LIKERT_LABELS = {
   en: ['Strongly disagree', 'Disagree', 'In between', 'Agree', 'Strongly agree'],
@@ -31,7 +33,9 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
   const reportOptions = REPORT_OPTIONS[language] ?? REPORT_OPTIONS.en;
   const themeLabel  = THEME_LABELS[language]?.[question.theme] ?? question.theme;
   const themeColor  = THEME_COLORS[question.theme] ?? '#64748B';
-  const hasInfo     = Boolean(question.info?.fr || question.info?.en || (typeof question.info === 'string' && question.info));
+  const hasInfo     = Array.isArray(question.info)
+    ? question.info.length > 0
+    : Boolean(question.info?.fr || question.info?.en || (typeof question.info === 'string' && question.info));
   const questionText = typeof question.text === 'string'
     ? question.text
     : (question.text[language] ?? question.text.fr ?? question.text.en);
@@ -81,7 +85,11 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
         {hasInfo && (
           <motion.button
             key={`info-${question.id}`}
-            onClick={() => setShowInfo(!showInfo)}
+            onClick={() => {
+              const next = !showInfo;
+              setShowInfo(next);
+              trackExplanationToggled({ questionId: question.id, theme: question.theme, open: next });
+            }}
             className="flex items-center gap-1.5 mb-5 text-xs font-medium transition-colors"
             style={{ color: showInfo ? '#2563EB' : '#94A3B8' }}
             initial={{ opacity: 0 }}
@@ -110,9 +118,12 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              {typeof question.info === 'string'
-                ? question.info
-                : (question.info?.[language] ?? question.info?.fr ?? question.info?.en)}
+              <ExplanationContent
+                content={question.info}
+                language={language}
+                questionId={question.id}
+                theme={question.theme}
+              />
             </motion.div>
           )}
         </AnimatePresence>

@@ -210,6 +210,34 @@ export function trackBeginnerOpened({ section } = {}) {
   track('beginner_opened', { section: section ?? null });
 }
 
+/**
+ * User opens or closes a question's "Comprendre cet enjeu" explanation panel.
+ * No opinion payload (no answer value) — not consent-gated, same rubric as trackConceptOpened.
+ * @param {{ questionId: string, theme: string, open: boolean }} props
+ */
+export function trackExplanationToggled({ questionId, theme, open } = {}) {
+  track('explanation_toggled', {
+    question_id: questionId ?? null,
+    theme:       theme      ?? null,
+    open:        open       ?? false,
+  });
+}
+
+/**
+ * User clicks an inline Academy concept link inside a question's explanation.
+ * Opens Poliscop Academy in a new tab; carries only topic identifiers, never
+ * the user's answer — not consent-gated, same rubric as trackConceptOpened.
+ * @param {{ conceptId: string, questionId: string, theme: string, position: number|null }} props
+ */
+export function trackAcademyConceptClicked({ conceptId, questionId, theme, position } = {}) {
+  track('academy_concept_clicked', {
+    concept_id:  conceptId  ?? null,
+    question_id: questionId ?? null,
+    theme:       theme      ?? null,
+    position:    position   ?? null,
+  });
+}
+
 // ── Quiz micro-events ─────────────────────────────────────────────────────────
 
 /**

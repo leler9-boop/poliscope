@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { findEntry, findBySlug, SECTIONS } from '../content/learn/manifest.js';
@@ -21,6 +21,7 @@ import {
 export default function LearnPage() {
   const { section, slug } = useParams();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const language = useStore(s => s.language);
   const setLastLearn = useStore(s => s.setLastLearn);
   const recordFicheLevel = useStore(s => s.recordFicheLevel);
@@ -78,6 +79,19 @@ export default function LearnPage() {
     setOpenSections(s => ({ ...s, [id]: true }));
     setTimeout(() => anchorRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
+
+  // Deep link to a precise N3 section via URL hash (e.g. from an Academy concept
+  // link in the quiz: /learn/debats/retraites?niveau=3#mesures-prises). Only
+  // fires once the section actually exists in the loaded content, so an unknown
+  // or stale hash is silently ignored rather than scrolling to nothing.
+  useEffect(() => {
+    if (!content || maxLevel < 3) return;
+    const hash = location.hash?.replace(/^#/, '');
+    if (hash && content.level3?.sections?.some(s => s.id === hash)) {
+      openAnchor(hash);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content, maxLevel, location.hash]);
 
   // niveau max atteint → score de connaissance (idempotent côté store)
   useEffect(() => {
