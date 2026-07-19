@@ -186,7 +186,7 @@ export function VraiFauxItem({ item, language }) {
 
 /* ── quiz ────────────────────────────────────────────────────────────────── */
 
-export function QuizItem({ q, index, language }) {
+export function QuizItem({ q, index, language, onAnswer }) {
   const [picked, setPicked] = useState(null);
   return (
     <div className="bg-white border border-gray-200 rounded-xl px-4 py-3">
@@ -206,7 +206,7 @@ export function QuizItem({ q, index, language }) {
             <button
               key={i}
               disabled={picked !== null}
-              onClick={() => setPicked(i)}
+              onClick={() => { setPicked(i); onAnswer?.(index, i === q.bonneReponse); }}
               className={`w-full text-left text-sm border rounded-lg px-3 py-2 transition-colors ${cls}`}
             >
               {L(opt, language)}

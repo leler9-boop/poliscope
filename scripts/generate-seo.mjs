@@ -219,6 +219,41 @@ urls.push({
   }), lastmod: '2026-07-12', priority: 0.7,
 });
 
+/* ── parcours guidés + grand quiz ────────────────────────────────────────── */
+
+const { PARCOURS_LIST } = await import('../src/content/learn/parcours/index.js');
+
+for (const pc of PARCOURS_LIST) {
+  const path = `/learn/parcours/${pc.slug}`;
+  const steps = pc.etapes.map((e, i) => {
+    const entry = LEARN_MANIFEST.find(x => x.section === e.section && x.slug === e.slug);
+    return entry ? `<li><strong>Étape ${i + 1}</strong> — <a href="/learn/${e.section}/${e.slug}">${esc(entry.title.fr)}</a> : ${esc(e.pourquoi?.fr || '')}</li>` : '';
+  }).join('\n');
+  urls.push({
+    url: renderPage({
+      path,
+      title: `Parcours « ${pc.titre.fr} » — apprendre la politique pas à pas | Poliscop`,
+      description: (pc.description?.fr || '').slice(0, 158),
+      ogType: 'website',
+      bodyHtml: wrap(`<h1>Parcours : ${esc(pc.titre.fr)}</h1>
+<p>${esc(pc.description?.fr || '')}</p>
+<h2>Les étapes</h2><ol>${steps}</ol>`),
+    }), lastmod: '2026-07-12', priority: 0.7,
+  });
+}
+
+urls.push({
+  url: renderPage({
+    path: '/learn/quiz',
+    title: `Quiz politique : testez vos connaissances | Poliscop`,
+    description: `10 questions tirées de toute la base Poliscop — institutions, familles politiques, présidents, grands débats. Gagnez des points, montez de niveau, révisez avec les fiches.`,
+    ogType: 'website',
+    bodyHtml: wrap(`<h1>Le grand quiz politique</h1>
+<p>10 questions tirées au hasard dans toute la base Poliscop : institutions, familles politiques, présidents de la Ve République, grands débats. Chaque bonne réponse fait monter votre niveau de connaissance — de Novice à Maître Poliscop.</p>
+<p><a href="/learn">Explorer les fiches</a> pour réviser avant de jouer.</p>`),
+  }), lastmod: '2026-07-12', priority: 0.8,
+});
+
 /* ── sitemap ─────────────────────────────────────────────────────────────── */
 
 const staticUrls = [

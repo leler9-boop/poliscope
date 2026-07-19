@@ -104,6 +104,12 @@ export const useStore = create(
       // null | { section, slug, title, ts }
       lastLearn: null,
 
+      // ── Gamification apprentissage (persisté, 100 % local — engagement, pas opinion) ──
+      // knowledge : { quiz: {qid: bool}, vf: {id: bool}, fiches: {slug: maxLevel} }
+      knowledge: { quiz: {}, vf: {}, fiches: {} },
+      // parcoursDone : { [parcoursSlug]: [ 'section/slug', … ] }
+      parcoursDone: {},
+
       // ── Profile last updated timestamp (persisted for cross-device sync) ──
       profileLastUpdated: null,
 
@@ -125,6 +131,29 @@ export const useStore = create(
       setLanguage: (lang) => set({ language: lang }),
 
       setLastLearn: (v) => set({ lastLearn: v }),
+
+      recordQuiz: (qid, correct) => set(st => {
+        // ne jamais dégrader un acquis : une bonne réponse passée reste acquise
+        if (st.knowledge.quiz[qid] === true) return {};
+        return { knowledge: { ...st.knowledge, quiz: { ...st.knowledge.quiz, [qid]: correct } } };
+      }),
+
+      recordVf: (id, correct) => set(st => {
+        if (st.knowledge.vf[id] === true) return {};
+        return { knowledge: { ...st.knowledge, vf: { ...st.knowledge.vf, [id]: correct } } };
+      }),
+
+      recordFicheLevel: (slug, level) => set(st => {
+        const cur = st.knowledge.fiches[slug] || 0;
+        if (level <= cur) return {};
+        return { knowledge: { ...st.knowledge, fiches: { ...st.knowledge.fiches, [slug]: level } } };
+      }),
+
+      markParcoursStep: (parcoursSlug, key) => set(st => {
+        const done = st.parcoursDone[parcoursSlug] || [];
+        if (done.includes(key)) return {};
+        return { parcoursDone: { ...st.parcoursDone, [parcoursSlug]: [...done, key] } };
+      }),
 
       navigate: (page) => {
         set({ currentPage: page });
@@ -454,6 +483,8 @@ export const useStore = create(
         profileLastUpdated: state.profileLastUpdated,
         consent: state.consent,
         lastLearn: state.lastLearn,
+        knowledge: state.knowledge,
+        parcoursDone: state.parcoursDone,
       }),
       // Sync analytics.js's module-level consent flag as soon as the persisted
       // state is available — before this runs, it defaults to false (fail-closed:

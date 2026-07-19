@@ -5,6 +5,8 @@ import { useStore } from '../store/useStore.js';
 import { LEARN_MANIFEST, UPCOMING, findBySlug, searchLearn } from '../content/learn/manifest.js';
 import { VRAIFAUX_BANK, VRAIFAUX_IDS, VERDICT_LABELS } from '../content/learn/vraifaux/bank.js';
 import { setPageMeta } from '../lib/seo.js';
+import { PARCOURS_LIST, stepKey } from '../content/learn/parcours/index.js';
+import { computeScore } from '../lib/knowledge.js';
 
 const L = (field, language) => field?.[language] ?? field?.fr ?? '';
 
@@ -123,34 +125,53 @@ const VERDICT_STYLE = {
   'sans-contexte': 'bg-gray-100 border-gray-200 text-gray-600',
 };
 
+// L'intuition « nuancé » regroupe les verdicts partiel / trompeur / sans-contexte.
+const GUESSES = [
+  { key: 'vrai', label: { fr: 'Vrai' }, matches: ['vrai'] },
+  { key: 'faux', label: { fr: 'Faux' }, matches: ['faux'] },
+  { key: 'nuance', label: { fr: `C'est plus nuancé` }, matches: ['partiel', 'trompeur', 'sans-contexte'] },
+];
+
 function VraiFauxCard({ language }) {
+  const recordVf = useStore(s => s.recordVf);
   const [idx, setIdx] = useState(() => Math.floor(Math.random() * VRAIFAUX_IDS.length));
-  const [revealed, setRevealed] = useState(false);
+  const [guessed, setGuessed] = useState(null);
   const id = VRAIFAUX_IDS[idx];
   const item = VRAIFAUX_BANK[id];
 
+  const guess = (g) => {
+    const correct = g.matches.includes(item.verdict);
+    setGuessed({ correct });
+    recordVf(id, correct);
+  };
+
   const next = () => {
-    setRevealed(false);
+    setGuessed(null);
     setIdx(i => (i + 1) % VRAIFAUX_IDS.length);
   };
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-5">
       <p className="text-[15px] font-medium text-gray-800 mb-3">« {L(item.enonce, language)} »</p>
-      {!revealed ? (
+      {!guessed ? (
         <div className="flex flex-wrap gap-2">
-          {['vrai', 'faux', 'partiel'].map(guess => (
+          {GUESSES.map(g => (
             <button
-              key={guess}
-              onClick={() => setRevealed(true)}
+              key={g.key}
+              onClick={() => guess(g)}
               className="text-sm font-semibold border border-gray-200 hover:border-gray-400 text-gray-700 px-4 py-2 rounded-xl transition-colors"
             >
-              {L(VERDICT_LABELS[guess], language)}
+              {L(g.label, language)}
             </button>
           ))}
         </div>
       ) : (
         <div>
+          <p className={`text-xs font-bold mb-2 ${guessed.correct ? 'text-emerald-600' : 'text-rose-500'}`}>
+            {guessed.correct
+              ? (language === 'fr' ? '✓ Bien vu ! +5 pts' : '✓ Well spotted! +5 pts')
+              : (language === 'fr' ? '✗ Pas tout à fait…' : '✗ Not quite…')}
+          </p>
           <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border mb-2 ${VERDICT_STYLE[item.verdict]}`}>
             {L(VERDICT_LABELS[item.verdict], language)}
           </span>
@@ -170,18 +191,13 @@ const REPERES = ['gauche', 'droite', 'centre', 'president-de-la-republique', 'el
 const ACTUALITE = ['retraites', 'oqtf', 'inflation'];
 const MOTS_PARTOUT = ['oqtf', '49-3', 'dette-publique', 'proportionnelle', 'motion-de-censure'];
 
-const PARCOURS = [
-  { icon: '🌱', label: { fr: 'Je pars de zéro' }, hook: { fr: `7 étapes : la politique, la gauche et la droite, les institutions, le vote, les partis, les débats, vérifier une info.` }, to: '/learn/familles/droite' },
-  { icon: '🗳️', label: { fr: 'Comprendre les élections' }, hook: { fr: `Scrutins, candidats, sondages, premier et second tour, vote utile, abstention.` } },
-  { icon: '💶', label: { fr: `Comprendre l'économie politique` }, hook: { fr: `PIB, inflation, impôts, dette, chômage, retraites, commerce international.` } },
-  { icon: '🌍', label: { fr: `Comprendre l'immigration` }, hook: { fr: `Étranger, immigré, réfugié, asile, OQTF, données migratoires, le débat.` } },
-  { icon: '🇪🇺', label: { fr: `Comprendre l'Union européenne` }, hook: { fr: `Pourquoi l'UE existe, qui décide, l'euro, Schengen, les critiques, les visions.` } },
-  { icon: '🔬', label: { fr: 'Comment le sait-on ?' }, hook: { fr: `Lire un sondage, une statistique, un graphique. Fait, opinion, prédiction.` } },
-];
 
 export default function LearnHub() {
   const language = useStore(s => s.language);
   const lastLearn = useStore(s => s.lastLearn);
+  const knowledge = useStore(s => s.knowledge);
+  const parcoursDone = useStore(s => s.parcoursDone);
+  const score = computeScore(knowledge, parcoursDone, PARCOURS_LIST);
 
   React.useEffect(() => {
     setPageMeta({
@@ -235,6 +251,39 @@ export default function LearnHub() {
         </motion.div>
       )}
 
+      {/* Votre niveau de connaissance */}
+      <motion.div {...fadeUp(0.09)} className="mb-8">
+        <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">
+              {language === 'fr' ? 'Votre niveau' : 'Your level'}
+            </p>
+            <p className="text-sm font-bold text-gray-900">
+              {score.niveau.icon} {L(score.niveau.nom, language)}
+              <span className="font-semibold text-gray-400"> · {score.points} pts</span>
+            </p>
+            {score.suivant ? (
+              <div className="mt-1.5 flex items-center gap-2">
+                <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-gray-900 rounded-full" style={{ width: `${score.progression}%` }} />
+                </div>
+                <span className="text-[10px] text-gray-400">
+                  {score.suivant.icon} {language === 'fr' ? 'à' : 'at'} {score.suivant.min} pts
+                </span>
+              </div>
+            ) : (
+              <p className="text-[11px] text-gray-400 mt-1">{L(score.niveau.phrase, language)}</p>
+            )}
+          </div>
+          <Link
+            to="/learn/quiz"
+            className="shrink-0 bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors"
+          >
+            {language === 'fr' ? '🏆 Le grand quiz' : '🏆 Big quiz'}
+          </Link>
+        </div>
+      </motion.div>
+
       {/* 3. Commencer de zéro */}
       <motion.div {...fadeUp(0.1)} className="mb-10">
         <div className="bg-white border border-gray-200 rounded-2xl p-5">
@@ -250,16 +299,11 @@ export default function LearnHub() {
               : `A 7-step path to understand everything in the right order — politics, left and right, institutions, voting, parties, debates, and how to check a claim.`}
           </p>
           <Link
-            to="/learn/familles/droite"
+            to="/learn/parcours/je-pars-de-zero"
             className="inline-block bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
           >
-            {language === 'fr' ? `Commencer par : la gauche et la droite →` : 'Start with: left and right →'}
+            {language === 'fr' ? `Commencer le parcours →` : 'Start the path →'}
           </Link>
-          <p className="text-[11px] text-gray-400 mt-3">
-            {language === 'fr'
-              ? `Le parcours complet arrive — la première étape disponible est le dossier sur la droite.`
-              : `The full path is coming — the first available step is the deep-dive on the Right.`}
-          </p>
         </div>
       </motion.div>
 
@@ -314,27 +358,41 @@ export default function LearnHub() {
 
       {/* 8. Parcours guidés */}
       <motion.div {...fadeUp(0.3)} className="mb-10">
-        <SectionLabel>{language === 'fr' ? 'Les parcours guidés' : 'Guided paths'}</SectionLabel>
+        <div className="flex items-baseline justify-between gap-2 mb-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
+            {language === 'fr' ? 'Les parcours guidés' : 'Guided paths'}
+          </p>
+          <Link to="/learn/quiz" className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+            {language === 'fr' ? 'Le grand quiz →' : 'The big quiz →'}
+          </Link>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {PARCOURS.map((p, i) => (
-            <div key={i} className={`rounded-2xl px-4 py-3.5 ${p.to ? 'bg-white border border-gray-200' : 'bg-gray-50 border border-dashed border-gray-200'}`}>
-              <p className="text-sm font-semibold flex items-center gap-1.5 flex-wrap">
-                <span>{p.icon}</span>
-                <span className={p.to ? 'text-gray-900' : 'text-gray-500'}>{L(p.label, language)}</span>
-                {!p.to && (
-                  <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                    {language === 'fr' ? 'bientôt' : 'soon'}
-                  </span>
-                )}
-              </p>
-              <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">{L(p.hook, language)}</p>
-              {p.to && (
-                <Link to={p.to} className="inline-block text-xs font-semibold text-blue-600 hover:text-blue-800 mt-1.5 transition-colors">
-                  {language === 'fr' ? 'Commencer →' : 'Start →'}
-                </Link>
-              )}
-            </div>
-          ))}
+          {PARCOURS_LIST.map(p => {
+            const done = (parcoursDone[p.slug] || []).filter(k => p.etapes.some(e => stepKey(e) === k)).length;
+            const total = p.etapes.length;
+            const complete = done === total;
+            return (
+              <Link
+                key={p.slug}
+                to={`/learn/parcours/${p.slug}`}
+                className={`block border rounded-2xl px-4 py-3.5 transition-colors ${
+                  complete ? 'bg-emerald-50/50 border-emerald-200 hover:border-emerald-400' : 'bg-white border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                <p className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span>{p.icon}</span>{L(p.titre, language)}
+                  {complete && <span className="text-emerald-600 text-xs">✓</span>}
+                </p>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">{L(p.description, language)}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${complete ? 'bg-emerald-500' : 'bg-gray-900'}`} style={{ width: `${(done / total) * 100}%` }} />
+                  </div>
+                  <span className="text-[10px] font-semibold text-gray-400 tabular-nums">{done}/{total}</span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </motion.div>
 

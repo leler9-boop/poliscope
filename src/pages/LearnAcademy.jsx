@@ -44,10 +44,11 @@ const PRESIDENTS = [
 ];
 
 const OUTILS = [
+  { icon: '🏆', title: { fr: 'Le grand quiz politique' }, hook: { fr: `10 questions tirées de toute la base — testez votre niveau, gagnez des points.` }, to: '/learn/quiz' },
   { icon: '📖', title: { fr: 'Le dictionnaire politique' }, hook: { fr: 'Chaque mot en trois niveaux de lecture' }, to: '/learn/dico' },
   { icon: '⚖️', title: { fr: 'Les comparateurs' }, hook: { fr: `Deux à quatre idées côte à côte : socialisme et social-démocratie, régimes parlementaire et présidentiel…` } },
   { icon: '📜', title: { fr: 'Les chronologies' }, hook: { fr: `Les Républiques, l'histoire de la gauche et de la droite, la construction européenne — en frises interactives.` } },
-  { icon: '🔬', title: { fr: 'Comment le sait-on ?' }, hook: { fr: `Lire un sondage, une statistique, un graphique — la boîte à outils du citoyen.` } },
+  { icon: '🔬', title: { fr: 'Comment le sait-on ?' }, hook: { fr: `Lire un sondage, une statistique, un graphique — la boîte à outils du citoyen.` }, to: '/learn/parcours/comment-le-sait-on' },
 ];
 
 const RESSOURCES = [

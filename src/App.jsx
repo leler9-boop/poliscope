@@ -31,6 +31,8 @@ const LearnHub         = lazy(() => import('./pages/LearnHub.jsx'));
 const LearnPage        = lazy(() => import('./pages/LearnPage.jsx'));
 const LearnDico        = lazy(() => import('./pages/LearnDico.jsx'));
 const LearnAcademy     = lazy(() => import('./pages/LearnAcademy.jsx'));
+const LearnParcours    = lazy(() => import('./pages/LearnParcours.jsx'));
+const LearnQuiz        = lazy(() => import('./pages/LearnQuiz.jsx'));
 const Privacy          = lazy(() => import('./pages/Privacy.jsx'));
 const Terms            = lazy(() => import('./pages/Terms.jsx'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard.jsx'));
@@ -134,6 +136,8 @@ function AppInner() {
             <Route path="/learn/explorer" element={<Beginner />} />
             <Route path="/learn/dico"     element={<LearnDico />} />
             <Route path="/learn/academy"  element={<LearnAcademy />} />
+            <Route path="/learn/quiz"     element={<LearnQuiz />} />
+            <Route path="/learn/parcours/:slug" element={<LearnParcours />} />
             <Route path="/learn/:section/:slug" element={<LearnPage />} />
             <Route path="/privacy"      element={<Privacy />} />
             <Route path="/terms"        element={<Terms />} />

@@ -25,6 +25,11 @@ import VF_UE from './debats/union-europeenne.js';
 import VF_AN from './institutions/assemblee-nationale.js';
 import VF_CC from './institutions/conseil-constitutionnel.js';
 import VF_ELECTIONS from './bases/elections.js';
+import VF_PARTIS from './partis/partis.js';
+import VF_M_SONDAGE from './methodes/lire-un-sondage.js';
+import VF_M_FOP from './methodes/fait-opinion-prediction.js';
+import VF_M_STAT from './methodes/lire-une-statistique.js';
+import VF_M_GRAPH from './methodes/graphique-trompeur.js';
 
 export const VERDICT_LABELS = {
   vrai: { fr: 'Vrai', en: 'True' },
@@ -305,6 +310,11 @@ export const VRAIFAUX_BANK = {
   ...VF_AN,
   ...VF_CC,
   ...VF_ELECTIONS,
+  ...VF_PARTIS,
+  ...VF_M_SONDAGE,
+  ...VF_M_FOP,
+  ...VF_M_STAT,
+  ...VF_M_GRAPH,
 };
 
 /** Résout une liste d'ids en items ; ignore les ids inconnus. */

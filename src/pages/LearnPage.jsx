@@ -6,6 +6,7 @@ import { findEntry, findBySlug, SECTIONS } from '../content/learn/manifest.js';
 import { getVraiFaux } from '../content/learn/vraifaux/bank.js';
 import { L, formatDate, DIFFICULTY } from '../components/learn/helpers.js';
 import { setPageMeta, ficheTitle } from '../lib/seo.js';
+import { getParcours, stepKey } from '../content/learn/parcours/index.js';
 import { SectionBody } from '../components/learn/Briques.jsx';
 import {
   ReadingProgress, LevelNav, Accordion, Chronologie, TableauComparatif,
@@ -22,8 +23,14 @@ export default function LearnPage() {
   const [searchParams] = useSearchParams();
   const language = useStore(s => s.language);
   const setLastLearn = useStore(s => s.setLastLearn);
+  const recordFicheLevel = useStore(s => s.recordFicheLevel);
+  const recordQuiz = useStore(s => s.recordQuiz);
+  const markParcoursStep = useStore(s => s.markParcoursStep);
+  const parcoursDone = useStore(s => s.parcoursDone);
 
   const entry = findEntry(section, slug);
+  const parcoursSlug = searchParams.get('parcours');
+  const parcours = parcoursSlug ? getParcours(parcoursSlug) : null;
   const [content, setContent] = useState(null);
   const [maxLevel, setMaxLevel] = useState(1); // passage de niveau toujours explicite (bouton)
   const [openSections, setOpenSections] = useState({});
@@ -45,6 +52,7 @@ export default function LearnPage() {
       entry.load().then(c => { if (alive) setContent(c); });
       setLastLearn({ section, slug, title: entry.title.fr, ts: Date.now() });
       setPageMeta({ title: ficheTitle(entry), description: entry.hook?.fr, path: `/learn/${section}/${slug}` });
+      if (parcours) markParcoursStep(parcours.slug, `${section}/${slug}`);
     }
     return () => { alive = false; };
   }, [section, slug]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -70,6 +78,11 @@ export default function LearnPage() {
     setOpenSections(s => ({ ...s, [id]: true }));
     setTimeout(() => anchorRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
+
+  // niveau max atteint → score de connaissance (idempotent côté store)
+  useEffect(() => {
+    if (content) recordFicheLevel(slug, Math.min(maxLevel, 3));
+  }, [content, maxLevel]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showLevel2 = () => {
     setMaxLevel(2);
@@ -113,6 +126,38 @@ export default function LearnPage() {
         <span>›</span>
         <span className="text-gray-600 font-medium">{L(entry.title, language)}</span>
       </motion.nav>
+
+      {/* Bannière parcours */}
+      {parcours && (() => {
+        const done = parcoursDone[parcours.slug] || [];
+        const idx = parcours.etapes.findIndex(e => e.section === section && e.slug === slug);
+        const nextStep = parcours.etapes.find(e => !done.includes(stepKey(e)) && !(e.section === section && e.slug === slug));
+        return (
+          <div className="flex items-center justify-between gap-3 bg-gray-900 rounded-2xl px-4 py-3 mb-6">
+            <Link to={`/learn/parcours/${parcours.slug}`} className="text-sm text-white min-w-0 truncate">
+              <span className="mr-1.5">{parcours.icon}</span>
+              <span className="text-gray-400">{language === 'fr' ? 'Parcours' : 'Path'} · </span>
+              <span className="font-semibold">{L(parcours.titre, language)}</span>
+              {idx >= 0 && <span className="text-gray-400"> — {language === 'fr' ? 'étape' : 'step'} {idx + 1}/{parcours.etapes.length}</span>}
+            </Link>
+            {nextStep ? (
+              <Link
+                to={`/learn/${nextStep.section}/${nextStep.slug}?parcours=${parcours.slug}`}
+                className="shrink-0 text-xs font-semibold bg-white text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {language === 'fr' ? 'Étape suivante →' : 'Next →'}
+              </Link>
+            ) : (
+              <Link
+                to={`/learn/parcours/${parcours.slug}`}
+                className="shrink-0 text-xs font-semibold bg-emerald-500 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-400 transition-colors"
+              >
+                {language === 'fr' ? 'Terminer 🎉' : 'Finish 🎉'}
+              </Link>
+            )}
+          </div>
+        );
+      })()}
 
       {/* En-tête */}
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
@@ -340,7 +385,10 @@ export default function LearnPage() {
                 {language === 'fr' ? '✏️ Testez-vous' : '✏️ Test yourself'}
               </p>
               <div className="space-y-2">
-                {content.quiz.map((q, i) => <QuizItem key={i} q={q} index={i} language={language} />)}
+                {content.quiz.map((q, i) => (
+                  <QuizItem key={i} q={q} index={i} language={language}
+                    onAnswer={(idx, correct) => recordQuiz(`${slug}#${idx}`, correct)} />
+                ))}
               </div>
             </section>
           )}

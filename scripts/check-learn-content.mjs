@@ -192,6 +192,17 @@ for (const e of LEARN_MANIFEST) {
   }
 }
 
+// ── 2bis. Parcours : chaque étape référence une fiche du manifeste ──
+const { PARCOURS_LIST } = await import('../src/content/learn/parcours/index.js');
+for (const pc of PARCOURS_LIST) {
+  for (const e2 of pc.etapes) {
+    if (!LEARN_MANIFEST.some(x => x.section === e2.section && x.slug === e2.slug)) {
+      err(`parcours/${pc.slug}`, `étape inconnue au manifeste : ${e2.section}/${e2.slug}`);
+    }
+  }
+  if (pc.etapes.length < 3) warn(`parcours/${pc.slug}`, `parcours très court (${pc.etapes.length} étapes)`);
+}
+
 // ── 3. Banque vrai/faux ──────────────────────────────────────────────────────
 const VERDICTS = new Set(['vrai', 'faux', 'partiel', 'trompeur', 'sans-contexte']);
 for (const [id, item] of Object.entries(VRAIFAUX_BANK)) {
