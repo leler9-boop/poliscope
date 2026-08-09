@@ -20,6 +20,8 @@
 export const SOURCE_LEVEL = {
   /** Site officiel de campagne, programme PDF, discours intégral. */
   PRIMARY_OFFICIAL: 'primary_official',
+  /** Enregistrement direct ou transcription verbatim d'une prise de parole du candidat. */
+  PRIMARY_DIRECT: 'primary_direct',
   /** Institution : Conseil constitutionnel, JO, Assemblée, Sénat, juridiction. */
   INSTITUTIONAL: 'institutional',
   /** Commission des sondages, document original d'institut. */
@@ -260,6 +262,21 @@ export const SOURCE_DOCUMENTS = [
     note: 'Position explicite en faveur d’une réévaluation à la hausse de l’arsenal et du renouvellement des composantes.',
   },
   {
+    id: 'src-lisnard-bfmtv-retraites-2025-11-18',
+    url: 'https://x.com/BFMTV/status/1990691225695813743',
+    title: 'Interview BFMTV — âge de départ à la retraite',
+    publisher: 'BFMTV — enregistrement vidéo direct de David Lisnard',
+    level: SOURCE_LEVEL.PRIMARY_DIRECT,
+    type: 'interview_video',
+    language: 'fr',
+    publishedAt: '2025-11-18',
+    eventAt: '2025-11-18',
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Enregistrement direct : David Lisnard rejette explicitement la proposition du RN d’abaisser l’âge de départ à la retraite.',
+  },
+  {
     id: 'src-attal-campagne-2027',
     url: 'https://attalpresident.fr/',
     title: 'Site de campagne de Gabriel Attal',
@@ -452,6 +469,13 @@ const FR2027_QUESTION_IDS = [
 export const CANDIDATE_POSITIONS = [
   ...FR2027_QUESTION_IDS.map(questionId => {
     const coded = {
+      fr_2027_q1: {
+        stance: -2,
+        sourceIds: ['src-lisnard-bfmtv-retraites-2025-11-18'],
+        excerpt: 'Un parti comme le RN qui vous dit qu’on va abaisser l’âge de la retraite se fout du monde !',
+        reasoning: 'La déclaration rejette directement un abaissement de l’âge de départ par rapport au droit actuel à 64 ans.',
+        evidenceType: 'interview', confidence: 0.98, validFrom: '2025-11-18',
+      },
       fr_2027_q2: {
         stance: 2,
         sourceIds: ['src-lisnard-programme-immigration-2027'],

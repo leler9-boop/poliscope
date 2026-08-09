@@ -124,7 +124,7 @@ test('un thème sous le seuil de positions indépendantes reste inconnu — jama
   const seuil = MATCH_CONFIG.minSourcedPositionsPerTheme;
   assert.ok(seuil >= 1, 'un seuil doit être déclaré dans la configuration versionnée');
 
-  // ECONOMY a 3 questions dans fr_2027 (q1, q8, q11) : on n'en code qu'une.
+  // ECONOMY a 4 questions dans fr_2027 (q1, q8, q11, q17) : on n'en code qu'une.
   const pos = [approved('fr_2027_q1', 2)];
   const d = deriveCandidateThemes(pos, fr2027.specificQuestions, { sourceIsVerified: () => true });
   if (seuil > 1) {
@@ -217,6 +217,35 @@ test('couverture suffisante : un score est produit, et il ignore le profil legac
   }
   assert.equal(avecLegacyHaut.score, avecLegacyBas.score,
     'le profil legacy influence encore le score : il doit être totalement ignoré');
+});
+
+test('le corpus Lisnard devient calculable après — et seulement après — une relecture indépendante', () => {
+  // Simulation de la FUTURE validation : le dépôt reste à zéro position APPROVED. Ce test
+  // prouve simplement que le corpus éditorial couvre désormais quatre thèmes robustes et
+  // qu'une vraie relecture ne débouchera pas sur un candidat toujours inclassable.
+  const independentlyApproved = CANDIDATE_POSITIONS
+    .filter(position => position.candidateId === 'david-lisnard'
+      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+    .map(position => ({
+      ...position,
+      reviewStatus: REVIEW_STATUS.APPROVED,
+      reviewedBy: 'independent-review-fixture',
+    }));
+
+  const m = computeCandidateMatch({
+    userThemes: flat(50),
+    candidate: { id: 'david-lisnard', name: 'David Lisnard' },
+    priorityOrder: [...THEMES_ORDER],
+    electionAnswers: allAnswers,
+    questions: fr2027.specificQuestions,
+    approvedPositions: independentlyApproved,
+  });
+
+  assert.equal(independentlyApproved.length, 11);
+  assert.equal(m.coverage.themesKnown, 4,
+    'le corpus doit couvrir économie, environnement, mondialisation et sécurité');
+  assert.ok(Number.isFinite(m.score),
+    'le corpus relu devrait produire un score sans abaisser le seuil de deux preuves par thème');
 });
 
 test('le résultat embarque les versions de données et de matching', () => {

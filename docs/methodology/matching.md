@@ -1,73 +1,60 @@
 # Méthodologie — indice de proximité
 
-Version du moteur : `v1-editorial` · Dernière mise à jour : 2026-08-09
-Code : `src/engine/candidateMatch.js`, `src/engine/matchConfig.js`, `src/engine/matcher.js`
+Moteur : `v1-editorial` · Données candidats : `2026-08-10` · Mise à jour : 2026-08-10
+Code : `src/engine/candidateMatch.js`, `candidateProfile.js`, `matchConfig.js`
 
----
+## Ce que le nombre signifie
 
-## En une phrase
+L'indice de proximité sur 100 mesure la distance entre le profil thématique de l'utilisateur
+et un profil candidat dérivé de positions concrètes, pondérée par les priorités de
+l'utilisateur. Ce n'est ni une probabilité de vote, ni un pourcentage de propositions
+communes, ni une recommandation électorale.
 
-Le nombre affiché à côté d'un candidat est un **indice de proximité sur 100**, construit à
-partir de la distance entre vos scores thématiques et les siens, pondérée par vos priorités,
-puis volontairement amplifiée pour différencier les profils.
+L'interface doit écrire `78/100`, avec la couverture utilisée, et jamais `78 %`.
 
-## Ce qu'il n'est pas
+## Condition préalable : des preuves recevables
 
-Il ne s'agit **pas** :
+Le moteur ignore entièrement :
 
-- d'un pourcentage de positions communes ;
-- d'une probabilité que vous votiez pour cette personne ;
-- d'une mesure scientifique validée ;
-- d'une recommandation de vote.
+- les huit nombres historiques de `candidate.profile` (`legacy-manual-v1`) ;
+- les anciennes valeurs de secours dans `specificQuestions[].positions` ;
+- toute position non approuvée, sans source vérifiée, sans date, sans codeur ou sans relecteur.
 
-Il n'existe pas de dénominateur qui rende « 78 % » littéralement vrai. C'est pourquoi
-l'interface affiche « 78/100 » accompagné de sa couverture, et non « 78 % » tout court.
+Une question recevable est normalisée sur 0–100 selon sa direction, puis agrégée dans son
+thème. Un thème exige **au moins deux positions approuvées**. Un score candidat exige **au
+moins quatre thèmes connus**. Les thèmes inconnus restent `null` : ils ne valent jamais 50.
 
----
+S'il n'existe aucune position recevable, le résultat est `no_sourced_positions`. Si des
+positions existent mais couvrent moins de quatre thèmes, le résultat est
+`insufficient_coverage`. Dans les deux cas, aucun score ni classement de secours n'est publié.
 
-## Comment il est calculé
+## Calcul
 
-### 1. Distance thématique pondérée
+### 1. Profil thématique
 
-Pour chacun des 8 thèmes connus des deux côtés :
+Pour chaque thème connu des deux côtés :
 
 ```
 distance_thème = |score_utilisateur − score_candidat| / 100
 ```
 
-Moyenne pondérée par vos priorités :
+La moyenne est pondérée par l'allocation de priorités de l'utilisateur. À défaut, l'ordre des
+priorités donne des poids de 8 à 1. Un thème de poids 0 est exclu du calcul et du veto.
 
-- si vous avez réparti 100 points entre les thèmes, ce sont ces poids qui s'appliquent ;
-- sinon, l'ordre de priorité donne des poids de 8 (rang 1) à 1 (rang 8) ;
-- un thème de poids 0 est **entièrement** exclu — y compris du veto (voir plus bas) ;
-- si tous les poids sont nuls, on retombe sur des poids égaux, explicitement.
-
-Un thème inconnu d'un côté ou de l'autre est exclu du calcul — il n'est pas remplacé par 50.
-*(Cette règle s'applique au scoring v2 ; le v1, encore actif par défaut, traite un thème
-sans réponse comme valant 50.)*
-
-### 2. Amplification
+### 2. Amplification éditoriale
 
 ```
-base = (1 − distance_moyenne) ^ 2,4 × 100
+score_global = (1 − distance_moyenne) ^ 2,4 × 100
 ```
 
-L'exposant 2,4 est un **choix éditorial**, pas une calibration. Il élargit l'écart entre
-profils proches et profils opposés.
+L'exposant 2,4 différencie davantage les profils ; il n'est pas issu d'une calibration
+scientifique.
 
-| distance moyenne | indice |
-|---|---|
-| 0,05 | 89 |
-| 0,15 | 71 |
-| 0,25 | 53 |
-| 0,35 | 37 |
-| 0,50 | 19 |
+### 3. Désaccords majeurs
 
-### 3. Désaccords majeurs (« veto »)
+Six thèmes peuvent appliquer une pénalité progressive en cas de grand écart :
 
-Sur 6 thèmes jugés clivants, un écart important réduit le score multiplicativement :
-
-| Thème | Seuil | Pénalité maximale |
+| Thème | Début de pénalité | Multiplicateur à l'écart maximal |
 |---|---:|---:|
 | Immigration | 30 | ×0,62 |
 | Économie | 30 | ×0,72 |
@@ -76,58 +63,36 @@ Sur 6 thèmes jugés clivants, un écart important réduit le score multiplicati
 | Sécurité | 42 | ×0,78 |
 | Services publics | 42 | ×0,82 |
 
-Démocratie et Environnement sont volontairement hors veto — aucune base suffisante n'a été
-trouvée pour les y ajouter.
+La pénalité est continue entre le seuil et un écart de 100. Plusieurs pénalités se multiplient.
+Ce double effet — distance puis veto — est assumé, mais reste à calibrer empiriquement.
 
-La pénalité est **continue** : elle vaut 1,0 au seuil et atteint son maximum à un écart de 100.
-Franchir le seuil d'un point ne fait donc pas basculer le score. Les pénalités de plusieurs
-thèmes se multiplient entre elles.
+### 4. Questions de l'élection
 
-⚠ **Le veto agit en plus de la distance**, qui pénalise déjà le désaccord. C'est un double
-effet, assumé mais non calibré.
-
-### 4. Questions propres à l'élection
-
-Si vous répondez aux questions spécifiques (17 pour la présidentielle 2027) :
+Quand l'utilisateur répond aux 17 questions 2027, seules celles qui ont aussi une position
+candidat recevable entrent dans la composante spécifique :
 
 ```
 score_final = 0,65 × score_global + 0,35 × score_spécifique
 ```
 
-Le score spécifique utilise l'exposant 2,2 et subit le même veto. **Seules** les questions à
-la fois répondues par vous et documentées pour le candidat sont comptées — c'est ce nombre
-qui est affiché (« 12 positions comparables sur 17 »).
+La composante spécifique utilise un exposant de 2,2. Elle ne peut jamais contourner le seuil
+de quatre thèmes du score global. Le nombre de positions effectivement comparées est affiché.
 
-Si aucune position n'est disponible pour un candidat, le score se réduit au score global et
-l'interface le dit explicitement. Elle ne prétend jamais que vos réponses ont été prises en
-compte alors qu'elles ne l'ont pas été.
+## Priorités, égalités et versions
 
-> **Historique** : jusqu'au 2026-08-09, Marine Le Pen et Jean-Luc Mélenchon avaient 0 position
-> exploitable à cause d'identifiants désalignés. Répondre aux 17 questions ne changeait rien
-> pour eux alors que cela changeait le score de leurs concurrents. Corrigé, et verrouillé par
-> un test bloquant.
+Les mêmes poids sont transmis aux pages Profil et Élection. Deux scores séparés de moins de
+3 points sont signalés comme trop proches pour être départagés ; ce seuil n'est pas une marge
+d'erreur statistique.
 
----
+Chaque résultat embarque les versions du moteur de matching, des données candidats et de la
+dérivation du profil. Modifier une formule nécessite une nouvelle version et une décision
+documentée. Ajouter ou corriger des sources candidat nécessite une nouvelle release de données.
 
-## Effet de vos priorités
+## Limites actuelles
 
-Vos priorités changent le poids de chaque thème dans la distance moyenne. Elles sont désormais
-transmises **identiquement** sur la page Profil et sur la page Élection — ce n'était pas le cas
-avant le 2026-08-09, où la page Élection ignorait la répartition sur 100 points.
-
-## Résultats trop proches
-
-Quand les deux premiers candidats sont séparés de moins de 3 points, l'interface le signale.
-Un ordre catégorique entre deux scores aussi proches ne serait pas soutenu par la méthode.
-
-Ce seuil est une **sensibilité**, pas une marge d'erreur statistique : aucun intervalle de
-confiance n'est calculé aujourd'hui.
-
----
-
-## Ce qui reste à valider
-
-- L'exposant 2,4 et les seuils de veto n'ont jamais été estimés sur des données.
-- Les profils candidats sont saisis à la main (`legacy-manual-v1`) et ne proviennent pas du
-  même questionnaire que le vôtre — voir `docs/data/candidate-provenance.md`.
-- Aucune incertitude n'est calculée. Voir `docs/methodology/validation-roadmap.md`.
+- Les exposants et vetos n'ont pas encore été calibrés sur un panel de validation.
+- Aucune incertitude statistique n'est calculée.
+- Au 2026-08-10, aucune position réelle n'est encore approuvée : le classement public est donc
+  volontairement vide.
+- La priorité immédiate est la relecture indépendante du corpus Lisnard, puis l'application du
+  même protocole aux autres candidatures les plus crédibles.

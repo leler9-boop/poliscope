@@ -209,7 +209,7 @@ export const CANDIDATE_REGISTRY = [
     statusSource: 'Candidature officialisée fin mars 2026 ; programme officiel structuré sur le site de Nouvelle Énergie.',
     statusSourceIds: ['src-lcp-candidats-2027-2026-07-10', 'src-lisnard-programme-2027'],
     matchReady: false,
-    notMatchReadyReason: 'Aucune position sourcée codée. Programme officiel disponible (maturité M3+) : à coder en priorité — c’est l’absence la plus visible du produit.',
+    notMatchReadyReason: '11 positions sourcées sont codées, mais aucune n’est encore relue indépendamment. Elles restent exclues du matching jusqu’à validation.',
     profileSource: PROFILE_SOURCE.NONE, programMaturity: 'M3',
     programSourceIds: [
       'src-lisnard-programme-2027',

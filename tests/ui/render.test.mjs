@@ -137,7 +137,8 @@ test('une candidature 2027 suivie hors des dix anciennes fiches possède une pag
   assert.match(html, /Candidature déclarée/);
   assert.match(html, /Programme officiel partiel/);
   assert.match(html, /unenouvelleenergie\.fr/);
-  assert.match(html, /10\/17 positions codées/);
+  assert.match(html, /x\.com\/BFMTV/);
+  assert.match(html, /11\/17 positions codées/);
   assert.match(html, /0\/17 positions validées/);
   assert.match(html, /relecture indépendante/);
 });

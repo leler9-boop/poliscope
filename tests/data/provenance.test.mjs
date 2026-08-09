@@ -161,7 +161,7 @@ test('zéro position approuvée ⇒ AUCUN score public (et non un repli legacy)'
     'la seule provenance possible pour un score est désormais « sourced-positions »');
 });
 
-test('dix positions de David Lisnard sont codées mais restent exclues sans relecture indépendante', () => {
+test('onze positions de David Lisnard sont codées mais restent exclues sans relecture indépendante', () => {
   const cov = positionCoverage('david-lisnard');
   assert.equal(cov.approved, 0);
   assert.equal(cov.total, FR2027_QUESTION_IDS.length);
@@ -170,8 +170,8 @@ test('dix positions de David Lisnard sont codées mais restent exclues sans rele
   const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'david-lisnard');
   const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
   const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
-  assert.equal(pending.length, 10);
-  assert.equal(unknown.length, 7);
+  assert.equal(pending.length, 11);
+  assert.equal(unknown.length, 6);
 
   for (const position of pending) {
     assert.notEqual(position.stance, null);
@@ -179,10 +179,13 @@ test('dix positions de David Lisnard sont codées mais restent exclues sans rele
     assert.ok(position.reasoning);
     assert.ok(position.codedBy);
     assert.equal(position.reviewedBy, null, 'le premier passage ne doit pas se prétendre indépendant');
-    assert.ok(position.sourceIds.every(sourceId => getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL));
+    assert.ok(position.sourceIds.every(sourceId => [
+      SOURCE_LEVEL.PRIMARY_OFFICIAL,
+      SOURCE_LEVEL.PRIMARY_DIRECT,
+    ].includes(getSource(sourceId)?.level)));
   }
 
-  // Les 17 entrées restent dans la file : dix à relire, sept encore à instruire.
+  // Les 17 entrées restent dans la file : onze à relire, six encore à instruire.
   const queue = getReviewQueue().filter(x => x.candidateId === 'david-lisnard');
   assert.equal(queue.length, FR2027_QUESTION_IDS.length,
     'aucune question ne doit disparaître avant validation ou rejet explicite');

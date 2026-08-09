@@ -24,7 +24,7 @@ export const AXIS_VERSION = 'v1';
 export const MATCHING_VERSION = 'v1-editorial';
 
 /** Release du jeu de données candidats (profils, statuts, positions). */
-export const CANDIDATE_DATA_RELEASE = '2026-08-09';
+export const CANDIDATE_DATA_RELEASE = '2026-08-10';
 
 /** Format des exports JSON. Incrémenter à tout changement de forme non rétrocompatible. */
 export const EXPORT_FORMAT_VERSION = '2.0';

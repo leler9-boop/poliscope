@@ -708,3 +708,24 @@ résultats : 0 candidat classé ; les 10 candidats listés sous « NON CLASSÉS 
 avec statut daté et sourcé ; aucun score `/100` ; aucun terme banni ; 0 erreur console.
 
 `npm test` : **208 tests, 0 échec**. `npm run verify` : vert.
+
+---
+
+## D-36 · Deux preuves par thème restent obligatoires ; le corpus doit atteindre le seuil
+
+**Fausse bonne idée rejetée.** La présidentielle 2027 ne contient qu'une question pour
+certains thèmes. Abaisser automatiquement le seuil thématique de deux preuves à une aurait
+rendu ces thèmes « connus » sur une seule déclaration et aurait pu déclencher un veto majeur
+sur cette base. Le seuil n'est donc pas adaptatif : `minSourcedPositionsPerTheme` reste à 2.
+
+**Solution retenue.** Une prise de parole directe de David Lisnard contre l'abaissement de
+l'âge de la retraite a été rattachée à q1. Avec q8, l'économie rejoint l'environnement, la
+mondialisation et la sécurité : après relecture indépendante des 11 codages, quatre thèmes
+atteignent chacun le seuil de deux positions.
+
+Un test simule uniquement cette future relecture et exige un score fini avec exactement quatre
+thèmes connus. Les données réelles restent à 0 `APPROVED` : le codeur n'est pas devenu son
+propre relecteur et aucun score public n'est débloqué par cette décision.
+
+La release de données candidats passe à `2026-08-10`. La version du moteur ne change pas,
+puisque ses formules et seuils sont inchangés.

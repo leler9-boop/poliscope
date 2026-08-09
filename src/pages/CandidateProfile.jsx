@@ -136,12 +136,13 @@ export default function CandidateProfile() {
   const statusDetail = registryEntry?.statusSource
     ?? (typeof candidate?.result === 'object' ? candidate.result[language] : candidate?.result);
   const programSources = (registryEntry?.programSourceIds ?? []).map(getSource).filter(Boolean);
+  const editorialPositions = is2027 ? getPositions(registryEntry.id) : [];
   const factSourceIds = [...new Set([
     ...(registryEntry?.statusSourceIds ?? []),
     ...(registryEntry?.programSourceIds ?? []),
+    ...editorialPositions.flatMap(position => position.sourceIds ?? []),
   ])];
   const factSources = factSourceIds.map(getSource).filter(Boolean);
-  const editorialPositions = is2027 ? getPositions(registryEntry.id) : [];
   const codedPositionCount = editorialPositions.filter(position => position.stance != null).length;
   const pendingPositionCount = editorialPositions.filter(
     position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW,
