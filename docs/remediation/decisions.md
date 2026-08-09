@@ -729,3 +729,22 @@ propre relecteur et aucun score public n'est débloqué par cette décision.
 
 La release de données candidats passe à `2026-08-10`. La version du moteur ne change pas,
 puisque ses formules et seuils sont inchangés.
+
+---
+
+## D-37 · Les « chantiers » Attal sont codables, mais ne deviennent pas un programme final
+
+Le site officiel de campagne publie quatre chantiers et deux dettes, tout en invitant les
+citoyens à alimenter le programme et en annonçant encore des propositions complètes à venir.
+La maturité reste donc M2. Six positions directes sont codées `PENDING_REVIEW` ; onze restent
+inconnues lorsque la formulation précise de Poliscop n'est pas satisfaite.
+
+Trois intensités sont volontairement limitées à ±1 : opposition à la retraite à 60 ans mais
+pas à tout seuil inférieur à 64, orientation favorable à la baisse de l'impôt sur les sociétés
+sans engagement chiffré 2027, et dissuasion renforcée dans un cadre européen plutôt
+qu'autonomie française explicitement exclusive.
+
+Le champ `profileSource` de Lisnard et Attal passe à `sourced-positions` pour décrire la nature
+réelle de leur corpus. Cela ne les rend pas comparables : `isMatchReady()` exige toujours des
+positions approuvées et quatre thèmes au seuil. Lisnard en atteindrait quatre après relecture ;
+Attal seulement deux et reste donc exclu même dans cette simulation.

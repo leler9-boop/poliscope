@@ -153,6 +153,18 @@ test('une fiche 2027 ne republie pas les anciennes positions éditoriales non so
   assert.match(html, /Sources vérifiées/);
 });
 
+test('la fiche Attal distingue ses chantiers 2027 codés d’un programme final et d’une validation', () => {
+  const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/candidates/attal'] },
+    h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));
+
+  assert.match(html, /Gabriel Attal/);
+  assert.match(html, /Propositions thématiques/);
+  assert.match(html, /6\/17 positions codées/);
+  assert.match(html, /0\/17 positions validées/);
+  assert.match(html, /6 positions sont en attente d’une relecture indépendante/);
+  assert.doesNotMatch(html, /Programme officiel complet/);
+});
+
 test('la page 2027 expose l’annuaire complet sans le présenter comme une liste officielle', () => {
   const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/elections/fr_2027'] },
     h(Routes, null, h(Route, { path: '/elections/:id', element: h(ElectionDetail) }))));

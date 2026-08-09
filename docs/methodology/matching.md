@@ -94,5 +94,6 @@ documentée. Ajouter ou corriger des sources candidat nécessite une nouvelle re
 - Aucune incertitude statistique n'est calculée.
 - Au 2026-08-10, aucune position réelle n'est encore approuvée : le classement public est donc
   volontairement vide.
-- La priorité immédiate est la relecture indépendante du corpus Lisnard, puis l'application du
-  même protocole aux autres candidatures les plus crédibles.
+- La priorité immédiate est la relecture indépendante du corpus Lisnard. Le corpus Attal est
+  amorcé mais ne couvre encore que deux thèmes robustes ; il ne doit pas être classé par
+  anticipation.

@@ -191,6 +191,25 @@ test('onze positions de David Lisnard sont codées mais restent exclues sans rel
     'aucune question ne doit disparaître avant validation ou rejet explicite');
 });
 
+test('six positions 2027 de Gabriel Attal sont codées sans présenter ses chantiers comme un programme final', () => {
+  const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'gabriel-attal');
+  const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
+  const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
+
+  assert.equal(positions.length, FR2027_QUESTION_IDS.length);
+  assert.equal(pending.length, 6);
+  assert.equal(unknown.length, 11);
+  assert.equal(positionCoverage('gabriel-attal').approved, 0);
+
+  for (const position of pending) {
+    assert.notEqual(position.stance, null);
+    assert.ok(position.excerpt);
+    assert.ok(position.reasoning);
+    assert.equal(position.reviewedBy, null);
+    assert.ok(position.sourceIds.every(sourceId => getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL));
+  }
+});
+
 test('les identifiants de questions de la provenance existent dans fr_2027', () => {
   const known = new Set(fr2027.specificQuestions.map(q => q.id));
   for (const p of CANDIDATE_POSITIONS) {

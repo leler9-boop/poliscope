@@ -69,6 +69,27 @@ elles restent toutes `pending_review`.
 
 Le dossier opérationnel est dans `docs/data/david-lisnard-2027-review.md`.
 
+## Deuxième corpus : Gabriel Attal
+
+Le site `attalpresident.fr` publie quatre « chantiers capitaux », deux « dettes à résorber »
+et plusieurs prises de position de campagne. Il indique aussi que les contributions alimentent
+encore le programme et annonce certaines stratégies complètes pour plus tard. Sa maturité
+reste donc **M2 — propositions thématiques**, pas « programme final ».
+
+| État | Nombre | Effet public |
+|---|---:|---|
+| Codées, en attente de relecture indépendante | 6 | Aucun |
+| Encore inconnues (`to_review`) | 11 | Aucun |
+| Approuvées | 0 | Aucun |
+
+Les positions codées portent sur les retraites, l'immigration, l'Europe, la fiscalité des
+sociétés, l'Ukraine et la dissuasion. L'intensité est volontairement modérée quand la source
+donne une orientation sans engagement 2027 complet. Même après validation, ce corpus ne couvre
+que deux thèmes avec deux preuves : Attal resterait hors classement jusqu'à l'obtention de deux
+thèmes robustes supplémentaires.
+
+Le dossier opérationnel est dans `docs/data/gabriel-attal-2027-review.md`.
+
 ## Contrat de publication
 
 Une position ne contribue au matching que si toutes les conditions suivantes sont réunies :

@@ -135,8 +135,16 @@ export const CANDIDATE_REGISTRY = [
     status: CANDIDACY_STATUS.DECLARED, statusDate: '2026-05-22',
     statusSource: 'Déclaration à Mur-de-Barrez (Aveyron)',
     statusSourceIds: ['src-attal-campagne-2027', 'src-lcp-candidats-2027-2026-07-10'],
-    trackedFor: ['fr_2027'], matchReady: false, profileSource: PROFILE_SOURCE.LEGACY_MANUAL_V1,
-    programMaturity: 'M2', programSourceIds: ['src-attal-campagne-2027'], lastReviewed: '2026-08-10',
+    trackedFor: ['fr_2027'], matchReady: false, profileSource: PROFILE_SOURCE.SOURCED_POSITIONS,
+    notMatchReadyReason: '6 positions 2027 sont sourcées et codées, mais encore non relues et insuffisantes pour atteindre quatre thèmes comparables.',
+    programMaturity: 'M2', programSourceIds: [
+      'src-attal-campagne-2027',
+      'src-attal-travail-salaires-2027',
+      'src-attal-frontieres-2027',
+      'src-attal-europe-2026-06-24',
+      'src-attal-profile-2026-05-22',
+      'src-attal-tf1-rn-2026-07-07',
+    ], lastReviewed: '2026-08-10',
   },
   {
     id: 'jean-luc-melenchon', displayName: 'Jean-Luc Mélenchon', legacyIds: ['melenchon', 'melenchon_2027'],
@@ -210,7 +218,7 @@ export const CANDIDATE_REGISTRY = [
     statusSourceIds: ['src-lcp-candidats-2027-2026-07-10', 'src-lisnard-programme-2027'],
     matchReady: false,
     notMatchReadyReason: '11 positions sourcées sont codées, mais aucune n’est encore relue indépendamment. Elles restent exclues du matching jusqu’à validation.',
-    profileSource: PROFILE_SOURCE.NONE, programMaturity: 'M3',
+    profileSource: PROFILE_SOURCE.SOURCED_POSITIONS, programMaturity: 'M3',
     programSourceIds: [
       'src-lisnard-programme-2027',
       'src-lisnard-programme-institutions-2027',

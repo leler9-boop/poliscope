@@ -248,6 +248,31 @@ test('le corpus Lisnard devient calculable après — et seulement après — un
     'le corpus relu devrait produire un score sans abaisser le seuil de deux preuves par thème');
 });
 
+test('le corpus Attal reste honnêtement insuffisant même après une future relecture', () => {
+  const independentlyApproved = CANDIDATE_POSITIONS
+    .filter(position => position.candidateId === 'gabriel-attal'
+      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+    .map(position => ({
+      ...position,
+      reviewStatus: REVIEW_STATUS.APPROVED,
+      reviewedBy: 'independent-review-fixture',
+    }));
+
+  const m = computeCandidateMatch({
+    userThemes: flat(50),
+    candidate: { id: 'gabriel-attal', name: 'Gabriel Attal' },
+    priorityOrder: [...THEMES_ORDER],
+    electionAnswers: allAnswers,
+    questions: fr2027.specificQuestions,
+    approvedPositions: independentlyApproved,
+  });
+
+  assert.equal(independentlyApproved.length, 6);
+  assert.equal(m.coverage.themesKnown, 2, 'seuls économie et mondialisation atteignent deux preuves');
+  assert.equal(m.score, null);
+  assert.equal(m.reason, 'insufficient_coverage');
+});
+
 test('le résultat embarque les versions de données et de matching', () => {
   const m = computeCandidateMatch({
     userThemes: flat(50), candidate: fr2027.candidates[0], priorityOrder: [...THEMES_ORDER],
