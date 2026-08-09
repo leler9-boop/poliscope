@@ -2,6 +2,35 @@
 // Calculates alignment scores between a user profile and candidates/figures.
 
 import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';
+import { MATCH_CONFIG, computeVeto } from './matchConfig.js';
+
+/**
+ * Construit la carte de poids par thème à partir des préférences utilisateur.
+ * Règle de priorité, unique et explicite : une allocation `themeWeights` complète gagne
+ * toujours ; sinon on retombe sur l'ordre de priorité (rang 1 = poids 8, rang 8 = poids 1) ;
+ * sinon sur l'ordre de déclaration des thèmes.
+ *
+ * Exportée pour que TOUTES les surfaces (Profil, Élection, archétypes) utilisent la même —
+ * l'audit avait relevé que la page Élection ignorait purement et simplement `themeWeights`.
+ */
+export function buildWeightMap(priorityOrder, themeWeights) {
+  const weightMap = {};
+
+  if (themeWeights && THEMES_ORDER.every(t => themeWeights[t] != null)) {
+    THEMES_ORDER.forEach(theme => { weightMap[theme] = themeWeights[theme]; });
+    // Garde-fou : une allocation entièrement nulle ne doit pas produire un résultat au hasard.
+    if (THEMES_ORDER.every(t => !(weightMap[t] > 0))) {
+      THEMES_ORDER.forEach(theme => { weightMap[theme] = 1; });
+    }
+    return weightMap;
+  }
+
+  const order = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
+    ? priorityOrder
+    : THEMES_ORDER;
+  order.forEach((theme, idx) => { weightMap[theme] = THEMES_ORDER.length - idx; });
+  return weightMap;
+}
 
 /**
  * Calculate alignment percentage between user profile and a target profile.
@@ -21,23 +50,7 @@ import { THEMES_ORDER, THEME_LABELS } from '../data/questions.js';
  * @returns {number} alignment 0–100
  */
 export function calculateAlignment(userThemes, targetProfile, priorityOrder, themeWeights) {
-  // Build weight map — explicit themeWeights take priority over priorityOrder
-  const weightMap = {};
-
-  if (themeWeights && THEMES_ORDER.every(t => themeWeights[t] != null)) {
-    // Use user-defined 100-point allocation directly as weights
-    THEMES_ORDER.forEach(theme => {
-      weightMap[theme] = themeWeights[theme];
-    });
-  } else {
-    const order = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
-      ? priorityOrder
-      : THEMES_ORDER;
-    order.forEach((theme, idx) => {
-      // Weights: rank 1 = weight 8, rank 8 = weight 1
-      weightMap[theme] = THEMES_ORDER.length - idx;
-    });
-  }
+  const weightMap = buildWeightMap(priorityOrder, themeWeights);
 
   let weightedDistanceSum = 0;
   let totalWeight = 0;
@@ -62,35 +75,18 @@ export function calculateAlignment(userThemes, targetProfile, priorityOrder, the
   // d=0.50 → 19%  (opposing)
   // POL-AUDIT-019: kept unrounded here — rounding once, after the veto below, avoids a
   // rare double-rounding artifact that could flip a ranking by one point (~0.04% of pairs).
-  const baseAlignment = Math.pow(1 - meanDistance, 2.4) * 100;
+  const baseAlignment = Math.pow(1 - meanDistance, MATCH_CONFIG.distanceExponent) * 100;
 
-  // Multiplicative veto: on 6 clivant themes, a large distance crushes the score.
-  // This models the "dealbreaker" effect — e.g. a user strongly opposed to immigration
-  // restriction will never align with a far-right candidate, even if they agree on economy.
-  // Thresholds set at 30-42 to avoid crushing moderate profiles (< 20% for too many).
-  // GLOBAL added lot 2 (POL-AUDIT-012): the EU/sovereignty axis was the only clearly
-  // identity-defining theme left unprotected — simulation showed 13.1% of random profiles
-  // (18.0% of profiles with a strong EU/sovereignty position) got a corrected top match,
-  // with no new discontinuity introduced. Calibrated by analogy with IMMIGRATION.
-  const VETO_THEMES = {
-    IMMIGRATION:     { threshold: 30, penalty: 0.62 },
-    ECONOMY:         { threshold: 30, penalty: 0.72 },
-    SOCIAL:          { threshold: 42, penalty: 0.78 },
-    SECURITY:        { threshold: 42, penalty: 0.78 },
-    PUBLIC_SERVICES: { threshold: 42, penalty: 0.82 },
-    GLOBAL:          { threshold: 30, penalty: 0.65 },
-  };
-  // Smooth veto: penalty ramps linearly from 1.0 (at threshold) to full penalty (at dist=100).
-  // No cliff: a 1-point movement across the threshold produces only a tiny change.
-  let vetoMultiplier = 1.0;
-  Object.entries(VETO_THEMES).forEach(([theme, config]) => {
-    const dist = Math.abs((userThemes[theme] ?? 50) - (targetProfile[theme] ?? 50));
-    if (dist > config.threshold) {
-      const t = (dist - config.threshold) / (100 - config.threshold); // 0 at threshold, 1 at max
-      const multiplier = 1 - t * (1 - config.penalty); // 1.0 → penalty
-      vetoMultiplier *= multiplier;
-    }
-  });
+  // Veto multiplicatif : sur 6 thèmes clivants, un écart important écrase le score.
+  // Les seuils, pénalités et la rampe vivent désormais dans `matchConfig.js` — un seul
+  // endroit, consommé aussi par la page Élection (qui en avait sa propre copie, sans GLOBAL).
+  const { multiplier: vetoMultiplier } = computeVeto(
+    // `?? 50` : le moteur v1 traite un thème absent comme centriste. Le v2 (thèmes `null`)
+    // passe par `candidateMatch.js`, qui laisse `computeVeto` ignorer les thèmes inconnus.
+    Object.fromEntries(THEMES_ORDER.map(t => [t, userThemes[t] ?? 50])),
+    Object.fromEntries(THEMES_ORDER.map(t => [t, targetProfile[t] ?? 50])),
+    weightMap,
+  );
 
   const alignment = Math.round(baseAlignment * vetoMultiplier);
   return Math.max(0, Math.min(100, alignment));
@@ -160,18 +156,21 @@ export function alignmentBarColor(score) {
 export function alignmentLabel(score, lang = 'en') {
   const labels = {
     en: {
-      very_high: 'Very strong alignment',
-      high: 'Strong alignment',
-      moderate: 'Moderate alignment',
-      low: 'Weak alignment',
-      very_low: 'Very weak alignment',
+      very_high: 'Very strong proximity',
+      high: 'Strong proximity',
+      moderate: 'Moderate proximity',
+      low: 'Weak proximity',
+      very_low: 'Very weak proximity',
     },
     fr: {
-      very_high: 'Très forte compatibilité',
-      high: 'Forte compatibilité',
-      moderate: 'Compatibilité modérée',
-      low: 'Faible compatibilité',
-      very_low: 'Très faible compatibilité',
+      // Vocabulaire de PROXIMITÉ : le nombre mesure une distance entre positions. Il ne
+      // porte aucun jugement sur l'adéquation d'un vote à vos intérêts — voir le garde-fou
+      // de terminologie dans tests/data/ui-terminology.test.mjs.
+      very_high: 'Très forte proximité',
+      high: 'Forte proximité',
+      moderate: 'Proximité modérée',
+      low: 'Faible proximité',
+      very_low: 'Très faible proximité',
     },
   };
   const l = labels[lang] ?? labels.en;

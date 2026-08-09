@@ -15,14 +15,41 @@
  */
 import React from 'react';
 import { useStore, CONSENT_VERSION } from '../store/useStore.js';
+import { useAuth } from '../lib/auth.jsx';
 
 export default function ConsentModal({ onDecided }) {
   const language    = useStore(s => s.language);
-  const setConsent  = useStore(s => s.setConsent);
   const fr = language === 'fr';
+  // AVANT (2e contre-audit) : la modale appelait uniquement `useStore.setConsent()`.
+  // `grantConsent()` — la seule fonction qui écrit la PREUVE de consentement dans
+  // `user_consents` — était exportée mais appelée nulle part. Un compte connecté pouvait donc
+  // voir ses opinions synchronisées sans qu'aucune trace de consentement n'existe côté serveur.
+  const { grantConsent, revokeConsent } = useAuth();
 
-  function decide(granted) {
-    setConsent(granted);
+  // Consentement à la mesure d'audience : case DÉCOCHÉE par défaut, et distincte du
+  // consentement à la sauvegarde des opinions. Tant qu'aucune décision n'est prise, aucun
+  // identifiant persistant n'est déposé sur l'appareil (voir src/lib/anonymous.js).
+  const [measurement, setMeasurement] = React.useState(false);
+
+  const [busy, setBusy]   = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  async function decide(granted) {
+    setBusy(true);
+    setError(null);
+    // La preuve serveur est écrite AVANT que le consentement politique ne soit activé
+    // localement : en cas d'échec, aucune opinion ne part (voir grantConsent dans auth.jsx).
+    const res = granted
+      ? await grantConsent({ measurement })
+      : await revokeConsent({ measurement });
+    setBusy(false);
+
+    if (res?.error) {
+      setError(fr
+        ? 'Impossible d’enregistrer votre accord sur nos serveurs. Rien n’a été envoyé : vos réponses restent sur cet appareil. Réessayez plus tard.'
+        : 'We could not record your consent on our servers. Nothing was sent: your answers stay on this device. Please try again later.');
+      return; // la modale reste ouverte — la décision n'est pas acquise
+    }
     onDecided?.(granted);
   }
 
@@ -104,19 +131,43 @@ export default function ConsentModal({ onDecided }) {
               : 'Without your consent, you can still answer every question and see your profile — just without an online save.'}
           </p>
 
+          {/* Mesure d'audience — choix séparé, refusé par défaut */}
+          <label className="flex items-start gap-2.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={measurement}
+              onChange={e => setMeasurement(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-xs text-gray-600 leading-relaxed">
+              {fr
+                ? <><span className="font-semibold text-gray-800">Mesure d’audience (facultatif).</span> Autoriser un identifiant sur cet appareil pour compter les visites et voir à quelle étape le parcours s’arrête. Ce flux ne transporte ni tes réponses, ni tes thèmes, ni les candidats qui te correspondent — uniquement des écrans, des étapes et des compteurs. Décoché = aucun identifiant n’est déposé.</>
+                : <><span className="font-semibold text-gray-800">Audience measurement (optional).</span> Allow an identifier on this device to count visits and see where the journey stops. This stream carries none of your answers, themes, or matching candidates — only screens, steps and counters. Unchecked = no identifier is stored.</>}
+            </span>
+          </label>
+
           <div className="flex flex-col gap-2 pb-2">
             <button
               onClick={() => decide(true)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
+              disabled={busy}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
             >
-              {fr ? "J'accepte la sauvegarde en ligne" : 'I agree to the online save'}
+              {busy
+                ? (fr ? 'Enregistrement…' : 'Saving…')
+                : (fr ? "J'accepte la sauvegarde en ligne" : 'I agree to the online save')}
             </button>
             <button
               onClick={() => decide(false)}
-              className="w-full border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+              disabled={busy}
+              className="w-full border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-60 transition-colors"
             >
               {fr ? 'Non merci, je reste en local' : 'No thanks, keep it on this device'}
             </button>
+            {error && (
+              <p role="alert" className="text-xs text-red-600 leading-relaxed bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
           </div>
 
           <p className="text-[10px] text-gray-300 text-center">

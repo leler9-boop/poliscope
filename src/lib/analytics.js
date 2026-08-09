@@ -1,368 +1,264 @@
 /**
- * POLISCOP — Analytics module
+ * POLISCOP — Mesure d'audience.
  *
- * Thin, fire-and-forget wrapper over track() from anonymous.js.
- * All calls are silent no-ops when Supabase is not configured.
- * Never import this in server-side or non-browser contexts.
+ * MODÈLE — allowlist par événement, point d'émission unique
+ * ---------------------------------------------------------
+ * Deux versions successives de ce module ont échoué :
  *
- * Usage:
- *   import { trackLandingView, trackTestStart } from './analytics.js';
- *   trackLandingView({ lang: 'fr', hasProfile: false });
+ *   1. Un gate `politicalData` : il n'empêchait pas l'envoi de l'opinion vers l'identifiant
+ *      de terminal, il l'AUTORISAIT dès que l'utilisateur avait accepté l'analyse de ses
+ *      opinions. La case « mesure d'audience » affirmait pourtant le contraire.
+ *   2. Une denylist (`stripOpinionPayload`) appliquée par une fonction `trackAudience()`
+ *      que 19 des 27 fonctions exportées n'utilisaient pas : `candidate_viewed`,
+ *      `historical_figure_viewed`, `compare_started`, `explanation_toggled`,
+ *      `academy_concept_clicked` et d'autres appelaient `track()` directement. Le filtre
+ *      était donc contourné pour la majorité des événements.
  *
- * Consent gating (RGPD, 2026-07-11):
- * A subset of events below carry political-opinion content (the answer value
- * itself, or an archetype/candidate derived from it) — GDPR Article 9 special
- * category data. Those are gated behind explicit consent via a module-level flag,
- * kept in sync by useStore.js (setConsent/withdrawConsent) rather than importing
- * useStore here directly, which would create a circular import (useStore already
- * imports several track* functions from this file). Events with no political
- * payload (page views, funnel counts, account lifecycle) are never gated — they
- * carry no opinion data, matching the "legitimate interest" analytics category.
+ * Modèle actuel :
+ *   • `emit()` est le SEUL point d'envoi ; il est privé au module.
+ *   • Chaque événement déclare la liste EXHAUSTIVE de ses propriétés autorisées
+ *     (`EVENT_ALLOWLIST`). Toute clé non déclarée est supprimée.
+ *   • Un événement inconnu de l'allowlist est refusé.
+ *   • `tests/data/analytics-allowlist.test.mjs` échoue si `track()` est appelé ailleurs
+ *     que dans `emit()`, ou si une propriété interdite apparaît dans l'allowlist.
+ *
+ * CE QUI NE PEUT PAS TRANSITER, quelle que soit la fonction appelée : une valeur de réponse,
+ * un identifiant de question, un thème, un concept, un candidat, une figure, un archétype,
+ * un ordre de priorités, un identifiant d'élection, une donnée démographique.
+ *
+ * Les tendances politiques doivent être agrégées depuis les tables de COMPTE
+ * (`user_answers`, `user_profiles`), soumises au consentement `politicalData`, avec contrôle
+ * serveur et seuils de population — pas depuis un flux d'événements de terminal.
+ *
+ * Le consentement applicable ici est `measurement` : `track()` (anonymous.js) refuse d'émettre
+ * sans lui et ne dépose aucun identifiant.
  */
 
 import { track } from './anonymous.js';
 
-let _politicalDataConsent = false;
-
-/** Called by useStore.js whenever consent state changes (grant, withdraw, or on rehydration from localStorage). */
-export function setAnalyticsConsent(granted) {
-  _politicalDataConsent = granted === true;
-}
-
-function trackIfConsented(event_name, props) {
-  if (!_politicalDataConsent) return;
-  track(event_name, props);
-}
-
-// ── Acquisition ──────────────────────────────────────────────────────────────
+// ─── Allowlist ───────────────────────────────────────────────────────────────
 
 /**
- * Fired once per session when the landing page is first rendered.
- * @param {{ lang: string, hasProfile: boolean }} props
+ * Propriétés autorisées, par événement. Une clé absente d'ici est supprimée avant envoi.
+ *
+ * Règle de rédaction : n'ajouter une clé que si elle décrit un COMPORTEMENT (quel écran,
+ * quelle étape, combien, quelle langue, quel mode). Jamais un CONTENU d'opinion.
  */
+export const EVENT_ALLOWLIST = Object.freeze({
+  // Acquisition
+  landing_view:              ['lang', 'has_profile'],
+  // Entonnoir du questionnaire
+  test_start:                ['mode', 'lang'],
+  test_complete:             ['mode', 'answered_count', 'total_count', 'lang'],
+  improve_started:           [],
+  improve_completed:         ['answered_count'],
+  retake_started:            [],
+  // Question : index et mode seulement. Ni `question_id`, ni `theme`, ni `value` —
+  // savoir quelles questions une personne passe est déjà un signal d'opinion.
+  question_answered:         ['question_index', 'mode', 'is_improve'],
+  question_skipped:          ['question_index', 'mode'],
+  // Profil : jamais d'archétype ni de candidat, ce sont des opinions dérivées.
+  profile_viewed:            ['answered_count'],
+  profile_shared:            ['method'],
+  profile_downloaded:        [],
+  profile_exported:          [],
+  share_modal_opened:        [],
+  // Le simple fait d'avoir ordonné ses priorités est un signal de parcours ; l'ordre lui-même
+  // est un signal de valeurs et n'est donc pas transmis.
+  priority_ranking_completed: [],
+  // Compte
+  signup_completed:          ['method'],
+  login_completed:           ['method'],
+  // Démographie : seul le fait de compléter ou passer le formulaire est compté.
+  demographics_completed:    ['has_postal_code'],
+  demographics_skipped:      [],
+  // Pédagogie : position dans le parcours, jamais le concept ni la question concernée.
+  concept_opened:            ['question_index'],
+  beginner_opened:           ['section'],
+  explanation_toggled:       ['open'],
+  academy_definition_opened: ['position'],
+  academy_concept_clicked:   ['position'],
+  // Consultation de contenu : le compteur d'ouvertures, jamais QUI est consulté.
+  candidate_viewed:          [],
+  election_viewed:           [],
+  historical_figure_viewed:  ['section'],
+  compare_started:           [],
+});
+
+/**
+ * Clés formellement interdites, quelle que soit l'allowlist. Double sécurité : si quelqu'un
+ * ajoute par mégarde `theme` à un événement, l'émission est refusée en développement.
+ */
+export const OPINION_PAYLOAD_KEYS = Object.freeze([
+  'value', 'answer', 'answer_value',
+  'question_id', 'theme', 'themes',
+  'concept_key', 'concept_id',
+  'archetype_id', 'top_candidate_id', 'candidate_id', 'top_candidate_alignment',
+  'election_id', 'figure_id', 'id1', 'id2',
+  'priority_order', 'theme_weights', 'current_id',
+  'gender', 'age_range', 'commune_type', 'employment_status', 'education_level',
+]);
+
+const isDev = () => Boolean(import.meta?.env?.DEV);
+
+/**
+ * Filtre un payload selon l'allowlist de son événement.
+ * Exportée pour les tests ; l'application passe toujours par `emit()`.
+ * @returns {{props: Object, dropped: string[], forbidden: string[]}}
+ */
+export function filterEventProps(eventName, props = {}) {
+  const allowed = EVENT_ALLOWLIST[eventName];
+  if (!allowed) return { props: null, dropped: [], forbidden: [], unknownEvent: true };
+
+  const out = {};
+  const dropped = [];
+  const forbidden = [];
+
+  for (const [key, value] of Object.entries(props ?? {})) {
+    if (OPINION_PAYLOAD_KEYS.includes(key)) { forbidden.push(key); continue; }
+    if (!allowed.includes(key)) { dropped.push(key); continue; }
+    out[key] = value;
+  }
+  return { props: out, dropped, forbidden };
+}
+
+/**
+ * SEUL point d'émission du module. Privé : rien d'autre n'appelle `track()`.
+ */
+function emit(eventName, props = {}) {
+  const { props: clean, forbidden, unknownEvent } = filterEventProps(eventName, props);
+
+  if (unknownEvent) {
+    if (isDev()) {
+      console.error(`[Poliscop] Événement « ${eventName} » absent de EVENT_ALLOWLIST — non émis.`);
+    }
+    return;
+  }
+  if (forbidden.length > 0 && isDev()) {
+    console.error(
+      `[Poliscop] Clés d'opinion refusées sur « ${eventName} » : ${forbidden.join(', ')}. ` +
+      `Voir l'en-tête de src/lib/analytics.js.`,
+    );
+  }
+
+  track(eventName, Object.keys(clean).length > 0 ? clean : {});
+}
+
+// ─── Acquisition ─────────────────────────────────────────────────────────────
+
 export function trackLandingView({ lang, hasProfile } = {}) {
-  track('landing_view', {
-    lang: lang ?? null,
-    has_profile: hasProfile ?? false,
-  });
+  emit('landing_view', { lang: lang ?? null, has_profile: hasProfile ?? false });
 }
 
-// ── Quiz funnel ───────────────────────────────────────────────────────────────
+// ─── Entonnoir du questionnaire ──────────────────────────────────────────────
 
-/**
- * User clicks a CTA that starts a quiz (mode chosen on SelectTest screen).
- * @param {{ mode: string, lang: string }} props
- */
 export function trackTestStart({ mode, lang } = {}) {
-  track('test_start', {
+  emit('test_start', { mode: mode ?? null, lang: lang ?? null });
+}
+
+export function trackTestComplete({ mode, answeredCount, totalCount, lang } = {}) {
+  emit('test_complete', {
     mode: mode ?? null,
+    answered_count: answeredCount ?? null,
+    total_count: totalCount ?? null,
     lang: lang ?? null,
   });
 }
 
-/**
- * User completes the last question in their quiz session.
- * @param {{ mode: string, answeredCount: number, totalCount: number, lang: string }} props
- */
-export function trackTestComplete({ mode, answeredCount, totalCount, lang } = {}) {
-  track('test_complete', {
-    mode:           mode ?? null,
-    answered_count: answeredCount ?? null,
-    total_count:    totalCount ?? null,
-    lang:           lang ?? null,
-  });
-}
+export function trackImproveStarted() { emit('improve_started'); }
 
-/**
- * User starts improve mode (one-question-at-a-time refinement from Profile).
- */
-export function trackImproveStarted() {
-  track('improve_started');
-}
-
-/**
- * User exits improve mode back to their profile.
- * @param {{ answeredCount: number }} props
- */
 export function trackImproveCompleted({ answeredCount } = {}) {
-  track('improve_completed', {
-    answered_count: answeredCount ?? null,
+  emit('improve_completed', { answered_count: answeredCount ?? null });
+}
+
+export function trackRetakeStarted() { emit('retake_started'); }
+
+/**
+ * Une question reçoit une réponse. La VALEUR, l'identifiant de question et le thème sont
+ * volontairement absents : seule la progression est mesurée.
+ */
+export function trackQuestionAnswered({ questionIndex, mode, isImprove } = {}) {
+  emit('question_answered', {
+    question_index: questionIndex ?? null,
+    mode: mode ?? null,
+    is_improve: isImprove ?? false,
   });
 }
 
-// ── Profile ───────────────────────────────────────────────────────────────────
-
-/**
- * Profile page becomes visible to the user.
- * Consent-gated: archetype_id/top_candidate_id are derived political-opinion data.
- * @param {{ answeredCount: number, archetypeId: string|null, topCandidateId: string|null }} props
- */
-export function trackProfileViewed({ answeredCount, archetypeId, topCandidateId } = {}) {
-  trackIfConsented('profile_viewed', {
-    answered_count:   answeredCount  ?? null,
-    archetype_id:     archetypeId   ?? null,
-    top_candidate_id: topCandidateId ?? null,
-  });
+/** Une question est passée. Le thème n'est pas transmis : les sujets évités sont un signal. */
+export function trackQuestionSkipped({ questionIndex, mode } = {}) {
+  emit('question_skipped', { question_index: questionIndex ?? null, mode: mode ?? null });
 }
 
-/**
- * User shares their profile card (image or link).
- * Consent-gated: carries archetype/candidate alignment, derived political-opinion data.
- * @param {{ method: 'native'|'copy'|'download', archetypeId: string|null, topCandidateId: string|null, topCandidateAlignment: number|null }} props
- */
-export function trackProfileShared({ method, archetypeId, topCandidateId, topCandidateAlignment } = {}) {
-  trackIfConsented('profile_shared', {
-    method:                  method                ?? null,
-    archetype_id:            archetypeId           ?? null,
-    top_candidate_id:        topCandidateId        ?? null,
-    top_candidate_alignment: topCandidateAlignment ?? null,
-  });
+// ─── Profil ──────────────────────────────────────────────────────────────────
+
+export function trackProfileViewed({ answeredCount } = {}) {
+  emit('profile_viewed', { answered_count: answeredCount ?? null });
 }
 
-/**
- * User downloads their profile image (save to camera roll / file).
- * Consent-gated: carries archetype_id, derived political-opinion data.
- * @param {{ archetypeId: string|null }} props
- */
-export function trackProfileDownloaded({ archetypeId } = {}) {
-  trackIfConsented('profile_downloaded', {
-    archetype_id: archetypeId ?? null,
-  });
+export function trackProfileShared({ method } = {}) {
+  emit('profile_shared', { method: method ?? null });
 }
 
-/**
- * User exports their profile as a JSON file.
- */
-export function trackProfileExported() {
-  track('profile_exported');
-}
+export function trackProfileDownloaded() { emit('profile_downloaded'); }
+export function trackProfileExported()   { emit('profile_exported'); }
+export function trackShareModalOpened()  { emit('share_modal_opened'); }
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+/** L'ordre choisi n'est pas transmis — c'est en soi un signal de valeurs. */
+export function trackPriorityCompleted() { emit('priority_ranking_completed'); }
 
-/**
- * User successfully creates an account.
- * @param {{ method: 'email'|'google'|'github' }} props
- */
+// ─── Compte ──────────────────────────────────────────────────────────────────
+
 export function trackSignupCompleted({ method } = {}) {
-  track('signup_completed', { method: method ?? null });
+  emit('signup_completed', { method: method ?? null });
 }
 
-/**
- * User successfully logs in to an existing account.
- * @param {{ method: 'email'|'google'|'github' }} props
- */
 export function trackLoginCompleted({ method } = {}) {
-  track('login_completed', { method: method ?? null });
+  emit('login_completed', { method: method ?? null });
 }
 
-// ── Onboarding / demographics ─────────────────────────────────────────────────
+// ─── Démographie ─────────────────────────────────────────────────────────────
+//
+// Destinés à être croisés avec les opinions, ces champs rendraient le traitement sensible.
+// Seul le fait de compléter le formulaire est compté.
 
-/**
- * User submits the onboarding demographics form.
- * Consent-gated: same rationale as saveDemographics() in auth.jsx — this data
- * is explicitly meant to be cross-referenced with political opinions, so the
- * joined processing is sensitive even though no single field here is.
- * @param {{ gender, ageRange, communeType, employmentStatus, educationLevel, hasPostalCode }} props
- */
-export function trackDemographicsCompleted({
-  gender,
-  ageRange,
-  communeType,
-  employmentStatus,
-  educationLevel,
-  hasPostalCode,
-} = {}) {
-  trackIfConsented('demographics_completed', {
-    gender:           gender           ?? null,
-    age_range:        ageRange         ?? null,
-    commune_type:     communeType      ?? null,
-    employment_status: employmentStatus ?? null,
-    education_level:  educationLevel   ?? null,
-    has_postal_code:  hasPostalCode    ?? false,
-  });
+export function trackDemographicsCompleted({ hasPostalCode } = {}) {
+  emit('demographics_completed', { has_postal_code: hasPostalCode ?? false });
 }
 
-/**
- * User skips the onboarding demographics form.
- */
-export function trackDemographicsSkipped() {
-  track('demographics_skipped');
+export function trackDemographicsSkipped() { emit('demographics_skipped'); }
+
+// ─── Pédagogie ───────────────────────────────────────────────────────────────
+
+export function trackConceptOpened({ questionIndex } = {}) {
+  emit('concept_opened', { question_index: questionIndex ?? null });
 }
 
-// ── Content engagement ────────────────────────────────────────────────────────
-
-/**
- * User opens a concept explainer modal from the questionnaire.
- * @param {{ conceptKey: string, questionIndex: number }} props
- */
-export function trackConceptOpened({ conceptKey, questionIndex } = {}) {
-  track('concept_opened', {
-    concept_key:    conceptKey    ?? null,
-    question_index: questionIndex ?? null,
-  });
-}
-
-/**
- * User opens the Beginner / explainer page.
- * @param {{ section: string }} props
- */
 export function trackBeginnerOpened({ section } = {}) {
-  track('beginner_opened', { section: section ?? null });
+  emit('beginner_opened', { section: section ?? null });
 }
 
-/**
- * User opens or closes a question's "Comprendre cet enjeu" explanation panel.
- * No opinion payload (no answer value) — not consent-gated, same rubric as trackConceptOpened.
- * @param {{ questionId: string, theme: string, open: boolean }} props
- */
-export function trackExplanationToggled({ questionId, theme, open } = {}) {
-  track('explanation_toggled', {
-    question_id: questionId ?? null,
-    theme:       theme      ?? null,
-    open:        open       ?? false,
-  });
+export function trackExplanationToggled({ open } = {}) {
+  emit('explanation_toggled', { open: open ?? null });
 }
 
-/**
- * User clicks an inline Academy concept term inside a question's explanation,
- * revealing its short definition popover (first step — no navigation yet).
- * No opinion payload — not consent-gated, same rubric as trackConceptOpened.
- * @param {{ conceptId: string, questionId: string, theme: string, position: number|null }} props
- */
-export function trackAcademyDefinitionOpened({ conceptId, questionId, theme, position } = {}) {
-  track('academy_definition_opened', {
-    concept_id:  conceptId  ?? null,
-    question_id: questionId ?? null,
-    theme:       theme      ?? null,
-    position:    position   ?? null,
-  });
+export function trackAcademyDefinitionOpened({ position } = {}) {
+  emit('academy_definition_opened', { position: position ?? null });
 }
 
-/**
- * User clicks through to Poliscop Academy from a concept's definition popover
- * (second step). Opens in a new tab; carries only topic identifiers, never
- * the user's answer — not consent-gated, same rubric as trackConceptOpened.
- * @param {{ conceptId: string, questionId: string, theme: string, position: number|null }} props
- */
-export function trackAcademyConceptClicked({ conceptId, questionId, theme, position } = {}) {
-  track('academy_concept_clicked', {
-    concept_id:  conceptId  ?? null,
-    question_id: questionId ?? null,
-    theme:       theme      ?? null,
-    position:    position   ?? null,
-  });
+export function trackAcademyConceptClicked({ position } = {}) {
+  emit('academy_concept_clicked', { position: position ?? null });
 }
 
-// ── Quiz micro-events ─────────────────────────────────────────────────────────
+// ─── Consultation de contenu ─────────────────────────────────────────────────
+//
+// On compte les ouvertures, pas QUI est consulté : « a ouvert la fiche Le Pen » est une
+// donnée d'opinion dès qu'elle est attachée à un identifiant de terminal persistant.
 
-/**
- * User answers a question in the questionnaire.
- * Fires on FIRST answer to each question (not on re-selection).
- * Consent-gated: `value` is the political answer itself (GDPR Article 9 data),
- * not just behavioral metadata — do not remove this gate to "simplify" the funnel.
- * @param {{ questionId: string, theme: string, value: 1|2|3|4|5, questionIndex: number, mode: string|null, isImprove: boolean }} props
- */
-export function trackQuestionAnswered({ questionId, theme, value, questionIndex, mode, isImprove } = {}) {
-  trackIfConsented('question_answered', {
-    question_id:    questionId    ?? null,
-    theme:          theme         ?? null,
-    value:          value         ?? null,
-    question_index: questionIndex ?? null,
-    mode:           mode          ?? null,
-    is_improve:     isImprove     ?? false,
-  });
-}
+export function trackCandidateViewed()        { emit('candidate_viewed'); }
+export function trackElectionViewed()         { emit('election_viewed'); }
+export function trackCompareStarted()         { emit('compare_started'); }
 
-/**
- * User skips a question without answering.
- * Consent-gated: theme is a (weak) signal of which political topics a person avoids.
- * @param {{ questionId: string, theme: string, questionIndex: number, mode: string|null }} props
- */
-export function trackQuestionSkipped({ questionId, theme, questionIndex, mode } = {}) {
-  trackIfConsented('question_skipped', {
-    question_id:    questionId    ?? null,
-    theme:          theme         ?? null,
-    question_index: questionIndex ?? null,
-    mode:           mode          ?? null,
-  });
-}
-
-// ── Retention ─────────────────────────────────────────────────────────────────
-
-/**
- * User resets their profile and starts over.
- * Product stickiness / retake signal.
- */
-export function trackRetakeStarted() {
-  track('retake_started');
-}
-
-// ── Share funnel ──────────────────────────────────────────────────────────────
-
-/**
- * User opens the share modal (intent, before taking any action).
- * Consent-gated: carries archetype_id, derived political-opinion data.
- * @param {{ archetypeId: string|null }} props
- */
-export function trackShareModalOpened({ archetypeId } = {}) {
-  trackIfConsented('share_modal_opened', {
-    archetype_id: archetypeId ?? null,
-  });
-}
-
-// ── Feature adoption ──────────────────────────────────────────────────────────
-
-/**
- * User confirms their priority ranking on the PriorityRanking page.
- * Consent-gated: which themes someone weighs most is itself a values signal.
- * @param {{ priorityOrder: string[] }} props
- */
-export function trackPriorityCompleted({ priorityOrder } = {}) {
-  trackIfConsented('priority_ranking_completed', {
-    priority_order: priorityOrder ?? null,
-  });
-}
-
-// ── Content engagement ────────────────────────────────────────────────────────
-
-/**
- * User views a candidate profile page.
- * @param {{ candidateId: string }} props
- */
-export function trackCandidateViewed({ candidateId } = {}) {
-  track('candidate_viewed', {
-    candidate_id: candidateId ?? null,
-  });
-}
-
-/**
- * User views an election detail page.
- * @param {{ electionId: string }} props
- */
-export function trackElectionViewed({ electionId } = {}) {
-  track('election_viewed', {
-    election_id: electionId ?? null,
-  });
-}
-
-/**
- * User views a historical or French figure profile.
- * @param {{ figureId: string, section: 'historical'|'french' }} props
- */
-export function trackFigureViewed({ figureId, section } = {}) {
-  track('historical_figure_viewed', {
-    figure_id: figureId ?? null,
-    section:   section  ?? null,
-  });
-}
-
-/**
- * User initiates a candidate comparison.
- * @param {{ id1: string, id2: string }} props
- */
-export function trackCompareStarted({ id1, id2 } = {}) {
-  track('compare_started', {
-    candidate_id_1: id1 ?? null,
-    candidate_id_2: id2 ?? null,
-  });
+export function trackFigureViewed({ section } = {}) {
+  emit('historical_figure_viewed', { section: section ?? null });
 }

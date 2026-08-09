@@ -3,6 +3,7 @@
 // per theme; legacy and retired items remain in the JSON for traceability.
 
 import rawQuestions from './questions_final.json';
+import { createRng, seededShuffle } from '../engine/rng.js';
 
 // ─── Themes ──────────────────────────────────────────────────────────────────
 
@@ -202,13 +203,83 @@ export function getQuiz(isFastMode) {
   return isFastMode ? coreQuestions : questions;
 }
 
+const QUESTIONS_BY_ID = new Map(questions.map(q => [q.id, q]));
+
+/**
+ * Reconstruit une file à partir d'identifiants persistés.
+ *
+ * Sert à reprendre un questionnaire après rechargement : on ne persiste que les IDs
+ * (la file complète pèserait plusieurs dizaines de Ko dans localStorage et figerait le
+ * texte des questions à leur version du jour de la passation).
+ *
+ * @returns {{queue: Array, missing: string[]}} `missing` liste les IDs absents de la banque
+ *   courante — leur présence signifie que le questionnaire a changé depuis la passation et
+ *   que la file ne peut pas être reprise fidèlement.
+ */
+export function getQuestionsByIds(ids) {
+  const queue = [];
+  const missing = [];
+  for (const id of ids ?? []) {
+    const q = QUESTIONS_BY_ID.get(id);
+    if (q) queue.push(q);
+    else missing.push(id);
+  }
+  return { queue, missing };
+}
+
+// ─── Modes de questionnaire ──────────────────────────────────────────────────
+
+/**
+ * Modes canoniques et nombre de questions servies. Source unique : le nombre affiché à
+ * l'utilisateur et le nombre réellement tiré doivent venir d'ici.
+ *
+ * Les alias historiques (`quick`, `medium`, `full`) restent acceptés en ENTRÉE — d'anciens
+ * `testMode` persistés dans des navigateurs les contiennent — mais ne doivent JAMAIS être
+ * comparés en dur dans l'interface : `testMode === 'quick'` ne matchait plus rien depuis le
+ * passage à 16/32/64, et le bandeau qui en dépendait ne s'affichait plus pour personne.
+ */
+export const TEST_MODES = Object.freeze({
+  DISCOVERY: 'discovery',
+  STANDARD:  'standard',
+  DEEP:      'deep',
+});
+
+export const MODE_QUESTION_COUNT = Object.freeze({
+  [TEST_MODES.DISCOVERY]: 16,
+  [TEST_MODES.STANDARD]:  32,
+  [TEST_MODES.DEEP]:      64,
+});
+
+const MODE_ALIASES = Object.freeze({
+  quick: TEST_MODES.DISCOVERY, medium: TEST_MODES.STANDARD, full: TEST_MODES.DEEP,
+});
+
+/** Normalise un mode, alias hérités compris. Retourne `null` si inconnu. */
+export function canonicalMode(mode) {
+  if (!mode) return null;
+  const m = MODE_ALIASES[mode] ?? mode;
+  return Object.values(TEST_MODES).includes(m) ? m : null;
+}
+
 // ─── Question queue for quiz sessions ────────────────────────────────────────
 
-export function getQuestionQueue(mode, priorityOrder) {
-  // Backward compat: map old mode names to new ones
-  // Old: quick(8q) → discovery(16q), medium(24q) → standard(32q), full(40q) → deep(64q)
-  const modeAlias = { quick: 'discovery', medium: 'standard', full: 'deep' };
-  const m = modeAlias[mode] ?? mode;
+/**
+ * Construit la file de questions d'une passation.
+ *
+ * @param {string} mode           'discovery' | 'standard' | 'deep' (alias hérités acceptés)
+ * @param {Array}  priorityOrder  ordre d'alternance des thèmes
+ * @param {string} [seed]         graine de tirage. OBLIGATOIRE en pratique : sans elle le
+ *                                tirage n'est pas reproductible et la file de l'utilisateur
+ *                                ne peut plus être reconstituée (reprise, partage, audit).
+ *                                Un repli `'legacy-unseeded'` est conservé pour les appels
+ *                                anciens, mais il produit une file figée, pas aléatoire.
+ *
+ * Le tirage n'est plus fait avec `Math.random()` : voir src/engine/rng.js.
+ * Version de l'algorithme : QUEUE_ALGORITHM_VERSION dans src/engine/versions.js.
+ */
+export function getQuestionQueue(mode, priorityOrder, seed = 'legacy-unseeded') {
+  // Alias hérités normalisés en un seul endroit : voir canonicalMode().
+  const m = canonicalMode(mode) ?? TEST_MODES.DEEP;
 
   // All modes draw from the full question pool; CORE questions are always served first.
   const source = questions;
@@ -218,15 +289,6 @@ export function getQuestionQueue(mode, priorityOrder) {
   THEMES_ORDER.forEach(t => { byTheme[t] = []; });
   source.forEach(q => { byTheme[q.theme]?.push(q); });
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   // Per-mode caps: discovery=2/theme (16 total), standard=4/theme (32 total), deep=8/theme (64 total)
   // Matches the question counts advertised on the SelectTest screen.
   const capPerTheme = { discovery: 2, standard: 4, deep: 8 };
@@ -234,10 +296,19 @@ export function getQuestionQueue(mode, priorityOrder) {
 
   THEMES_ORDER.forEach(t => {
     let pool = byTheme[t];
-    // All modes: CORE questions first (highest signal), then shuffled remainder
-    const core = pool.filter(q => q.status === 'CORE');
-    const rest = shuffle(pool.filter(q => q.status !== 'CORE'));
-    pool = [...core, ...rest].slice(0, cap);
+    // CORE d'abord (plus fort signal), puis PRIMARY, puis SECONDARY — chaque strate mélangée
+    // séparément avec un RNG dérivé de (graine, thème) pour que l'ordre des thèmes n'influe pas.
+    //
+    // L'audit externe supposait que la quasi-absence de PRIMARY en mode Approfondi venait d'un
+    // ordre de tirage accidentel. Vérification faite : c'est une propriété de la banque, pas un
+    // bug — elle ne contient que 3 questions PRIMARY (ECO_4, ECO_28, DEM_26) sur 128 actives,
+    // contre 16 CORE et 109 SECONDARY. Le tri par strate ne « corrige » donc rien ici ; il rend
+    // la règle explicite et stable si la répartition des statuts évolue.
+    const rng = createRng(`${seed}:${t}`);
+    const core      = pool.filter(q => q.status === 'CORE');
+    const primary   = seededShuffle(pool.filter(q => q.status === 'PRIMARY'), rng);
+    const secondary = seededShuffle(pool.filter(q => q.status === 'SECONDARY'), rng);
+    pool = [...core, ...primary, ...secondary].slice(0, cap);
     byTheme[t] = pool;
   });
 

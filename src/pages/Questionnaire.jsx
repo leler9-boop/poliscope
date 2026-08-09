@@ -10,6 +10,7 @@ import { questionHints } from '../data/questionHints.js';
 import { QUESTION_EXPLANATIONS } from '../data/questionExplanations.js';
 import { QUESTION_CONCEPTS, THEME_INTROS } from '../data/conceptMap.js';
 import { THEME_COLORS } from '../data/questions.js';
+import { NO_OPINION, isScorable } from '../engine/scorer.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -24,7 +25,10 @@ export default function Questionnaire() {
   const improveMode          = useStore(s => s.improveMode);
   const stopImproveMode      = useStore(s => s.stopImproveMode);
   const nextImproveQuestion  = useStore(s => s.nextImproveQuestion);
-  const totalAnswered        = Object.keys(answers).length;
+  const resumeQuestionnaire  = useStore(s => s.resumeQuestionnaire);
+  const discardQueue         = useStore(s => s.discardQueue);
+  // Ne compte que les réponses exploitables : un « sans opinion » ne doit pas gonfler la progression affichée.
+  const totalAnswered        = Object.keys(answers).filter(id => isScorable(answers[id])).length;
   const t = createTranslator(language);
 
   const [introSeen, setIntroSeen] = useState(() => {
@@ -48,6 +52,30 @@ export default function Questionnaire() {
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
     setIntroSeen(true);
   };
+
+  // ── Reprise après rechargement ──
+  // `onRehydrateStorage` tente déjà la reprise ; cet effet couvre l'accès direct à /quiz
+  // avant que la réhydratation n'ait eu lieu, et fournit le motif à afficher en cas d'échec.
+  const [resumeState, setResumeState] = useState(null);
+  useEffect(() => {
+    if (questionsQueue && questionsQueue.length > 0) { setResumeState({ resumed: true }); return; }
+    setResumeState(resumeQuestionnaire());
+  }, [questionsQueue, resumeQuestionnaire]);
+
+  // ⚠ TOUS les hooks doivent être appelés AVANT le `return` conditionnel plus bas.
+  //
+  // `useEffect(cleanup)` et `useStore(s => s.testMode)` vivaient APRÈS ce return : quand la
+  // file était vide au premier rendu (accès direct à /quiz, avant réhydratation), React
+  // enregistrait moins de hooks, puis un de plus au rendu suivant. L'indexation des hooks se
+  // décalait et l'abonnement au store se figeait : `question` restait bloqué sur la première
+  // question de la file. Symptôme observé en navigateur — à l'index 4, répondre écrivait la
+  // réponse sur `ECO_8`, la question 1.
+  const testMode = useStore(s => s.testMode);
+
+  // Purge le minuteur d'auto-avance quand la question change (navigation manuelle).
+  useEffect(() => {
+    return () => clearTimeout(autoAdvanceTimer.current);
+  }, [currentIndex]);
 
   // Detect theme change and show chapter transition banner.
   // V4: removed 3-second auto-timeout. Banner now stays visible until:
@@ -76,14 +104,47 @@ export default function Questionnaire() {
   }, [currentQuestion?.id]);
 
   if (!questionsQueue || questionsQueue.length === 0) {
+    // La reprise elle-même est tentée dans l'effet ci-dessus (jamais pendant le rendu :
+    // muter le store depuis le corps d'un composant provoquerait une boucle de rendu).
+    // Tant qu'elle n'a pas répondu, on n'affiche rien plutôt qu'un message erroné.
+    if (!resumeState) return null;
+    if (resumeState.resumed) return null;
+
+    const REASONS = {
+      fr: {
+        no_queue: 'Aucun questionnaire en cours sur cet appareil.',
+        questionnaire_version_changed: 'Le questionnaire a été mis à jour depuis votre dernière session : la file précédente ne peut pas être reprise à l’identique. Vos réponses déjà données sont conservées.',
+        queue_algorithm_changed: 'La façon de composer le questionnaire a changé depuis votre dernière session : la file précédente ne peut pas être reprise à l’identique. Vos réponses déjà données sont conservées.',
+        questions_missing: 'Certaines questions de votre session n’existent plus dans le questionnaire actuel. Vos réponses déjà données sont conservées.',
+      },
+      en: {
+        no_queue: 'No questionnaire in progress on this device.',
+        questionnaire_version_changed: 'The questionnaire has been updated since your last session, so the previous queue cannot be resumed exactly. Your existing answers are kept.',
+        queue_algorithm_changed: 'The way the questionnaire is assembled has changed since your last session, so the previous queue cannot be resumed exactly. Your existing answers are kept.',
+        questions_missing: 'Some questions from your session no longer exist in the current questionnaire. Your existing answers are kept.',
+      },
+    };
+    const dict = REASONS[language] ?? REASONS.en;
+
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <p className="text-slate-500 mb-4">
-          {language === 'fr' ? 'Aucune question disponible.' : 'No questions available.'}
+        <p className="text-slate-600 mb-6 leading-relaxed">
+          {dict[resumeState.reason] ?? dict.no_queue}
         </p>
-        <button onClick={() => navigate('landing')} className="text-blue-600 font-medium hover:text-blue-700">
-          ← {t('back')}
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+          <button
+            onClick={() => { discardQueue(); navigate('selectTest'); }}
+            className="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors"
+          >
+            {language === 'fr' ? 'Recommencer un questionnaire' : 'Start a new questionnaire'}
+          </button>
+          <button
+            onClick={() => navigate('landing')}
+            className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors"
+          >
+            ← {t('back')}
+          </button>
+        </div>
       </div>
     );
   }
@@ -98,13 +159,6 @@ export default function Questionnaire() {
   const progressPct = total > 0
     ? Math.round(((currentIndex + (hasAnswer ? 1 : 0)) / total) * 100)
     : 0;
-
-  // Clear auto-advance timer when question changes (user manually navigated)
-  useEffect(() => {
-    return () => clearTimeout(autoAdvanceTimer.current);
-  }, [currentIndex]);
-
-  const testMode = useStore(s => s.testMode);
 
   const handleAnswer = (val) => {
     if (!question) return;
@@ -148,6 +202,15 @@ export default function Questionnaire() {
     clearTimeout(autoAdvanceTimer.current);
     directionRef.current = 1;
     if (question) {
+      // « Je ne sais pas » est désormais ENREGISTRÉ comme tel (NO_OPINION), au lieu de
+      // laisser simplement la question sans réponse. Deux raisons :
+      //   • la couverture peut distinguer « posée, sans opinion » de « jamais posée » ;
+      //   • la question n'est pas resservie indéfiniment en mode approfondissement.
+      // Cette valeur n'entre dans AUCUNE moyenne (voir isScorable dans engine/scorer.js) :
+      // elle n'est pas convertie en position centrale, contrairement au bouton « 3 ».
+      // Un seul état d'inconnu est conservé — « passer » et « sans opinion » ne sont pas
+      // distingués, par minimisation des données.
+      answerQuestion(question.id, NO_OPINION);
       trackQuestionSkipped({
         questionId:    question.id,
         theme:         question.theme,

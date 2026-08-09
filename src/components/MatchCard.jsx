@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
+// Import MANQUANT jusqu'au 2026-08-09 : `formatProximity()` était appelé sans être importé.
+// Vite ne détecte pas une référence libre au build ; React levait une ReferenceError au
+// rendu, et `/france` comme `/figures` — les deux pages qui utilisent MatchCard — étaient
+// entièrement blanches. Couvert par tests/ui/render.test.mjs.
+import { formatProximity, scoreToCssPercent } from '../engine/scoreDisplay.js';
 
 export default function MatchCard({
   target,
@@ -118,21 +123,31 @@ export default function MatchCard({
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.34, 1.2, 0.64, 1] }}
             >
-              {alignment}%
+              {formatProximity(alignment)}
             </motion.div>
-            <div className="text-xs text-slate-400 mt-0.5">{language === 'fr' ? 'compat.' : 'match'}</div>
+            {/* « compat. » abrégeait un terme banni : il promettait un jugement d'adéquation
+                que l'indice ne porte pas. Voir tests/data/ui-terminology.test.mjs. */}
+            <div className="text-xs text-slate-400 mt-0.5">{language === 'fr' ? 'proximité' : 'proximity'}</div>
           </div>
         </div>
 
         {/* Alignment bar */}
         <div className="mt-4">
           <div className={`rounded-full overflow-hidden ${isTopMatch ? 'h-1.5' : 'h-1'} bg-slate-100`}>
-            <motion.div
+            {/* Largeur DÉCLARATIVE, jamais produite par une animation.
+                Elle était auparavant définie par `initial={{width:'0%'}}` +
+                `animate={{width:`${alignment}%`}}` : sans frame d'animation (onglet en
+                arrière-plan, `prefers-reduced-motion`, capture avant le premier rAF), la barre
+                restait à 0 px alors que le score affiché était correct. La géométrie ne doit
+                dépendre que de la donnée ; seule la transition est cosmétique.
+                `scoreToCssPercent()` borne la valeur et garantit une unité CSS valide. */}
+            <div
               className="h-full rounded-full"
-              style={{ backgroundColor: barColor }}
-              initial={{ width: '0%' }}
-              animate={{ width: `${alignment}%` }}
-              transition={{ duration: 0.85, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{
+                backgroundColor: barColor,
+                width: scoreToCssPercent(alignment),
+                transition: 'width 0.85s cubic-bezier(0.25,0.46,0.45,0.94)',
+              }}
             />
           </div>
           <p className="text-xs text-slate-400 mt-1.5">{label}</p>

@@ -31,10 +31,10 @@ export const translations = {
     test_medium: `Standard`,
     test_full: `In-depth`,
     test_quick_desc: `16 questions · ~6 minutes · First estimation`,
-    test_medium_desc: `32 questions · ~12 minutes · Robust profile`,
-    test_full_desc: `64 questions · ~25 minutes · Maximum precision`,
+    test_medium_desc: `32 questions · ~12 minutes · Good coverage`,
+    test_full_desc: `64 questions · ~25 minutes · Full coverage`,
     test_start: `Start test`,
-    test_note: `Longer tests produce more accurate profiles. You can always add questions later.`,
+    test_note: `Longer tests cover more topics. You can always add questions later.`,
 
     // ── Priority ranking ──
     priorities_title: `Which topics matter most to you?`,
@@ -202,10 +202,10 @@ export const translations = {
     test_medium: `Standard`,
     test_full: `Approfondi`,
     test_quick_desc: `16 questions · ~6 minutes · Première estimation`,
-    test_medium_desc: `32 questions · ~12 minutes · Profil robuste`,
-    test_full_desc: `64 questions · ~25 minutes · Précision maximale`,
+    test_medium_desc: `32 questions · ~12 minutes · Bonne couverture`,
+    test_full_desc: `64 questions · ~25 minutes · Couverture complète`,
     test_start: `Commencer le test`,
-    test_note: `Les tests plus longs produisent des profils plus précis. Vous pouvez toujours ajouter des questions plus tard.`,
+    test_note: `Les tests plus longs couvrent davantage de sujets. Vous pouvez toujours ajouter des questions plus tard.`,
 
     // ── Priority ranking ──
     priorities_title: `Quels sujets comptent le plus pour vous ?`,
@@ -250,14 +250,14 @@ export const translations = {
     profile_axis_international: `Axe international`,
 
     // ── Elections page ──
-    elections_title: `Compatibilité électorale`,
+    elections_title: `Proximité électorale`,
     elections_subtitle: `Découvrez comment votre profil s'aligne avec des candidats et des partis réels.`,
     elections_no_profile: `Construisez d'abord votre profil pour comparer avec les candidats.`,
     elections_select: `Sélectionner une élection`,
     elections_your_match: `Votre meilleure correspondance`,
-    elections_alignment: `Compatibilité`,
-    elections_disclaimer: `Les scores de compatibilité sont des comparaisons analytiques basées sur les positions politiques. Ils ne constituent pas des recommandations de vote.`,
-    elections_sorted: `Classé par compatibilité avec votre profil`,
+    elections_alignment: `Proximité`,
+    elections_disclaimer: `L'indice de proximité (sur 100) compare vos positions à celles des candidats. Ce n'est ni un pourcentage d'accord, ni une probabilité, ni une recommandation de vote.`,
+    elections_sorted: `Classé par proximité avec votre profil`,
 
     // ── Historical figures page ──
     figures_title: `Figures historiques`,
@@ -265,10 +265,10 @@ export const translations = {
     figures_no_profile: `Construisez d'abord votre profil pour comparer avec les figures historiques.`,
     figures_disclaimer: `⚠️ Ces profils sont des simplifications analytiques à des fins éducatives. Les figures historiques avaient des opinions qui ont évolué au fil du temps et existaient dans des contextes très différents. Cette fonctionnalité est uniquement destinée à l'exploration intellectuelle.`,
     figures_top_match: `Votre meilleure correspondance`,
-    figures_sorted: `Classé par compatibilité avec votre profil`,
+    figures_sorted: `Classé par proximité avec votre profil`,
 
     // ── Confidence bar ──
-    confidence_label: `Précision du profil`,
+    confidence_label: `Couverture du profil`,
     confidence_improve_cta: `Améliorer mon profil`,
 
     // ── Improve mode ──

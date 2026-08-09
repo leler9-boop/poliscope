@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CONCEPTS } from '../data/conceptMap.js';
+import { NO_OPINION } from '../engine/scorer.js';
 import ExplanationContent from './ExplanationContent.jsx';
 import { trackExplanationToggled } from '../lib/analytics.js';
 
@@ -28,6 +29,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
   const [reportText,   setReportText]   = useState('');
   const [reportSent,   setReportSent]   = useState(false);
 
+  const noOpinionSelected = currentAnswer === NO_OPINION;
   const labels      = LIKERT_LABELS[language]  ?? LIKERT_LABELS.en;
   const shortLabels = SHORT_LABELS[language]    ?? SHORT_LABELS.en;
   const reportOptions = REPORT_OPTIONS[language] ?? REPORT_OPTIONS.en;
@@ -213,25 +215,35 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
             ))}
           </div>
 
+          {/* « Sans opinion » est un état à part entière, distinct du bouton « 3 » (position
+              centrale assumée). Il est enregistré, affiché comme sélectionné, et n'entre dans
+              aucune moyenne — il réduit seulement la couverture du thème. */}
           {onSkip && (
             <button
               type="button"
               onClick={onSkip}
-              className="mt-5 w-full min-h-[52px] px-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+              aria-pressed={noOpinionSelected}
+              className={[
+                'mt-5 w-full min-h-[52px] px-4 rounded-xl border-2 font-semibold text-sm transition-colors flex items-center justify-center gap-2',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-1',
+                noOpinionSelected
+                  ? 'border-slate-500 bg-slate-600 text-white'
+                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700',
+              ].join(' ')}
             >
               <span aria-hidden="true">?</span>
               <span>
                 {language === 'fr'
-                  ? 'Je ne sais pas · Passer cette question'
-                  : "I don't know · Skip this question"}
+                  ? 'Je ne sais pas · Sans opinion'
+                  : "I don't know · No opinion"}
               </span>
             </button>
           )}
           {onSkip && (
             <p className="mt-2 text-[11px] text-center text-slate-400 leading-relaxed">
               {language === 'fr'
-                ? 'Cette question ne comptera pas dans votre profil.'
-                : 'This question will not count toward your profile.'}
+                ? 'Enregistré comme « sans opinion » : cette question ne comptera pas dans vos scores, contrairement à la réponse neutre (3).'
+                : 'Recorded as “no opinion”: this question will not count toward your scores, unlike the neutral answer (3).'}
             </p>
           )}
         </div>

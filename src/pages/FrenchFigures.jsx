@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
+import { formatProximity, scoreToCssPercent } from '../engine/scoreDisplay.js';
 import { createTranslator } from '../i18n/translations.js';
 import { rankByAlignment, generateWhyMatch, alignmentBarColor } from '../engine/matcher.js';
 import { frenchFigures } from '../data/frenchFigures.js';
@@ -443,7 +444,7 @@ export default function FrenchFigures() {
             className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-5"
             {...fadeUp(0.1)}
           >
-            {language === 'fr' ? `Classé par compatibilité` : `Sorted by alignment`} — {displayFigures.length} {language === 'fr' ? `figures` : `figures`}
+            {language === 'fr' ? `Classé par proximité` : `Sorted by alignment`} — {displayFigures.length} {language === 'fr' ? `figures` : `figures`}
           </motion.p>
 
           {/* Top match */}
@@ -574,13 +575,13 @@ export default function FrenchFigures() {
                         className="h-full rounded-full"
                         style={{ backgroundColor: barColor }}
                         initial={{ width: '0%' }}
-                        whileInView={{ width: `${figure.alignment}%` }}
+                        whileInView={{ width: scoreToCssPercent(figure.alignment) }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.7, delay: idx * 0.02, ease: [0.25, 0.46, 0.45, 0.94] }}
                       />
                     </div>
                     <span className="text-xs font-bold w-9 text-right tabular-nums" style={{ color: barColor }}>
-                      {figure.alignment}%
+                      {formatProximity(figure.alignment)}
                     </span>
                   </div>
                 );

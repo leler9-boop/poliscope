@@ -17,7 +17,8 @@ import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'dist', 'notebooklm-py', '.claude']);
+// « Poliscop » (racine) = dossier de travail personnel de l'utilisateur, non suivi par git.
+const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'dist', 'notebooklm-py', '.claude', 'Poliscop']);
 const EXTS = new Set(['.js', '.jsx', '.mjs', '.md', '.json', '.html', '.sql', '.css', '.txt', '.svg', '.webmanifest', '.example']);
 const SKIP_FILES = new Set(['package-lock.json', 'check-brand.mjs']);
 

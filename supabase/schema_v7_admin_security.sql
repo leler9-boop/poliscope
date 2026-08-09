@@ -1,0 +1,21 @@
+-- ============================================================================
+-- ⚠ CE FICHIER EST OBSOLÈTE — NE PAS L'EXÉCUTER.
+--
+-- Version d'origine (2026-08-09) : elle révoquait les droits sur les fonctions `founder_*`
+-- puis VÉRIFIAIT que chacune contenait un appel à `is_founder_admin()` — sans jamais
+-- l'ajouter. Aucune fonction ne le contenant, la vérification levait systématiquement une
+-- exception et la transaction entière était annulée. Elle ne corrigeait donc rien, tout en
+-- donnant l'impression d'un durcissement livré.
+--
+-- Remplacée le même jour par une vraie migration, exécutable et testée :
+--
+--   supabase/migrations/20260809120000_admin_authorization.sql
+--   supabase/migrations/20260809120000_admin_authorization_rollback.sql
+--
+-- Testée sur un cluster Postgres jetable — 11 assertions (anon, connecté non-admin,
+-- analyste, fondateur, transmission des paramètres, idempotence, rollback) :
+--
+--   ./supabase/tests/run-migration-tests.sh
+--
+-- Voir docs/security/production-audit-runbook.md pour la procédure d'application.
+-- ============================================================================

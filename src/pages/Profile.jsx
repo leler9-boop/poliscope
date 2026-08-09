@@ -3,9 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
-import { getConfidenceMeta, AXES_LABELS } from '../engine/scorer.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions } from '../data/questions.js';
-import { rankByAlignment, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
+import { getConfidenceMeta, AXES_LABELS, recalculateAxes, isScorable } from '../engine/scorer.js';
+import { formatProximity, coverageLabel, coverageTitle, scoreToCssPercent } from '../engine/scoreDisplay.js';
+import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_QUESTION_COUNT, canonicalMode } from '../data/questions.js';
+// `rankLegacyFigures` ne sert plus qu'aux COURANTS idéologiques et aux figures : des
+// profils de référence documentés, pas des candidats à une élection en cours. Le classement
+// des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
+import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
+import { rankCandidates } from '../engine/candidateMatch.js';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
 const THEME_AXES = {
@@ -229,14 +234,20 @@ export default function Profile() {
     );
   }
 
-  const { themes: rawThemes = {}, axes = {}, confidence = 'very_low', confidenceScore = 0, answeredCount = 0, totalQuestions = 162 } = profile ?? {};
+  const { themes: rawThemes = {}, confidence = 'very_low', confidenceScore = 0, answeredCount = 0, totalQuestions = 162 } = profile ?? {};
   const themes = useMemo(
     () => isSharedView ? parsedSharedScores : buildAdjustedThemes(rawThemes, profileAdjustments),
     [isSharedView, parsedSharedScores, rawThemes, profileAdjustments]
   );
+  // Les axes sont RECALCULÉS depuis les thèmes effectivement affichés.
+  // Avant ce correctif, ils étaient lus tels quels dans `profile.axes` : après un ajustement
+  // manuel ou en vue partagée, les 4 axes restaient ceux du profil d'origine alors que les
+  // thèmes et le matching, eux, tenaient compte de l'ajustement — trois chiffres incohérents
+  // sur la même page. Une seule fonction pure fait foi (src/engine/scorer.js).
+  const axes = useMemo(() => recalculateAxes(themes) ?? {}, [themes]);
   const adjustedProfile = useMemo(
-    () => isSharedView ? { themes } : { ...profile, themes },
-    [isSharedView, profile, themes]
+    () => isSharedView ? { themes, axes } : { ...profile, themes, axes },
+    [isSharedView, profile, themes, axes]
   );
 
   // Shareable URL encoding current profile scores
@@ -247,7 +258,7 @@ export default function Profile() {
   }, [themes]);
   const confMeta = getConfidenceMeta(confidence, language);
   const rankedCurrents = useMemo(
-    () => rankByAlignment(adjustedProfile, ideologicalCurrents, priorityOrder, themeWeights),
+    () => rankLegacyFigures(adjustedProfile, ideologicalCurrents, priorityOrder, themeWeights),
     [adjustedProfile, priorityOrder, themeWeights]
   );
   const topArchetype = useMemo(
@@ -262,10 +273,26 @@ export default function Profile() {
     return election.candidates;
   }, []);
 
-  const rankedCandidates = useMemo(() => {
-    if (!themes || fr2027Candidates.length === 0) return [];
-    return rankByAlignment({ themes }, fr2027Candidates, priorityOrder ?? [], themeWeights ?? null);
-  }, [themes, fr2027Candidates, priorityOrder, themeWeights]);
+  // Classement 2027 — passe par le moteur SOURCÉ.
+  //
+  // Avant le 2026-08-09, cette page appelait `rankByAlignment()`, qui compare le profil de
+  // l'utilisateur aux huit nombres `legacy-manual-v1` de `candidate.profile`. Elle affichait
+  // donc « Meilleur match 2027 — … — 66/100 » alors qu'aucune position n'avait été sourcée
+  // ni relue. `rankCandidates()` n'accepte que des positions approuvées : tant qu'il n'y en a
+  // aucune, `results` est vide et `unscored` porte le motif à afficher.
+  const { results: rankedCandidates, unscored: unscoredCandidates } = useMemo(() => {
+    if (!themes || fr2027Candidates.length === 0) return { results: [], unscored: [] };
+    const r = rankCandidates(
+      { userThemes: themes, priorityOrder: priorityOrder ?? [], themeWeights: themeWeights ?? null, language },
+      fr2027Candidates,
+    );
+    // `rankCandidates` renvoie { candidate, match } ; les surfaces existantes attendent un
+    // objet candidat plat portant `alignment`.
+    return {
+      results: r.results.map(x => ({ ...x.candidate, alignment: x.match.score, match: x.match })),
+      unscored: r.unscored.map(x => ({ ...x.candidate, match: x.match })),
+    };
+  }, [themes, fr2027Candidates, priorityOrder, themeWeights, language]);
 
   // Lot 2 (proposal #3, robustness simulation): ~48% of profiles have their top-2 matches
   // within 1 point in a stress test — a single "best match" badge overstates precision
@@ -282,7 +309,8 @@ export default function Profile() {
   );
   const hasAdjustments = Object.keys(profileAdjustments).length > 0;
   const adjustmentCount = Object.values(profileAdjustments).filter(v => v !== 0).length;
-  const answeredTotal = Object.keys(answers).length;
+  // Ne compte que les réponses exploitables : un « sans opinion » ne doit pas gonfler la couverture affichée.
+  const answeredTotal = Object.keys(answers).filter(id => isScorable(answers[id])).length;
   const unansweredCount = totalQuestions - answeredTotal;
 
   // ── Analytics: fire profile_viewed once on mount ──────────────────────────
@@ -320,8 +348,30 @@ export default function Profile() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const ok = importProfile(ev.target.result);
-      if (!ok) alert(language === 'fr' ? 'Fichier invalide' : 'Invalid file');
+      const res = importProfile(ev.target.result);
+      if (res === true) return;
+      // Message explicite plutôt qu'un « Fichier invalide » générique : l'import valide
+      // désormais le format, les identifiants de questions et le domaine des réponses.
+      const reasons = {
+        fr: {
+          too_large: 'Fichier trop volumineux pour être un export Poliscop.',
+          malformed: 'Fichier illisible : ce n’est pas un export Poliscop valide.',
+          missing_format_version: 'Ce fichier ne déclare pas de version de format : ce n’est pas un export Poliscop.',
+          unsupported_format_version: 'Version de format non reconnue. Cet export provient d’une version incompatible de Poliscop.',
+          no_answers: 'Ce fichier ne contient aucune réponse.',
+          no_valid_answers: 'Aucune réponse exploitable : les identifiants de questions ne correspondent pas à la version actuelle du questionnaire.',
+        },
+        en: {
+          too_large: 'File too large to be a Poliscop export.',
+          malformed: 'Unreadable file: this is not a valid Poliscop export.',
+          missing_format_version: 'This file declares no format version: it is not a Poliscop export.',
+          unsupported_format_version: 'Unrecognised format version. This export comes from an incompatible version of Poliscop.',
+          no_answers: 'This file contains no answers.',
+          no_valid_answers: 'No usable answers: the question IDs do not match the current questionnaire version.',
+        },
+      };
+      const dict = reasons[language] ?? reasons.en;
+      alert(dict[res?.error] ?? dict.malformed);
     };
     reader.readAsText(file);
   };
@@ -385,7 +435,11 @@ export default function Profile() {
       </AnimatePresence>
 
       {/* ── Upgrade nudge — shown to quick-test users on first profile visit ── */}
-      {!isSharedView && testMode === 'quick' && answeredCount <= 10 && !profileRevealPending && (
+      {/* `testMode === 'quick'` ne matchait plus rien : les modes sont discovery/standard/deep
+          depuis le passage à 16/32/64. Le bandeau était donc invisible pour tout le monde.
+          On compare désormais au mode CANONIQUE, alias hérités inclus. */}
+      {!isSharedView && canonicalMode(testMode) === TEST_MODES.DISCOVERY
+        && answeredCount <= MODE_QUESTION_COUNT[TEST_MODES.DISCOVERY] && !profileRevealPending && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -393,8 +447,8 @@ export default function Profile() {
         >
           <p className="text-xs text-blue-800 font-medium">
             {language === 'fr'
-              ? `⚡ Test rapide terminé. Passe au test standard (24 questions) pour un profil plus fiable.`
-              : `⚡ Quick test done. Try the standard test (24 questions) for a more reliable profile.`}
+              ? `⚡ Test Découverte terminé. Passe au test Standard (${MODE_QUESTION_COUNT[TEST_MODES.STANDARD]} questions) pour un profil plus détaillé.`
+              : `⚡ Discovery test done. Try the Standard test (${MODE_QUESTION_COUNT[TEST_MODES.STANDARD]} questions) for a more detailed profile.`}
           </p>
           <button
             onClick={() => navigate('selectTest')}
@@ -686,12 +740,16 @@ export default function Profile() {
                     {language === 'fr' ? 'Profil partagé' : 'Shared profile'}
                   </span>
                 ) : confidenceScore >= 40 ? (
-                  /* Profil fiable → badge positif */
+                  /* Couverture élevée → énoncé FACTUEL, pas une promesse de fiabilité.
+                     Le badge disait « ✓ Profil fiable » : rien ne valide cette fiabilité,
+                     seule la quantité de réponses est connue. */
                   <span
                     className="text-xs font-semibold px-3 py-1 rounded-full"
                     style={{ backgroundColor: `${confBarColor}18`, color: confBarColor }}
                   >
-                    {language === 'fr' ? '✓ Profil fiable' : '✓ Reliable profile'}
+                    {language === 'fr'
+                      ? `${answeredTotal} réponses prises en compte`
+                      : `${answeredTotal} answers taken into account`}
                   </span>
                 ) : confidenceScore < 40 ? (
                   /* Profil en cours → mini barre de progression motivante */
@@ -766,6 +824,23 @@ export default function Profile() {
                 </motion.div>
               )}
 
+              {/* ── Aucun candidat comparable : on le DIT, on n'invente pas un classement ── */}
+              {rankedCandidates.length === 0 && unscoredCandidates.length > 0 && (
+                <motion.div
+                  className="mb-5 px-3.5 py-3 rounded-xl border border-amber-200 bg-amber-50"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.58 }}
+                >
+                  <p className="text-xs font-semibold text-amber-900 mb-1">
+                    {language === 'fr' ? 'Aucun classement 2027 disponible' : 'No 2027 ranking available'}
+                  </p>
+                  <p className="text-[11px] text-amber-800 leading-relaxed">
+                    {language === 'fr'
+                      ? <>Aucune position de candidat n’est encore sourcée et relue. Nous préférons ne rien afficher plutôt qu’un « meilleur match » calculé sur des estimations non vérifiées. {unscoredCandidates.length} candidats sont suivis — voir la page Élection.</>
+                      : <>No candidate position has been sourced and reviewed yet. We would rather show nothing than a “best match” computed from unverified estimates. {unscoredCandidates.length} candidates are tracked — see the Election page.</>}
+                  </p>
+                </motion.div>
+              )}
+
               {/* ── Top 2027 match — quick preview in hero ─────────────── */}
               {rankedCandidates?.[0] && (
                 <motion.div
@@ -791,7 +866,7 @@ export default function Profile() {
                       className="font-bold text-sm tabular-nums shrink-0"
                       style={{ color: alignmentBarColor(rankedCandidates[0].alignment) }}
                     >
-                      {rankedCandidates[0].alignment}%
+                      {formatProximity(rankedCandidates[0].alignment)}
                     </span>
                   </div>
                 </motion.div>
@@ -799,8 +874,8 @@ export default function Profile() {
               {closeSecondCandidate && (
                 <p className="text-[11px] text-slate-400 -mt-3.5 mb-5 px-3.5">
                   {language === 'fr'
-                    ? `Résultat serré — à ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} de ${closeSecondCandidate.name} (${closeSecondCandidate.alignment}%).`
-                    : `Close result — ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} ahead of ${closeSecondCandidate.name} (${closeSecondCandidate.alignment}%).`}
+                    ? `Résultat serré — à ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} de ${closeSecondCandidate.name} (${formatProximity(closeSecondCandidate.alignment)}).`
+                    : `Close result — ${rankedCandidates[0].alignment - closeSecondCandidate.alignment} point${rankedCandidates[0].alignment - closeSecondCandidate.alignment > 1 ? 's' : ''} ahead of ${closeSecondCandidate.name} (${formatProximity(closeSecondCandidate.alignment)}).`}
                 </p>
               )}
 
@@ -1025,7 +1100,14 @@ export default function Profile() {
                 {language === 'fr' ? 'Candidats 2027' : '2027 Candidates'}
               </h2>
               <p className="text-sm text-slate-500 mt-1">
-                {language === 'fr' ? 'Votre compatibilité avec les candidats présentiels' : 'Your compatibility with projected candidates'}
+                {language === 'fr' ? 'Votre proximité avec les candidats déclarés' : 'Your proximity to declared candidates'}
+              </p>
+              {/* Explicitation du nombre affiché : il ressemblait à un pourcentage sans en
+                  être un. Une phrase, au plus près du chiffre — pas une note de bas de page. */}
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed max-w-md">
+                {language === 'fr'
+                  ? <>Indice de proximité sur 100 — pas un pourcentage d’accord, pas une prédiction, pas une recommandation de vote. Calculé sur {answeredTotal} réponse{answeredTotal > 1 ? 's' : ''}, pondéré par vos priorités.</>
+                  : <>Proximity index out of 100 — not a percentage of agreement, not a prediction, not a voting recommendation. Computed from {answeredTotal} answer{answeredTotal > 1 ? 's' : ''}, weighted by your priorities.</>}
               </p>
             </div>
             {!isSharedView && (
@@ -1072,7 +1154,7 @@ export default function Profile() {
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.45 + idx * 0.07 }}
                         >
-                          {candidate.alignment}%
+                          {formatProximity(candidate.alignment)}
                         </motion.span>
                       </div>
                       <p className="text-xs text-slate-400 truncate">{candidate.party[language]}</p>
@@ -1083,7 +1165,7 @@ export default function Profile() {
                       className="h-full rounded-full"
                       style={{ backgroundColor: barColor }}
                       initial={{ width: '0%' }}
-                      animate={{ width: `${candidate.alignment}%` }}
+                      animate={{ width: scoreToCssPercent(candidate.alignment) }}
                       transition={{ duration: 0.75, delay: 0.42 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
                     />
                   </div>
@@ -1163,10 +1245,10 @@ export default function Profile() {
                   <span className="font-semibold text-slate-900 text-sm block truncate">{topPrimary[0].name[language]}</span>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${topPrimary[0].alignment}%`, backgroundColor: alignmentBarColor(topPrimary[0].alignment) }} />
+                      <div className="h-full rounded-full" style={{ width: scoreToCssPercent(topPrimary[0].alignment), backgroundColor: alignmentBarColor(topPrimary[0].alignment) }} />
                     </div>
                     <span className="text-xs font-bold tabular-nums flex-shrink-0" style={{ color: alignmentBarColor(topPrimary[0].alignment) }}>
-                      {topPrimary[0].alignment}%
+                      {formatProximity(topPrimary[0].alignment)}
                     </span>
                   </div>
                 </div>
@@ -1221,7 +1303,7 @@ export default function Profile() {
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.65 + idx * 0.12 }}
                             >
-                              {alignmentWord(current.alignment, language)} ({current.alignment}%)
+                              {alignmentWord(current.alignment, language)} ({formatProximity(current.alignment)})
                             </motion.span>
                           </div>
                           <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -1229,7 +1311,7 @@ export default function Profile() {
                               className="h-full rounded-full"
                               style={{ backgroundColor: barColor }}
                               initial={{ width: 0 }}
-                              animate={{ width: `${current.alignment}%` }}
+                              animate={{ width: scoreToCssPercent(current.alignment) }}
                               transition={{ duration: 0.85, delay: 0.65 + idx * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
                             />
                           </div>
@@ -1297,7 +1379,7 @@ export default function Profile() {
                                 className="absolute top-0 left-0 h-full rounded-full"
                                 style={{ backgroundColor: barColor, opacity: 0.7 }}
                                 initial={{ width: '0%' }}
-                                animate={{ width: `${current.alignment}%` }}
+                                animate={{ width: scoreToCssPercent(current.alignment) }}
                                 transition={{ duration: 0.7, delay: idx * 0.05 }}
                               />
                             </div>
@@ -1332,7 +1414,7 @@ export default function Profile() {
                           <span className="text-base">{current.icon}</span>
                           <span className="font-medium text-slate-700 text-sm">{current.name[language]}</span>
                           <span className={`ml-auto text-sm font-bold tabular-nums ${textColor}`}>
-                            {current.alignment}%
+                            {formatProximity(current.alignment)}
                           </span>
                         </div>
                         <p className="text-xs text-slate-400 leading-relaxed mb-2">{current.shortDesc[language]}</p>
@@ -1341,7 +1423,7 @@ export default function Profile() {
                             className="h-full rounded-full"
                             style={{ backgroundColor: barColor }}
                             initial={{ width: '0%' }}
-                            animate={{ width: `${current.alignment}%` }}
+                            animate={{ width: scoreToCssPercent(current.alignment) }}
                             transition={{ duration: 0.8, delay: 0.6 + idx * 0.08 }}
                           />
                         </div>
@@ -1640,7 +1722,7 @@ export default function Profile() {
             topArchetype={topArchetype}
             rankedCandidates={rankedCandidates}
             language={language}
-            answeredCount={Object.keys(answers).length}
+            answeredCount={answeredTotal}
             totalCount={questions.length}
             shareUrl={shareUrl}
             onClose={() => setShowShareModal(false)}

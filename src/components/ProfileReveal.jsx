@@ -128,7 +128,12 @@ export default function ProfileReveal({
               transition={{ duration: 0.4, delay: 3.05 }}
               whileTap={{ scale: 0.97 }}
             >
-              {lang === 'fr' ? 'Voir mon meilleur match 2027 →' : 'See my best 2027 match →'}
+              {/* CTA CONDITIONNEL : ne promettre un « meilleur match » que s'il en existe un.
+                  Constat navigateur (4e contre-audit) : le bouton disait « Voir mon meilleur
+                  match 2027 → » puis l'écran suivant affichait « Aucun candidat disponible ». */}
+              {topCandidate
+                ? (lang === 'fr' ? 'Voir ma proximité avec les candidats →' : 'See my proximity to candidates →')
+                : (lang === 'fr' ? 'Voir les candidats suivis →' : 'See tracked candidates →')}
             </motion.button>
 
             <motion.button
@@ -158,7 +163,9 @@ export default function ProfileReveal({
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
             >
-              {lang === 'fr' ? 'Votre meilleur match 2027' : 'Your best 2027 match'}
+              {topCandidate
+                ? (lang === 'fr' ? 'Votre proximité 2027' : 'Your 2027 proximity')
+                : (lang === 'fr' ? 'Candidats 2027' : '2027 candidates')}
             </motion.p>
 
             {topCandidate ? (
@@ -177,7 +184,8 @@ export default function ProfileReveal({
                   >
                     {topCandidate.alignment}
                   </span>
-                  <span className="text-4xl font-black" style={{ opacity: 0.7 }}>%</span>
+                  {/* Indice sur 100, jamais un pourcentage : le nombre n'est pas une part d'un tout. */}
+                  <span className="text-3xl font-black" style={{ opacity: 0.55 }}>/100</span>
                 </motion.div>
 
                 <motion.p
@@ -186,7 +194,7 @@ export default function ProfileReveal({
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.35, delay: 0.85 }}
                 >
-                  {lang === 'fr' ? "de compatibilité avec" : "alignment with"}
+                  {lang === 'fr' ? "de proximité avec" : "alignment with"}
                 </motion.p>
 
                 {/* Candidate card */}
@@ -226,9 +234,20 @@ export default function ProfileReveal({
                 </motion.p>
               </>
             ) : (
-              <p className="text-slate-400 text-center mb-8">
-                {lang === 'fr' ? 'Aucun candidat disponible.' : 'No candidates available.'}
-              </p>
+              /* Aucun candidat comparable : on explique POURQUOI plutôt que d'afficher un
+                 constat sec sous un titre qui promettait un résultat. */
+              <div className="text-center mb-8 px-2">
+                <p className="text-slate-300 text-sm leading-relaxed mb-2">
+                  {lang === 'fr'
+                    ? 'Aucune position de candidat n’est encore sourcée et relue.'
+                    : 'No candidate position has been sourced and reviewed yet.'}
+                </p>
+                <p className="text-slate-500 text-xs leading-relaxed">
+                  {lang === 'fr'
+                    ? 'Nous préférons ne rien afficher plutôt qu’une proximité calculée sur des estimations non vérifiées. Les candidats suivis restent consultables sur la page Élection.'
+                    : 'We would rather show nothing than a proximity computed from unverified estimates. Tracked candidates remain visible on the Election page.'}
+                </p>
+              </div>
             )}
 
             {/* CTA — dismiss to full profile */}

@@ -6,7 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/generate-seo.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --import ./tests/helpers/register-loader.mjs --test \"tests/**/*.test.mjs\"",
+    "test:unit": "node --import ./tests/helpers/register-loader.mjs --test \"tests/engine/**/*.test.mjs\"",
+    "test:data": "node --import ./tests/helpers/register-loader.mjs --test \"tests/data/**/*.test.mjs\"",
+    "test:integration": "node --import ./tests/helpers/register-loader.mjs --test \"tests/integration/**/*.test.mjs\"",
+    "test:ui": "node --import ./tests/helpers/register-loader.mjs --test \"tests/ui/**/*.test.mjs\"",
+    "check:conventions": "node scripts/check-profile-conventions.mjs",
+    "check:questions": "node scripts/lint-questions.mjs",
+    "check:freshness": "node scripts/check-freshness.mjs",
+    "check:brand": "node scripts/check-brand.mjs",
+    "check:undef": "eslint src scripts tests",
+    "watch:prepare": "node scripts/election-watch/run.mjs --prepare",
+    "watch:finalize": "node scripts/election-watch/run.mjs --finalize",
+    "test:migrations": "./supabase/tests/run-migration-tests.sh",
+    "check:learn": "node scripts/check-learn-content.mjs",
+    "lint": "npm run check:undef && npm run check:conventions && npm run check:brand && npm run check:learn",
+    "verify": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.0",
@@ -20,6 +36,8 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
+    "eslint": "^10.8.1",
+    "globals": "^17.9.0",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
     "vite": "^5.0.8"

@@ -12,16 +12,28 @@ export default function SyncConflictModal() {
   const fr = language === 'fr';
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!syncConflict) return null;
   const { remoteAnswers, remoteCount, localCount } = syncConflict;
 
-  // Keep local: push local answers to Supabase, close modal
+  // Conserver le local : pousse l'état local vers Supabase — y compris la SUPPRESSION des
+  // lignes distantes correspondant aux questions passées en « sans opinion ». C'est la
+  // primitive syncAnswersToCloud() qui s'en charge (voir src/lib/cloudAnswers.js).
+  // La modale ne se ferme QUE si la synchronisation a réussi : la refermer sur une erreur
+  // laisserait l'utilisateur croire son choix appliqué alors que le cloud diverge encore.
   async function handleKeepLocal() {
     setLoading(true);
-    await saveAnswers(answers);
-    setSyncConflict(null);
+    setError(null);
+    const res = await saveAnswers(answers);
     setLoading(false);
+    if (res?.error) {
+      setError(fr
+        ? 'La synchronisation a échoué : votre profil sauvegardé n’a pas été mis à jour. Vos réponses restent intactes sur cet appareil.'
+        : 'Sync failed: your saved profile was not updated. Your answers remain intact on this device.');
+      return;
+    }
+    setSyncConflict(null);
   }
 
   // Use remote: hydrate store with remote answers, close modal
@@ -38,6 +50,11 @@ export default function SyncConflictModal() {
         <h2 className="text-base font-bold text-gray-900 mb-2">
           {fr ? `Deux profils détectés` : `Two profiles found`}
         </h2>
+        {error && (
+          <p role="alert" className="text-xs text-red-600 leading-relaxed bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
+            {error}
+          </p>
+        )}
         <p className="text-sm text-gray-500 mb-5 leading-relaxed">
           {fr
             ? `Votre profil local et votre profil sauvegardé sont différents. Lequel voulez-vous conserver ?`

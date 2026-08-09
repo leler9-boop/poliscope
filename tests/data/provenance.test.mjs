@@ -1,0 +1,166 @@
+// POLISCOP — Intégrité de la provenance des positions candidates.
+//
+// Le 2e contre-audit relevait que `candidateProvenance.js` était une ÎLE : aucun moteur ne
+// l'importait, aucune position approuvée n'existait, et rien ne validait sa structure. Une
+// position mal formée — sans source, avec un `stance` hors domaine, en double — aurait pu y
+// entrer sans que rien ne la signale.
+//
+// `candidateMatch.js` consomme désormais `getApprovedPositions()`. Ces tests garantissent
+// qu'aucune position non conforme ne peut atteindre un score.
+
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+
+import {
+  SOURCE_DOCUMENTS, CANDIDATE_POSITIONS, SOURCE_LEVEL, REVIEW_STATUS,
+  getApprovedPositions, positionCoverage, getReviewQueue, getSource, FR2027_QUESTION_IDS,
+} from '../../src/data/candidateProvenance.js';
+import { resolveCandidateId } from '../../src/data/candidateRegistry.js';
+import { elections } from '../../src/data/elections.js';
+import { computeCandidateMatch } from '../../src/engine/candidateMatch.js';
+import { THEMES_ORDER } from '../../src/data/questions.js';
+
+const fr2027 = elections.find(e => e.id === 'fr_2027');
+const flat = v => Object.fromEntries(THEMES_ORDER.map(t => [t, v]));
+
+// ─── Documents sources ───────────────────────────────────────────────────────
+
+test('chaque document source a un identifiant unique', () => {
+  const ids = SOURCE_DOCUMENTS.map(s => s.id);
+  assert.equal(new Set(ids).size, ids.length, 'identifiant de source dupliqué');
+});
+
+test('chaque document source a une URL, un éditeur et un niveau connu', () => {
+  const levels = new Set(Object.values(SOURCE_LEVEL));
+  for (const s of SOURCE_DOCUMENTS) {
+    assert.match(s.url ?? '', /^https:\/\//, `${s.id} : URL absente ou non https`);
+    assert.ok(s.publisher, `${s.id} : éditeur manquant`);
+    assert.ok(levels.has(s.level), `${s.id} : niveau de source inconnu « ${s.level} »`);
+    assert.ok(s.discoveredAt, `${s.id} : date de découverte manquante`);
+  }
+});
+
+test('les dates de source sont au format ISO ou explicitement nulles', () => {
+  const iso = /^\d{4}-\d{2}-\d{2}$/;
+  for (const s of SOURCE_DOCUMENTS) {
+    for (const field of ['publishedAt', 'eventAt', 'discoveredAt', 'verifiedAt']) {
+      const v = s[field];
+      assert.ok(v === null || (typeof v === 'string' && iso.test(v)),
+        `${s.id}.${field} = « ${v} » : attendu AAAA-MM-JJ ou null`);
+    }
+  }
+});
+
+// ─── Positions ───────────────────────────────────────────────────────────────
+
+test('unicité de (candidateId, questionId, validFrom)', () => {
+  const seen = new Set();
+  for (const p of CANDIDATE_POSITIONS) {
+    const key = `${p.candidateId}|${p.questionId}|${p.validFrom ?? 'null'}`;
+    assert.ok(!seen.has(key), `position dupliquée : ${key}`);
+    seen.add(key);
+  }
+});
+
+test('chaque position référence un candidat du registre canonique', () => {
+  for (const p of CANDIDATE_POSITIONS) {
+    assert.equal(resolveCandidateId(p.candidateId), p.candidateId,
+      `${p.candidateId} n'est pas un identifiant canonique du registre`);
+  }
+});
+
+test('chaque sourceId d’une position existe réellement', () => {
+  for (const p of CANDIDATE_POSITIONS) {
+    for (const id of p.sourceIds ?? []) {
+      assert.ok(getSource(id), `${p.candidateId}/${p.questionId} référence une source inconnue : ${id}`);
+    }
+  }
+});
+
+test('stance appartient à {-2,-1,0,+1,+2} ou vaut null — jamais 3 ni une chaîne', () => {
+  for (const p of CANDIDATE_POSITIONS) {
+    assert.ok(
+      p.stance === null || [-2, -1, 0, 1, 2].includes(p.stance),
+      `${p.candidateId}/${p.questionId} : stance « ${p.stance} » hors domaine. ` +
+      `« Inconnu » se code null, jamais 0 ni une valeur Likert.`,
+    );
+  }
+});
+
+test('le statut de revue est une valeur connue', () => {
+  const statuses = new Set(Object.values(REVIEW_STATUS));
+  for (const p of CANDIDATE_POSITIONS) {
+    assert.ok(statuses.has(p.reviewStatus),
+      `${p.candidateId}/${p.questionId} : statut inconnu « ${p.reviewStatus} »`);
+  }
+});
+
+test('une position APPROUVÉE a obligatoirement stance, source et relecteur', () => {
+  for (const p of CANDIDATE_POSITIONS.filter(x => x.reviewStatus === REVIEW_STATUS.APPROVED)) {
+    assert.notEqual(p.stance, null, `${p.candidateId}/${p.questionId} approuvée sans stance`);
+    assert.ok((p.sourceIds ?? []).length > 0, `${p.candidateId}/${p.questionId} approuvée sans source`);
+    assert.ok(p.reviewedBy, `${p.candidateId}/${p.questionId} approuvée sans relecteur`);
+  }
+});
+
+test('une supersession référence une position réellement existante', () => {
+  const keys = new Set(CANDIDATE_POSITIONS.map(p => `${p.candidateId}|${p.questionId}|${p.validFrom ?? 'null'}`));
+  for (const p of CANDIDATE_POSITIONS.filter(x => x.supersedesId)) {
+    assert.ok(keys.has(p.supersedesId),
+      `${p.candidateId}/${p.questionId} remplace une position inexistante : ${p.supersedesId}`);
+  }
+});
+
+// ─── Effet réel sur le moteur ────────────────────────────────────────────────
+
+test('getApprovedPositions ne renvoie que du publiable', () => {
+  for (const person of new Set(CANDIDATE_POSITIONS.map(p => p.candidateId))) {
+    for (const p of getApprovedPositions(person)) {
+      assert.equal(p.reviewStatus, REVIEW_STATUS.APPROVED);
+      assert.notEqual(p.stance, null);
+      assert.ok(p.sourceIds.length > 0);
+    }
+  }
+});
+
+test('zéro position approuvée ⇒ AUCUN score public (et non un repli legacy)', () => {
+  // Le test précédent affirmait « le repli legacy s'applique donc partout » : il verrouillait
+  // exactement l'inverse de l'exigence produit. Le repli a été supprimé du moteur public.
+  const approved = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
+  assert.equal(approved.length, 0,
+    `${approved.length} position(s) approuvée(s) : mettre à jour docs/data/candidate-provenance.md ` +
+    `et le rapport, qui affirment qu'aucune n'est encore sourcée.`);
+
+  const m = computeCandidateMatch({
+    userThemes: flat(50),
+    candidate: fr2027.candidates[0],
+    priorityOrder: [...THEMES_ORDER],
+    electionAnswers: Object.fromEntries(fr2027.specificQuestions.map(q => [q.id, 3])),
+    questions: fr2027.specificQuestions,
+  });
+  assert.equal(m.score, null, 'un score a été produit sans aucune preuve sourcée');
+  assert.equal(m.reason, 'no_sourced_positions');
+  assert.equal(m.coverage.sourcedPositions, 0);
+  assert.equal(m.coverage.positionProvenance, 'sourced-positions',
+    'la seule provenance possible pour un score est désormais « sourced-positions »');
+});
+
+test('la couverture sourcée de David Lisnard est 0/17, et il n’est pas comparable', () => {
+  const cov = positionCoverage('david-lisnard');
+  assert.equal(cov.approved, 0);
+  assert.equal(cov.total, FR2027_QUESTION_IDS.length);
+  assert.equal(cov.ratio, 0);
+
+  // Les 17 entrées existent comme file de revue, avec stance null — pas comme données.
+  const queue = getReviewQueue().filter(x => x.candidateId === 'david-lisnard');
+  assert.equal(queue.length, FR2027_QUESTION_IDS.length,
+    'les 17 questions doivent être instruites, pas devinées');
+});
+
+test('les identifiants de questions de la provenance existent dans fr_2027', () => {
+  const known = new Set(fr2027.specificQuestions.map(q => q.id));
+  for (const p of CANDIDATE_POSITIONS) {
+    if (!p.questionId.startsWith('fr_2027')) continue;
+    assert.ok(known.has(p.questionId), `question inconnue dans la provenance : ${p.questionId}`);
+  }
+});

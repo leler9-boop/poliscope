@@ -22,3 +22,7 @@ yarn-debug.log*
 # Vite
 *.local
 vite.config.js.timestamp*
+
+# Veille électorale — verrou d'exécution seulement.
+# Les dossiers de run datés SONT versionnés : ce sont les propositions à relire.
+veille/2027/.lock

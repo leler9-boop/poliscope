@@ -4,90 +4,65 @@ import { useStore } from '../store/useStore.js';
 // selectCandidate is accessed via useStore inside CandidateResultCard
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
-import { calculateAlignment, alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
+import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
+import { computeCandidateMatch } from '../engine/candidateMatch.js';
+import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
+import { getTrackedNotMatchReady } from '../data/candidateRegistry.js';
+import { getSource } from '../data/candidateProvenance.js';
 import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackElectionViewed } from '../lib/analytics.js';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
+//
+// Le calcul de proximité (mélange global/spécifique, veto, pondérations) vit désormais
+// entièrement dans `src/engine/candidateMatch.js`. Ce fichier en contenait une copie
+// divergente : table de veto à 5 thèmes au lieu de 6 (GLOBAL manquant) et `themeWeights`
+// purement ignoré, si bien que la page Élection et la page Profil ne classaient pas les
+// candidats de la même façon. Ne pas réintroduire de règle métier ici.
 
-// Veto thresholds mirror matcher.js — prevents election-specific questions
-// from inflating scores for fundamentally incompatible candidates.
-const BLEND_VETO = {
-  IMMIGRATION:     { t: 30, p: 0.62 },
-  ECONOMY:         { t: 30, p: 0.72 },
-  SOCIAL:          { t: 42, p: 0.78 },
-  SECURITY:        { t: 42, p: 0.78 },
-  PUBLIC_SERVICES: { t: 42, p: 0.82 },
-};
+// ⚠️ Quatre helpers ont été SUPPRIMÉS ici (voir docs/remediation/decisions.md D-35) :
+//
+//   getQuestionBreakdown()        lisait `q.positions[candidate.id]`
+//   getThemeAgreementsFallback()  lisait `candidate.profile`
+//   getMatchSentence()            reposait sur le précédent
+//   (et `generateProfileAnalysis` lisait `top.profile?.[theme] ?? 50`)
+//
+// `candidate.profile` est `legacy-manual-v1` : huit nombres saisis à la main, sans preuve
+// par position. `specificQuestions[].positions` a la même origine. Le moteur a cessé de les
+// lire — mais ces helpers continuaient à en tirer des PHRASES affichées (« Proches sur
+// l'économie, plus éloignés sur l'immigration »), c'est-à-dire des affirmations sur les
+// positions d'une personne réelle, sans source. Le score était honnête, le commentaire non.
+//
+// Tout ce qui est affiché vient désormais du résultat du moteur : `match.agreements`,
+// `match.disagreements` (positions sourcées, approuvées et relues) et `match.derivedThemes`
+// (thème inconnu = `null`, jamais remplacé par 50).
 
-function blendedAlignment(globalProfile, electionAnswers, candidate, questions, priorityOrder) {
-  const globalScore = calculateAlignment(globalProfile.themes, candidate.profile, priorityOrder);
-  const answered = questions.filter(
-    q => electionAnswers[q.id] != null && q.positions[candidate.id] != null
-  );
-  if (answered.length === 0) return globalScore;
+/**
+ * Phrase courte sous le score, construite à partir du profil candidat DÉRIVÉ.
+ * Renvoie `null` — donc n'affiche rien — dès qu'aucun thème n'est comparable.
+ * Ne jamais lui faire supposer une valeur par défaut : « inconnu » n'est pas « au centre ».
+ */
+function getMatchSentence(userThemes, match, language) {
+  const derived = match?.derivedThemes;
+  if (!userThemes || !derived) return null;
 
-  const meanDist =
-    answered.reduce((sum, q) => {
-      return sum + Math.abs(electionAnswers[q.id] - q.positions[candidate.id]) / 4;
-    }, 0) / answered.length;
-
-  const rawElectionScore = Math.round(Math.pow(1 - meanDist, 2.2) * 100);
-
-  // Apply same smooth veto to election-specific score so specific questions cannot
-  // override fundamental profile incompatibility (e.g. centrist matching communist).
-  // Penalty ramps linearly from 1.0 at threshold to full penalty at dist=100 (no cliff).
-  let vetoMult = 1.0;
-  for (const [theme, cfg] of Object.entries(BLEND_VETO)) {
-    const dist = Math.abs((globalProfile.themes[theme] ?? 50) - (candidate.profile[theme] ?? 50));
-    if (dist > cfg.t) {
-      const tRamp = (dist - cfg.t) / (100 - cfg.t);
-      vetoMult *= (1 - tRamp * (1 - cfg.p));
-    }
-  }
-  const electionScore = Math.round(rawElectionScore * vetoMult);
-
-  return Math.max(0, Math.min(100, Math.round(globalScore * 0.65 + electionScore * 0.35)));
-}
-
-function getQuestionBreakdown(electionAnswers, candidate, questions) {
-  return questions
-    .filter(q => electionAnswers[q.id] != null && q.positions[candidate.id] != null)
-    .map(q => ({
-      q,
-      distance: Math.abs(electionAnswers[q.id] - q.positions[candidate.id]),
-    }))
-    .sort((a, b) => a.distance - b.distance);
-}
-
-// Returns the N closest and N most distant themes between user and candidate profiles.
-// Used as fallback when no election-specific questions were answered.
-function getThemeAgreementsFallback(userThemes, candidate, language, count = 2) {
-  if (!userThemes || !candidate.profile) return { agreements: [], disagreements: [] };
   const themeLabels = THEME_LABELS[language] ?? THEME_LABELS.en;
-  const diffs = THEMES_ORDER
+  const comparables = THEMES_ORDER
+    .filter(theme => derived[theme] != null && userThemes[theme] != null)
     .map(theme => ({
       label: themeLabels[theme] ?? theme,
-      diff: Math.abs((userThemes[theme] ?? 50) - (candidate.profile[theme] ?? 50)),
+      diff: Math.abs(userThemes[theme] - derived[theme]),
     }))
     .sort((a, b) => a.diff - b.diff);
-  return {
-    agreements:    diffs.slice(0, count),
-    disagreements: diffs.slice(-count).reverse(),
-  };
-}
 
-// Builds the one-sentence summary shown under the match score.
-function getMatchSentence(userThemes, candidate, language) {
-  const { agreements, disagreements } = getThemeAgreementsFallback(userThemes, candidate, language, 2);
-  if (!agreements.length) return null;
-  const agreeStr    = agreements.map(a => a.label).join(' et ');
-  const disagreeStr = disagreements.map(d => d.label).join(' et ');
-  if (language === 'fr') {
-    return `Proches sur ${agreeStr}${disagreeStr ? `, plus éloignés sur ${disagreeStr}` : ''}.`;
-  }
-  return `Close on ${agreeStr}${disagreeStr ? `, further apart on ${disagreeStr}` : ''}.`;
+  if (comparables.length < 2) return null;
+
+  const agreeStr    = comparables.slice(0, 2).map(a => a.label).join(' et ');
+  const disagreeStr = comparables.slice(-2).reverse().map(d => d.label).join(' et ');
+  return language === 'fr'
+    ? `Proches sur ${agreeStr}, plus éloignés sur ${disagreeStr}.`
+    : `Close on ${agreeStr}, further apart on ${disagreeStr}.`;
 }
 
 // ─── Profile analysis ────────────────────────────────────────────────────────
@@ -102,22 +77,35 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
 
   const themeLabels = THEME_LABELS[language] ?? THEME_LABELS.en;
 
-  // Per-theme distances
-  const themeDiffs = THEMES_ORDER.map(theme => ({
-    label:      themeLabels[theme] ?? theme,
-    user:       userThemes[theme] ?? 50,
-    diffTop:    Math.abs((userThemes[theme] ?? 50) - (top.profile?.[theme]    ?? 50)),
-    diffSecond: second ? Math.abs((userThemes[theme] ?? 50) - (second.profile?.[theme] ?? 50)) : 100,
-  }));
+  // Distances par thème — profils candidats DÉRIVÉS des positions sourcées.
+  // Lisaient auparavant `top.profile?.[theme] ?? 50` : valeur legacy non sourcée, et un thème
+  // inconnu compté comme « au centre », ce qui fabriquait une fausse proximité.
+  // Un thème non sourcé est maintenant EXCLU de l'analyse au lieu d'être supposé.
+  const topThemes    = top.match?.derivedThemes    ?? null;
+  const secondThemes = second?.match?.derivedThemes ?? null;
 
-  // Themes where user ≈ top candidate
+  const themeDiffs = THEMES_ORDER
+    .filter(theme => userThemes[theme] != null && topThemes?.[theme] != null)
+    .map(theme => ({
+      label:      themeLabels[theme] ?? theme,
+      user:       userThemes[theme],
+      diffTop:    Math.abs(userThemes[theme] - topThemes[theme]),
+      diffSecond: secondThemes?.[theme] != null
+        ? Math.abs(userThemes[theme] - secondThemes[theme])
+        : null,
+    }));
+
+  // Aucun thème comparable → aucune phrase de comparaison. Le paragraphe se limitera à la
+  // description du profil de l'utilisateur, qui, elle, repose sur ses propres réponses.
+  const comparaisonPossible = themeDiffs.length >= 2;
+
   const byCloseness = [...themeDiffs].sort((a, b) => a.diffTop - b.diffTop);
-  const shared1 = byCloseness[0];
-  const shared2 = byCloseness[1];
+  const shared1 = byCloseness[0] ?? null;
+  const shared2 = byCloseness[1] ?? null;
 
-  // Theme where user diverges most from second vs top
-  const divergeFromSecond = second
-    ? [...themeDiffs].sort((a, b) => (b.diffSecond - b.diffTop) - (a.diffSecond - a.diffTop))[0]
+  const avecSecond = themeDiffs.filter(d => d.diffSecond != null);
+  const divergeFromSecond = second && avecSecond.length
+    ? [...avecSecond].sort((a, b) => (b.diffSecond - b.diffTop) - (a.diffSecond - a.diffTop))[0]
     : null;
 
   // Short names
@@ -158,7 +146,7 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
     : `Your profile shows ${econPhrase}, combined with ${socialPhrase}${enviroPhrase ? ` and ${enviroPhrase}` : ''}.`;
 
   // S2 — closeness to top candidate
-  const s2 = shared1.diffTop < 20
+  const s2 = !comparaisonPossible ? '' : shared1.diffTop < 20
     ? (fr
         ? `Tu te rapproches de ${topName} surtout sur ${shared1.label.toLowerCase()}${shared2.diffTop < 25 ? ` et ${shared2.label.toLowerCase()}` : ''}, où vos sensibilités convergent.`
         : `You align most with ${topName} particularly on ${shared1.label.toLowerCase()}${shared2.diffTop < 25 ? ` and ${shared2.label.toLowerCase()}` : ''}, where your views converge.`)
@@ -168,7 +156,7 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
 
   // S3 — contrast with second candidate
   let s3 = '';
-  if (second) {
+  if (second && comparaisonPossible) {
     const gap = top.alignment - second.alignment;
     if (gap > 15 && divergeFromSecond && divergeFromSecond.diffSecond > 25) {
       s3 = fr
@@ -187,7 +175,7 @@ function generateProfileAnalysis(userThemes, rankedCandidates, language) {
 
   // S4 — distance from last candidate (only if gap is significant)
   let s4 = '';
-  if (last.id !== top.id && top.alignment - last.alignment > 30) {
+  if (comparaisonPossible && last.id !== top.id && top.alignment - last.alignment > 30) {
     s4 = fr
       ? `C'est avec ${lastName} que tes positions divergent le plus — des positions très différentes sur la plupart des sujets.`
       : `Your positions diverge most from ${lastName} — very different views on most issues.`;
@@ -486,22 +474,179 @@ function QuestionnaireStep({ election, language, t, electionAnswers, answerElect
   );
 }
 
-function ResultsStep({ election, language, t, globalProfile, electionAnswers, priorityOrder, onRetake, onBack }) {
+/**
+ * Encart de transparence : ce que le score mesure, sur quelle base, et quand il ne permet
+ * pas de départager. Volontairement sobre — deux à quatre lignes, pas un rapport.
+ */
+function MatchCoverageNotice({ rankedCandidates, answeredCount, totalQuestions, tooClose, language }) {
+  if (!rankedCandidates.length) return null;
+  const fr = language === 'fr';
+
+  const usedList = rankedCandidates.map(c => c.match?.coverage?.positionsUsed ?? 0);
+  const minUsed = Math.min(...usedList);
+  const maxUsed = Math.max(...usedList);
+  const ignored = rankedCandidates.filter(c => c.match?.coverage?.specificIgnored);
+
+  return (
+    <div className="mb-6 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-xs text-gray-600 space-y-1.5">
+      <p>
+        <span className="font-semibold text-gray-700">
+          {fr ? 'Indice de proximité sur 100' : 'Proximity index out of 100'}
+        </span>{' '}
+        {fr
+          ? '— ce n’est ni un pourcentage de mesures communes, ni une probabilité de vote, ni une recommandation. C’est une distance pondérée par vos priorités, amplifiée volontairement pour différencier les profils.'
+          : '— not a percentage of shared positions, not a probability, not a voting recommendation. It is a distance weighted by your priorities, deliberately amplified to separate profiles.'}
+      </p>
+      {answeredCount > 0 && (
+        <p>
+          {fr
+            ? `Vos réponses à cette élection : ${answeredCount}/${totalQuestions}. Positions comparables selon le candidat : ${minUsed === maxUsed ? minUsed : `${minUsed} à ${maxUsed}`} sur ${totalQuestions}.`
+            : `Your answers for this election: ${answeredCount}/${totalQuestions}. Comparable positions per candidate: ${minUsed === maxUsed ? minUsed : `${minUsed}–${maxUsed}`} of ${totalQuestions}.`}
+        </p>
+      )}
+      {ignored.length > 0 && (
+        <p className="text-amber-700">
+          {fr
+            ? `Aucune position documentée pour ${ignored.map(c => c.name).join(', ')} : leur score ne repose que sur le profil général.`
+            : `No documented positions for ${ignored.map(c => c.name).join(', ')}: their score rests on the general profile only.`}
+        </p>
+      )}
+      {tooClose && (
+        <p className="text-amber-700">
+          {fr
+            ? 'Les deux premiers résultats sont trop proches pour être départagés avec confiance.'
+            : 'The top two results are too close to be ranked with confidence.'}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Candidats suivis mais PAS comparables.
+ *
+ * Le produit affichait dix profils 2027 et rien d'autre : David Lisnard, déclaré depuis le
+ * 31 mars 2026 avec un programme officiel structuré, était simplement invisible. La tentation
+ * serait de lui inventer huit scores pour « compléter la liste » — c'est exactement ce qu'il
+ * ne faut pas faire. Il figure ici avec son statut, sa date et sa source, et n'entre pas dans
+ * le classement tant qu'aucune position sourcée n'a été codée.
+ */
+function TrackedNotComparable({ electionId, language }) {
+  const tracked = getTrackedNotMatchReady(electionId);
+  if (tracked.length === 0) return null;
+  const fr = language === 'fr';
+
+  const STATUS_LABEL = {
+    declared: fr ? 'Candidature déclarée' : 'Declared candidacy',
+    invested: fr ? 'Investi par son parti' : 'Party nominee',
+    primary_candidate: fr ? 'Candidat à une primaire' : 'Primary candidate',
+    conditional: fr ? 'Candidature conditionnelle' : 'Conditional candidacy',
+    potential: fr ? 'Pressenti — non déclaré' : 'Potential — not declared',
+    contingency: fr ? 'Scénario de remplacement — non candidat' : 'Contingency — not a candidate',
+    withdrawn: fr ? 'Candidature retirée ou écartée' : 'Withdrawn or ruled out',
+    ineligible: fr ? 'Inéligible' : 'Ineligible',
+  };
+
+  return (
+    <div className="mb-6">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+        {fr ? 'Annuaire 2027 — suivis, pas encore comparables' : '2027 directory — tracked, not yet comparable'}
+      </p>
+      <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+        {fr
+          ? 'Cet annuaire distingue les candidatures déclarées, conditionnelles, les primaires, les personnes seulement pressenties et les retraits. Aucun de ces noms n’entre dans le classement tant que ses positions n’ont pas été sourcées et relues.'
+          : 'This directory distinguishes declared and conditional candidacies, primaries, potential candidates and withdrawals. Nobody enters the ranking until their positions are sourced and reviewed.'}
+        <span className="block mt-1 text-gray-400">
+          {fr
+            ? 'Programme : M0 aucun corpus 2027 · M1 orientations · M2 propositions thématiques · M3 programme officiel partiel · M4 complet · M5 version électorale archivée.'
+            : 'Programme: M0 no 2027 corpus · M1 broad direction · M2 thematic proposals · M3 partial official programme · M4 complete · M5 archived electoral version.'}
+        </span>
+      </p>
+      <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+        {tracked.map(p => (
+          <div key={p.id} className="px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-sm font-semibold text-gray-800">{p.displayName}</span>
+              <span className="text-[11px] text-gray-400 whitespace-nowrap">{p.party}</span>
+            </div>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              {STATUS_LABEL[p.status] ?? p.status}
+              {p.statusDate ? ` · ${p.statusDatePrecision === 'on_or_before' ? (fr ? 'au plus tard ' : 'by ') : ''}${p.statusDate}` : ''}
+              {p.programMaturity ? ` · programme ${p.programMaturity}` : ''}
+            </p>
+            {p.statusSource && (
+              <p className="text-[10px] text-gray-400 mt-1 leading-relaxed">{p.statusSource}</p>
+            )}
+            {(p.statusSourceIds ?? []).some(id => getSource(id)) && (
+              <p className="text-[10px] mt-1.5 flex flex-wrap gap-x-2 gap-y-1">
+                {(p.statusSourceIds ?? []).map(getSource).filter(Boolean).map(source => (
+                  <a
+                    key={source.id}
+                    href={source.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {source.publisher}
+                  </a>
+                ))}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ResultsStep({ election, language, t, globalProfile, electionAnswers, priorityOrder, themeWeights, onRetake, onBack }) {
   const [expandedId, setExpandedId] = useState(null);
   const [methodOpen, setMethodOpen] = useState(false);
   const questions = election.specificQuestions ?? [];
   const thisElectionAnswers = electionAnswers[election.id] ?? {};
   const answeredCount = questions.filter(q => thisElectionAnswers[q.id] != null).length;
 
+  // Candidats pour lesquels le moteur refuse de produire un score (couverture insuffisante,
+  // tous les thèmes comparables à poids nul, aucune donnée). Ils restent VISIBLES avec leur
+  // motif : les faire disparaître laisserait croire qu'ils n'existent pas.
+  const unscoredCandidates = useMemo(() => {
+    return election.candidates
+      .filter(c => !c.variantOf)
+      .map(c => ({
+        ...c,
+        match: computeCandidateMatch({
+          userThemes: globalProfile.themes, candidate: c, priorityOrder, themeWeights,
+          electionAnswers: thisElectionAnswers, questions, language,
+        }),
+      }))
+      .filter(c => c.match.score == null);
+  }, [election, globalProfile, thisElectionAnswers, priorityOrder, themeWeights, language]);
+
   const rankedCandidates = useMemo(() => {
     return election.candidates
       .filter(c => !c.variantOf) // filter any remaining variant candidates
-      .map(c => ({
-        ...c,
-        alignment: blendedAlignment(globalProfile, thisElectionAnswers, c, questions, priorityOrder),
-      }))
+      .map(c => {
+        const match = computeCandidateMatch({
+          userThemes: globalProfile.themes,
+          candidate: c,
+          priorityOrder,
+          themeWeights,           // transmis : la page Élection les ignorait auparavant
+          electionAnswers: thisElectionAnswers,
+          questions,
+          language,
+        });
+        // `?? 0` afficherait « 0/100 » — un score, faux — là où le moteur dit « pas de score ».
+        // Les candidats sans score sont séparés et présentés avec leur motif.
+        return { ...c, alignment: match.score, match };
+      })
+      .filter(c => c.alignment != null)
       .sort((a, b) => b.alignment - a.alignment);
-  }, [election, globalProfile, thisElectionAnswers, priorityOrder]);
+  }, [election, globalProfile, thisElectionAnswers, priorityOrder, themeWeights, language]);
+
+  // Deux premiers trop proches pour être départagés → on le dit au lieu d'afficher un ordre
+  // catégorique que le bruit de mesure ne soutient pas.
+  const tooClose = rankedCandidates.length >= 2
+    && (rankedCandidates[0].alignment - rankedCandidates[1].alignment) < 3;
 
   const noteExtra = answeredCount > 0
     ? t('election_results_note_extra', { n: answeredCount })
@@ -523,6 +668,17 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         </div>
         <p className="text-sm text-gray-500">{note}</p>
       </div>
+
+      {/* Transparence du calcul — couverture réelle, pas seulement un score.
+          Sans ce bloc, rien ne distinguait un score appuyé sur 17 positions comparables
+          d'un score qui n'en utilisait aucune (le cas Le Pen/Mélenchon d'avant correctif). */}
+      <MatchCoverageNotice
+        rankedCandidates={rankedCandidates}
+        answeredCount={answeredCount}
+        totalQuestions={questions.length}
+        tooClose={tooClose}
+        language={language}
+      />
 
       {/* Profile analysis */}
       {globalProfile?.themes && (
@@ -611,6 +767,28 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         </div>
       )}
 
+      {/* Candidats non classables — motif affiché, jamais un score de repli */}
+      {unscoredCandidates.length > 0 && (
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
+            {language === 'fr' ? 'Non classés' : 'Not ranked'}
+          </p>
+          <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+            {unscoredCandidates.map(c => (
+              <div key={c.id} className="px-4 py-3">
+                <p className="text-sm font-semibold text-gray-800">{c.name}</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {noScoreReason(c.match.reason, language)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Annuaire : personnes suivies mais volontairement hors classement */}
+      <TrackedNotComparable electionId={election.id} language={language} />
+
       {/* Fallback: no tiers — just list all */}
       {strongMatches.length === 0 && moderateMatches.length === 0 && weakMatches.length === 0 && (
         <div className="space-y-3 mb-6">
@@ -658,7 +836,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
                   />
                 </div>
                 <span className="text-xs font-bold w-9 text-right" style={{ color: barColor }}>
-                  {c.alignment}%
+                  {formatProximity(c.alignment)}
                 </span>
               </div>
             );
@@ -712,16 +890,39 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   );
 }
 
-function ThemeBreakdown({ userThemes, candidate, language }) {
+/**
+ * Ventilation par thème — profil candidat DÉRIVÉ des positions sourcées.
+ *
+ * Lisait auparavant `candidate.profile?.[theme] ?? 50`. Deux mensonges dans une ligne :
+ * la valeur venait de `legacy-manual-v1` (huit nombres saisis à la main), et le `?? 50`
+ * transformait « on ne sait pas » en « exactement au centre » — un thème inconnu était
+ * affiché comme une position mesurée.
+ *
+ * Un thème sans assez de positions approuvées est désormais montré comme INCONNU : pas de
+ * nombre, pas de barre candidat, une mention explicite.
+ */
+function ThemeBreakdown({ userThemes, match, candidate, language }) {
+  const derived = match?.derivedThemes ?? null;
+  const connus = THEMES_ORDER.filter(theme => derived?.[theme] != null);
+
   return (
     <div className="mt-4 border-t border-gray-100 pt-4">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
         {language === 'fr' ? 'Scores par thème' : 'Theme scores'}
       </p>
+
+      {connus.length === 0 && (
+        <p className="text-xs text-gray-500 leading-relaxed mb-3">
+          {language === 'fr'
+            ? `Aucun thème n'est encore comparable pour ce candidat : cela demande au moins deux positions sourcées et relues par thème.`
+            : `No theme is comparable for this candidate yet: this requires at least two sourced, reviewed positions per theme.`}
+        </p>
+      )}
+
       <div className="space-y-2.5">
         {THEMES_ORDER.map(theme => {
-          const userScore = userThemes?.[theme] ?? 50;
-          const candidateScore = candidate.profile?.[theme] ?? 50;
+          const userScore      = userThemes?.[theme] ?? null;
+          const candidateScore = derived?.[theme] ?? null;   // jamais `?? 50`
           const label = THEME_LABELS[language]?.[theme] ?? theme;
           const color = THEME_COLORS[theme] ?? '#6b7280';
           return (
@@ -729,20 +930,30 @@ function ThemeBreakdown({ userThemes, candidate, language }) {
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-gray-500">{label}</span>
                 <div className="flex items-center gap-1.5 text-xs tabular-nums">
-                  <span style={{ color: '#60a5fa' }}>{userScore}</span>
+                  <span style={{ color: '#60a5fa' }}>{userScore ?? '—'}</span>
                   <span className="text-gray-300">·</span>
-                  <span style={{ color }}>{candidateScore}</span>
+                  {candidateScore == null ? (
+                    <span className="text-gray-400 not-italic">
+                      {language === 'fr' ? 'non sourcé' : 'not sourced'}
+                    </span>
+                  ) : (
+                    <span style={{ color }}>{candidateScore}</span>
+                  )}
                 </div>
               </div>
               <div className="relative h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className="absolute inset-y-0 left-0 h-full rounded-full"
-                  style={{ width: `${userScore}%`, backgroundColor: '#3b82f6', opacity: 0.25 }}
-                />
-                <div
-                  className="absolute inset-y-0 left-0 h-full rounded-full"
-                  style={{ width: `${candidateScore}%`, backgroundColor: color, opacity: 0.75 }}
-                />
+                {userScore != null && (
+                  <div
+                    className="absolute inset-y-0 left-0 h-full rounded-full"
+                    style={{ width: scoreToCssPercent(userScore), backgroundColor: '#3b82f6', opacity: 0.25 }}
+                  />
+                )}
+                {candidateScore != null && (
+                  <div
+                    className="absolute inset-y-0 left-0 h-full rounded-full"
+                    style={{ width: scoreToCssPercent(candidateScore), backgroundColor: color, opacity: 0.75 }}
+                  />
+                )}
               </div>
             </div>
           );
@@ -818,7 +1029,7 @@ function ComparePanel({ candidates, userThemes, language }) {
                 <div key={c.id} className="flex flex-col items-center gap-1">
                   <CandidateAvatar src={c.image} name={c.name} size={36} />
                   <p className="text-xs font-semibold text-gray-800 text-center leading-tight">{c.name}</p>
-                  <p className="text-xs text-gray-400">{c.alignment}%</p>
+                  <p className="text-xs text-gray-400">{formatProximity(c.alignment)}</p>
                 </div>
               ))}
           </div>
@@ -833,17 +1044,27 @@ function ComparePanel({ candidates, userThemes, language }) {
                 <div key={theme} className="grid gap-3 items-center" style={{ gridTemplateColumns: '110px 1fr 1fr' }}>
                   <span className="text-xs text-gray-500 truncate">{label}</span>
                   {selected.map(c => {
-                    const score = c.profile?.[theme] ?? 50;
-                    const diff = Math.abs(score - userScore);
+                    // Profil DÉRIVÉ des positions sourcées. `c.profile?.[theme] ?? 50` affichait
+                    // une barre et un nombre pour un thème dont rien n'est établi : la
+                    // comparaison côte à côte de deux candidats donnait un « Δ vs vous » calculé
+                    // sur des valeurs inventées. Un thème non sourcé ne se compare pas.
+                    const score = c.match?.derivedThemes?.[theme] ?? null;
+                    const diff = score == null ? null : Math.abs(score - userScore);
                     return (
                       <div key={c.id}>
-                        <div className="flex items-center gap-1.5">
-                          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className="h-full rounded-full" style={{ width: `${score}%`, backgroundColor: color }} />
+                        {score == null ? (
+                          <p className="text-xs text-gray-400 italic">
+                            {language === 'fr' ? 'non sourcé' : 'not sourced'}
+                          </p>
+                        ) : (
+                          <div className="flex items-center gap-1.5">
+                            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: scoreToCssPercent(score), backgroundColor: color }} />
+                            </div>
+                            <span className="text-xs tabular-nums text-gray-500 w-6 text-right flex-shrink-0">{score}</span>
                           </div>
-                          <span className="text-xs tabular-nums text-gray-500 w-6 text-right flex-shrink-0">{score}</span>
-                        </div>
-                        {diff >= 30 && (
+                        )}
+                        {diff != null && diff >= 30 && (
                           <p className="text-xs mt-0.5" style={{ color: '#f59e0b', fontSize: 10 }}>
                             {language === 'fr' ? `Δ${diff} vs vous` : `Δ${diff} vs you`}
                           </p>
@@ -895,9 +1116,12 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
   const textColor = alignmentColorClass(alignment);
   const label = alignmentLabel(alignment, language);
 
-  const breakdown = getQuestionBreakdown(electionAnswers, candidate, questions);
-  const agreements = breakdown.filter(d => d.distance <= 1).slice(0, 2);
-  const disagreements = breakdown.filter(d => d.distance >= 3).slice(0, 2);
+  // Accords et désaccords viennent du moteur, donc de positions sourcées, datées, codées et
+  // relues. Ils étaient auparavant recalculés ici depuis `q.positions[candidate.id]`.
+  const match = candidate.match ?? null;
+  const agreements    = match?.agreements    ?? [];
+  const disagreements = match?.disagreements ?? [];
+  const aDesPreuves   = match?.breakdownSource === 'sourced-positions';
 
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition-all hover:shadow-sm ${
@@ -937,27 +1161,30 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
 
           {/* Score */}
           <div className="text-right flex-shrink-0">
-            <div className={`font-bold tabular-nums ${isTop ? 'text-3xl' : 'text-2xl'} ${textColor}`}>{alignment}%</div>
-            <div className="text-xs text-gray-400 mt-0.5">{language === 'fr' ? 'compat.' : 'match'}</div>
+            <div className={`font-bold tabular-nums ${isTop ? 'text-3xl' : 'text-2xl'} ${textColor}`}>{formatProximity(alignment)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">{language === 'fr' ? 'proximité' : 'proximity'}</div>
           </div>
         </div>
 
         {/* Bar */}
         <div className="mt-4 mb-1">
           <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full rounded-full match-bar-fill" style={{ width: `${alignment}%`, backgroundColor: barColor }} />
+            <div className="h-full rounded-full match-bar-fill" style={{ width: scoreToCssPercent(alignment), backgroundColor: barColor }} />
           </div>
           <p className="text-xs text-gray-400 mt-1.5">{label}</p>
           {globalProfile?.themes && (
             <p className="text-xs text-gray-500 leading-relaxed mt-1">
-              {getMatchSentence(globalProfile.themes, candidate, language)}
+              {getMatchSentence(globalProfile.themes, match, language)}
             </p>
           )}
         </div>
 
-        {/* Election-specific breakdown (question-level when available, theme-level fallback) */}
+        {/* Accords et désaccords — UNIQUEMENT des positions sourcées et approuvées.
+            Le repli theme-level qui lisait `candidate.profile` a été supprimé : il produisait
+            des affirmations sur les positions d'une personne réelle sans aucune preuve.
+            Quand rien n'est sourcé, on l'écrit ; on ne comble pas le vide. */}
         {(expanded || isTop) && (
-          breakdown.length > 0 ? (
+          aDesPreuves && (agreements.length > 0 || disagreements.length > 0) ? (
             <div className="mt-4 grid sm:grid-cols-2 gap-3">
               {agreements.length > 0 && (
                 <div className="bg-green-50 border border-green-100 rounded-lg p-3">
@@ -984,33 +1211,15 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
                 </div>
               )}
             </div>
-          ) : globalProfile?.themes && candidate.profile ? (() => {
-            const fb = getThemeAgreementsFallback(globalProfile.themes, candidate, language, 2);
-            return (fb.agreements.length > 0 || fb.disagreements.length > 0) ? (
-              <div className="mt-4 grid sm:grid-cols-2 gap-3">
-                {fb.agreements.length > 0 && (
-                  <div className="bg-green-50 border border-green-100 rounded-lg p-3">
-                    <p className="text-xs font-semibold text-green-700 mb-2">✓ {t('election_agreements')}</p>
-                    <ul className="space-y-1">
-                      {fb.agreements.map(({ label: lbl }) => (
-                        <li key={lbl} className="text-xs text-green-800 leading-snug">{lbl}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {fb.disagreements.length > 0 && (
-                  <div className="bg-red-50 border border-red-100 rounded-lg p-3">
-                    <p className="text-xs font-semibold text-red-700 mb-2">✗ {t('election_disagreements')}</p>
-                    <ul className="space-y-1">
-                      {fb.disagreements.map(({ label: lbl }) => (
-                        <li key={lbl} className="text-xs text-red-800 leading-snug">{lbl}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ) : null;
-          })() : null
+          ) : (
+            <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <p className="text-xs text-gray-600 leading-relaxed">
+                {language === 'fr'
+                  ? `Aucun accord ou désaccord détaillé n'est affiché : cela suppose des positions sourcées, datées et relues, question par question. Le détail apparaîtra à mesure que ces positions seront publiées.`
+                  : `No detailed agreements or disagreements are shown: that requires sourced, dated and reviewed positions, question by question. Details will appear as those positions are published.`}
+              </p>
+            </div>
+          )
         )}
 
         {/* Bio (expanded) */}
@@ -1021,8 +1230,8 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
         )}
 
         {/* Theme breakdown (expanded) */}
-        {(expanded || isTop) && globalProfile?.themes && candidate.profile && (
-          <ThemeBreakdown userThemes={globalProfile.themes} candidate={candidate} language={language} />
+        {(expanded || isTop) && globalProfile?.themes && (
+          <ThemeBreakdown userThemes={globalProfile.themes} match={match} candidate={candidate} language={language} />
         )}
 
         {/* Toggle + profile link */}
@@ -1067,6 +1276,7 @@ export default function ElectionDetail() {
   const profile            = useStore(s => s.profile);
   const profileAdjustments = useStore(s => s.profileAdjustments);
   const priorityOrder      = useStore(s => s.priorityOrder);
+  const themeWeights       = useStore(s => s.themeWeights);
   const navigate           = useStore(s => s.navigate);
   const selectedElectionId = useStore(s => s.selectedElectionId);
   const setSelectedElection = useStore(s => s.selectElection);
@@ -1168,6 +1378,7 @@ export default function ElectionDetail() {
           globalProfile={adjustedProfile}
           electionAnswers={electionAnswers}
           priorityOrder={priorityOrder}
+          themeWeights={themeWeights}
           onRetake={() => {
             clearElectionAnswers(election.id);
             setStep('questionnaire');

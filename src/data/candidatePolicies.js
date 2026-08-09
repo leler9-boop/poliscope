@@ -790,6 +790,41 @@ export const CANDIDATE_POLICIES = {
     },
   },
 
+  ruffin: {
+    ECONOMY: {
+      fr: `Ruffin défend une économie protectrice des travailleurs : hausse des salaires et du SMIC, abrogation de la réforme des retraites, protectionnisme européen et « made in France » pour réindustrialiser les territoires périphériques. Il cible les dividendes et les aides publiques versées aux grandes entreprises sans contreparties.`,
+      en: `Ruffin advocates a worker-protective economy: higher wages and minimum wage, repeal of the pension reform, European protectionism and "made in France" policies to reindustrialise peripheral regions. He targets dividends and no-strings public subsidies to large corporations.`,
+    },
+    SOCIAL: {
+      fr: `Progressiste sur les droits, il met l'accent sur la question sociale plutôt que sur les débats identitaires, qu'il juge clivants pour les classes populaires. Il défend une gauche « des ronds-points » qui parle aux ouvriers et employés des petites villes.`,
+      en: `Progressive on rights, he emphasises social issues over identity debates, which he sees as divisive for the working class. He champions a left "of the roundabouts" that speaks to workers and employees in small towns.`,
+    },
+    IMMIGRATION: {
+      fr: `Position de gauche mais plus discrète que LFI : il défend la dignité et les droits des personnes migrantes tout en refusant d'en faire le cœur de son discours, privilégiant les questions de salaires et de conditions de travail communes à tous.`,
+      en: `A left-wing but lower-key position than LFI: he defends migrants' dignity and rights while declining to make immigration the core of his message, prioritising wages and working conditions shared by all.`,
+    },
+    SECURITY: {
+      fr: `Il privilégie la présence de services publics et la prévention dans les quartiers et zones rurales délaissés, plutôt qu'une surenchère répressive. Il défend une police de proximité et critique les violences policières sans discours anti-police.`,
+      en: `He prioritises public-service presence and prevention in neglected neighbourhoods and rural areas over repressive escalation. He supports community policing and criticises police violence without an anti-police discourse.`,
+    },
+    ENVIRONMENT: {
+      fr: `Il porte une « écologie populaire » : rénovation thermique massive, transports publics du quotidien, relocalisation de la production. Il refuse une écologie punitive qui ferait payer la transition aux ménages modestes et est resté prudent sur le nucléaire.`,
+      en: `He promotes a "popular ecology": mass thermal renovation, everyday public transport, relocalisation of production. He rejects punitive ecology that would make poorer households pay for the transition, and has stayed cautious on nuclear power.`,
+    },
+    DEMOCRACY: {
+      fr: `Il défend le référendum d'initiative citoyenne, une VIe République plus parlementaire et la démocratie sociale dans l'entreprise. Son mouvement Debout ! revendique un fonctionnement plus horizontal que LFI, dont il a dénoncé la verticalité.`,
+      en: `He supports citizen-initiated referendums, a more parliamentary Sixth Republic and workplace democracy. His movement Debout! claims a more horizontal functioning than LFI, whose top-down structure he has denounced.`,
+    },
+    GLOBAL: {
+      fr: `Critique de l'Europe libre-échangiste, il défend le protectionnisme aux frontières de l'UE et la relocalisation des productions stratégiques. Sur l'Ukraine, il soutient l'aide au pays agressé tout en restant prudent sur l'escalade militaire.`,
+      en: `Critical of free-trade Europe, he advocates protectionism at the EU's borders and relocating strategic production. On Ukraine, he supports aid to the attacked country while remaining cautious about military escalation.`,
+    },
+    PUBLIC_SERVICES: {
+      fr: `C'est le cœur de son projet : réouverture de services publics dans les territoires (gares, écoles, maternités, bureaux de poste), embauches massives à l'hôpital et dans l'éducation, et un « droit à la ville comme au village » contre la France à deux vitesses.`,
+      en: `The heart of his project: reopening public services across the country (train stations, schools, maternity wards, post offices), mass hiring in hospitals and education, and a "right to the city and to the village" against a two-speed France.`,
+    },
+  },
+
   roussel_2027: {
     ECONOMY: {
       fr: `Roussel défend une économie de plein emploi avec des salaires élevés et une forte protection des travailleurs. Il propose l'augmentation du SMIC, la suppression de la réforme des retraites et un soutien appuyé à l'industrie française. Il distingue le PCF de LFI en refusant le catastrophisme économique et en valorisant la production et le travail.`,

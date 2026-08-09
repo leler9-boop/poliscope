@@ -9,6 +9,10 @@ import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolici
 import { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackCandidateViewed, trackCompareStarted } from '../lib/analytics.js';
 import { ThemeComparison } from '../components/CompareBar.jsx';
+// La fiche candidat affichait ses « Positions idéologiques » depuis `candidate.profile`,
+// c'est-à-dire huit nombres `legacy-manual-v1` saisis à la main, sans preuve par position.
+// Le moteur dérive désormais ces thèmes des seules positions approuvées et relues.
+import { computeCandidateMatch } from '../engine/candidateMatch.js';
 
 
 function findCandidate(id) {
@@ -99,6 +103,20 @@ export default function CandidateProfile() {
     });
     return themes;
   }, [profile, profileAdjustments]);
+
+  // Profil candidat DÉRIVÉ. `derivedThemes[theme] === null` signifie « pas assez de positions
+  // sourcées pour ce thème » — un état distinct de « position centrale ». Ne jamais le
+  // remplacer par 50 : c'est exactement la substitution qui faisait passer une absence de
+  // donnée pour une mesure.
+  const derivedThemes = React.useMemo(() => {
+    if (!candidate) return null;
+    return computeCandidateMatch({
+      userThemes: userThemes ?? {},
+      candidate,
+      questions: election?.specificQuestions ?? [],
+      language,
+    }).derivedThemes ?? null;
+  }, [candidate, election, userThemes, language]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -241,27 +259,40 @@ export default function CandidateProfile() {
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Positions idéologiques' : 'Ideological positions'}
         </h2>
-        <ThemeComparison
-          userThemes={userThemes}
-          targetThemes={candidate.profile}
-          targetName={candidate.name.split(' ').pop()}
-          language={language}
-          policyTexts={
-            POLICY_ELECTION_IDS.has(election.id)
-              ? Object.fromEntries(
-                  Object.entries(CANDIDATE_POLICIES[candidateId] ?? {}).map(([theme, vals]) => [
-                    theme,
-                    (() => {
-                      const uScore = userThemes?.[theme];
-                      const cScore = candidate.profile?.[theme] ?? 50;
-                      const diff   = uScore != null ? Math.abs(uScore - cScore) : null;
-                      return diff != null && diff < 28 ? (vals?.[language] ?? null) : null;
-                    })(),
-                  ])
-                )
-              : {}
-          }
-        />
+        {derivedThemes && Object.values(derivedThemes).some(v => v != null) ? (
+          <ThemeComparison
+            userThemes={userThemes}
+            targetThemes={derivedThemes}
+            targetName={candidate.name.split(' ').pop()}
+            language={language}
+            policyTexts={
+              POLICY_ELECTION_IDS.has(election.id)
+                ? Object.fromEntries(
+                    Object.entries(CANDIDATE_POLICIES[candidateId] ?? CANDIDATE_POLICIES[baseId(candidateId)] ?? {}).map(([theme, vals]) => [
+                      theme,
+                      (() => {
+                        const uScore = userThemes?.[theme];
+                        const cScore = derivedThemes?.[theme];
+                        // Sans position sourcée pour ce thème, aucun texte de politique n'est
+                        // affiché : le rapprocher du profil de l'utilisateur supposerait une
+                        // proximité qu'aucune preuve n'établit.
+                        if (uScore == null || cScore == null) return null;
+                        return Math.abs(uScore - cScore) < 28 ? (vals?.[language] ?? null) : null;
+                      })(),
+                    ])
+                  )
+                : {}
+            }
+          />
+        ) : (
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {language === 'fr'
+                ? `Aucune position sourcée et relue n'est encore publiée pour ${candidate.name}. Les positions idéologiques apparaîtront ici lorsqu'elles seront étayées par des sources vérifiées, question par question — nous n'affichons pas d'estimation à la place.`
+                : `No sourced, reviewed position has been published for ${candidate.name} yet. Ideological positions will appear here once backed by verified sources, question by question — we do not display an estimate instead.`}
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Compare with others */}

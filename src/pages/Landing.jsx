@@ -86,7 +86,7 @@ export default function Landing() {
       Icon: IconVote,
       title: language === 'fr' ? 'Élections réelles' : 'Real elections',
       desc:  language === 'fr'
-        ? 'Comparez votre profil aux candidats des vraies élections, avec des scores d\'alignement précis.'
+        ? 'Comparez votre profil aux candidats des vraies élections, à partir de positions sourcées et relues.'
         : 'Compare yourself to candidates in real elections, with precise alignment scores.',
       action:      profile ? () => navigate('elections') : null,
       actionLabel: language === 'fr' ? 'Explorer les élections →' : 'Explore elections →',

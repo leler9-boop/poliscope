@@ -30,7 +30,7 @@ const content = {
       {
         n: '04',
         heading: 'Distance is turned into a score',
-        body: 'Small distances produce high compatibility. Large distances produce low compatibility. Strong disagreement — where you are at opposite ends of the scale — is penalised more than moderate disagreement. The final score for each candidate is a percentage between 0% and 100%.',
+        body: 'Small distances produce a high proximity index; large distances a low one. Strong disagreement — opposite ends of the scale — is penalised more than moderate disagreement. The final figure is an index out of 100, NOT a percentage: it is neither a share of shared positions nor a probability. Six themes also act as major-disagreement penalties, and your own priorities weight every theme.',
       },
       {
         n: '05',
@@ -88,7 +88,7 @@ const content = {
       {
         n: "04",
         heading: "La distance est convertie en score",
-        body: "Les petites distances produisent une forte compatibilité. Les grandes distances produisent une faible compatibilité. Le désaccord fort — où vous êtes aux extrêmes opposés de l'échelle — est pénalisé davantage qu'un désaccord modéré. Le score final pour chaque candidat est un pourcentage entre 0 % et 100 %.",
+        body: "Les petites distances produisent un indice de proximité élevé, les grandes un indice faible. Le désaccord fort — positions aux extrêmes opposés — est pénalisé davantage qu'un désaccord modéré. Le chiffre final est un indice sur 100, PAS un pourcentage : ce n'est ni une part de positions communes, ni une probabilité. Six thèmes jouent en outre le rôle de désaccords majeurs, et vos propres priorités pondèrent chaque thème.",
       },
       {
         n: "05",

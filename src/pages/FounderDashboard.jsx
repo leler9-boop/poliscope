@@ -15,10 +15,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 
-// ─── Config ──────────────────────────────────────────────────────────────────
-// Mot de passe local basique — empêche l'accès accidentel public.
-// Ce n'est PAS une sécurité forte : les données sont des agrégats anonymisés.
-const DASHBOARD_PIN = 'poliscop2027';
+// ─── Autorisation ────────────────────────────────────────────────────────────
+//
+// AVANT (retiré le 2026-08-09) : un PIN en clair, `const DASHBOARD_PIN = '…'`, compilé dans
+// le bundle JavaScript envoyé à tous les visiteurs. N'importe qui pouvait le lire dans les
+// sources du navigateur. Pire, il ne protégeait rien : les RPC d'agrégats étaient exécutables
+// directement par le rôle `anon`, donc accessibles sans jamais voir cet écran.
+//
+// MAINTENANT : l'autorisation est vérifiée CÔTÉ SERVEUR. Le frontend se contente de masquer
+// l'interface ; c'est `is_founder_admin()` (Postgres) et les GRANT restreints de
+// `supabase/schema_v7_admin_security.sql` qui font foi. Aucun secret ne transite par le bundle.
+//
+// ⚠ La migration v7 N'A PAS ÉTÉ APPLIQUÉE (projet Supabase de production inaccessible depuis
+// cet environnement). Tant qu'elle ne l'est pas, ce garde-fou frontend refusera l'accès mais
+// les RPC historiques resteront ouvertes à `anon`. Voir docs/security/production-audit-runbook.md.
+async function checkFounderAccess() {
+  if (!isSupabaseEnabled || !supabase) return { allowed: false, reason: 'supabase_off' };
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return { allowed: false, reason: 'not_signed_in' };
+  const { data, error } = await supabase.rpc('is_founder_admin');
+  if (error) return { allowed: false, reason: 'rpc_unavailable', detail: error.message };
+  return { allowed: data === true, reason: data === true ? 'ok' : 'not_admin' };
+}
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
@@ -455,56 +473,47 @@ function Dashboard() {
 
 // ─── Auth Gate ────────────────────────────────────────────────────────────────
 
-export default function FounderDashboard() {
-  const [unlocked, setUnlocked] = useState(() => {
-    try { return sessionStorage.getItem('founder_unlocked') === 'yes'; } catch { return false; }
-  });
-  const [pin, setPin] = useState('');
-  const [error, setError] = useState(false);
+const DENIAL_MESSAGES = {
+  supabase_off:    'Supabase n’est pas configuré dans cet environnement : le tableau de bord est indisponible.',
+  not_signed_in:   'Connectez-vous avec votre compte Poliscop administrateur pour accéder à ce tableau de bord.',
+  not_admin:       'Ce compte n’a pas le rôle administrateur.',
+  rpc_unavailable: 'Contrôle d’autorisation indisponible côté serveur : la migration schema_v7_admin_security.sql n’est pas appliquée. Accès refusé par défaut.',
+};
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (pin === DASHBOARD_PIN) {
-      try { sessionStorage.setItem('founder_unlocked', 'yes'); } catch {}
-      setUnlocked(true);
-    } else {
-      setError(true);
-      setPin('');
-      setTimeout(() => setError(false), 2000);
-    }
+export default function FounderDashboard() {
+  // `checking` → on ne montre RIEN tant que le serveur n'a pas répondu. Pas d'état « déverrouillé »
+  // conservé en sessionStorage : un flag local n'est pas une autorisation.
+  const [state, setState] = useState({ status: 'checking' });
+
+  useEffect(() => {
+    let cancelled = false;
+    checkFounderAccess().then(res => {
+      if (!cancelled) setState({ status: res.allowed ? 'allowed' : 'denied', ...res });
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  if (state.status === 'checking') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="w-5 h-5 rounded-full border-2 border-gray-200 border-t-blue-500 animate-spin" />
+      </div>
+    );
   }
 
-  if (unlocked) return <Dashboard />;
+  if (state.status === 'allowed') return <Dashboard />;
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 w-full max-w-sm text-center">
-        <div className="text-3xl mb-4">📊</div>
+        <div className="text-3xl mb-4">🔒</div>
         <h1 className="text-lg font-bold text-gray-900 mb-1">Dashboard POLISCOP</h1>
-        <p className="text-sm text-gray-400 mb-6">Accès fondateur uniquement</p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="password"
-            value={pin}
-            onChange={e => setPin(e.target.value)}
-            placeholder="Mot de passe"
-            autoFocus
-            className={[
-              'w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 mb-4',
-              error
-                ? 'border-red-300 ring-red-200 bg-red-50 text-red-700'
-                : 'border-gray-200 ring-blue-200',
-            ].join(' ')}
-          />
-          <button
-            type="submit"
-            className="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-black transition-colors"
-          >
-            Accéder
-          </button>
-        </form>
-        {error && (
-          <p className="text-xs text-red-500 mt-3">Mot de passe incorrect</p>
+        <p className="text-sm text-gray-400 mb-6">Accès réservé aux administrateurs</p>
+        <p className="text-sm text-gray-600">
+          {DENIAL_MESSAGES[state.reason] ?? DENIAL_MESSAGES.not_admin}
+        </p>
+        {state.detail && (
+          <p className="mt-3 text-[11px] text-gray-400 break-words">{state.detail}</p>
         )}
       </div>
     </div>

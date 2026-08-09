@@ -21,6 +21,10 @@ import { motion } from 'motion/react';
 import { getRarityLine, ARCHETYPE_RARITY } from '../data/archetypeRarity.js';
 import { THEME_COLORS, THEMES_ORDER } from '../data/questions.js';
 import { trackProfileShared, trackProfileDownloaded, trackShareModalOpened } from '../lib/analytics.js';
+// Troisième occurrence de la même classe de bug (après MatchCard puis les pages figures) :
+// `formatProximity()` et `coverageLabel()` étaient appelés sans import — le modal de partage
+// aurait planté à l'ouverture. Détectée par le balayage statique de tests/ui/render.test.mjs.
+import { formatProximity, coverageLabel } from '../engine/scoreDisplay.js';
 
 const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
@@ -78,8 +82,8 @@ const THEME_ABBR_EN = {
 // Intermediate thresholds handle improve-mode and partial completions.
 function getConfidenceLevel(answeredCount, lang) {
   const n = answeredCount ?? 0;
-  if (n >= 64) return { label: lang === 'fr' ? 'Profil très fiable'   : 'Highly reliable profile', bars: 5 };
-  if (n >= 32) return { label: lang === 'fr' ? 'Profil robuste'       : 'Robust profile',          bars: 4 };
+  if (n >= 64) return { label: coverageLabel('very_high', lang), bars: 5 };
+  if (n >= 32) return { label: coverageLabel('high', lang), bars: 4 };
   if (n >= 24) return { label: lang === 'fr' ? 'Profil en cours'      : 'Profile building',        bars: 3 };
   if (n >= 16) return { label: lang === 'fr' ? 'Première estimation'  : 'First estimation',        bars: 2 };
   return               { label: lang === 'fr' ? 'Profil en cours'     : 'Profile in progress',     bars: 1 };
@@ -277,6 +281,18 @@ export default function ProfileShareModal({
           transition={{ duration: 0.40, ease: [0.34, 1.08, 0.64, 1] }}
           onClick={e => e.stopPropagation()}
         >
+
+          {/* Avertissement de sensibilité — le lien encode les huit scores politiques dans
+              son URL. Un lien « anonyme » au sens où il ne porte pas de nom reste une donnée
+              d'opinion politique (article 9 du RGPD) dès qu'il est recoupé avec l'identité de
+              la personne qui l'envoie. L'utilisateur doit le savoir AVANT de copier. */}
+          <div className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5">
+            <p className="text-[11px] text-amber-900 leading-relaxed">
+              {lang === 'fr'
+                ? <><span className="font-semibold">Ce lien contient tes scores politiques.</span> Quiconque l’ouvre — ou le reçoit en transfert — voit tes positions sur les huit thèmes. Ne le partage qu’avec des personnes de confiance.</>
+                : <><span className="font-semibold">This link contains your political scores.</span> Anyone who opens it — or receives it forwarded — sees your positions across all eight themes. Only share it with people you trust.</>}
+            </p>
+          </div>
 
           {/* ── Action buttons — ABOVE card, always visible ── */}
           <div className="flex flex-col gap-2.5">
@@ -537,7 +553,7 @@ export default function ProfileShareModal({
                     textTransform: 'uppercase', letterSpacing: '0.16em',
                     marginBottom: 10,
                   }}>
-                    {lang === 'fr' ? 'Compatibilité 2027' : '2027 Match'}
+                    {lang === 'fr' ? 'Proximité 2027' : '2027 proximity'}
                   </p>
 
                   {/* The big number — the most shareable element */}
@@ -551,7 +567,7 @@ export default function ProfileShareModal({
                         `0 2px 8px rgba(0,0,0,0.5)`,
                       ].join(', '),
                     }}>
-                      {topCandidate.alignment}%
+                      {formatProximity(topCandidate.alignment)}
                     </span>
                   </div>
 

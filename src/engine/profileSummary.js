@@ -146,8 +146,8 @@ function getOverallSentence(rankedCurrents, lang) {
   }
 
   return lang === 'fr'
-    ? `Dans l'ensemble, vos tendances politiques se rapprochent le plus de « ${topName} » (${top.alignment}% de compatibilité).`
-    : `Overall, your political tendencies lean most strongly toward ${topName} (${top.alignment}% match).`;
+    ? `Dans l'ensemble, vos tendances politiques se rapprochent le plus de « ${topName} » (indice de proximité ${top.alignment}/100).`
+    : `Overall, your political tendencies lean most strongly toward ${topName} (proximity index ${top.alignment}/100).`;
 }
 
 // ─── Utility ─────────────────────────────────────────────────────────────────

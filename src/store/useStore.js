@@ -1,10 +1,17 @@
 // POLISCOP — Zustand Store
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { calculateProfile } from '../engine/scorer.js';
-import { THEMES_ORDER, getQuestionQueue, questions as allQuestions } from '../data/questions.js';
+import { calculateProfile, isScorable, NO_OPINION } from '../engine/scorer.js';
+// Sélection contrôlée v1/v2 : le drapeau vit dans scoringVersion.js, jamais dans l'appelant.
+import { calculateActiveProfile, profileAnsweredCount } from '../engine/scoringVersion.js';
+import { generateSeed } from '../engine/rng.js';
+import { parseImport } from '../engine/importSchema.js';
+import { currentVersions, EXPORT_FORMAT_VERSION, QUESTIONNAIRE_VERSION, QUEUE_ALGORITHM_VERSION } from '../engine/versions.js';
+import { THEMES_ORDER, getQuestionQueue, getQuestionsByIds, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
+import { setMeasurementConsent } from '../lib/anonymous.js';
+import { toCloudAnswerRow, cloudAnsweredCount } from '../lib/cloudAnswers.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 import {
   trackTestStart,
@@ -12,7 +19,6 @@ import {
   trackImproveStarted,
   trackImproveCompleted,
   trackRetakeStarted,
-  setAnalyticsConsent,
 } from '../lib/analytics.js';
 
 // Consent text version — bump this if the consent copy shown to users changes
@@ -91,7 +97,11 @@ export const useStore = create(
       //                true = granted | false = explicitly declined.
       // This is the single gate checked before any Supabase write of answers,
       // computed profile, or archetype/candidate-carrying analytics events.
-      consent: { politicalData: null, grantedAt: null, version: null },
+      // measurement : consentement DISTINCT à la mesure d'audience (identifiant persistant
+      // dans localStorage + événements de parcours). null = non décidé ⇒ aucune collecte et
+      // aucun UUID déposé. Séparé de politicalData : accepter l'analyse de ses opinions ne
+      // vaut pas acceptation d'un traceur, et inversement.
+      consent: { politicalData: null, measurement: null, grantedAt: null, version: null },
 
       // ── Profile reveal (session-only) — true once after quiz completion ──
       profileRevealPending: false,
@@ -118,6 +128,19 @@ export const useStore = create(
 
       // ── Priority weights (100 points allocated across themes, null = equal) ──
       themeWeights: null, // { ECONOMY: 20, SOCIAL: 15, … } summing to 100
+
+      // ── Reproductibilité et reprise de la passation ──
+      // Graine du tirage des questions. Persistée avec le profil : sans elle, la file exacte
+      // à laquelle l'utilisateur a répondu est irrécupérable.
+      queueSeed: null,
+      // Identifiants de la file, persistés pour la REPRISE après rechargement.
+      // `questionsQueue` contient les objets complets et n'est PAS persisté (poids inutile
+      // dans localStorage, et cela figerait le texte des questions). Avant ce correctif,
+      // recharger /quiz affichait « Aucune question disponible » : la file était perdue.
+      queueQuestionIds: [],
+      // Métadonnées permettant de REFUSER une reprise devenue incohérente.
+      // { mode, seed, questionnaireVersion, queueAlgorithmVersion }
+      queueMeta: null,
 
       // ── Election module ──
       selectedElectionId: null,
@@ -167,10 +190,23 @@ export const useStore = create(
 
       startTest: (mode) => {
         const { priorityOrder, language } = get();
-        const queue = getQuestionQueue(mode, priorityOrder);
+        // Une graine est tirée UNE fois par passation puis persistée : c'est elle qui rend la
+        // file reproductible (reprise après interruption, ré-audit d'un résultat, comparaison
+        // de deux passations). Avant, `Math.random()` produisait une file différente à chaque
+        // appel sans qu'aucune trace ne permette de la reconstituer.
+        const queueSeed = generateSeed();
+        const queue = getQuestionQueue(mode, priorityOrder, queueSeed);
         set({
           testMode: mode,
+          queueSeed,
           questionsQueue: queue,
+          queueQuestionIds: queue.map(q => q.id),
+          queueMeta: {
+            mode,
+            seed: queueSeed,
+            questionnaireVersion: QUESTIONNAIRE_VERSION,
+            queueAlgorithmVersion: QUEUE_ALGORITHM_VERSION,
+          },
           currentQuestionIndex: 0,
           currentPage: 'questionnaire',
         });
@@ -240,16 +276,38 @@ export const useStore = create(
        * Supabase's user_consents table (for logged-in users) happens separately
        * in auth.jsx — this action only updates local/device state.
        */
-      setConsent: (granted) => {
-        const consent = { politicalData: granted === true, grantedAt: new Date().toISOString(), version: CONSENT_VERSION };
+      /**
+       * @param {boolean} granted        consentement au traitement des opinions politiques
+       * @param {{measurement?: boolean}} [options] consentement distinct à la mesure d'audience
+       *   (identifiant persistant + événements de parcours). Non renseigné ⇒ refusé :
+       *   la mesure ne démarre jamais par défaut.
+       */
+      setConsent: (granted, options = {}) => {
+        const measurement = options.measurement === true;
+        const consent = {
+          politicalData: granted === true,
+          measurement,
+          grantedAt: new Date().toISOString(),
+          version: CONSENT_VERSION,
+        };
         set({ consent });
-        setAnalyticsConsent(granted === true);
+        setMeasurementConsent(measurement);
       },
 
-      /** Explicit withdrawal — distinct action from setConsent(false) only for readability at call sites. */
-      withdrawConsent: () => {
-        set({ consent: { politicalData: false, grantedAt: new Date().toISOString(), version: CONSENT_VERSION } });
-        setAnalyticsConsent(false);
+      /**
+       * Retrait du consentement aux données politiques.
+       * @param {{measurement?: boolean}} [options] la mesure d'audience est une décision
+       *   SÉPARÉE, locale au terminal. Sans valeur explicite, elle est retirée elle aussi
+       *   (comportement d'un « tout refuser »). Avec `measurement: true`, l'utilisateur
+       *   refuse la sauvegarde de ses opinions MAIS autorise la mesure — une combinaison
+       *   que le produit décrivait comme possible sans jamais la permettre.
+       */
+      withdrawConsent: ({ measurement } = {}) => {
+        const keepMeasurement = measurement === true;
+        set({ consent: { politicalData: false, measurement: keepMeasurement, grantedAt: new Date().toISOString(), version: CONSENT_VERSION } });
+        // Purge immédiate de l'identifiant local si la mesure est refusée : un retrait doit
+        // arrêter la collecte ET effacer le traceur déjà déposé, pas seulement cesser d'émettre.
+        setMeasurementConsent(keepMeasurement);
       },
 
       /**
@@ -258,8 +316,21 @@ export const useStore = create(
        * rather than stamping "now", since this isn't a new decision.
        */
       hydrateConsent: ({ granted, grantedAt, version }) => {
-        set({ consent: { politicalData: granted === true, grantedAt: grantedAt ?? null, version: version ?? null } });
-        setAnalyticsConsent(granted === true);
+        // `measurement` est une décision LOCALE au terminal (traceur déposé sur cet appareil)
+        // et n'est pas stockée côté serveur : la réhydratation depuis `user_consents` ne doit
+        // donc jamais l'écraser. Avant ce correctif, se connecter effaçait silencieusement le
+        // choix de mesure d'audience de l'appareil, et le gate n'était pas resynchronisé.
+        const previous = get().consent ?? {};
+        const measurement = previous.measurement ?? null;
+        set({
+          consent: {
+            politicalData: granted === true,
+            measurement,
+            grantedAt: grantedAt ?? null,
+            version: version ?? null,
+          },
+        });
+        setMeasurementConsent(measurement === true);
       },
 
       setSyncConflict: (v) => set({ syncConflict: v }),
@@ -316,7 +387,9 @@ export const useStore = create(
 
       answerQuestion: (questionId, value) => {
         const newAnswers = { ...get().answers, [questionId]: value };
-        const profile = calculateProfile(newAnswers);
+        // La file réellement posée est transmise au scoring : sans elle, la couverture v2
+        // se calculerait sur toute la banque au lieu des questions effectivement servies.
+        const profile = calculateActiveProfile(newAnswers, { askedQuestionIds: get().queueQuestionIds });
         const now = new Date().toISOString();
         set({ answers: newAnswers, profile, profileLastUpdated: now });
 
@@ -335,16 +408,29 @@ export const useStore = create(
         const { userId, consent } = get();
         const hasConsent = consent?.politicalData === true;
         if (isSupabaseEnabled && supabase && userId && hasConsent) {
-          // Save individual answer
-          supabase
-            .from('user_answers')
-            .upsert(
-              { user_id: userId, question_id: questionId, answer_value: value },
-              { onConflict: 'user_id,question_id' }
-            )
-            .then(({ error }) => {
-              if (error) console.error('[Poliscop] Supabase answer save error:', error.message);
-            });
+          // `answer_value` est un smallint : « sans opinion » ne peut pas y être écrit.
+          // Passage obligatoire par src/lib/cloudAnswers.js — ne jamais reconstruire la
+          // ligne à la main ici, c'est ce qui avait produit l'erreur d'écriture.
+          const row = toCloudAnswerRow(userId, questionId, value);
+          if (row) {
+            supabase
+              .from('user_answers')
+              .upsert(row, { onConflict: 'user_id,question_id' })
+              .then(({ error }) => {
+                if (error) console.error('[Poliscop] Supabase answer save error:', error.message);
+              });
+          } else {
+            // La réponse est devenue « sans opinion » : on retire la ligne distante, sinon
+            // le cloud conserverait une position que l'utilisateur vient de retirer.
+            supabase
+              .from('user_answers')
+              .delete()
+              .eq('user_id', userId)
+              .eq('question_id', questionId)
+              .then(({ error }) => {
+                if (error) console.error('[Poliscop] Supabase answer clear error:', error.message);
+              });
+          }
           // Save profile snapshot (answered_count used for cross-device sync)
           supabase
             .from('user_profiles')
@@ -355,7 +441,15 @@ export const useStore = create(
                 axes:             profile.axes,
                 confidence:       profile.confidence ?? 'very_low',
                 confidence_score: profile.confidenceScore ?? 0,
-                answered_count:   Object.keys(newAnswers).length,
+                // Ne compte que les réponses exploitables. Comptait auparavant les « sans
+                // opinion », ce qui faussait l'arbitrage de conflit local/cloud (l'appareil
+                // avec le plus de questions passées gagnait).
+                answered_count:   cloudAnsweredCount(newAnswers),
+                // Trace de la MÉTHODE : sans elle, un snapshot relu est ininterprétable et
+                // deux versions de scoring se mélangeraient dans une même moyenne.
+                // Colonnes ajoutées par 20260809130000_profile_versions.sql.
+                scoring_version:       profile?.versions?.scoring ?? null,
+                questionnaire_version: profile?.versions?.questionnaire ?? null,
               },
               { onConflict: 'user_id' }
             )
@@ -371,23 +465,65 @@ export const useStore = create(
        */
       hydrateFromCloud: (cloudAnswers) => {
         if (!cloudAnswers || Object.keys(cloudAnswers).length === 0) return;
-        const profile = calculateProfile(cloudAnswers);
+        // La file d'origine de la passation distante est inconnue : la couverture v2 le
+        // déclarera (`basedOnQueue: false`) au lieu d'inventer un dénominateur.
+        const profile = calculateActiveProfile(cloudAnswers);
         set({ answers: cloudAnswers, profile });
       },
+
+      /**
+       * Reconstruit la file après un rechargement de page.
+       *
+       * Appelée à la réhydratation du store. Refuse la reprise plutôt que de servir une file
+       * approximative : si le questionnaire ou l'algorithme de file a changé depuis la
+       * passation, ou si des questions ont disparu de la banque, la file n'est plus celle à
+       * laquelle l'utilisateur répondait.
+       *
+       * @returns {{resumed: boolean, reason?: string}}
+       */
+      resumeQuestionnaire: () => {
+        const { queueQuestionIds, queueMeta, questionsQueue, currentQuestionIndex } = get();
+        if (questionsQueue?.length > 0) return { resumed: true };          // déjà en mémoire
+        if (!queueQuestionIds?.length) return { resumed: false, reason: 'no_queue' };
+
+        if (queueMeta?.questionnaireVersion !== QUESTIONNAIRE_VERSION) {
+          return { resumed: false, reason: 'questionnaire_version_changed' };
+        }
+        if (queueMeta?.queueAlgorithmVersion !== QUEUE_ALGORITHM_VERSION) {
+          return { resumed: false, reason: 'queue_algorithm_changed' };
+        }
+
+        const { queue, missing } = getQuestionsByIds(queueQuestionIds);
+        if (missing.length > 0) return { resumed: false, reason: 'questions_missing' };
+
+        set({
+          questionsQueue: queue,
+          // L'index est borné : une valeur persistée aberrante ne doit pas produire un écran vide.
+          currentQuestionIndex: Math.min(Math.max(0, currentQuestionIndex ?? 0), queue.length - 1),
+          testMode: queueMeta?.mode ?? get().testMode,
+          queueSeed: queueMeta?.seed ?? get().queueSeed,
+        });
+        return { resumed: true };
+      },
+
+      /** Abandonne une file non reprenable, sans toucher aux réponses déjà données. */
+      discardQueue: () => set({
+        questionsQueue: [], queueQuestionIds: [], queueMeta: null, currentQuestionIndex: 0,
+      }),
 
       nextQuestion: () => {
         const { currentQuestionIndex, questionsQueue } = get();
         if (currentQuestionIndex < questionsQueue.length - 1) {
           set({ currentQuestionIndex: currentQuestionIndex + 1 });
         } else {
-          const { answers, testMode, language } = get();
-          const profile = calculateProfile(answers);
+          const { answers, testMode, language, queueQuestionIds } = get();
+          const profile = calculateActiveProfile(answers, { askedQuestionIds: queueQuestionIds });
           set({ profile, currentPage: 'profile' });
           routerNavigate('/profile');
           trackTestComplete({
             mode: testMode,
-            answeredCount: Object.keys(answers).length,
-            totalCount: profile.totalQuestions,
+            answeredCount: profileAnsweredCount(profile),
+            totalCount: queueQuestionIds?.length ?? null,
             lang: language,
           });
         }
@@ -401,8 +537,12 @@ export const useStore = create(
       },
 
       finishQuestionnaire: () => {
-        const { answers, testMode, language } = get();
-        const profile = calculateProfile(answers);
+        const { answers, testMode, language, queueQuestionIds } = get();
+        // Version ACTIVE, pas v1 en dur : `nextQuestion()`, `finishQuestionnaire()`,
+        // `hydrateFromCloud()` et `importProfile()` recalculaient tous explicitement en v1,
+        // ce qui rendait le drapeau VITE_SCORING_VERSION trompeur — le profil affiché après
+        // la dernière question écrasait celui calculé en v2 par answerQuestion().
+        const profile = calculateActiveProfile(answers, { askedQuestionIds: queueQuestionIds });
         set({ profile, currentPage: 'profile', profileRevealPending: true });
         routerNavigate('/profile');
         trackTestComplete({
@@ -434,13 +574,26 @@ export const useStore = create(
       },
 
       exportProfile: () => {
-        const { answers, profile, priorityOrder } = get();
+        const { answers, profile, priorityOrder, themeWeights, queueSeed, testMode, questionsQueue } = get();
         const data = {
-          version: '1.0',
+          // Le format 1.0 embarquait les scores sans dire comment ils avaient été calculés :
+          // relire un vieil export était impossible dès que la méthode changeait.
+          version: EXPORT_FORMAT_VERSION,
           exportDate: new Date().toISOString(),
           answers,
+          // `profile` reste exporté pour lecture humaine, mais il est TOUJOURS recalculé à
+          // l'import : il est indicatif, jamais la source de vérité.
           profile,
           priorityOrder,
+          themeWeights,
+          queueSeed,
+          testMode,
+          questionnaireVersion: QUESTIONNAIRE_VERSION,
+          questionIds: (questionsQueue ?? []).map(q => q.id),
+          // Versions RÉELLES du profil exporté. `currentVersions()` retombait par défaut sur
+          // `scoring: 'v1'` : un profil calculé en v2 s'exportait donc étiqueté v1, et se
+          // relisait comme tel. La version d'origine fait foi.
+          versions: profile?.versions ?? currentVersions(),
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -451,23 +604,72 @@ export const useStore = create(
         URL.revokeObjectURL(url);
       },
 
+      /**
+       * Import d'un profil exporté.
+       *
+       * Règle non négociable : le profil est TOUJOURS recalculé depuis les réponses validées.
+       * L'ancienne version faisait `profile: data.profile`, c'est-à-dire qu'un fichier JSON
+       * fabriqué à la main pouvait imposer n'importe quels scores — et qu'un export d'une
+       * version antérieure du moteur restait affiché comme s'il venait du moteur courant.
+       *
+       * @returns {true | {error: string}} true si importé, sinon un motif exploitable par l'UI.
+       */
       importProfile: (jsonData) => {
-        try {
-          const data = JSON.parse(jsonData);
-          if (data.answers && data.profile) {
-            set({
-              answers: data.answers,
-              profile: data.profile,
-              priorityOrder: data.priorityOrder ?? [...THEMES_ORDER],
-              currentPage: 'profile',
-            });
-            routerNavigate('/profile');
-            return true;
+        const parsed = parseImport(jsonData, {
+          knownQuestionIds: new Set(allQuestions.map(q => q.id)),
+          isAcceptableAnswer: v => isScorable(v) || v === NO_OPINION,
+        });
+        if (!parsed.ok) return { error: parsed.error };
+
+        const v = parsed.value;
+
+        // Reconstruction de la file si l'export en contenait une ET qu'elle reste compatible.
+        // Sinon la session est importée sans file — l'utilisateur relance un questionnaire.
+        let queue = [];
+        let queueMeta = null;
+        if (v.questionIds && v.questionnaireVersion === QUESTIONNAIRE_VERSION
+            && (v.queueAlgorithmVersion == null || v.queueAlgorithmVersion === QUEUE_ALGORITHM_VERSION)) {
+          const rebuilt = getQuestionsByIds(v.questionIds);
+          if (rebuilt.missing.length === 0) {
+            queue = rebuilt.queue;
+            queueMeta = {
+              mode: v.testMode,
+              seed: v.queueSeed,
+              questionnaireVersion: QUESTIONNAIRE_VERSION,
+              queueAlgorithmVersion: QUEUE_ALGORITHM_VERSION,
+            };
           }
-        } catch (e) {
-          console.error('Import failed:', e);
         }
-        return false;
+
+        // TOUS les champs de session sont écrits explicitement, y compris à `null`.
+        // Un `?? get().champ` ferait survivre l'état local antérieur — c'est précisément le
+        // défaut relevé sur `themeWeights` : des poids saisis par l'utilisateur continuaient
+        // de pondérer un profil importé d'ailleurs.
+        set({
+          answers: v.answers,
+          // Recalcul systématique, jamais `data.profile` — et avec la version ACTIVE.
+          profile: calculateActiveProfile(v.answers, { askedQuestionIds: v.questionIds ?? null }),
+          priorityOrder: v.priorityOrder ?? [...THEMES_ORDER],
+          themeWeights: v.themeWeights,           // null = réinitialisé, pas « inchangé »
+          queueSeed: v.queueSeed,
+          testMode: v.testMode,
+          questionsQueue: queue,
+          queueQuestionIds: queue.map(q => q.id),
+          queueMeta,
+          currentQuestionIndex: 0,
+          profileAdjustments: {},                 // un ajustement manuel ne se transporte pas
+          importedFrom: {
+            formatVersion: v.formatVersion,
+            questionnaireVersion: v.questionnaireVersion ?? 'inconnue',
+            droppedAnswers: v.droppedAnswers,
+            warnings: parsed.warnings,
+            queueRestored: queue.length > 0,
+            importedAt: new Date().toISOString(),
+          },
+          currentPage: 'profile',
+        });
+        routerNavigate('/profile');
+        return true;
       },
     }),
     {
@@ -480,6 +682,14 @@ export const useStore = create(
         electionAnswers: state.electionAnswers,
         profileAdjustments: state.profileAdjustments,
         themeWeights: state.themeWeights,
+        queueSeed: state.queueSeed,
+        testMode: state.testMode,
+        // Reprise du questionnaire après rechargement : IDs + position + métadonnées de
+        // validité. La file complète reste hors localStorage (poids, texte figé).
+        queueQuestionIds: state.queueQuestionIds,
+        queueMeta: state.queueMeta,
+        currentQuestionIndex: state.currentQuestionIndex,
+        importedFrom: state.importedFrom,
         profileLastUpdated: state.profileLastUpdated,
         consent: state.consent,
         lastLearn: state.lastLearn,
@@ -490,7 +700,10 @@ export const useStore = create(
       // state is available — before this runs, it defaults to false (fail-closed:
       // no tracking of political content until we positively know consent was granted).
       onRehydrateStorage: () => (state) => {
-        setAnalyticsConsent(state?.consent?.politicalData === true);
+        setMeasurementConsent(state?.consent?.measurement === true);
+        // Reconstruit la file du questionnaire depuis les IDs persistés. Sans cela, un
+        // rechargement direct sur /quiz affichait « Aucune question disponible ».
+        try { state?.resumeQuestionnaire?.(); } catch { /* file inutilisable — écran de reprise */ }
       },
     }
   )

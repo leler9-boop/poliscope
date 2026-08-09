@@ -20,7 +20,7 @@ const content = {
     s3_label: 'The idea',
     s3_heading: 'What if you could compare ideas without the noise?',
     s3_p1: 'Poliscop tries to do something simpler. Instead of opinions and arguments, it focuses on policies and positions. You answer a set of structured questions about real political issues — immigration, public spending, climate, security, and so on.',
-    s3_p2: 'Your answers are then compared to the positions held by candidates or parties. The closer your views are to theirs, the higher your compatibility score. That is the whole mechanism.',
+    s3_p2: 'Your answers are then compared to the positions held by candidates or parties. The closer your views are to theirs, the higher your proximity index out of 100. That is the whole mechanism — it is not a percentage of agreement and not a voting recommendation.',
     s3_p3: "There is no editorial voice here. No commentary telling you who is right or wrong. The tool does not tell you who to vote for. Its only goal is to show you which candidates are closest to your own expressed views — and let you decide what to do with that.",
 
     s4_label: 'Independent thinking',
@@ -66,7 +66,7 @@ const content = {
     s3_label: "L'idée",
     s3_heading: "Et si on pouvait comparer les idées sans tout ce bruit ?",
     s3_p1: "Poliscop tente de faire quelque chose de plus simple. Au lieu d'opinions et d'arguments, il se concentre sur les politiques et les positions. Vous répondez à un ensemble de questions structurées sur des enjeux politiques réels — immigration, dépenses publiques, climat, sécurité, et ainsi de suite.",
-    s3_p2: "Vos réponses sont ensuite comparées aux positions des candidats ou partis. Plus vos opinions sont proches des leurs, plus votre score de compatibilité est élevé. C'est le mécanisme entier.",
+    s3_p2: "Vos réponses sont ensuite comparées aux positions des candidats ou partis. Plus vos opinions sont proches des leurs, plus votre indice de proximité sur 100 est élevé. C'est tout le mécanisme — ce n'est ni un pourcentage d'accord, ni une recommandation de vote.",
     s3_p3: "Il n'y a pas de voix éditoriale ici. Pas de commentaire qui dit qui a tort ou raison. L'outil ne vous dit pas pour qui voter. Son seul but est de montrer quels candidats sont les plus proches de vos opinions exprimées — et vous laisser décider ce que vous en faites.",
 
     s4_label: "Penser par soi-même",

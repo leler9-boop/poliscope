@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase.js';
 import { useStore, CONSENT_VERSION } from '../store/useStore.js';
 import { initAnonymousSession, mergeAnonymousAnswers } from './anonymous.js';
+import { syncAnswersToCloud, fromCloudAnswerRows, mergeCloudIntoLocal, cloudAnsweredCount } from './cloudAnswers.js';
 import { trackSignupCompleted, trackLoginCompleted } from './analytics.js';
 
 const AuthContext = createContext(null);
@@ -37,7 +38,9 @@ export function AuthProvider({ children }) {
 
     const storeState    = useStore.getState();
     const localAnswers  = storeState.answers;
-    const localCount    = Object.keys(localAnswers).length;
+    // Comparé à `user_profiles.answered_count`, qui ne compte que les réponses scorables :
+    // les deux côtés doivent compter la même chose, sinon l'arbitrage de conflit est faussé.
+    const localCount    = cloudAnsweredCount(localAnswers);
 
     // Fetch cloud profile snapshot for count + timestamp comparison.
     // user_profiles has created_at only (no updated_at column).
@@ -75,8 +78,9 @@ export function AuthProvider({ children }) {
         .select('question_id, answer_value')
         .eq('user_id', userId);
 
-      const remoteAnswers = {};
-      (remoteData ?? []).forEach(row => { remoteAnswers[row.question_id] = row.answer_value; });
+      // Validation des lignes distantes : on ne fait pas plus confiance à la base qu'à un
+      // fichier importé (données héritées, valeurs hors domaine).
+      const { answers: remoteAnswers } = fromCloudAnswerRows(remoteData);
 
       useStore.getState().setSyncConflict({ remoteAnswers, remoteCount, localCount, userId });
       return;
@@ -105,23 +109,24 @@ export function AuthProvider({ children }) {
     }
 
     if (data && data.length > 0) {
-      const answersMap = {};
-      data.forEach(row => { answersMap[row.question_id] = row.answer_value; });
-      useStore.getState().hydrateFromCloud(answersMap);
+      const { answers: cloudAnswers } = fromCloudAnswerRows(data);
+      // Le cloud ne stocke pas les « sans opinion » : leur absence ne signifie pas que
+      // l'utilisateur ne s'est pas prononcé. On préserve donc les décisions locales.
+      const merged = mergeCloudIntoLocal(cloudAnswers, useStore.getState().answers);
+      useStore.getState().hydrateFromCloud(merged);
     }
   }
 
+  /**
+   * Upload du lot local. Passe par la primitive unique : upsert des 1–5 ET suppression des
+   * lignes distantes correspondant aux questions repassées en « sans opinion ». La version
+   * précédente ne supprimait jamais rien — une position retirée survivait au cloud.
+   */
   function _pushLocalToCloud(userId, localAnswers) {
-    const rows = Object.entries(localAnswers).map(([question_id, answer_value]) => ({
-      user_id: userId, question_id, answer_value,
-    }));
-    if (rows.length === 0) return;
-    supabase
-      .from('user_answers')
-      .upsert(rows, { onConflict: 'user_id,question_id' })
-      .then(({ error }) => {
-        if (error) console.error('[Poliscop] Sync upload error:', error.message);
-      });
+    syncAnswersToCloud(supabase, userId, localAnswers).then(({ error, stage, deleted }) => {
+      if (error) console.error(`[Poliscop] Sync upload error (${stage}):`, error.message);
+      else if (deleted > 0) console.info(`[Poliscop] ${deleted} position(s) retirée(s) du cloud (« sans opinion »).`);
+    });
   }
 
   /**
@@ -280,15 +285,33 @@ export function AuthProvider({ children }) {
    * across devices). Call this from the consent modal's "I agree" action, not
    * automatically on login or signup.
    */
-  async function grantConsent() {
-    useStore.getState().setConsent(true);
-    if (!isSupabaseEnabled || !supabase || !user) return { error: null }; // local-only is still a valid outcome pre-login
+  async function grantConsent({ measurement = false } = {}) {
+    // La mesure d'audience est une décision LOCALE au terminal (un traceur y est déposé) :
+    // elle est appliquée immédiatement et indépendamment du résultat serveur. Ne jamais la
+    // remettre à false ici — c'est ce que faisait `setConsent(true)` sans options.
+    if (!isSupabaseEnabled || !supabase || !user) {
+      // Invité ou Supabase non configuré : les opinions restent de toute façon locales.
+      useStore.getState().setConsent(true, { measurement });
+      return { error: null, scope: 'local' };
+    }
+
+    // ORDRE IMPOSÉ : la preuve de consentement est écrite AVANT que quoi que ce soit
+    // d'opinion ne puisse partir. `setConsent(true)` ouvre la porte à answerQuestion() et
+    // saveAnswers() ; l'appeler d'abord enverrait des données sans trace de consentement.
     const { error } = await supabase.from('user_consents').upsert(
       { user_id: user.id, consent_type: 'political_data', granted: true, version: CONSENT_VERSION },
       { onConflict: 'user_id,consent_type' }
     );
-    if (error) console.error('[Poliscop] grantConsent error:', error.message);
-    return { error };
+
+    if (error) {
+      console.error('[Poliscop] grantConsent error:', error.message);
+      // Échec : le consentement politique reste REFUSÉ localement. Aucune opinion ne part.
+      useStore.getState().setConsent(false, { measurement });
+      return { error, scope: 'none' };
+    }
+
+    useStore.getState().setConsent(true, { measurement });
+    return { error: null, scope: 'account' };
   }
 
   /**
@@ -297,8 +320,17 @@ export function AuthProvider({ children }) {
    * analytics from this point on. The consent row itself is kept (with
    * granted=false) as the audit trail proving consent was later withdrawn.
    */
-  async function revokeConsent() {
-    useStore.getState().withdrawConsent();
+  /**
+   * @param {{measurement?: boolean}} [options] choix de mesure d'audience à CONSERVER.
+   *   Le 3e contre-audit relevait que cocher « mesure d'audience » puis choisir « Non merci,
+   *   je reste en local » appelait `revokeConsent()` sans transmettre ce choix : la case
+   *   affichée était donc ignorée, et la combinaison (politicalData=false, measurement=true)
+   *   restait inatteignable. Elle est désormais possible et explicite.
+   */
+  async function revokeConsent({ measurement } = {}) {
+    // Le retrait est appliqué localement d'ABORD : l'arrêt de la collecte ne doit pas
+    // dépendre de la disponibilité du réseau.
+    useStore.getState().withdrawConsent({ measurement });
     if (!isSupabaseEnabled || !supabase || !user) return { error: null };
     const { error } = await supabase.from('user_consents').upsert(
       { user_id: user.id, consent_type: 'political_data', granted: false, version: CONSENT_VERSION },
@@ -351,16 +383,18 @@ export function AuthProvider({ children }) {
   async function saveAnswers(answers) {
     if (!isSupabaseEnabled || !user) return { error: 'Not authenticated' };
     if (!hasPoliticalDataConsent()) return { error: 'Consent required before saving political answers' };
-    const rows = Object.entries(answers).map(([question_id, answer_value]) => ({
-      user_id: user.id,
-      question_id,
-      answer_value,
-    }));
-    if (rows.length === 0) return { data: null, error: null };
-    const { data, error } = await supabase
-      .from('user_answers')
-      .upsert(rows, { onConflict: 'user_id,question_id' });
-    return { data, error };
+    // Primitive unique — voir src/lib/cloudAnswers.js. Aucun retour anticipé : un lot
+    // entièrement « sans opinion » (rows.length === 0) est précisément le cas où la
+    // suppression des lignes distantes est indispensable. L'ancienne version retournait
+    // avant, laissant les anciennes positions au cloud.
+    const { error, upserted, deleted, stage } = await syncAnswersToCloud(supabase, user.id, answers);
+    if (error) {
+      // Une erreur de suppression est remontée comme une erreur : un upsert réussi ne rend
+      // pas la synchronisation correcte si les retraits n'ont pas été appliqués.
+      console.error(`[Poliscop] saveAnswers error (${stage}):`, error.message ?? error);
+      return { data: null, error, stage };
+    }
+    return { data: null, error: null, upserted, deleted };
   }
 
   /**
@@ -374,9 +408,12 @@ export function AuthProvider({ children }) {
       user_id:          user.id,
       theme_scores:     profile.themes,
       axes:             profile.axes,
-      confidence:       profile.confidence,
+      confidence:       profile.confidence ?? null,
       confidence_score: profile.confidenceScore ?? 0,
-      answered_count:   profile.answeredCount ?? 0,
+      answered_count:   profile.answeredCount ?? profile.coverage?.answeredCount ?? 0,
+      // Voir 20260809130000_profile_versions.sql — un score sans sa méthode est illisible.
+      scoring_version:       profile.versions?.scoring ?? null,
+      questionnaire_version: profile.versions?.questionnaire ?? null,
     };
     const { data, error } = await supabase
       .from('user_profiles')
@@ -395,10 +432,7 @@ export function AuthProvider({ children }) {
       supabase.from('user_profiles').select('*').eq('user_id', user.id).maybeSingle(),
     ]);
 
-    const answersMap = {};
-    (answersRes.data ?? []).forEach(row => {
-      answersMap[row.question_id] = row.answer_value;
-    });
+    const { answers: answersMap } = fromCloudAnswerRows(answersRes.data);
 
     return {
       answers: Object.keys(answersMap).length > 0 ? answersMap : null,

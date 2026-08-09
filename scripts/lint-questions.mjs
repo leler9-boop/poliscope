@@ -1,13 +1,15 @@
 // POLISCOP — Editorial lint for the question bank.
 // Flags candidates for human review; never auto-rewrites. Run: node scripts/lint-questions.mjs [THEME]
 import { register } from 'node:module';
-import { pathToFileURL } from 'node:url';
-const ROOT = '/Users/arnaudlery/Desktop/poliscope copy';
-register(pathToFileURL(`${ROOT}/audit/poliscop-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
+import { pathToFileURL, fileURLToPath } from 'node:url';
+// Chemin résolu depuis l'emplacement du script : un ROOT absolu en dur cassait toute
+// exécution hors de la machine de développement (CI comprise).
+const ROOT = fileURLToPath(new URL('..', import.meta.url)).replace(/\/$/, '');
+register(new URL('./lib/json-import-loader.mjs', import.meta.url));
 
-const { questions, THEMES_ORDER } = await import(`${ROOT}/src/data/questions.js`);
-const rawAll = (await import(`${ROOT}/src/data/questions_final.json`, { with: { type: 'json' } })).default;
-const { questionHints } = await import(`${ROOT}/src/data/questionHints.js`);
+const { questions, THEMES_ORDER } = await import(`${pathToFileURL(ROOT).href}/src/data/questions.js`);
+const rawAll = (await import(`${pathToFileURL(ROOT).href}/src/data/questions_final.json`, { with: { type: 'json' } })).default;
+const { questionHints } = await import(`${pathToFileURL(ROOT).href}/src/data/questionHints.js`);
 
 const ANGLICISMS = [
   'supporter', 'adresser ce', 'adresser cette', 'opportunité', 'réaliser que',

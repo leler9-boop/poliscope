@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { useStore } from '../store/useStore.js';
+import { formatProximity, scoreToCssPercent } from '../engine/scoreDisplay.js';
 import { createTranslator } from '../i18n/translations.js';
 import { rankByAlignment, generateWhyMatch, alignmentBarColor } from '../engine/matcher.js';
 import { historicalFigures } from '../data/historicalFigures.js';
@@ -205,13 +206,13 @@ export default function HistoricalFigures() {
                         className="h-full rounded-full"
                         style={{ backgroundColor: barColor }}
                         initial={{ width: '0%' }}
-                        whileInView={{ width: `${figure.alignment}%` }}
+                        whileInView={{ width: scoreToCssPercent(figure.alignment) }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.7, delay: idx * 0.02, ease: [0.25, 0.46, 0.45, 0.94] }}
                       />
                     </div>
                     <span className="text-xs font-bold w-9 text-right tabular-nums" style={{ color: barColor }}>
-                      {figure.alignment}%
+                      {formatProximity(figure.alignment)}
                     </span>
                   </div>
                 );

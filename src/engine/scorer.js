@@ -2,6 +2,22 @@
 // Converts question answers into a multi-dimensional political profile.
 
 import { THEMES, THEMES_ORDER, questions as allQuestions } from '../data/questions.js';
+import { SCORING_VERSION_V1, SCORING_VERSION_V2, AXIS_VERSION, currentVersions } from './versions.js';
+
+/**
+ * Valeur de réponse réservée à « Je ne sais pas / Sans opinion ».
+ *
+ * POURQUOI : le bouton « neutre » (3) était la seule façon de ne pas se prononcer, et il
+ * était compté comme une position centrale. Une absence d'opinion et un centrisme assumé
+ * produisaient donc exactement le même profil. Cette valeur sort du domaine 1–5 pour être
+ * impossible à confondre : elle n'entre dans aucune moyenne, elle réduit la couverture.
+ */
+export const NO_OPINION = 'no_opinion';
+
+/** Une réponse est-elle exploitable pour le calcul ? */
+export function isScorable(answer) {
+  return typeof answer === 'number' && answer >= 1 && answer <= 5;
+}
 
 /**
  * Calculate theme scores from user answers.
@@ -28,7 +44,7 @@ export function calculateProfile(answers) {
 
   allQuestions.forEach(q => {
     const answer = answers[q.id];
-    if (answer == null) return;
+    if (!isScorable(answer)) return; // ignore null, undefined et NO_OPINION
 
     // Normalize answer to 0–1
     const normalized = (answer - 1) / 4;
@@ -59,7 +75,9 @@ export function calculateProfile(answers) {
   const axes = calculateAxes(themes);
 
   // Confidence based on number of answered questions
-  const answeredCount = Object.keys(answers).length;
+  // Ne comptabilise que les réponses exploitables : un « sans opinion » ne doit pas
+  // gonfler l'indicateur de couverture.
+  const answeredCount = Object.keys(answers).filter(id => isScorable(answers[id])).length;
   const totalQuestions = allQuestions.length;
   // Confidence calibrated against the quiz's actual max (64 questions for deep/Approfondi mode).
   //   discovery mode (16q) → 25% → 'medium'  ("Première estimation")
@@ -75,8 +93,148 @@ export function calculateProfile(answers) {
   else if (answeredCount < 64)  confidence = 'high';
   else                          confidence = 'very_high';
 
-  return { themes, axes, confidence, confidenceScore, answeredCount, totalQuestions };
+  return {
+    themes, axes, confidence, confidenceScore, answeredCount, totalQuestions,
+    versions: currentVersions({ scoring: SCORING_VERSION_V1 }),
+  };
 }
+
+// ─── Scoring v2 ──────────────────────────────────────────────────────────────
+//
+// Différences assumées avec le v1, toutes documentées dans docs/methodology/scoring-v2.md :
+//   1. un thème sans réponse exploitable vaut `null`, pas 50 — « inconnu » ≠ « centriste » ;
+//   2. pas d'étirement non linéaire : le score reste la moyenne pondérée des réponses ;
+//   3. la couverture est calculée par thème et renvoyée à côté du score, jamais fondue dedans ;
+//   4. aucune incertitude numérique n'est inventée — `uncertainty` reste `null` tant qu'aucune
+//      validation empirique ne permet de la calculer (voir validation-roadmap.md).
+//
+// Le v1 reste le comportement par défaut de l'application : basculer les utilisateurs sur le
+// v2 change leurs résultats et doit être une décision produit explicite, pas un effet de bord.
+
+/**
+ * @param {Object} answers  { [questionId]: 1–5 | NO_OPINION }
+ * @param {Object} [options]
+ * @param {string[]} [options.askedQuestionIds]
+ *   Identifiants des questions RÉELLEMENT posées durant la passation (la file). Sans eux, la
+ *   couverture ne peut pas distinguer « non posée » de « posée sans réponse » : la première
+ *   version comptait `asked` sur toute la banque, si bien qu'un mode Découverte (2 questions
+ *   par thème) affichait une couverture calculée sur 16 — un rapport faux d'un facteur 8.
+ *   Quand l'information est absente, `inQueue` vaut `null` plutôt qu'un nombre inventé.
+ * @returns {{themes: Object, axes: Object, coverage: Object, uncertainty: null, versions: Object}}
+ */
+export function calculateProfileV2(answers, { askedQuestionIds = null } = {}) {
+  const asked = askedQuestionIds ? new Set(askedQuestionIds) : null;
+
+  const acc = {};
+  THEMES_ORDER.forEach(theme => {
+    acc[theme] = { weightedSum: 0, totalWeight: 0, answered: 0, noOpinion: 0, inQueue: 0, inBank: 0 };
+  });
+
+  allQuestions.forEach(q => {
+    const bucket = acc[q.theme];
+    if (!bucket) return;
+
+    // `inBank` : taille de la banque pour ce thème — un plafond théorique, pas une couverture.
+    bucket.inBank++;
+
+    const wasAsked = asked ? asked.has(q.id) : answers[q.id] !== undefined;
+    if (wasAsked) bucket.inQueue++;
+
+    const answer = answers[q.id];
+    if (answer === NO_OPINION) { bucket.noOpinion++; return; }
+    if (!isScorable(answer)) return;
+
+    const normalized = (answer - 1) / 4;
+    const contribution = q.direction === 1 ? normalized : 1 - normalized;
+    const w = q.weight ?? 1;
+    bucket.weightedSum += contribution * w;
+    bucket.totalWeight += w;
+    bucket.answered++;
+  });
+
+  const themes = {};
+  const perTheme = {};
+  THEMES_ORDER.forEach(theme => {
+    const d = acc[theme];
+    themes[theme] = d.totalWeight === 0
+      ? null                                   // ← v1 mettait 50 ici
+      : Math.round((d.weightedSum / d.totalWeight) * 100);
+    perTheme[theme] = {
+      /** Réponses exploitables 1–5. */
+      answered: d.answered,
+      /** Questions explicitement passées (« sans opinion »). */
+      noOpinion: d.noOpinion,
+      /** Questions réellement posées dans cette passation. `null` si la file est inconnue. */
+      inQueue: askedQuestionIds ? d.inQueue : null,
+      /** Questions existant dans la banque pour ce thème — plafond, PAS une couverture. */
+      inBank: d.inBank,
+      /** Posées mais restées sans réponse ni « sans opinion ». `null` si la file est inconnue. */
+      unanswered: askedQuestionIds ? Math.max(0, d.inQueue - d.answered - d.noOpinion) : null,
+    };
+  });
+
+  const known = THEMES_ORDER.filter(t => themes[t] != null);
+  const answeredCount = THEMES_ORDER.reduce((n, t) => n + perTheme[t].answered, 0);
+  const noOpinionCount = THEMES_ORDER.reduce((n, t) => n + perTheme[t].noOpinion, 0);
+  const askedCount = askedQuestionIds
+    ? THEMES_ORDER.reduce((n, t) => n + perTheme[t].inQueue, 0)
+    : null;
+
+  return {
+    themes,
+    axes: calculateAxesV2(themes),
+    coverage: {
+      themesKnown: known.length,
+      themesTotal: THEMES_ORDER.length,
+      answeredCount,
+      noOpinionCount,
+      /** Nombre de questions posées ; `null` si la file n'a pas été fournie. */
+      askedCount,
+      /** La couverture est-elle calculée sur la file réelle ou déduite des seules réponses ? */
+      basedOnQueue: Boolean(askedQuestionIds),
+      perTheme,
+    },
+    // Volontairement null : afficher un intervalle non estimé serait une fausse précision.
+    uncertainty: null,
+    versions: currentVersions({ scoring: SCORING_VERSION_V2 }),
+  };
+}
+
+/**
+ * Axes v2 : mêmes formules éditoriales que le v1 (axisVersion inchangée), mais un axe n'est
+ * calculé que si tous ses composants sont connus. Un axe partiellement inconnu vaut `null`
+ * plutôt qu'une valeur reposant implicitement sur des 50 fabriqués.
+ */
+export function calculateAxesV2(themes) {
+  const need = (...keys) => keys.every(k => themes[k] != null);
+  const inv = v => 100 - v;
+  return {
+    economic: need('ECONOMY', 'PUBLIC_SERVICES')
+      ? Math.round(themes.ECONOMY * 0.5 + inv(themes.PUBLIC_SERVICES) * 0.5) : null,
+    social: need('SOCIAL', 'IMMIGRATION', 'SECURITY')
+      ? Math.round(themes.SOCIAL * 0.45 + inv(themes.IMMIGRATION) * 0.3 + inv(themes.SECURITY) * 0.25) : null,
+    institutional: need('DEMOCRACY', 'SECURITY', 'GLOBAL')
+      ? Math.round(themes.DEMOCRACY * 0.6 + inv(themes.SECURITY) * 0.25 + themes.GLOBAL * 0.15) : null,
+    international: need('GLOBAL', 'IMMIGRATION', 'DEMOCRACY')
+      ? Math.round(themes.GLOBAL * 0.55 + inv(themes.IMMIGRATION) * 0.25 + themes.DEMOCRACY * 0.2) : null,
+  };
+}
+
+/**
+ * Recalcule les axes à partir de scores thématiques quelconques.
+ *
+ * L'audit relevait qu'un ajustement manuel du profil modifiait les thèmes et le matching,
+ * mais laissait les 4 axes affichés à leur valeur d'avant ajustement. Toute surface qui
+ * modifie des thèmes DOIT repasser par cette fonction — c'est la même que celle utilisée à
+ * la création du profil, ce qui rend l'incohérence impossible.
+ */
+export function recalculateAxes(themes) {
+  return themes && THEMES_ORDER.some(t => themes[t] == null)
+    ? calculateAxesV2(themes)
+    : calculateAxes(themes);
+}
+
+export { AXIS_VERSION };
 
 /**
  * Derive 4 ideological axes from theme scores.
@@ -140,16 +298,16 @@ export function getConfidenceMeta(confidence, lang = 'en') {
             message: 'Votre profil capture vos grandes positions. Le test Standard le précisera davantage.' },
     },
     high: {
-      en: { label: 'Robust profile', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Your profile is solid and well-differentiated across all themes.' },
-      fr: { label: 'Profil robuste', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
-            message: 'Votre profil est solide et bien différencié sur l\'ensemble des thèmes.' },
+      en: { label: 'Good coverage', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
+            message: 'Enough answers to differentiate every theme. Coverage describes detail, not scientific reliability.' },
+      fr: { label: 'Bonne couverture', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
+            message: 'Assez de réponses pour différencier chaque thème. La couverture décrit le niveau de détail, pas une fiabilité scientifique.' },
     },
     very_high: {
-      en: { label: 'Highly reliable profile', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
-            message: 'Your profile is built on a comprehensive set of answers across all political themes.' },
-      fr: { label: 'Profil très fiable', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
-            message: 'Votre profil repose sur un ensemble complet de réponses couvrant tous les grands thèmes politiques.' },
+      en: { label: 'Full coverage', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Every theme is covered by the full set of questions. This measures detail, not validated accuracy.' },
+      fr: { label: 'Couverture complète', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200',
+            message: 'Tous les thèmes sont couverts par l\'ensemble des questions. Cela mesure le niveau de détail, pas une exactitude validée.' },
     },
   };
   return meta[confidence]?.[lang] ?? meta.very_low[lang];
