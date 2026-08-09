@@ -210,6 +210,21 @@ test('six positions 2027 de Gabriel Attal sont codées sans présenter ses chant
   }
 });
 
+test('six positions actuelles de Fabien Roussel sont codées sans recycler son programme 2022', () => {
+  const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'fabien-roussel');
+  const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
+  const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
+
+  assert.equal(positions.length, FR2027_QUESTION_IDS.length);
+  assert.equal(pending.length, 6);
+  assert.equal(unknown.length, 11);
+  assert.equal(positionCoverage('fabien-roussel').approved, 0);
+  assert.ok(pending.every(position => position.sourceIds.every(sourceId =>
+    getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL)));
+  assert.ok(pending.every(position => position.sourceIds.every(sourceId =>
+    !getSource(sourceId)?.url.includes('fabienroussel2022'))));
+});
+
 test('les identifiants de questions de la provenance existent dans fr_2027', () => {
   const known = new Set(fr2027.specificQuestions.map(q => q.id));
   for (const p of CANDIDATE_POSITIONS) {

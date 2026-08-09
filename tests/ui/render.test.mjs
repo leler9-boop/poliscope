@@ -148,8 +148,12 @@ test('une fiche 2027 ne republie pas les anciennes positions éditoriales non so
     h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));
 
   assert.match(html, /Parti Communiste Français/);
+  assert.match(html, /6\/17 positions codées/);
+  assert.match(html, /0\/17 positions validées/);
+  assert.match(html, /6 positions sont en attente d’une relecture indépendante/);
   assert.doesNotMatch(html, /Positions clés/);
   assert.doesNotMatch(html, /Fortement pro-immigration/);
+  assert.doesNotMatch(html, /Programme officiel complet/);
   assert.match(html, /Sources vérifiées/);
 });
 

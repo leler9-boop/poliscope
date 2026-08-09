@@ -748,3 +748,21 @@ Le champ `profileSource` de Lisnard et Attal passe à `sourced-positions` pour d
 réelle de leur corpus. Cela ne les rend pas comparables : `isMatchReady()` exige toujours des
 positions approuvées et quatre thèmes au seuil. Lisnard en atteindrait quatre après relecture ;
 Attal seulement deux et reste donc exclu même dans cette simulation.
+
+---
+
+## D-38 · Une étiquette politique décrit l'identité, jamais un score de matching
+
+Fabien Roussel est affiché comme membre du Parti communiste français : c'est un fait d'identité
+politique explicite et sourcé, pas une valeur calculée. Le moteur ne doit pourtant pas déduire ses
+17 réponses du mot « communiste » ni recopier son programme présidentiel 2022 dans le scrutin
+2027.
+
+Six positions personnelles récentes sont codées à partir du site officiel du PCF : retraites,
+nucléaire, services publics, Ukraine, laïcité et SMIC. Onze questions restent inconnues. Les six entrées
+restent `PENDING_REVIEW` et n'ont aucun effet public avant relecture indépendante. Même après une
+validation simulée, seule l'économie atteint le seuil de deux preuves : aucun score n'est produit.
+
+La fiche passe à `profileSource: sourced-positions`, tout en restant `matchReady: false` et en
+maturité M1. Cette décision sépare volontairement trois notions : appartenance au PCF, positions
+actuelles documentées et comparabilité statistique.

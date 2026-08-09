@@ -273,6 +273,31 @@ test('le corpus Attal reste honnêtement insuffisant même après une future rel
   assert.equal(m.reason, 'insufficient_coverage');
 });
 
+test('l’étiquette communiste de Roussel n’invente pas un score sans couverture factuelle suffisante', () => {
+  const independentlyApproved = CANDIDATE_POSITIONS
+    .filter(position => position.candidateId === 'fabien-roussel'
+      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+    .map(position => ({
+      ...position,
+      reviewStatus: REVIEW_STATUS.APPROVED,
+      reviewedBy: 'independent-review-fixture',
+    }));
+
+  const m = computeCandidateMatch({
+    userThemes: flat(50),
+    candidate: { id: 'fabien-roussel', name: 'Fabien Roussel' },
+    priorityOrder: [...THEMES_ORDER],
+    electionAnswers: allAnswers,
+    questions: fr2027.specificQuestions,
+    approvedPositions: independentlyApproved,
+  });
+
+  assert.equal(independentlyApproved.length, 6);
+  assert.equal(m.coverage.themesKnown, 1, 'seule l’économie atteint deux preuves indépendantes');
+  assert.equal(m.score, null);
+  assert.equal(m.reason, 'insufficient_coverage');
+});
+
 test('le résultat embarque les versions de données et de matching', () => {
   const m = computeCandidateMatch({
     userThemes: flat(50), candidate: fr2027.candidates[0], priorityOrder: [...THEMES_ORDER],

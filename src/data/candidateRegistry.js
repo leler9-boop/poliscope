@@ -192,8 +192,10 @@ export const CANDIDATE_REGISTRY = [
     party: 'Parti Communiste Français', elections: ['fr_2022', 'fr_2027'],
     status: CANDIDACY_STATUS.CONDITIONAL, statusDate: '2026-07-05',
     statusSource: 'Réélu à la tête du PCF (congrès de Lille) ; désignation soumise au vote des militants du 6 septembre 2026',
-    statusSourceIds: ['src-lcp-candidats-2027-2026-07-10'], trackedFor: ['fr_2027'],
-    matchReady: false, profileSource: PROFILE_SOURCE.LEGACY_MANUAL_V1, programMaturity: 'M1', lastReviewed: '2026-08-10',
+    statusSourceIds: ['src-lcp-candidats-2027-2026-07-10', 'src-roussel-presidentielle-2026-07-06'], trackedFor: ['fr_2027'],
+    matchReady: false, profileSource: PROFILE_SOURCE.SOURCED_POSITIONS,
+    notMatchReadyReason: '6 positions actuelles sont sourcées et codées, mais encore non relues et insuffisantes pour produire un profil comparable.',
+    programMaturity: 'M1', lastReviewed: '2026-08-10',
   },
   {
     id: 'eric-zemmour', displayName: 'Éric Zemmour', legacyIds: ['zemmour', 'zemmour_2027'],

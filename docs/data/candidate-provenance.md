@@ -90,6 +90,26 @@ thèmes robustes supplémentaires.
 
 Le dossier opérationnel est dans `docs/data/gabriel-attal-2027-review.md`.
 
+## Troisième corpus : Fabien Roussel
+
+Fabien Roussel reste secrétaire national du **Parti communiste français** et sa candidature
+2027 est conditionnée au vote des militants annoncé pour septembre 2026. Il n'a pas publié de
+programme présidentiel final 2027. Poliscop ne réutilise donc pas automatiquement son programme
+de 2022 ; seules des déclarations officielles de 2025–2026 sont codées.
+
+| État | Nombre | Effet public |
+|---|---:|---|
+| Codées, en attente de relecture indépendante | 6 | Aucun |
+| Encore inconnues (`to_review`) | 11 | Aucun |
+| Approuvées | 0 | Aucun |
+
+Le corpus actuel confirme directement l'abrogation des 64 ans, une forte hausse du SMIC, un
+plan pour les soignants et enseignants, un programme nucléaire massif, la priorité diplomatique
+sur l'Ukraine et une position nuancée sur la laïcité. Même toutes relues, ces six positions ne
+rendraient robuste que le thème économie : aucun score ne doit donc être affiché.
+
+Le dossier opérationnel est dans `docs/data/fabien-roussel-2027-review.md`.
+
 ## Contrat de publication
 
 Une position ne contribue au matching que si toutes les conditions suivantes sont réunies :

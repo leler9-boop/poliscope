@@ -96,4 +96,5 @@ documentée. Ajouter ou corriger des sources candidat nécessite une nouvelle re
   volontairement vide.
 - La priorité immédiate est la relecture indépendante du corpus Lisnard. Le corpus Attal est
   amorcé mais ne couvre encore que deux thèmes robustes ; il ne doit pas être classé par
-  anticipation.
+  anticipation. Le corpus Roussel confirme six positions actuelles, sans recycler son programme
+  2022, mais ne couvre encore qu'un thème robuste.
