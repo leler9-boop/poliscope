@@ -71,6 +71,18 @@ export const PROFILE_SOURCE = {
 
 const DEFAULT_2027_STATUS_SOURCE = ['src-lcp-candidats-2027-2026-07-10'];
 
+const CANDIDACY_STATUS_ORDER = {
+  [CANDIDACY_STATUS.OFFICIALLY_VALIDATED]: 0,
+  [CANDIDACY_STATUS.INVESTED]: 1,
+  [CANDIDACY_STATUS.DECLARED]: 2,
+  [CANDIDACY_STATUS.PRIMARY_CANDIDATE]: 3,
+  [CANDIDACY_STATUS.CONDITIONAL]: 4,
+  [CANDIDACY_STATUS.CONTINGENCY]: 5,
+  [CANDIDACY_STATUS.POTENTIAL]: 6,
+  [CANDIDACY_STATUS.WITHDRAWN]: 7,
+  [CANDIDACY_STATUS.INELIGIBLE]: 8,
+};
+
 /**
  * Valeurs communes aux personnes suivies pour 2027.
  *
@@ -247,7 +259,7 @@ export const CANDIDATE_REGISTRY = [
     trackedFor: ['fr_2027'],
     status: CANDIDACY_STATUS.PRIMARY_CANDIDATE, statusDate: '2026-07-10',
     statusSource: 'Candidate annoncée à la primaire fermée du pôle socialiste ; pas encore candidate désignée pour le premier tour.',
-    statusSourceIds: ['src-france24-royal-2026-05-24', 'src-wikipedia-presidentielle-2027'],
+    statusSourceIds: ['src-france24-royal-2026-05-24'],
     matchReady: false, notMatchReadyReason: 'Aucune position sourcée codée.',
     profileSource: PROFILE_SOURCE.NONE, programMaturity: 'M1', lastReviewed: '2026-08-10',
   },
@@ -447,28 +459,22 @@ export function getRegistryEntry(anyId) {
   return BY_ANY_ID.get(anyId) ?? null;
 }
 
+/** Annuaire complet des personnes suivies pour une élection donnée. */
+export function getTrackedCandidates(electionId) {
+  return CANDIDATE_REGISTRY
+    .filter(person => person.trackedFor?.includes(electionId))
+    .sort((a, b) =>
+      (CANDIDACY_STATUS_ORDER[a.status] ?? 99) - (CANDIDACY_STATUS_ORDER[b.status] ?? 99)
+      || a.displayName.localeCompare(b.displayName, 'fr')
+    );
+}
+
 /** Personnes suivies pour une élection donnée mais pas encore comparables. */
 export function getTrackedNotMatchReady(electionId) {
-  const statusOrder = {
-    [CANDIDACY_STATUS.INVESTED]: 0,
-    [CANDIDACY_STATUS.DECLARED]: 1,
-    [CANDIDACY_STATUS.PRIMARY_CANDIDATE]: 2,
-    [CANDIDACY_STATUS.CONDITIONAL]: 3,
-    [CANDIDACY_STATUS.CONTINGENCY]: 4,
-    [CANDIDACY_STATUS.POTENTIAL]: 5,
-    [CANDIDACY_STATUS.WITHDRAWN]: 6,
-    [CANDIDACY_STATUS.INELIGIBLE]: 7,
-  };
-
-  return CANDIDATE_REGISTRY
+  return getTrackedCandidates(electionId)
     .filter(p =>
-      p.trackedFor?.includes(electionId)
-      && !isMatchReady(p)
+      !isMatchReady(p)
       && p.profileSource === PROFILE_SOURCE.NONE
-    )
-    .sort((a, b) =>
-      (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99)
-      || a.displayName.localeCompare(b.displayName, 'fr')
     );
 }
 

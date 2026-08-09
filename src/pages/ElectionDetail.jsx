@@ -7,7 +7,7 @@ import { elections } from '../data/elections.js';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
 import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
-import { getRegistryEntry, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
+import { getRegistryEntry, getTrackedCandidates, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
 import { getSource } from '../data/candidateProvenance.js';
 import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
@@ -33,6 +33,104 @@ function candidacyBadgeClass(status) {
   if (status === 'declared' || status === 'invested' || status === 'officially_validated') return 'bg-green-50 text-green-700 border-green-200';
   if (status === 'conditional' || status === 'primary_candidate') return 'bg-amber-50 text-amber-700 border-amber-200';
   return 'bg-gray-50 text-gray-600 border-gray-200';
+}
+
+const DIRECTORY_GROUPS = [
+  {
+    id: 'confirmed',
+    statuses: new Set(['officially_validated', 'invested', 'declared']),
+    fr: 'Candidatures déclarées ou investies',
+    en: 'Declared candidacies and party nominees',
+  },
+  {
+    id: 'process',
+    statuses: new Set(['primary_candidate', 'conditional']),
+    fr: 'Primaires et candidatures conditionnelles',
+    en: 'Primaries and conditional candidacies',
+  },
+  {
+    id: 'potential',
+    statuses: new Set(['potential', 'contingency']),
+    fr: 'Personnes pressenties et scénarios de remplacement',
+    en: 'Potential candidates and contingency scenarios',
+  },
+  {
+    id: 'out',
+    statuses: new Set(['withdrawn', 'ineligible']),
+    fr: 'Retraits ou candidatures écartées',
+    en: 'Withdrawn or ruled-out candidacies',
+  },
+];
+
+function CandidateDirectory2027({ language }) {
+  const candidates = getTrackedCandidates('fr_2027');
+  const selectCandidate = useStore(s => s.selectCandidate);
+  const fr = language === 'fr';
+  const confirmedCount = candidates.filter(candidate => DIRECTORY_GROUPS[0].statuses.has(candidate.status)).length;
+
+  return (
+    <section className="mb-8">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
+        {fr ? 'Annuaire présidentiel 2027' : '2027 presidential directory'}
+      </p>
+      <p className="text-xs text-gray-500 leading-relaxed mb-4">
+        {fr
+          ? `Poliscop suit ${candidates.length} profils. Cet annuaire n’est pas la liste officielle du premier tour : il sépare les candidatures déclarées, les processus en cours, les personnes pressenties et les retraits.`
+          : `Poliscop tracks ${candidates.length} profiles. This directory is not the official first-round list: it separates declared candidacies, ongoing processes, potential candidates and withdrawals.`}
+      </p>
+      <details className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+        <summary className="cursor-pointer list-none px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors">
+          <span className="text-sm font-semibold text-gray-800">
+            {candidates.length} {fr ? 'profils suivis' : 'tracked profiles'}
+          </span>
+          <span className="text-xs text-green-700">
+            {confirmedCount} {fr ? 'déclarés ou investis' : 'declared or nominated'}
+          </span>
+        </summary>
+        <div className="border-t border-gray-100 px-4 py-4 space-y-5">
+          {DIRECTORY_GROUPS.map(group => {
+            const groupCandidates = candidates.filter(candidate => group.statuses.has(candidate.status));
+            if (groupCandidates.length === 0) return null;
+            return (
+              <div key={group.id}>
+                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                  {fr ? group.fr : group.en} · {groupCandidates.length}
+                </p>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {groupCandidates.map(candidate => (
+                    <button
+                      key={candidate.id}
+                      type="button"
+                      onClick={() => selectCandidate(candidate.id)}
+                      className="rounded-xl border border-gray-100 px-3 py-2.5 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                    >
+                      <span className="flex items-start justify-between gap-2">
+                        <span className="min-w-0">
+                          <span className="block text-xs font-semibold text-gray-800 truncate">{candidate.displayName}</span>
+                          <span className="block text-[11px] text-gray-500 truncate">{candidate.party}</span>
+                        </span>
+                        <span className="text-[10px] font-semibold text-gray-400 flex-shrink-0">
+                          {candidate.programMaturity ?? 'M0'}
+                        </span>
+                      </span>
+                      <span className={`inline-block mt-1.5 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold ${candidacyBadgeClass(candidate.status)}`}>
+                        {candidacyLabel(candidate.status, language)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <p className="text-[11px] text-gray-400 leading-relaxed">
+            {fr
+              ? 'M0 à M5 indique uniquement la maturité du corpus programmatique disponible. Ouvrez une fiche pour consulter les dates et les sources.'
+              : 'M0 to M5 only indicates the maturity of the available programme corpus. Open a profile to see dates and sources.'}
+          </p>
+        </div>
+      </details>
+    </section>
+  );
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -312,61 +410,48 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
         </div>
       )}
 
-      {/* Candidates preview */}
-      <div className="mb-8">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
-          {is2027
-            ? (language === 'fr' ? 'Personnalités actuellement suivies dans le test' : 'People currently tracked in the test')
-            : (language === 'fr' ? 'Candidats' : 'Candidates')}
-        </p>
-        {is2027 && (
-          <p className="text-xs text-gray-500 leading-relaxed mb-4">
-            {language === 'fr'
-              ? 'Cette sélection de dix profils n’est pas la liste officielle du premier tour. Le badge distingue une candidature déclarée d’une candidature conditionnelle ou seulement pressentie ; l’annuaire complet apparaît dans les résultats.'
-              : 'This ten-profile selection is not the official first-round list. Badges distinguish declared, conditional and merely potential candidacies; the full directory appears with the results.'}
+      {/* Annuaire complet en 2027 ; aperçu historique pour les autres scrutins. */}
+      {is2027 ? (
+        <CandidateDirectory2027 language={language} />
+      ) : (
+        <div className="mb-8">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+            {language === 'fr' ? 'Candidats' : 'Candidates'}
           </p>
-        )}
-        <div className="grid sm:grid-cols-2 gap-2.5">
-          {election.candidates.map(c => {
-            const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-            const record = is2027 ? getRegistryEntry(c.id) : null;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => selectCandidate(c.id)}
-                className="flex items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
-              >
-                {c.image ? (
-                  <img
-                    src={c.image}
-                    alt={c.name}
-                    width={32}
-                    height={32}
-                    loading="lazy"
-                    className="rounded-full object-cover flex-shrink-0 w-8 h-8"
-                  />
-                ) : (
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                    style={{ backgroundColor: c.color ?? '#374151' }}
-                  >
-                    {initials}
-                  </div>
-                )}
-                <span className="min-w-0 flex-1">
-                  <span className="block text-xs font-medium text-gray-700 truncate">{c.name}</span>
-                  {record?.status && (
-                    <span className={`inline-block mt-1 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold ${candidacyBadgeClass(record.status)}`}>
-                      {candidacyLabel(record.status, language)}
-                    </span>
+          <div className="grid sm:grid-cols-2 gap-2.5">
+            {election.candidates.map(c => {
+              const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => selectCandidate(c.id)}
+                  className="flex items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  {c.image ? (
+                    <img
+                      src={c.image}
+                      alt={c.name}
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                      className="rounded-full object-cover flex-shrink-0 w-8 h-8"
+                    />
+                  ) : (
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                      style={{ backgroundColor: c.color ?? '#374151' }}
+                    >
+                      {initials}
+                    </div>
                   )}
-                </span>
-              </button>
-            );
-          })}
+                  <span className="block min-w-0 flex-1 text-xs font-medium text-gray-700 truncate">{c.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Disclaimer */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-8 text-xs text-amber-800">

@@ -149,12 +149,18 @@ test('une fiche 2027 ne republie pas les anciennes positions éditoriales non so
   assert.match(html, /Sources vérifiées/);
 });
 
-test('la page 2027 ne présente pas ses dix profils suivis comme une liste officielle de candidats', () => {
+test('la page 2027 expose l’annuaire complet sans le présenter comme une liste officielle', () => {
   const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/elections/fr_2027'] },
     h(Routes, null, h(Route, { path: '/elections/:id', element: h(ElectionDetail) }))));
 
-  assert.match(html, /Personnalités actuellement suivies dans le test/);
+  assert.match(html, /Annuaire présidentiel 2027/);
+  assert.match(html, /37 profils suivis/);
+  assert.match(html, /17 déclarés ou investis/);
   assert.match(html, /n’est pas la liste officielle du premier tour/);
+  assert.match(html, /Candidatures déclarées ou investies/);
+  assert.match(html, /Parti Communiste Français/);
+  assert.match(html, /David Lisnard/);
+  assert.match(html, /Jordan Bardella/);
   assert.match(html, /Pressenti — non déclaré/);
   assert.match(html, /Candidature conditionnelle/);
 });

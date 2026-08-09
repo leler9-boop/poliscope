@@ -5,6 +5,7 @@ import {
   CANDIDATE_REGISTRY,
   CANDIDACY_STATUS,
   PROFILE_SOURCE,
+  getTrackedCandidates,
   getTrackedNotMatchReady,
 } from '../../src/data/candidateRegistry.js';
 import { getSource, SOURCE_LEVEL } from '../../src/data/candidateProvenance.js';
@@ -25,6 +26,17 @@ test('les 16 candidatures officialisées par LCP au 10 juillet sont présentes e
     assert.ok(person, `${id} manque au registre 2027`);
     assert.ok(declaredStatuses.has(person.status), `${id} a le statut incohérent « ${person.status} »`);
   }
+});
+
+test('le registre compte 17 candidatures déclarées ou investies après l’annonce de Bernard Cazeneuve', () => {
+  const confirmedStatuses = new Set([
+    CANDIDACY_STATUS.OFFICIALLY_VALIDATED,
+    CANDIDACY_STATUS.INVESTED,
+    CANDIDACY_STATUS.DECLARED,
+  ]);
+  const confirmed = tracked2027.filter(person => confirmedStatuses.has(person.status));
+  assert.equal(confirmed.length, 17);
+  assert.ok(confirmed.some(person => person.id === 'bernard-cazeneuve'));
 });
 
 test('l’annuaire distingue explicitement les principaux cas non déclarés', () => {
@@ -94,4 +106,13 @@ test('l’annuaire visible ne ramasse que les personnes rattachées à fr_2027 e
   assert.ok(directory.length >= 25, 'l’annuaire 2027 doit couvrir au-delà des dix fiches historiques');
   assert.ok(directory.every(person => person.trackedFor?.includes('fr_2027')));
   assert.ok(directory.every(person => person.profileSource === PROFILE_SOURCE.NONE));
+});
+
+test('l’annuaire public complet expose aussi les dix profils historiques du test', () => {
+  const directory = getTrackedCandidates('fr_2027');
+  assert.equal(directory.length, tracked2027.length);
+  assert.ok(directory.length >= 35, 'le public doit voir le registre complet, pas seulement dix cartes');
+  assert.ok(directory.some(person => person.id === 'fabien-roussel'));
+  assert.ok(directory.some(person => person.id === 'david-lisnard'));
+  assert.ok(directory.some(person => person.id === 'jordan-bardella'));
 });
