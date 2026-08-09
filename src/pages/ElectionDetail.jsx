@@ -7,11 +7,33 @@ import { elections } from '../data/elections.js';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
 import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
-import { getTrackedNotMatchReady } from '../data/candidateRegistry.js';
+import { getRegistryEntry, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
 import { getSource } from '../data/candidateProvenance.js';
 import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackElectionViewed } from '../lib/analytics.js';
+
+const CANDIDACY_LABELS = {
+  declared:          { fr: 'Candidature déclarée', en: 'Declared candidacy' },
+  invested:          { fr: 'Investi par son parti', en: 'Party nominee' },
+  officially_validated: { fr: 'Validée par le Conseil constitutionnel', en: 'Officially validated' },
+  primary_candidate: { fr: 'Candidat à une primaire', en: 'Primary candidate' },
+  conditional:       { fr: 'Candidature conditionnelle', en: 'Conditional candidacy' },
+  potential:         { fr: 'Pressenti — non déclaré', en: 'Potential — not declared' },
+  contingency:       { fr: 'Scénario de remplacement — non candidat', en: 'Contingency — not a candidate' },
+  withdrawn:         { fr: 'Candidature retirée ou écartée', en: 'Withdrawn or ruled out' },
+  ineligible:        { fr: 'Inéligible', en: 'Ineligible' },
+};
+
+function candidacyLabel(status, language) {
+  return CANDIDACY_LABELS[status]?.[language] ?? status;
+}
+
+function candidacyBadgeClass(status) {
+  if (status === 'declared' || status === 'invested' || status === 'officially_validated') return 'bg-green-50 text-green-700 border-green-200';
+  if (status === 'conditional' || status === 'primary_candidate') return 'bg-amber-50 text-amber-700 border-amber-200';
+  return 'bg-gray-50 text-gray-600 border-gray-200';
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 //
@@ -212,8 +234,10 @@ function ProfileAnalysis({ userThemes, rankedCandidates, language }) {
 
 function ContextStep({ election, language, t, onStart, onSkip }) {
   const [deeperOpen, setDeeperOpen] = useState(false);
+  const selectCandidate = useStore(s => s.selectCandidate);
   const ctx = election.context?.[language] ?? [];
   const deeper = election.deeperContext?.[language] ?? [];
+  const is2027 = election.id === 'fr_2027';
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -291,13 +315,28 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
       {/* Candidates preview */}
       <div className="mb-8">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
-          {language === 'fr' ? 'Candidats' : 'Candidates'}
+          {is2027
+            ? (language === 'fr' ? 'Personnalités actuellement suivies dans le test' : 'People currently tracked in the test')
+            : (language === 'fr' ? 'Candidats' : 'Candidates')}
         </p>
-        <div className="flex flex-wrap gap-3">
+        {is2027 && (
+          <p className="text-xs text-gray-500 leading-relaxed mb-4">
+            {language === 'fr'
+              ? 'Cette sélection de dix profils n’est pas la liste officielle du premier tour. Le badge distingue une candidature déclarée d’une candidature conditionnelle ou seulement pressentie ; l’annuaire complet apparaît dans les résultats.'
+              : 'This ten-profile selection is not the official first-round list. Badges distinguish declared, conditional and merely potential candidacies; the full directory appears with the results.'}
+          </p>
+        )}
+        <div className="grid sm:grid-cols-2 gap-2.5">
           {election.candidates.map(c => {
             const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            const record = is2027 ? getRegistryEntry(c.id) : null;
             return (
-              <div key={c.id} className="flex items-center gap-2">
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => selectCandidate(c.id)}
+                className="flex items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              >
                 {c.image ? (
                   <img
                     src={c.image}
@@ -315,8 +354,15 @@ function ContextStep({ election, language, t, onStart, onSkip }) {
                     {initials}
                   </div>
                 )}
-                <span className="text-xs font-medium text-gray-700">{c.name}</span>
-              </div>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-xs font-medium text-gray-700 truncate">{c.name}</span>
+                  {record?.status && (
+                    <span className={`inline-block mt-1 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold ${candidacyBadgeClass(record.status)}`}>
+                      {candidacyLabel(record.status, language)}
+                    </span>
+                  )}
+                </span>
+              </button>
             );
           })}
         </div>
@@ -533,19 +579,9 @@ function MatchCoverageNotice({ rankedCandidates, answeredCount, totalQuestions, 
  */
 function TrackedNotComparable({ electionId, language }) {
   const tracked = getTrackedNotMatchReady(electionId);
+  const selectCandidate = useStore(s => s.selectCandidate);
   if (tracked.length === 0) return null;
   const fr = language === 'fr';
-
-  const STATUS_LABEL = {
-    declared: fr ? 'Candidature déclarée' : 'Declared candidacy',
-    invested: fr ? 'Investi par son parti' : 'Party nominee',
-    primary_candidate: fr ? 'Candidat à une primaire' : 'Primary candidate',
-    conditional: fr ? 'Candidature conditionnelle' : 'Conditional candidacy',
-    potential: fr ? 'Pressenti — non déclaré' : 'Potential — not declared',
-    contingency: fr ? 'Scénario de remplacement — non candidat' : 'Contingency — not a candidate',
-    withdrawn: fr ? 'Candidature retirée ou écartée' : 'Withdrawn or ruled out',
-    ineligible: fr ? 'Inéligible' : 'Ineligible',
-  };
 
   return (
     <div className="mb-6">
@@ -566,11 +602,17 @@ function TrackedNotComparable({ electionId, language }) {
         {tracked.map(p => (
           <div key={p.id} className="px-4 py-3">
             <div className="flex items-baseline justify-between gap-3">
-              <span className="text-sm font-semibold text-gray-800">{p.displayName}</span>
+              <button
+                type="button"
+                onClick={() => selectCandidate(p.id)}
+                className="text-sm font-semibold text-gray-800 text-left hover:underline"
+              >
+                {p.displayName}
+              </button>
               <span className="text-[11px] text-gray-400 whitespace-nowrap">{p.party}</span>
             </div>
             <p className="text-[11px] text-gray-500 mt-0.5">
-              {STATUS_LABEL[p.status] ?? p.status}
+              {candidacyLabel(p.status, language)}
               {p.statusDate ? ` · ${p.statusDatePrecision === 'on_or_before' ? (fr ? 'au plus tard ' : 'by ') : ''}${p.statusDate}` : ''}
               {p.programMaturity ? ` · programme ${p.programMaturity}` : ''}
             </p>
@@ -602,6 +644,7 @@ function TrackedNotComparable({ electionId, language }) {
 function ResultsStep({ election, language, t, globalProfile, electionAnswers, priorityOrder, themeWeights, onRetake, onBack }) {
   const [expandedId, setExpandedId] = useState(null);
   const [methodOpen, setMethodOpen] = useState(false);
+  const selectCandidate = useStore(s => s.selectCandidate);
   const questions = election.specificQuestions ?? [];
   const thisElectionAnswers = electionAnswers[election.id] ?? {};
   const answeredCount = questions.filter(q => thisElectionAnswers[q.id] != null).length;
@@ -776,7 +819,13 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
           <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
             {unscoredCandidates.map(c => (
               <div key={c.id} className="px-4 py-3">
-                <p className="text-sm font-semibold text-gray-800">{c.name}</p>
+                <button
+                  type="button"
+                  onClick={() => selectCandidate(c.id)}
+                  className="text-sm font-semibold text-gray-800 text-left hover:underline"
+                >
+                  {c.name}
+                </button>
                 <p className="text-xs text-gray-500 mt-0.5">
                   {noScoreReason(c.match.reason, language)}
                 </p>

@@ -23,13 +23,17 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-let h, renderToStaticMarkup, MatchCard, ProfileReveal, formatProximity, scoreToCssPercent;
+let h, renderToStaticMarkup, MemoryRouter, Routes, Route, MatchCard, ProfileReveal, CandidateProfile, ElectionDetail,
+  formatProximity, scoreToCssPercent;
 
 before(async () => {
   ({ createElement: h } = await import('react'));
   ({ renderToStaticMarkup } = await import('react-dom/server'));
+  ({ MemoryRouter, Routes, Route } = await import('react-router-dom'));
   MatchCard     = (await import('../../src/components/MatchCard.jsx')).default;
   ProfileReveal = (await import('../../src/components/ProfileReveal.jsx')).default;
+  CandidateProfile = (await import('../../src/pages/CandidateProfile.jsx')).default;
+  ElectionDetail = (await import('../../src/pages/ElectionDetail.jsx')).default;
   ({ formatProximity, scoreToCssPercent } = await import('../../src/engine/scoreDisplay.js'));
 });
 
@@ -120,6 +124,39 @@ test('ProfileReveal sans candidat ne promet aucun « meilleur match »', () => {
   assert.ok(!/meilleur match/i.test(html),
     'la modale promet un meilleur match alors qu’aucun candidat n’est comparable');
   assert.ok(!/best .{0,6}match/i.test(html));
+});
+
+// ─── Fiches 2027 : le registre sourcé doit être la source de vérité ─────────
+
+test('une candidature 2027 suivie hors des dix anciennes fiches possède une page factuelle', () => {
+  const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/candidates/david-lisnard'] },
+    h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));
+
+  assert.match(html, /David Lisnard/);
+  assert.match(html, /Nouvelle Énergie/);
+  assert.match(html, /Candidature déclarée/);
+  assert.match(html, /Programme officiel partiel/);
+  assert.match(html, /unenouvelleenergie\.fr/);
+});
+
+test('une fiche 2027 ne republie pas les anciennes positions éditoriales non sourcées', () => {
+  const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/candidates/roussel_2027'] },
+    h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));
+
+  assert.match(html, /Parti Communiste Français/);
+  assert.doesNotMatch(html, /Positions clés/);
+  assert.doesNotMatch(html, /Fortement pro-immigration/);
+  assert.match(html, /Sources vérifiées/);
+});
+
+test('la page 2027 ne présente pas ses dix profils suivis comme une liste officielle de candidats', () => {
+  const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/elections/fr_2027'] },
+    h(Routes, null, h(Route, { path: '/elections/:id', element: h(ElectionDetail) }))));
+
+  assert.match(html, /Personnalités actuellement suivies dans le test/);
+  assert.match(html, /n’est pas la liste officielle du premier tour/);
+  assert.match(html, /Pressenti — non déclaré/);
+  assert.match(html, /Candidature conditionnelle/);
 });
 
 // ─── Garde-fou générique : toute fonction d'un module engine doit être importée ──

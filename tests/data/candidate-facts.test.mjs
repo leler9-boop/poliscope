@@ -7,7 +7,7 @@ import {
   PROFILE_SOURCE,
   getTrackedNotMatchReady,
 } from '../../src/data/candidateRegistry.js';
-import { getSource } from '../../src/data/candidateProvenance.js';
+import { getSource, SOURCE_LEVEL } from '../../src/data/candidateProvenance.js';
 
 const tracked2027 = CANDIDATE_REGISTRY.filter(person => person.trackedFor?.includes('fr_2027'));
 
@@ -67,6 +67,26 @@ test('aucun profil 2027 manuel ou absent ne se déclare comparable', () => {
     person.matchReady === true && person.profileSource !== PROFILE_SOURCE.SOURCED_POSITIONS
   );
   assert.deepEqual(falsePromises, []);
+});
+
+test('tout programme 2027 annoncé comme partiel ou complet renvoie à une source officielle', () => {
+  for (const person of tracked2027.filter(candidate => ['M3', 'M4', 'M5'].includes(candidate.programMaturity))) {
+    assert.ok(person.programSourceIds?.length, `${person.id}: programme ${person.programMaturity} sans document`);
+    const sources = person.programSourceIds.map(getSource);
+    assert.ok(sources.every(Boolean), `${person.id}: référence programmatique inconnue`);
+    assert.ok(
+      sources.some(source => source.level === SOURCE_LEVEL.PRIMARY_OFFICIAL),
+      `${person.id}: programme ${person.programMaturity} sans source primaire officielle`,
+    );
+  }
+});
+
+test('les annonces directes de Le Pen et Mélenchon ne reposent plus sur une source programmatique ou un sondage', () => {
+  const lePen = tracked2027.find(candidate => candidate.id === 'marine-le-pen');
+  const melenchon = tracked2027.find(candidate => candidate.id === 'jean-luc-melenchon');
+
+  assert.ok(lePen.statusSourceIds.includes('src-lcp-lepen-declaration-2026-07-07'));
+  assert.ok(melenchon.statusSourceIds.includes('src-lcp-melenchon-declaration-2026-05-03'));
 });
 
 test('l’annuaire visible ne ramasse que les personnes rattachées à fr_2027 et reste non comparable', () => {

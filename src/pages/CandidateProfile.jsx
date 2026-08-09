@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStore } from '../store/useStore.js';
-import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { candidateDetails } from '../data/candidateDetails.js';
+import { getRegistryEntry } from '../data/candidateRegistry.js';
+import { getSource } from '../data/candidateProvenance.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 import { CandidateAvatar } from '../components/LazyImage.jsx';
@@ -19,6 +20,25 @@ function findCandidate(id) {
   for (const election of elections) {
     const c = election.candidates.find(c => c.id === id);
     if (c) return { candidate: c, election };
+  }
+
+  // L'annuaire 2027 suit davantage de personnes que les dix anciennes fiches codées dans
+  // elections.js. Une personne du registre doit malgré tout avoir une page factuelle : son
+  // absence du matching ne doit pas la rendre invisible.
+  const record = getRegistryEntry(id);
+  const electionId = record?.trackedFor?.find(trackedId => trackedId === 'fr_2027');
+  const election = elections.find(item => item.id === electionId);
+  if (record && election) {
+    return {
+      election,
+      candidate: {
+        id: record.id,
+        name: record.displayName,
+        party: record.party,
+        candidacyStatus: record.status,
+        color: '#374151',
+      },
+    };
   }
   return null;
 }
@@ -53,15 +73,37 @@ function Portrait({ candidate, size = 80 }) {
   );
 }
 
+const STATUS_CONFIG = {
+  declared:          { fr: 'Candidature déclarée', en: 'Declared candidacy', bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', dot: 'bg-green-500' },
+  invested:          { fr: 'Investi par son parti', en: 'Party nominee', bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', dot: 'bg-green-500' },
+  officially_validated: { fr: 'Candidature validée par le Conseil constitutionnel', en: 'Candidacy officially validated', bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', dot: 'bg-green-500' },
+  primary_candidate: { fr: 'Candidat à une primaire', en: 'Primary candidate', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', dot: 'bg-blue-400' },
+  conditional:       { fr: 'Candidature conditionnelle', en: 'Conditional candidacy', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-400' },
+  potential:         { fr: 'Pressenti — non déclaré', en: 'Potential — not declared', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-400' },
+  contingency:       { fr: 'Scénario de remplacement — non candidat', en: 'Contingency — not a candidate', bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', dot: 'bg-gray-400' },
+  withdrawn:         { fr: 'Candidature retirée ou écartée', en: 'Withdrawn or ruled out', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', dot: 'bg-red-400' },
+  ineligible:        { fr: 'Inéligible', en: 'Ineligible', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', dot: 'bg-red-400' },
+  probable:          { fr: 'Candidature probable', en: 'Probable candidate', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', dot: 'bg-blue-400' },
+  speculative:       { fr: 'Hypothèse politique', en: 'Political hypothesis', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-400' },
+};
+
+const PROGRAM_MATURITY_LABELS = {
+  M0: { fr: 'Aucun corpus 2027 identifié', en: 'No 2027 corpus identified' },
+  M1: { fr: 'Orientations générales', en: 'Broad directions' },
+  M2: { fr: 'Propositions thématiques', en: 'Thematic proposals' },
+  M3: { fr: 'Programme officiel partiel', en: 'Partial official programme' },
+  M4: { fr: 'Programme officiel complet', en: 'Complete official programme' },
+  M5: { fr: 'Version électorale archivée', en: 'Archived electoral version' },
+};
+
 export default function CandidateProfile() {
   const language            = useStore(s => s.language);
   const navigate            = useStore(s => s.navigate);
+  const selectElection      = useStore(s => s.selectElection);
   const selectedCandidateId = useStore(s => s.selectedCandidateId);
   const startCompare        = useStore(s => s.startCompare);
   const profile             = useStore(s => s.profile);
   const profileAdjustments  = useStore(s => s.profileAdjustments);
-  const t = createTranslator(language);
-
   // Support direct URL access (/candidates/:id)
   const { id: paramId } = useParams();
   const candidateId = paramId ?? selectedCandidateId;
@@ -83,16 +125,26 @@ export default function CandidateProfile() {
   }, [startCompare]);
 
   const found = findCandidate(candidateId);
-
-  if (!found) {
-    navigate('elections');
-    return null;
-  }
-
-  const { candidate, election } = found;
-  const details   = candidateDetails[selectedCandidateId] ?? candidateDetails[baseId(selectedCandidateId)] ?? {};
+  const candidate = found?.candidate ?? null;
+  const election = found?.election ?? null;
+  const registryEntry = getRegistryEntry(candidateId);
+  const is2027 = election?.id === 'fr_2027' && registryEntry?.trackedFor?.includes('fr_2027');
+  const details   = candidateDetails[candidateId] ?? candidateDetails[baseId(candidateId)] ?? {};
   const timeline  = details.timeline ?? [];
   const positions = details.positions?.[language] ?? [];
+  const status = registryEntry?.status ?? candidate?.candidacyStatus;
+  const statusDetail = registryEntry?.statusSource
+    ?? (typeof candidate?.result === 'object' ? candidate.result[language] : candidate?.result);
+  const programSources = (registryEntry?.programSourceIds ?? []).map(getSource).filter(Boolean);
+  const factSourceIds = [...new Set([
+    ...(registryEntry?.statusSourceIds ?? []),
+    ...(registryEntry?.programSourceIds ?? []),
+  ])];
+  const factSources = factSourceIds.map(getSource).filter(Boolean);
+
+  useEffect(() => {
+    if (!found && candidateId) navigate('elections');
+  }, [found, candidateId, navigate]);
 
   // Build adjusted user themes for comparison
   const userThemes = React.useMemo(() => {
@@ -109,7 +161,7 @@ export default function CandidateProfile() {
   // remplacer par 50 : c'est exactement la substitution qui faisait passer une absence de
   // donnée pour une mesure.
   const derivedThemes = React.useMemo(() => {
-    if (!candidate) return null;
+    if (!candidate || !election) return null;
     return computeCandidateMatch({
       userThemes: userThemes ?? {},
       candidate,
@@ -118,11 +170,13 @@ export default function CandidateProfile() {
     }).derivedThemes ?? null;
   }, [candidate, election, userThemes, language]);
 
+  if (!found || !candidate || !election) return null;
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Back */}
       <button
-        onClick={() => navigate('electionDetail')}
+        onClick={() => selectElection(election.id)}
         className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 mb-8 transition-colors"
       >
         ← {language === 'fr' ? 'Retour' : 'Back'}
@@ -138,7 +192,7 @@ export default function CandidateProfile() {
               {typeof candidate.party === 'object' ? candidate.party[language] : candidate.party}
             </p>
           )}
-          {candidate.result && (
+          {candidate.result && !is2027 && (
             <p className="text-xs text-gray-400 mt-1">
               {election.flag} {election.title[language]}
               {' · '}
@@ -157,24 +211,22 @@ export default function CandidateProfile() {
       </div>
 
       {/* Candidacy status badge */}
-      {candidate.candidacyStatus && (
+      {status && (
         <div className="mb-6">
           {(() => {
-            const statusConfig = {
-              declared:    { fr: 'Candidat déclaré',       en: 'Declared candidate',      bg: 'bg-green-50',  text: 'text-green-700',  border: 'border-green-200',  dot: 'bg-green-500'  },
-              probable:    { fr: 'Candidature probable',   en: 'Probable candidate',       bg: 'bg-blue-50',   text: 'text-blue-700',   border: 'border-blue-200',   dot: 'bg-blue-400'   },
-              speculative: { fr: 'Hypothèse politique',    en: 'Political hypothesis',     bg: 'bg-amber-50',  text: 'text-amber-700',  border: 'border-amber-200',  dot: 'bg-amber-400'  },
-              ineligible:  { fr: 'Inéligible',             en: 'Ineligible',               bg: 'bg-red-50',    text: 'text-red-700',    border: 'border-red-200',    dot: 'bg-red-400'    },
-            };
-            const s = statusConfig[candidate.candidacyStatus] ?? statusConfig.speculative;
+            const s = STATUS_CONFIG[status] ?? STATUS_CONFIG.speculative;
             const label = language === 'fr' ? s.fr : s.en;
-            const result = typeof candidate.result === 'object' ? candidate.result[language] : candidate.result;
             return (
               <div className={`inline-flex items-start gap-2 rounded-xl border px-3.5 py-2.5 ${s.bg} ${s.border}`}>
                 <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${s.dot}`} />
                 <div>
                   <p className={`text-xs font-bold ${s.text}`}>{label}</p>
-                  {result && <p className={`text-xs mt-0.5 ${s.text} opacity-75`}>{result}</p>}
+                  {statusDetail && <p className={`text-xs mt-0.5 ${s.text} opacity-75`}>{statusDetail}</p>}
+                  {registryEntry?.statusDate && (
+                    <p className={`text-[11px] mt-1 ${s.text} opacity-60`}>
+                      {language === 'fr' ? 'Situation vérifiée au' : 'Status verified on'} {registryEntry.lastReviewed ?? registryEntry.statusDate}
+                    </p>
+                  )}
                 </div>
               </div>
             );
@@ -183,7 +235,22 @@ export default function CandidateProfile() {
       )}
 
       {/* Bio */}
-      {candidate.description && (
+      {is2027 ? (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+            {language === 'fr' ? 'Repères vérifiés' : 'Verified facts'}
+          </h2>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600 leading-relaxed">
+            <p><span className="font-semibold text-gray-800">{language === 'fr' ? 'Formation :' : 'Party:'}</span> {registryEntry.party}</p>
+            <p className="mt-1"><span className="font-semibold text-gray-800">{language === 'fr' ? 'Statut :' : 'Status:'}</span> {statusDetail}</p>
+            <p className="mt-2 text-xs text-gray-400">
+              {language === 'fr'
+                ? 'Poliscop sépare les faits de candidature, les documents programmatiques et les positions utilisées pour le matching.'
+                : 'Poliscop separates candidacy facts, programme documents and positions used for matching.'}
+            </p>
+          </div>
+        </section>
+      ) : candidate.description ? (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
             {language === 'fr' ? 'Profil' : 'Profile'}
@@ -192,14 +259,49 @@ export default function CandidateProfile() {
             {typeof candidate.description === 'object' ? candidate.description[language] : candidate.description}
           </p>
         </section>
-      )}
+      ) : null}
 
       {/* Programme */}
       <section className="mb-8">
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
           {language === 'fr' ? 'Programme' : 'Programme'}
         </h2>
-        {candidate.programme?.[language] ? (
+        {is2027 ? (
+          <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-gray-800">
+                {PROGRAM_MATURITY_LABELS[registryEntry.programMaturity]?.[language]
+                  ?? registryEntry.programMaturity
+                  ?? (language === 'fr' ? 'État non documenté' : 'Undocumented status')}
+              </span>
+              {registryEntry.programMaturity && (
+                <span className="rounded-full bg-white border border-gray-200 px-2 py-0.5 text-[11px] font-semibold text-gray-500">
+                  {registryEntry.programMaturity}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              {language === 'fr'
+                ? 'Ce niveau décrit le corpus disponible, pas une validation du contenu. Une orientation ou un chantier participatif n’est pas présenté comme un programme électoral définitif.'
+                : 'This level describes the available corpus, not an endorsement. Broad directions or participatory work are not presented as a final electoral programme.'}
+            </p>
+            {programSources.length > 0 ? (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {programSources.map(source => (
+                  <a key={source.id} href={source.url} target="_blank" rel="noreferrer" className="text-xs font-medium text-blue-600 hover:underline">
+                    {source.publisher} · {new URL(source.url).hostname.replace(/^www\./, '')}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-amber-700">
+                {language === 'fr'
+                  ? 'Aucun document programmatique primaire n’est encore rattaché à cette fiche.'
+                  : 'No primary programme document is attached to this page yet.'}
+              </p>
+            )}
+          </div>
+        ) : candidate.programme?.[language] ? (
           <p className="text-gray-700 leading-relaxed">{candidate.programme[language]}</p>
         ) : (
           <div className="rounded-xl bg-gray-50 border border-gray-100 px-4 py-3 space-y-1.5">
@@ -210,15 +312,15 @@ export default function CandidateProfile() {
             </p>
             <p className="text-xs text-gray-400 leading-relaxed">
               {language === 'fr'
-                ? 'Les positions ci-dessous sont déduites de ses déclarations publiques, votes, interviews et prises de position récentes.'
-                : 'The positions shown below are inferred from public statements, votes, interviews and recent positions.'}
+                ? 'Les informations historiques ci-dessous ne participent pas au matching.'
+                : 'The historical information below is not used in matching.'}
             </p>
           </div>
         )}
       </section>
 
       {/* Key positions */}
-      {positions.length > 0 && (
+      {!is2027 && positions.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
             {language === 'fr' ? 'Positions clés' : 'Key positions'}
@@ -235,7 +337,7 @@ export default function CandidateProfile() {
       )}
 
       {/* Timeline */}
-      {timeline.length > 0 && (
+      {!is2027 && timeline.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
             {language === 'fr' ? 'Parcours' : 'Timeline'}
@@ -295,8 +397,32 @@ export default function CandidateProfile() {
         )}
       </section>
 
+      {is2027 && factSources.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+            {language === 'fr' ? 'Sources vérifiées' : 'Verified sources'}
+          </h2>
+          <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+            {factSources.map(source => (
+              <a
+                key={source.id}
+                href={source.url}
+                target="_blank"
+                rel="noreferrer"
+                className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+              >
+                <p className="text-sm font-medium text-gray-800">{source.title}</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {source.publisher} · {language === 'fr' ? 'vérifiée le' : 'verified on'} {source.verifiedAt}
+                </p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Compare with others */}
-      {election.candidates.filter(c => c.id !== candidate.id).length > 0 && (
+      {!is2027 && election.candidates.filter(c => c.id !== candidate.id).length > 0 && (
         <section className="border-t border-gray-100 pt-6">
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
             {language === 'fr' ? 'Comparer avec' : 'Compare with'}
