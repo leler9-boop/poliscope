@@ -4,7 +4,7 @@ import { useStore } from '../store/useStore.js';
 import { elections } from '../data/elections.js';
 import { candidateDetails } from '../data/candidateDetails.js';
 import { getRegistryEntry } from '../data/candidateRegistry.js';
-import { getSource } from '../data/candidateProvenance.js';
+import { getPositions, getSource, positionCoverage, REVIEW_STATUS } from '../data/candidateProvenance.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 import { CandidateAvatar } from '../components/LazyImage.jsx';
@@ -141,6 +141,12 @@ export default function CandidateProfile() {
     ...(registryEntry?.programSourceIds ?? []),
   ])];
   const factSources = factSourceIds.map(getSource).filter(Boolean);
+  const editorialPositions = is2027 ? getPositions(registryEntry.id) : [];
+  const codedPositionCount = editorialPositions.filter(position => position.stance != null).length;
+  const pendingPositionCount = editorialPositions.filter(
+    position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW,
+  ).length;
+  const approvedCoverage = is2027 ? positionCoverage(registryEntry.id) : null;
 
   useEffect(() => {
     if (!found && candidateId) navigate('elections');
@@ -286,12 +292,13 @@ export default function CandidateProfile() {
                 : 'This level describes the available corpus, not an endorsement. Broad directions or participatory work are not presented as a final electoral programme.'}
             </p>
             {programSources.length > 0 ? (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {programSources.map(source => (
-                  <a key={source.id} href={source.url} target="_blank" rel="noreferrer" className="text-xs font-medium text-blue-600 hover:underline">
-                    {source.publisher} · {new URL(source.url).hostname.replace(/^www\./, '')}
-                  </a>
-                ))}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
+                <a href={programSources[0].url} target="_blank" rel="noreferrer" className="text-xs font-medium text-blue-600 hover:underline">
+                  {language === 'fr' ? 'Consulter le corpus principal' : 'Open the main corpus'}
+                </a>
+                <span className="text-xs text-gray-400">
+                  {programSources.length} {language === 'fr' ? 'documents officiels rattachés' : 'official documents attached'}
+                </span>
               </div>
             ) : (
               <p className="text-xs text-amber-700">
@@ -393,6 +400,21 @@ export default function CandidateProfile() {
                 ? `Aucune position sourcée et relue n'est encore publiée pour ${candidate.name}. Les positions idéologiques apparaîtront ici lorsqu'elles seront étayées par des sources vérifiées, question par question — nous n'affichons pas d'estimation à la place.`
                 : `No sourced, reviewed position has been published for ${candidate.name} yet. Ideological positions will appear here once backed by verified sources, question by question — we do not display an estimate instead.`}
             </p>
+            {is2027 && approvedCoverage && (
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-gray-600">
+                  <span>{codedPositionCount}/{approvedCoverage.total} {language === 'fr' ? 'positions codées' : 'positions coded'}</span>
+                  <span>{approvedCoverage.approved}/{approvedCoverage.total} {language === 'fr' ? 'positions validées' : 'positions approved'}</span>
+                </div>
+                {pendingPositionCount > 0 && (
+                  <p className="text-xs text-amber-700 mt-2 leading-relaxed">
+                    {language === 'fr'
+                      ? `${pendingPositionCount} positions sont en attente d’une relecture indépendante. Elles ne participent pas au matching avant cette validation.`
+                      : `${pendingPositionCount} positions await independent review. They do not contribute to matching before approval.`}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </section>

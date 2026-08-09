@@ -100,6 +100,22 @@ test('une position APPROUVÉE a obligatoirement stance, source et relecteur', ()
     assert.notEqual(p.stance, null, `${p.candidateId}/${p.questionId} approuvée sans stance`);
     assert.ok((p.sourceIds ?? []).length > 0, `${p.candidateId}/${p.questionId} approuvée sans source`);
     assert.ok(p.reviewedBy, `${p.candidateId}/${p.questionId} approuvée sans relecteur`);
+    assert.notEqual(p.reviewedBy, p.codedBy,
+      `${p.candidateId}/${p.questionId} : le codeur ne peut pas être son propre relecteur indépendant`);
+  }
+});
+
+test('une position en relecture est complète mais ne se prétend pas déjà validée', () => {
+  for (const p of CANDIDATE_POSITIONS.filter(x => x.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)) {
+    assert.notEqual(p.stance, null, `${p.candidateId}/${p.questionId} en relecture sans stance`);
+    assert.ok(p.sourceIds?.length, `${p.candidateId}/${p.questionId} en relecture sans source`);
+    assert.ok(p.excerpt, `${p.candidateId}/${p.questionId} en relecture sans extrait`);
+    assert.ok(p.reasoning, `${p.candidateId}/${p.questionId} en relecture sans raisonnement`);
+    assert.ok(p.codedBy, `${p.candidateId}/${p.questionId} en relecture sans codeur`);
+    assert.ok(p.validFrom, `${p.candidateId}/${p.questionId} en relecture sans date de validité`);
+    assert.equal(p.reviewedBy, null, `${p.candidateId}/${p.questionId} porte déjà un relecteur sans être approuvée`);
+    assert.ok(p.excerpt.trim().split(/\s+/).length <= 25,
+      `${p.candidateId}/${p.questionId} : extrait de plus de 25 mots`);
   }
 });
 
@@ -145,16 +161,31 @@ test('zéro position approuvée ⇒ AUCUN score public (et non un repli legacy)'
     'la seule provenance possible pour un score est désormais « sourced-positions »');
 });
 
-test('la couverture sourcée de David Lisnard est 0/17, et il n’est pas comparable', () => {
+test('dix positions de David Lisnard sont codées mais restent exclues sans relecture indépendante', () => {
   const cov = positionCoverage('david-lisnard');
   assert.equal(cov.approved, 0);
   assert.equal(cov.total, FR2027_QUESTION_IDS.length);
   assert.equal(cov.ratio, 0);
 
-  // Les 17 entrées existent comme file de revue, avec stance null — pas comme données.
+  const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'david-lisnard');
+  const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
+  const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
+  assert.equal(pending.length, 10);
+  assert.equal(unknown.length, 7);
+
+  for (const position of pending) {
+    assert.notEqual(position.stance, null);
+    assert.ok(position.excerpt);
+    assert.ok(position.reasoning);
+    assert.ok(position.codedBy);
+    assert.equal(position.reviewedBy, null, 'le premier passage ne doit pas se prétendre indépendant');
+    assert.ok(position.sourceIds.every(sourceId => getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL));
+  }
+
+  // Les 17 entrées restent dans la file : dix à relire, sept encore à instruire.
   const queue = getReviewQueue().filter(x => x.candidateId === 'david-lisnard');
   assert.equal(queue.length, FR2027_QUESTION_IDS.length,
-    'les 17 questions doivent être instruites, pas devinées');
+    'aucune question ne doit disparaître avant validation ou rejet explicite');
 });
 
 test('les identifiants de questions de la provenance existent dans fr_2027', () => {

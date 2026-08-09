@@ -211,7 +211,17 @@ export const CANDIDATE_REGISTRY = [
     matchReady: false,
     notMatchReadyReason: 'Aucune position sourcée codée. Programme officiel disponible (maturité M3+) : à coder en priorité — c’est l’absence la plus visible du produit.',
     profileSource: PROFILE_SOURCE.NONE, programMaturity: 'M3',
-    programSourceIds: ['src-lisnard-programme-2027'], lastReviewed: '2026-08-10',
+    programSourceIds: [
+      'src-lisnard-programme-2027',
+      'src-lisnard-programme-institutions-2027',
+      'src-lisnard-programme-ambition-2027',
+      'src-lisnard-programme-security-2027',
+      'src-lisnard-programme-immigration-2027',
+      'src-lisnard-bayeux-2026-06-17',
+      'src-lisnard-strategy-2026-06-29',
+      'src-lisnard-saint-raphael-2026-07-03',
+      'src-lisnard-dissuasion-2026-03-06',
+    ], lastReviewed: '2026-08-10',
   },
   {
     id: 'nicolas-dupont-aignan', displayName: 'Nicolas Dupont-Aignan', legacyIds: [],

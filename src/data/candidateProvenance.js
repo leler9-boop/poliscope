@@ -137,7 +137,127 @@ export const SOURCE_DOCUMENTS = [
     discoveredAt: '2026-08-09',
     verifiedAt: '2026-08-10',
     status: 'active',
-    note: 'Page officielle ouverte et vérifiée. Elle présente un projet structuré (prospérité, équité, cohésion ; libéralisme économique, réforme de l’État, décentralisation), mais aucune position n’en est encore dérivée sans codage et double relecture.',
+    note: 'Page officielle ouverte et vérifiée. Elle présente le corpus programmatique et renvoie vers les chapitres détaillés utilisés pour le codage question par question.',
+  },
+  {
+    id: 'src-lisnard-programme-institutions-2027',
+    url: 'https://www.unenouvelleenergie.fr/notre-programme/etre-maitre-de-notre-destin/',
+    title: 'Être maître de notre destin — institutions, dette et Europe',
+    publisher: 'Nouvelle Énergie (parti de David Lisnard)',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'programme',
+    language: 'fr',
+    publishedAt: null,
+    eventAt: null,
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Chapitre officiel détaillant notamment la doctrine européenne et la réforme institutionnelle.',
+  },
+  {
+    id: 'src-lisnard-programme-ambition-2027',
+    url: 'https://www.unenouvelleenergie.fr/notre-programme/reussir-une-nouvelle-ambition-francaise/',
+    title: 'Réussir une nouvelle ambition française — économie et cohésion',
+    publisher: 'Nouvelle Énergie (parti de David Lisnard)',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'programme',
+    language: 'fr',
+    publishedAt: null,
+    eventAt: null,
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Chapitre officiel détaillant notamment la baisse de la fiscalité de production.',
+  },
+  {
+    id: 'src-lisnard-programme-security-2027',
+    url: 'https://www.unenouvelleenergie.fr/notre-programme/securite/',
+    title: 'Sécurité — le projet de David Lisnard',
+    publisher: 'Nouvelle Énergie (parti de David Lisnard)',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'programme',
+    language: 'fr',
+    publishedAt: null,
+    eventAt: null,
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Chapitre officiel sur les moyens et pouvoirs de sécurité et les règles visant l’islamisme.',
+  },
+  {
+    id: 'src-lisnard-programme-immigration-2027',
+    url: 'https://www.unenouvelleenergie.fr/notre-programme/immigration/',
+    title: 'Immigration — le projet de David Lisnard',
+    publisher: 'Nouvelle Énergie (parti de David Lisnard)',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'programme',
+    language: 'fr',
+    publishedAt: null,
+    eventAt: null,
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Chapitre officiel chiffrant une réduction par huit des titres de séjour.',
+  },
+  {
+    id: 'src-lisnard-bayeux-2026-06-17',
+    url: 'https://www.unenouvelleenergie.fr/app/uploads/2026/06/Discours-de-David-Lisnard-a-Bayeux-17062026.pdf',
+    title: 'Discours de Bayeux — institutions et référendum',
+    publisher: 'David Lisnard / Nouvelle Énergie',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'discours_integral',
+    language: 'fr',
+    publishedAt: '2026-06-17',
+    eventAt: '2026-06-17',
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Texte intégral officiel annonçant un référendum d’initiative populaire rendu praticable.',
+  },
+  {
+    id: 'src-lisnard-strategy-2026-06-29',
+    url: 'https://www.unenouvelleenergie.fr/le-grand-entretien-avec-david-lisnard-quelle-strategie-pour-la-france-dans-le-nouveau-desordre-mondial/',
+    title: 'Le Grand Entretien — stratégie internationale, Ukraine et nucléaire',
+    publisher: 'David Lisnard / Nouvelle Énergie',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'interview_integrale',
+    language: 'fr',
+    publishedAt: '2026-06-29',
+    eventAt: '2026-06-29',
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Entretien officiel détaillant EPR2, petits réacteurs modulaires, soutien à l’Ukraine et capacités de défense.',
+  },
+  {
+    id: 'src-lisnard-saint-raphael-2026-07-03',
+    url: 'https://www.unenouvelleenergie.fr/a-saint-raphael-david-lisnard-lance-sa-campagne-pour-faire-gagner-la-france-qui-fait/',
+    title: 'Discours de lancement de campagne à Saint-Raphaël',
+    publisher: 'David Lisnard / Nouvelle Énergie',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'discours_integral',
+    language: 'fr',
+    publishedAt: '2026-07-10',
+    eventAt: '2026-07-03',
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Discours officiel de campagne sur sécurité, salaires nets, nucléaire et écologie non punitive.',
+  },
+  {
+    id: 'src-lisnard-dissuasion-2026-03-06',
+    url: 'https://www.unenouvelleenergie.fr/dissuasion-nucleaire-ce-que-le-discours-du-president-de-la-republique-dit-et-ce-quil-ne-dit-pas/',
+    title: 'Dissuasion nucléaire — doctrine et capacités',
+    publisher: 'David Lisnard / Nouvelle Énergie',
+    level: SOURCE_LEVEL.PRIMARY_OFFICIAL,
+    type: 'chronique',
+    language: 'fr',
+    publishedAt: '2026-03-06',
+    eventAt: '2026-03-06',
+    discoveredAt: '2026-08-10',
+    verifiedAt: '2026-08-10',
+    status: 'active',
+    note: 'Position explicite en faveur d’une réévaluation à la hausse de l’arsenal et du renouvellement des composantes.',
   },
   {
     id: 'src-attal-campagne-2027',
@@ -298,11 +418,10 @@ export function getSource(id) { return SOURCES_BY_ID.get(id) ?? null; }
 //
 // AMORCE : David Lisnard.
 //
-// Le contre-audit demandait de « commencer la provenance question par question avec Lisnard
-// sans inventer les positions ». C'est exactement ce que fait le bloc ci-dessous : les 17
-// questions de fr_2027 existent comme entrées de travail, avec `stance: null` et le document
-// programmatique rattaché. Aucune valeur n'est devinée. Tant que ces entrées ne sont pas
-// instruites et relues, Lisnard reste `matchReady: false` et n'apparaît pas au classement.
+// Le premier passage de codage s'appuie uniquement sur des pages, discours et entretiens
+// officiels. Une position explicite devient PENDING_REVIEW ; une question que le corpus ne
+// tranche pas reste à `stance: null`. Aucun de ces codages n'alimente le score avant une
+// relecture indépendante.
 //
 // La forme est volontairement celle de la cible : quand une position sera codée, il suffira
 // de remplir `stance`, `sourceIds`, `excerpt`, `reasoning`, `codedBy` et `reviewedBy`.
@@ -331,21 +450,96 @@ const FR2027_QUESTION_IDS = [
  */
 
 export const CANDIDATE_POSITIONS = [
-  ...FR2027_QUESTION_IDS.map(questionId => ({
-    candidateId: 'david-lisnard',
-    questionId,
-    stance: null,                                   // ← inconnue, PAS neutre
-    sourceIds: ['src-lisnard-programme-2027'],      // document à dépouiller
-    excerpt: null,
-    reasoning: null,
-    evidenceType: 'programme',
-    confidence: null,
-    reviewStatus: REVIEW_STATUS.TO_REVIEW,
-    codedBy: null,
-    reviewedBy: null,
-    validFrom: null,
-    supersedesId: null,
-  })),
+  ...FR2027_QUESTION_IDS.map(questionId => {
+    const coded = {
+      fr_2027_q2: {
+        stance: 2,
+        sourceIds: ['src-lisnard-programme-immigration-2027'],
+        excerpt: 'Diviser par huit la délivrance de titres de séjour',
+        reasoning: 'La réduction proposée est explicite et nettement plus forte qu’un simple ajustement des flux.',
+        evidenceType: 'programme', confidence: 0.99, validFrom: '2026-08-10',
+      },
+      fr_2027_q3: {
+        stance: 2,
+        sourceIds: ['src-lisnard-strategy-2026-06-29'],
+        excerpt: 'prolonger le parc, exécuter l’EPR2, lancer les petits réacteurs modulaires',
+        reasoning: 'Le corpus prévoit plusieurs investissements nucléaires lourds et de long terme.',
+        evidenceType: 'interview', confidence: 0.98, validFrom: '2026-06-29',
+      },
+      fr_2027_q4: {
+        stance: 1,
+        sourceIds: ['src-lisnard-programme-institutions-2027'],
+        excerpt: 'L’Europe institutionnelle est une conquête et un outil nécessaire',
+        reasoning: 'Le projet veut renforcer des coopérations européennes concrètes tout en rapatriant certaines compétences : accord, mais non fédéraliste.',
+        evidenceType: 'programme', confidence: 0.88, validFrom: '2026-08-10',
+      },
+      fr_2027_q6: {
+        stance: -2,
+        sourceIds: ['src-lisnard-saint-raphael-2026-07-03'],
+        excerpt: 'L’écologie passera par la croissance, la science, la recherche, l’innovation et l’investissement.',
+        reasoning: 'Le discours rejette explicitement une écologie punitive qui renchérit les coûts des ménages, tout en soutenant l’action climatique technologique.',
+        evidenceType: 'discours', confidence: 0.9, validFrom: '2026-07-03',
+      },
+      fr_2027_q7: {
+        stance: 2,
+        sourceIds: ['src-lisnard-programme-security-2027'],
+        excerpt: 'accès aux fichiers, possibilité de verbalisation renforcée',
+        reasoning: 'Le projet accroît explicitement les outils, pouvoirs et moyens des forces de sécurité et de la justice.',
+        evidenceType: 'programme', confidence: 0.98, validFrom: '2026-08-10',
+      },
+      fr_2027_q8: {
+        stance: 2,
+        sourceIds: ['src-lisnard-programme-ambition-2027'],
+        excerpt: 'La baisse de la fiscalité de production doit être intensifiée.',
+        reasoning: 'Le programme chiffre une diminution de moitié des impôts de production et la suppression de contributions.',
+        evidenceType: 'programme', confidence: 0.99, validFrom: '2026-08-10',
+      },
+      fr_2027_q9: {
+        stance: 1,
+        sourceIds: ['src-lisnard-strategy-2026-06-29'],
+        excerpt: 'l’OTAN, le soutien à l’Ukraine, le renforcement de la base industrielle de défense européenne',
+        reasoning: 'Le soutien est explicite, mais la source ne formule pas un engagement littéral sans limite de durée.',
+        evidenceType: 'interview', confidence: 0.82, validFrom: '2026-06-29',
+      },
+      fr_2027_q10: {
+        stance: 1,
+        sourceIds: ['src-lisnard-programme-security-2027'],
+        excerpt: 'interdiction du voile à l’université',
+        reasoning: 'Le projet propose des restrictions religieuses supplémentaires dans une institution publique, sans énoncer une interdiction générale dans tout espace public.',
+        evidenceType: 'programme', confidence: 0.86, validFrom: '2026-08-10',
+      },
+      fr_2027_q15: {
+        stance: 2,
+        sourceIds: ['src-lisnard-bayeux-2026-06-17'],
+        excerpt: 'Le référendum d’initiative populaire sera vraiment institué et rendu praticable',
+        reasoning: 'La proposition répond directement à l’initiative citoyenne de référendums, avec seuil et vote garanti.',
+        evidenceType: 'discours', confidence: 0.99, validFrom: '2026-06-17',
+      },
+      fr_2027_q16: {
+        stance: 2,
+        sourceIds: ['src-lisnard-dissuasion-2026-03-06'],
+        excerpt: 'la réévaluation à la hausse de notre arsenal',
+        reasoning: 'La chronique approuve une hausse de l’arsenal, le renouvellement des composantes et l’autonomie stratégique.',
+        evidenceType: 'interview', confidence: 0.98, validFrom: '2026-03-06',
+      },
+    }[questionId];
+
+    return {
+      candidateId: 'david-lisnard',
+      questionId,
+      stance: coded?.stance ?? null,
+      sourceIds: coded?.sourceIds ?? ['src-lisnard-programme-2027'],
+      excerpt: coded?.excerpt ?? null,
+      reasoning: coded?.reasoning ?? null,
+      evidenceType: coded?.evidenceType ?? 'programme',
+      confidence: coded?.confidence ?? null,
+      reviewStatus: coded ? REVIEW_STATUS.PENDING_REVIEW : REVIEW_STATUS.TO_REVIEW,
+      codedBy: coded ? 'codex-source-pass-2026-08-10' : null,
+      reviewedBy: null,
+      validFrom: coded?.validFrom ?? null,
+      supersedesId: null,
+    };
+  }),
 ];
 
 // ─── Accès ───────────────────────────────────────────────────────────────────
