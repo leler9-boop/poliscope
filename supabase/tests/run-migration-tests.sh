@@ -108,6 +108,9 @@ PSQL=("${PSQL_FULL[@]}")
 echo "▶ Tests d'autorisation…"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/admin_authorization.test.sql"
 
+echo "▶ Tests de la plateforme de données…"
+"${PSQL[@]}" -f "$ROOT/supabase/tests/data_platform.test.sql"
+
 echo "▶ Rollback…"
 "${PSQL[@]}" -f "$ROOT/supabase/rollbacks/20260809120000_admin_authorization_rollback.sql" >/dev/null
 RESTORED="$("${PSQL[@]}" -t -A -c "

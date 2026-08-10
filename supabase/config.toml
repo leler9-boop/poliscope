@@ -1,0 +1,73 @@
+# POLISCOP — Configuration Supabase CLI.
+#
+# Ce fichier permet à `supabase start` / `supabase db reset` de reconstruire la base DEPUIS
+# ZÉRO à partir de `supabase/migrations/`. C'était la pièce manquante : le dépôt contenait
+# des migrations mais aucune déclaration de projet, donc aucune reconstruction reproductible.
+#
+# ⚠ `project_id` sert d'identifiant LOCAL (nom des conteneurs). Le rattachement au projet
+# distant se fait par `supabase link --project-ref <ref>`, jamais en dur ici.
+
+project_id = "poliscop"
+
+[api]
+enabled = true
+port = 54321
+# ⚠ CLÉ DE VOÛTE DU MODÈLE DE CONFIDENTIALITÉ : `private` n'est PAS exposé.
+# PostgREST ne sert que les schémas listés ici. Ajouter `private` à cette ligne rendrait
+# joignables par HTTP toutes les tables de collecte — même avec la RLS, ce serait une
+# régression majeure. Les données de `private` ne sortent que par des RPC `public`
+# explicitement autorisées (tableau de bord) ou par l'Edge Function d'ingestion.
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.migrations]
+# Ordre lexical strict — identique à celui que vérifie supabase/tests/run-migration-tests.sh.
+enabled = true
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed/*.sql"]
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["https://poliscop.fr", "https://www.poliscop.fr"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_confirmations = true
+
+[storage]
+enabled = false
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+
+# ─── Fonction d'ingestion anonyme ────────────────────────────────────────────
+#
+# `verify_jwt = false` est INDISPENSABLE : un visiteur non connecté n'a pas de JWT
+# utilisateur, et l'essentiel des passations est anonyme. Désactiver la vérification sans
+# rien mettre à la place serait une porte ouverte — les contrôles alternatifs sont donc
+# explicites, testés, et documentés dans docs/data-platform/ingestion.md :
+#
+#   1. CORS restreint à une liste blanche d'origines (aucun `*`) ;
+#   2. taille de payload plafonnée avant désérialisation ;
+#   3. allowlist stricte des types d'événements ET des champs de chaque type ;
+#   4. version de protocole obligatoire et vérifiée ;
+#   5. limitation de débit par fenêtre, sur un haché salé (jamais l'IP en clair) ;
+#   6. consentement revérifié EN BASE avant toute écriture (private.has_consent) ;
+#   7. la clé service_role ne vit que dans l'environnement de la fonction.
+[functions.ingest]
+verify_jwt = false

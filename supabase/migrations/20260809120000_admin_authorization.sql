@@ -253,7 +253,19 @@ declare
     -- RPC de libre-service utilisateur des schémas v3/v5, si présentes en production.
     -- Elles agissent sur les données de l'appelant (auth.uid()) et doivent rester ouvertes
     -- aux comptes connectés — les fermer casserait l'export et la suppression RGPD.
-    'delete_my_account', 'export_my_data', 'has_consent'
+    'delete_my_account', 'export_my_data', 'has_consent',
+    -- ── Arbitrage du 2026-08-10 : tableau de bord éditorial ──────────────────
+    -- Créées par 20260810140000_admin_dashboard_api.sql. Décision fonction par fonction,
+    -- comme l'exige le message d'erreur de l'étape (d) :
+    --   • chacune commence par `if not public.is_founder_admin() then raise` — le GRANT à
+    --     `authenticated` ouvre l'APPEL, jamais la donnée ;
+    --   • `admin_update_question_report` exige en plus le rôle `founder` (écriture) ;
+    --   • aucune ne renvoie de réponse individuelle : agrégats et colonnes éditoriales.
+    -- Sans cette entrée, l'étape (a) leur retirerait leur GRANT à chaque réapplication et
+    -- le tableau de bord tomberait en panne silencieusement.
+    'admin_question_reports', 'admin_question_health', 'admin_dropoff_by_position',
+    'admin_reexposure_comparison', 'admin_update_question_report',
+    'admin_export_report_aggregates'
   ];
 begin
   for fn in

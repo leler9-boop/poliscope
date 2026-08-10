@@ -308,7 +308,14 @@ declare
     'is_founder_admin',
     'founder_get_growth', 'founder_get_candidates', 'founder_get_archetypes',
     'founder_get_compass', 'founder_get_events', 'founder_get_top_skipped',
-    'founder_get_gender_scores', 'founder_get_commune_scores', 'founder_get_demographics_quality'
+    'founder_get_gender_scores', 'founder_get_commune_scores', 'founder_get_demographics_quality',
+    -- Tableau de bord éditorial (20260810140000). Ouvertes à `authenticated`, fermées à
+    -- `anon`, chacune refusant l'accès en interne hors administrateur. Le test 16 vérifie
+    -- ce refus sur une session authentifiée non administratrice — le GRANT seul ne prouve
+    -- rien, c'est la paire GRANT + refus interne qui constitue la garantie.
+    'admin_question_reports', 'admin_question_health', 'admin_dropoff_by_position',
+    'admin_reexposure_comparison', 'admin_update_question_report',
+    'admin_export_report_aggregates'
   ];
   should_be_open boolean;
 begin
