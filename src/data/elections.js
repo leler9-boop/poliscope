@@ -886,14 +886,14 @@ export const elections = [
       {
         id: `fr_2027_q3`,
         text: { en: `France should invest heavily in nuclear energy for the coming decades.`, fr: `La France devrait investir massivement dans l'énergie nucléaire pour les prochaines décennies.` },
-        theme: `ENVIRONMENT`, direction: -1,
+        theme: `ENVIRONMENT`, direction: 1,
         info: { en: `France has the most nuclear-dependent electricity grid in the world. Building new reactors is supported by most of the right and centre; the Greens oppose it.`, fr: `La France a le réseau électrique le plus dépendant du nucléaire au monde. La construction de nouveaux réacteurs est soutenue par la droite et le centre ; les Verts s'y opposent.` },
         positions: { lepen_2027: 5, philippe: 5, attal: 5, melenchon_2027: 2, glucksmann: 3, tondelier: 1, retailleau: 5, ruffin: 3, roussel_2027: 5, zemmour_2027: 5 },
       },
       {
         id: `fr_2027_q4`,
         text: { en: `France should strengthen its role within the European Union.`, fr: `La France devrait renforcer son rôle au sein de l'Union européenne.` },
-        theme: `GLOBAL`, direction: -1,
+        theme: `GLOBAL`, direction: 1,
         info: { en: `EU integration remains a core dividing line. Le Pen and Retailleau advocate national sovereignty; the centre and left are broadly pro-EU.`, fr: `L'intégration européenne reste un clivage central. Le Pen et Retailleau défendent la souveraineté nationale ; le centre et la gauche sont globalement pro-UE.` },
         positions: { lepen_2027: 1, philippe: 4, attal: 5, melenchon_2027: 3, glucksmann: 5, tondelier: 4, retailleau: 2, ruffin: 2, roussel_2027: 2, zemmour_2027: 1 },
       },
@@ -928,7 +928,7 @@ export const elections = [
       {
         id: `fr_2027_q9`,
         text: { en: `France should support Ukraine militarily for as long as necessary.`, fr: `La France devrait soutenir militairement l'Ukraine aussi longtemps que nécessaire.` },
-        theme: `GLOBAL`, direction: -1,
+        theme: `GLOBAL`, direction: 1,
         info: { en: `The war in Ukraine has divided French politics. Macron strongly backed Ukraine; Le Pen and Mélenchon have been more ambiguous about their support.`, fr: `La guerre en Ukraine a divisé la politique française. Macron a fermement soutenu l'Ukraine ; Le Pen et Mélenchon ont été plus ambigus.` },
         positions: { lepen_2027: 2, philippe: 5, attal: 5, melenchon_2027: 2, glucksmann: 5, tondelier: 4, retailleau: 4, ruffin: 3, roussel_2027: 3, zemmour_2027: 1 },
       },
