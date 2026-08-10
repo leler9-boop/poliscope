@@ -11,6 +11,7 @@ import { THEMES_ORDER, getQuestionQueue, getQuestionsByIds, questions as allQues
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { setMeasurementConsent } from '../lib/anonymous.js';
+import { normalizeConsent } from '../lib/consent.js';
 import { toCloudAnswerRow, cloudAnsweredCount } from '../lib/cloudAnswers.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 import {
@@ -25,6 +26,29 @@ import {
 // materially, so previously-granted consent can be distinguished from consent
 // to the current wording (mirrors user_consents.version in schema_v3.sql).
 export const CONSENT_VERSION = '2026-07';
+
+/**
+ * Répercute une décision de consentement sur la collecte réelle.
+ *
+ * Sans ce pont, le consentement resterait un état d'interface : la file de mutations
+ * continuerait d'émettre après un retrait, et l'identifiant pseudonyme resterait déposé
+ * sur le terminal. C'est le point où « consentement révocable » devient vrai dans le code
+ * et pas seulement dans le texte affiché.
+ *
+ * Importé paresseusement : `attemptSession` tire `ingestClient` → `import.meta.env`, que le
+ * ESM natif de Node ne fournit pas. Les tests d'intégration du store doivent pouvoir
+ * l'importer sans navigateur.
+ */
+function syncAttemptConsent(consent, state) {
+  import('../lib/attemptSession.js')
+    .then(({ attemptSession }) => {
+      attemptSession.setConsent(normalizeConsent(consent), {
+        userId: state?.userId ?? null,
+        language: state?.language ?? 'fr',
+      });
+    })
+    .catch(() => { /* module indisponible (test unitaire) : l'état local reste la référence */ });
+}
 
 /**
  * Pick the next question for improve mode.
@@ -287,11 +311,16 @@ export const useStore = create(
         const consent = {
           politicalData: granted === true,
           measurement,
+          // `research` est une finalité DISTINCTE et jamais déduite : accepter l'analyse
+          // de ses réponses ne vaut pas autorisation de réutilisation scientifique.
+          // Absente des options ⇒ non décidée (`null`), donc refusée par défaut.
+          research: options.research === true ? true : (options.research === false ? false : null),
           grantedAt: new Date().toISOString(),
           version: CONSENT_VERSION,
         };
         set({ consent });
         setMeasurementConsent(measurement);
+        syncAttemptConsent(consent, get());
       },
 
       /**
@@ -304,7 +333,17 @@ export const useStore = create(
        */
       withdrawConsent: ({ measurement } = {}) => {
         const keepMeasurement = measurement === true;
-        set({ consent: { politicalData: false, measurement: keepMeasurement, grantedAt: new Date().toISOString(), version: CONSENT_VERSION } });
+        const consent = {
+          politicalData: false,
+          measurement: keepMeasurement,
+          research: false,
+          grantedAt: new Date().toISOString(),
+          version: CONSENT_VERSION,
+        };
+        set({ consent });
+        // Le retrait doit AGIR : file d'envoi vidée, identifiant pseudonyme effacé, et
+        // décision transmise pour que le serveur supprime ce qu'il détient déjà.
+        syncAttemptConsent(consent, get());
         // Purge immédiate de l'identifiant local si la mesure est refusée : un retrait doit
         // arrêter la collecte ET effacer le traceur déjà déposé, pas seulement cesser d'émettre.
         setMeasurementConsent(keepMeasurement);
@@ -701,6 +740,9 @@ export const useStore = create(
       // no tracking of political content until we positively know consent was granted).
       onRehydrateStorage: () => (state) => {
         setMeasurementConsent(state?.consent?.measurement === true);
+        // Même logique fail-closed pour la collecte de passation : tant que l'état persisté
+        // n'est pas relu, `attemptSession` n'a aucun consentement et n'émet rien.
+        if (state?.consent) syncAttemptConsent(state.consent, state);
         // Reconstruit la file du questionnaire depuis les IDs persistés. Sans cela, un
         // rechargement direct sur /quiz affichait « Aucune question disponible ».
         try { state?.resumeQuestionnaire?.(); } catch { /* file inutilisable — écran de reprise */ }

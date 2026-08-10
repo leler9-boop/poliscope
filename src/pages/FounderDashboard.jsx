@@ -14,6 +14,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
+import QuestionReportsPanel from '../components/QuestionReportsPanel.jsx';
 
 // ─── Autorisation ────────────────────────────────────────────────────────────
 //
@@ -439,6 +440,13 @@ function Dashboard() {
           />
         )}
       </Section>
+
+      {/* ── 4bis. SIGNALEMENTS ────────────────────────────────────────────── */}
+      {/* Alimenté par private.question_reports via RPC administrateur. Contrairement à la
+          section ci-dessus (qui compte des ÉVÉNEMENTS de parcours), ce panneau lit des
+          signalements réellement stockés, avec le temps médian et le taux de « sans
+          opinion » de la même question. */}
+      <QuestionReportsPanel />
 
       {/* ── 5. QUALITÉ DES DONNÉES ────────────────────────────────────────── */}
       <Section title="🔬 Qualité des données (7 derniers jours)">

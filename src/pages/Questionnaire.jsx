@@ -11,6 +11,9 @@ import { QUESTION_EXPLANATIONS } from '../data/questionExplanations.js';
 import { QUESTION_CONCEPTS, THEME_INTROS } from '../data/conceptMap.js';
 import { THEME_COLORS } from '../data/questions.js';
 import { NO_OPINION, isScorable } from '../engine/scorer.js';
+import { QUESTIONNAIRE_VERSION } from '../engine/versions.js';
+import { activeScoringVersion } from '../engine/scoringVersion.js';
+import { attemptSession } from '../lib/attemptSession.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
@@ -76,6 +79,55 @@ export default function Questionnaire() {
   useEffect(() => {
     return () => clearTimeout(autoAdvanceTimer.current);
   }, [currentIndex]);
+
+  // ── Mesure du temps par question ─────────────────────────────────────────
+  //
+  // Branche la pause automatique sur la visibilité de l'onglet et la reprise de la file
+  // au retour du réseau. Le désabonnement est indispensable : sans lui, deux passations
+  // successives empileraient deux jeux d'écouteurs et chaque question serait comptée deux
+  // fois.
+  useEffect(() => attemptSession.attach(), []);
+
+  // Ouvre (ou reprend) la passation dès que la file est connue. Rien n'est TRANSMIS ici :
+  // `attemptSession` n'émet qu'une fois `political_analytics` accordé.
+  const queueLength = questionsQueue?.length ?? 0;
+  useEffect(() => {
+    if (queueLength === 0 || !testMode) return;
+    attemptSession.begin({
+      mode: testMode,
+      questionnaireVersion: QUESTIONNAIRE_VERSION,
+      scoringVersion: activeScoringVersion(),
+      language,
+    });
+  }, [queueLength, testMode, language]);
+
+  // La question devient visible ⇒ le chronomètre démarre. Au démontage (changement de
+  // question, sortie de page), il s'arrête et le cumul est soldé.
+  const currentQuestionId = (questionsQueue && questionsQueue.length > 0)
+    ? questionsQueue[currentIndex]?.id
+    : null;
+  useEffect(() => {
+    if (!currentQuestionId) return undefined;
+    attemptSession.showQuestion(currentQuestionId, currentIndex);
+    return () => { attemptSession.timer.hide(); };
+  }, [currentQuestionId, currentIndex]);
+
+  // Une modale COUVRE réellement la question : le temps passé dessus n'est pas du temps de
+  // réflexion sur l'énoncé, il ne doit pas être compté.
+  useEffect(() => {
+    if (activeConceptKey) attemptSession.block('modal:concept');
+    else attemptSession.unblock('modal:concept');
+  }, [activeConceptKey]);
+
+  useEffect(() => {
+    if (!introSeen) attemptSession.block('modal:prequiz');
+    else attemptSession.unblock('modal:prequiz');
+  }, [introSeen]);
+
+  useEffect(() => {
+    if (themeIntro) attemptSession.block('banner:theme');
+    else attemptSession.unblock('banner:theme');
+  }, [themeIntro]);
 
   // Detect theme change and show chapter transition banner.
   // V4: removed 3-second auto-timeout. Banner now stays visible until:
@@ -164,6 +216,9 @@ export default function Questionnaire() {
     if (!question) return;
     const wasAnswered = currentAnswer != null;
     answerQuestion(question.id, val);
+    // Chronométrage + mise en file. La MESURE est toujours faite ; seule la TRANSMISSION
+    // dépend du consentement, et c'est `attemptSession` qui l'arbitre.
+    attemptSession.recordAnswer(question.id, 'answered', val);
     // Dismiss chapter banner on first answer of the new theme (V4)
     if (themeIntro && !wasAnswered) setThemeIntro(null);
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
@@ -211,6 +266,10 @@ export default function Questionnaire() {
       // Un seul état d'inconnu est conservé — « passer » et « sans opinion » ne sont pas
       // distingués, par minimisation des données.
       answerQuestion(question.id, NO_OPINION);
+      // « Sans opinion » est un ÉTAT transmis comme tel (`response_state = 'no_opinion'`,
+      // `answer_value` nul), pas une suppression de ligne. C'est la correction de fond du
+      // modèle historique, où « sans opinion » était indiscernable de « jamais posée ».
+      attemptSession.recordAnswer(question.id, 'no_opinion', null);
       trackQuestionSkipped({
         questionId:    question.id,
         theme:         question.theme,
@@ -395,6 +454,12 @@ export default function Questionnaire() {
                   onConceptClick={(key) => {
                     trackConceptOpened({ conceptKey: key, questionIndex: currentIndex });
                     setActiveConceptKey(key);
+                  }}
+                  attemptId={attemptSession.attemptId}
+                  originScreen={improveMode ? 'improve' : 'questionnaire'}
+                  onReportOpenChange={(open) => {
+                    if (open) attemptSession.block('modal:report');
+                    else attemptSession.unblock('modal:report');
                   }}
                 />
               </motion.div>

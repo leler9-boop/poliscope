@@ -5,15 +5,34 @@ import { CONCEPTS } from '../data/conceptMap.js';
 import { NO_OPINION } from '../engine/scorer.js';
 import ExplanationContent from './ExplanationContent.jsx';
 import { trackExplanationToggled } from '../lib/analytics.js';
+import { submitQuestionReport } from '../lib/questionReports.js';
+import { QUESTIONNAIRE_VERSION } from '../engine/versions.js';
 
 const LIKERT_LABELS = {
   en: ['Strongly disagree', 'Disagree', 'In between', 'Agree', 'Strongly agree'],
   fr: ['Pas du tout d\'accord', 'Pas d\'accord', 'Entre les deux', 'D\'accord', 'Tout à fait d\'accord'],
 };
 
+/**
+ * Motifs de signalement. Chaque libellé porte sa CATÉGORIE de base (`private.report_category`) :
+ * l'index dans un tableau ne survit pas à une réorganisation de la liste, et un signalement
+ * mal catégorisé est un signalement perdu pour le tri éditorial.
+ */
 const REPORT_OPTIONS = {
-  en: ['Not clear', 'Not relevant', 'Biased'],
-  fr: ['Pas claire', 'Pas pertinente', 'Biaisée'],
+  en: [
+    { category: 'unclear',    label: 'Not clear' },
+    { category: 'biased',     label: 'Biased' },
+    { category: 'irrelevant', label: 'Not relevant' },
+    { category: 'fact_error', label: 'Factually wrong' },
+    { category: 'outdated',   label: 'Out of date' },
+  ],
+  fr: [
+    { category: 'unclear',    label: 'Pas claire' },
+    { category: 'biased',     label: 'Biaisée' },
+    { category: 'irrelevant', label: 'Pas pertinente' },
+    { category: 'fact_error', label: 'Erreur factuelle' },
+    { category: 'outdated',   label: 'Information dépassée' },
+  ],
 };
 
 /* Valeur 1–5 → label court pour mobile */
@@ -22,12 +41,20 @@ const SHORT_LABELS = {
   fr: ['Non ++', 'Non', 'Entre 2', 'Oui', 'Oui ++'],
 };
 
-export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip, language = 'en', concepts = [], onConceptClick }) {
+export default function QuestionCard({
+  question, currentAnswer, onAnswer, onSkip, language = 'en', concepts = [], onConceptClick,
+  attemptId = null, originScreen = 'questionnaire', onReportOpenChange,
+}) {
   const [showInfo,     setShowInfo]     = useState(false);
   const [reportOpen,   setReportOpen]   = useState(false);
   const [reportChoice, setReportChoice] = useState(null);
   const [reportText,   setReportText]   = useState('');
-  const [reportSent,   setReportSent]   = useState(false);
+  // `reportResult` remplace l'ancien booléen `reportSent`. Il ne peut prendre une valeur
+  // qu'APRÈS retour du serveur : `sent`, `queued` (hors ligne) ou `failed`. Le booléen
+  // précédent était mis à `true` sans le moindre appel réseau — 100 % des utilisateurs
+  // voyaient « signalement pris en compte » et 0 % des signalements existait quelque part.
+  const [reportResult, setReportResult] = useState(null);
+  const [reportBusy,   setReportBusy]   = useState(false);
 
   const noOpinionSelected = currentAnswer === NO_OPINION;
   const labels      = LIKERT_LABELS[language]  ?? LIKERT_LABELS.en;
@@ -42,21 +69,44 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
     ? question.text
     : (question.text[language] ?? question.text.fr ?? question.text.en);
 
-  const handleReportSubmit = () => {
-    setReportSent(true);
-    setTimeout(() => {
-      setReportOpen(false);
-      setReportChoice(null);
-      setReportText('');
-      setReportSent(false);
-    }, 1800);
+  const handleReportSubmit = async () => {
+    if (reportChoice == null || reportBusy) return;
+    setReportBusy(true);
+    try {
+      const outcome = await submitQuestionReport({
+        questionId:           question.id,
+        questionnaireVersion: QUESTIONNAIRE_VERSION,
+        category:             reportChoice,
+        comment:              reportText,
+        attemptId,
+        originScreen,
+        language,
+      });
+      setReportResult(outcome);
+      // La modale ne se referme d'elle-même que sur un succès CONFIRMÉ. Un signalement mis
+      // en file ou refusé doit rester à l'écran assez longtemps pour être lu.
+      if (outcome.status === 'sent') {
+        setTimeout(() => closeReport(), 1800);
+      }
+    } finally {
+      setReportBusy(false);
+    }
+  };
+
+  const openReport = () => {
+    setReportOpen(true);
+    // Le chronomètre de la question se met en pause : la modale couvre réellement la
+    // question, ce temps n'est pas du temps de réflexion sur l'énoncé.
+    onReportOpenChange?.(true);
   };
 
   const closeReport = () => {
     setReportOpen(false);
     setReportChoice(null);
     setReportText('');
-    setReportSent(false);
+    setReportResult(null);
+    setReportBusy(false);
+    onReportOpenChange?.(false);
   };
 
   return (
@@ -251,7 +301,7 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
         {/* ── Report ── */}
         <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
           <button
-            onClick={() => setReportOpen(true)}
+            onClick={openReport}
             className="text-[11px] text-slate-300 hover:text-slate-500 transition-colors py-2.5 px-1 min-h-[44px] flex items-center"
           >
             {language === 'fr' ? 'Signaler un problème' : 'Report an issue'}
@@ -280,23 +330,89 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
               transition={{ duration: 0.22, ease: [0.34, 1.06, 0.64, 1] }}
               onClick={e => e.stopPropagation()}
             >
-              {reportSent ? (
+              {reportResult ? (
                 <motion.div
                   className="text-center py-4"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <div className="w-10 h-10 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/>
-                    </svg>
-                  </div>
-                  <p className="font-semibold text-slate-900 mb-1">
-                    {language === 'fr' ? 'Merci !' : 'Thanks!'}
-                  </p>
-                  <p className="text-sm text-slate-400">
-                    {language === 'fr' ? 'Votre signalement a été pris en compte.' : 'Your report has been noted.'}
-                  </p>
+                  {/* Trois issues, trois messages DISTINCTS. « Reçu » n'est affiché que si
+                      le serveur l'a confirmé — c'est la raison d'être de ce module. */}
+                  {reportResult.status === 'sent' && (
+                    <>
+                      <div className="w-10 h-10 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/>
+                        </svg>
+                      </div>
+                      <p className="font-semibold text-slate-900 mb-1">
+                        {language === 'fr' ? 'Merci !' : 'Thanks!'}
+                      </p>
+                      <p className="text-sm text-slate-400">
+                        {language === 'fr'
+                          ? 'Votre signalement a bien été enregistré.'
+                          : 'Your report has been recorded.'}
+                      </p>
+                    </>
+                  )}
+
+                  {reportResult.status === 'queued' && (
+                    <>
+                      <div className="w-10 h-10 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                      <p className="font-semibold text-slate-900 mb-1">
+                        {language === 'fr' ? 'Enregistré sur cet appareil' : 'Saved on this device'}
+                      </p>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {language === 'fr'
+                          ? 'Le signalement sera envoyé lorsque la connexion reviendra.'
+                          : 'The report will be sent once the connection is back.'}
+                      </p>
+                      <button
+                        onClick={closeReport}
+                        className="mt-4 px-4 py-2 rounded-xl text-sm font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors"
+                      >
+                        {language === 'fr' ? 'Fermer' : 'Close'}
+                      </button>
+                    </>
+                  )}
+
+                  {reportResult.status === 'failed' && (
+                    <>
+                      <div className="w-10 h-10 bg-red-50 border border-red-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                      <p className="font-semibold text-slate-900 mb-1">
+                        {language === 'fr' ? 'Envoi impossible' : 'Could not send'}
+                      </p>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {language === 'fr'
+                          ? 'Le signalement n’a pas pu être enregistré. Vous pouvez réessayer.'
+                          : 'The report could not be recorded. You can try again.'}
+                      </p>
+                      <div className="flex gap-2 justify-center mt-4">
+                        <button
+                          onClick={() => setReportResult(null)}
+                          className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 text-white hover:bg-black transition-colors"
+                        >
+                          {language === 'fr' ? 'Réessayer' : 'Try again'}
+                        </button>
+                        <button
+                          onClick={closeReport}
+                          className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors"
+                        >
+                          {language === 'fr' ? 'Fermer' : 'Close'}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </motion.div>
               ) : (
                 <>
@@ -307,17 +423,17 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
                     {language === 'fr' ? 'Quel problème avec cette question ?' : 'What\'s wrong with this question?'}
                   </p>
                   <div className="space-y-2 mb-4">
-                    {reportOptions.map((opt, i) => (
+                    {reportOptions.map((opt) => (
                       <button
-                        key={i}
-                        onClick={() => setReportChoice(i)}
+                        key={opt.category}
+                        onClick={() => setReportChoice(opt.category)}
                         className={`w-full text-left px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
-                          reportChoice === i
+                          reportChoice === opt.category
                             ? 'border-slate-900 bg-slate-900 text-white'
                             : 'border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        {opt}
+                        {opt.label}
                       </button>
                     ))}
                   </div>
@@ -331,14 +447,16 @@ export default function QuestionCard({ question, currentAnswer, onAnswer, onSkip
                   <div className="flex gap-2">
                     <button
                       onClick={handleReportSubmit}
-                      disabled={reportChoice === null}
+                      disabled={reportChoice === null || reportBusy}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                        reportChoice !== null
+                        reportChoice !== null && !reportBusy
                           ? 'bg-slate-900 hover:bg-black text-white'
                           : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
                     >
-                      {language === 'fr' ? 'Envoyer' : 'Send'}
+                      {reportBusy
+                        ? (language === 'fr' ? 'Envoi…' : 'Sending…')
+                        : (language === 'fr' ? 'Envoyer' : 'Send')}
                     </button>
                     <button
                       onClick={closeReport}
