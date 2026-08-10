@@ -97,7 +97,7 @@
   },
   {
     "id": "ECO_13",
-    "text": "L'État doit imposer plus de règles aux plateformes numériques comme Uber.",
+    "text": "L'État doit imposer plus de règles aux plateformes comme Uber, qui font travailler des indépendants.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "travail de plateforme",
@@ -180,7 +180,7 @@
   },
   {
     "id": "ECO_23",
-    "text": "La priorité doit être la croissance économique, même si les inégalités augmentent.",
+    "text": "La priorité économique doit être la croissance, même si les inégalités augmentent.",
     "axis": "economic",
     "status": "CORE",
     "cluster": "croissance contre égalité",
@@ -230,7 +230,7 @@
   },
   {
     "id": "SOC_6",
-    "text": "Une personne transgenre doit pouvoir changer son état civil sans passer par un médecin.",
+    "text": "Une personne transgenre doit pouvoir changer la mention de son sexe à l'état civil sans avis médical.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "identité de genre",
@@ -238,7 +238,7 @@
   },
   {
     "id": "SOC_7",
-    "text": "L'État doit encourager le modèle de la famille traditionnelle.",
+    "text": "L'État doit promouvoir la famille traditionnelle hétérosexuelle.",
     "axis": "cultural",
     "status": "CORE",
     "cluster": "valeurs familiales",
@@ -263,7 +263,7 @@
   },
   {
     "id": "SOC_10",
-    "text": "L'euthanasie doit être autorisée pour les malades incurables qui la demandent.",
+    "text": "L'euthanasie doit être autorisée pour les malades incurables à un stade avancé qui la demandent.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "fin de vie",
@@ -313,7 +313,7 @@
   },
   {
     "id": "SOC_16",
-    "text": "Les élèves doivent pouvoir porter des signes religieux visibles à l'école publique.",
+    "text": "Les élèves doivent pouvoir porter des signes religieux visibles dans les établissements scolaires publics.",
     "axis": "cultural",
     "status": "CORE",
     "cluster": "laïcité à l école",
@@ -347,7 +347,7 @@
   },
   {
     "id": "SOC_20",
-    "text": "La loi ne doit pas punir la prostitution entre adultes consentants.",
+    "text": "La loi ne doit punir ni les personnes qui se prostituent ni leurs clients.",
     "axis": "cultural",
     "status": "SECONDARY",
     "cluster": "travail du sexe",
@@ -379,7 +379,7 @@
   },
   {
     "id": "IMM_1",
-    "text": "La France doit accueillir moins d'immigrés qu'aujourd'hui.",
+    "text": "La France doit accueillir beaucoup moins d'immigrés qu'aujourd'hui.",
     "axis": "global",
     "status": "CORE",
     "cluster": "volume de l immigration",
@@ -435,7 +435,7 @@
   },
   {
     "id": "IMM_8",
-    "text": "Les étrangers qui travaillent légalement en France doivent avoir les mêmes aides sociales que les Français.",
+    "text": "Les étrangers en situation régulière qui travaillent doivent avoir les mêmes droits sociaux que les Français.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "droits sociaux des étrangers",
@@ -443,7 +443,7 @@
   },
   {
     "id": "IMM_9",
-    "text": "La France doit accueillir des personnes qui fuient les catastrophes liées au climat.",
+    "text": "La France doit accueillir plus de personnes qui fuient les catastrophes liées au climat.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "déplacements climatiques",
@@ -499,7 +499,7 @@
   },
   {
     "id": "IMM_16",
-    "text": "La France doit fixer chaque année un nombre maximum d'immigrés à accueillir.",
+    "text": "Le Parlement doit voter chaque année un nombre maximum d'immigrés à accueillir.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "quotas d immigration",
@@ -542,7 +542,7 @@
   },
   {
     "id": "IMM_21",
-    "text": "Les pays européens doivent être obligés d'accueillir chacun une part des demandeurs d'asile.",
+    "text": "L'Union européenne doit obliger chaque pays membre à accueillir une part des demandeurs d'asile.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "répartition européenne de l asile",
@@ -559,7 +559,7 @@
   },
   {
     "id": "SEC_1",
-    "text": "La surveillance des communications doit être réservée aux personnes soupçonnées d'un crime.",
+    "text": "La surveillance des communications ne doit viser que des personnes déjà suspectes.",
     "axis": "authority",
     "status": "CORE",
     "cluster": "surveillance des communications",
@@ -616,7 +616,7 @@
   },
   {
     "id": "SEC_8",
-    "text": "Le Parlement doit contrôler l'activité des services secrets.",
+    "text": "Le Parlement doit contrôler plus étroitement les services secrets.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "contrôle des services secrets",
@@ -648,7 +648,7 @@
   },
   {
     "id": "SEC_12",
-    "text": "La police doit pouvoir lire les messages privés protégés des personnes suspectes.",
+    "text": "Les services secrets doivent pouvoir lire les messages protégés des personnes suspectes.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "accès aux messages chiffrés",
@@ -707,7 +707,7 @@
   },
   {
     "id": "SEC_19",
-    "text": "Une personne condamnée pour terrorisme doit pouvoir rester enfermée après avoir purgé sa peine.",
+    "text": "Une personne condamnée pour terrorisme doit rester enfermée longtemps après avoir purgé sa peine.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "rétention après peine",
@@ -723,7 +723,7 @@
   },
   {
     "id": "SEC_21",
-    "text": "La loi doit protéger les salariés qui révèlent des faits illégaux commis par leur employeur.",
+    "text": "La loi doit protéger ceux qui révèlent au public des faits illégaux graves.",
     "axis": "authority",
     "status": "CORE",
     "cluster": "lanceurs d alerte",
@@ -915,7 +915,7 @@
   },
   {
     "id": "ENV_22",
-    "text": "La circulation des voitures dans les centres-villes doit être limitée.",
+    "text": "L'usage de la voiture personnelle en ville doit être limité.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "mobilité urbaine",
@@ -987,7 +987,7 @@
   },
   {
     "id": "DEM_8",
-    "text": "Les partis politiques ne doivent plus pouvoir recevoir de dons privés.",
+    "text": "Les partis politiques ne doivent plus pouvoir recevoir de gros dons privés.",
     "axis": "authority",
     "status": "CORE",
     "cluster": "financement privé des partis",
@@ -1003,7 +1003,7 @@
   },
   {
     "id": "DEM_10",
-    "text": "L'état d'urgence doit prendre fin au bout de 30 jours, sauf prolongation votée par le Parlement.",
+    "text": "L'état d'urgence doit prendre fin automatiquement au bout de 30 jours.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "pouvoirs d urgence",
@@ -1035,7 +1035,7 @@
   },
   {
     "id": "DEM_14",
-    "text": "Un parlementaire doit pouvoir être poursuivi en justice comme tout autre citoyen.",
+    "text": "Les parlementaires doivent perdre une partie de leur protection contre les poursuites judiciaires.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "immunité parlementaire",
@@ -1159,7 +1159,7 @@
   },
   {
     "id": "GLO_6",
-    "text": "La France doit taxer les produits importés pour protéger ses usines.",
+    "text": "La France doit taxer les produits importés pour protéger ses usines, même au risque de tensions commerciales.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "protection commerciale",
@@ -1207,7 +1207,7 @@
   },
   {
     "id": "GLO_12",
-    "text": "La France doit verser des réparations financières à ses anciennes colonies.",
+    "text": "Les anciens pays colonisateurs doivent verser des réparations à leurs anciennes colonies.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "réparations coloniales",
@@ -1215,7 +1215,7 @@
   },
   {
     "id": "GLO_13",
-    "text": "La Cour pénale internationale doit pouvoir juger les crimes de guerre de tous les pays.",
+    "text": "La Cour pénale internationale doit juger les crimes de guerre.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "justice pénale internationale",
@@ -1223,7 +1223,7 @@
   },
   {
     "id": "GLO_14",
-    "text": "La France doit empêcher des entreprises étrangères de racheter ses entreprises stratégiques.",
+    "text": "Les pays doivent limiter la propriété étrangère dans leurs secteurs stratégiques.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "propriété étrangère",
@@ -1231,7 +1231,7 @@
   },
   {
     "id": "GLO_15",
-    "text": "La France doit pouvoir intervenir militairement pour stopper un massacre, même sans accord de l'ONU.",
+    "text": "La communauté internationale doit intervenir militairement contre un génocide, même sans accord de l'ONU.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "intervention militaire",
@@ -1314,7 +1314,7 @@
   },
   {
     "id": "PUB_3",
-    "text": "Les services publics doivent être ouverts à la concurrence des entreprises privées.",
+    "text": "Les services publics essentiels doivent être ouverts à la concurrence des entreprises privées.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "public contre privé",
@@ -1338,7 +1338,7 @@
   },
   {
     "id": "PUB_6",
-    "text": "L'État doit construire plus de logements sociaux.",
+    "text": "L'État doit construire beaucoup plus de logements sociaux.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "logement social",
@@ -1394,7 +1394,7 @@
   },
   {
     "id": "PUB_13",
-    "text": "Les dépenses sociales de la France doivent baisser.",
+    "text": "Les dépenses sociales de la France doivent beaucoup baisser.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "dépenses sociales",
@@ -1479,7 +1479,7 @@
   },
   {
     "id": "PUB_23",
-    "text": "Les études à l'université publique doivent être gratuites.",
+    "text": "L'inscription à l'université publique doit être gratuite pour les étudiants français.",
     "axis": "economic",
     "status": "CORE",
     "cluster": "université",
@@ -1575,7 +1575,7 @@
   },
   {
     "id": "GLO_25",
-    "text": "La France doit continuer à envoyer des armes à l'Ukraine.",
+    "text": "La France doit continuer à fournir une aide militaire à l'Ukraine.",
     "axis": "global",
     "status": "CORE",
     "cluster": "Ukraine",
@@ -1583,7 +1583,7 @@
   },
   {
     "id": "ENV_25",
-    "text": "Les règles écologiques imposées aux agriculteurs doivent être allégées.",
+    "text": "Les règles écologiques européennes imposées aux agriculteurs doivent être allégées.",
     "axis": "global",
     "status": "SECONDARY",
     "cluster": "normes agricoles",
@@ -1591,7 +1591,7 @@
   },
   {
     "id": "PUB_24",
-    "text": "L'État doit obliger les jeunes médecins à s'installer dans les zones qui manquent de soignants.",
+    "text": "L'État doit obliger les médecins à s'installer dans les zones qui manquent de médecins.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "déserts médicaux",
@@ -1599,7 +1599,7 @@
   },
   {
     "id": "PUB_25",
-    "text": "L'État doit donner plus d'argent aux hôpitaux publics.",
+    "text": "L'État doit donner beaucoup plus d'argent aux hôpitaux publics.",
     "axis": "economic",
     "status": "SECONDARY",
     "cluster": "hôpital public",
@@ -1615,7 +1615,7 @@
   },
   {
     "id": "SOC_27",
-    "text": "L'État doit infliger des amendes aux entreprises qui paient moins les femmes que les hommes.",
+    "text": "L'État doit infliger des amendes aux entreprises qui ne réduisent pas leur écart de salaire femmes-hommes.",
     "axis": "cultural",
     "status": "CORE",
     "cluster": "égalité salariale",
@@ -1623,7 +1623,7 @@
   },
   {
     "id": "DEM_25",
-    "text": "Une même personne ne doit pas pouvoir posséder plusieurs grands médias.",
+    "text": "La loi doit limiter le nombre de grands médias qu'une même personne peut posséder.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "concentration des médias",
@@ -1639,7 +1639,7 @@
   },
   {
     "id": "SEC_25",
-    "text": "Les enquêtes sur les policiers accusés de violences doivent être menées par un service indépendant.",
+    "text": "Une enquête totalement indépendante doit viser les policiers soupçonnés d'un usage excessif de la force.",
     "axis": "authority",
     "status": "CORE",
     "cluster": "contrôle de la police",
@@ -1655,7 +1655,7 @@
   },
   {
     "id": "ECO_28",
-    "text": "La loi doit encadrer l'intelligence artificielle, même si cela ralentit l'innovation.",
+    "text": "La loi doit encadrer strictement l'intelligence artificielle, même si cela ralentit l'innovation.",
     "axis": "economic",
     "status": "PRIMARY",
     "cluster": "régulation des technologies",
@@ -1799,7 +1799,7 @@
   },
   {
     "id": "DEM_28",
-    "text": "Un pouvoir politique fort vaut mieux qu'un pouvoir limité par de nombreux contrôles.",
+    "text": "Le gouvernement doit pouvoir faire adopter une loi sans vote des députés.",
     "axis": "authority",
     "status": "SECONDARY",
     "cluster": "contre-pouvoirs",
@@ -1844,5 +1844,53 @@
     "status": "SECONDARY",
     "cluster": "assurance chômage",
     "explanation": "L'assurance chômage verse un revenu de remplacement aux personnes qui perdent leur emploi, pendant une durée qui dépend du temps travaillé et de l'âge. Cette durée a été réduite en 2023 et reste un sujet de négociation. Les partisans d'une durée plus courte estiment qu'elle accélère le retour à l'emploi. Les opposants estiment qu'elle pousse à accepter un poste moins adapté, ce qui fragilise les parcours. Les études disponibles mesurent des effets de sens opposés selon les périodes et les publics."
+  },
+  {
+    "id": "ENV_31",
+    "text": "Le prix du carbone doit augmenter, même si cela fait monter le prix de l'essence.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "prix du carbone",
+    "explanation": "Le prix du carbone est ce que coûte, en euros, le fait d'émettre une tonne de gaz à effet de serre. En France, il passe surtout par une part carbone incluse dans les taxes sur les carburants et le fioul ; son augmentation est gelée depuis 2018. Les partisans estiment que renchérir ce qui pollue est le moyen le plus simple de faire baisser les émissions sans désigner qui doit changer. Les opposants estiment que cette hausse pèse d'abord sur les ménages qui n'ont pas d'autre solution que la voiture, notamment hors des grandes villes."
+  },
+  {
+    "id": "DEM_30",
+    "text": "Les électeurs doivent pouvoir révoquer un élu avant la fin de son mandat.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "révocation des élus",
+    "explanation": "Révoquer un élu, c'est mettre fin à son mandat avant son terme par un vote. Ce mécanisme n'existe pas en France pour les députés ni pour le président ; il existe dans plusieurs États américains et en Suisse au niveau local. Les partisans estiment qu'un mandat est un contrat et qu'un élu qui s'en écarte doit pouvoir être rappelé sans attendre l'échéance. Les opposants estiment que la menace d'une révocation permanente pousse à gouverner par sondages et expose les élus à des campagnes organisées par leurs adversaires."
+  },
+  {
+    "id": "DEM_31",
+    "text": "L'État doit imposer aux chaînes de télévision un temps de parole équilibré entre les partis.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "temps de parole",
+    "explanation": "Le temps de parole est la durée pendant laquelle les représentants de chaque parti s'expriment à l'antenne. En France, une autorité indépendante, l'Arcom, contrôle déjà cet équilibre, avec des règles renforcées en période électorale. Les partisans estiment qu'une répartition surveillée empêche les chaînes les plus suivies de favoriser un camp. Les opposants estiment qu'un décompte imposé conduit à inviter des personnalités pour remplir un quota plutôt que pour leur intérêt, et qu'il pèse sur la liberté éditoriale."
+  },
+  {
+    "id": "DEM_32",
+    "text": "Les citoyens doivent pouvoir demander un référendum en réunissant assez de signatures.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "démocratie directe",
+    "explanation": "Un référendum fait trancher une question directement par le vote de tous. En France, les citoyens ne peuvent pas en déclencher un seuls : la procédure existante exige d'abord l'appui d'un cinquième des parlementaires. Les partisans estiment qu'un droit de saisine citoyen permettrait de trancher des sujets que les élus évitent. Les opposants estiment qu'une question posée par oui ou non simplifie des sujets complexes et peut être portée par des groupes très organisés plutôt que par la majorité."
+  },
+  {
+    "id": "GLO_27",
+    "text": "La France doit produire elle-même son énergie, plutôt que d'en importer.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "autonomie énergétique",
+    "explanation": "La France produit la majeure partie de son électricité sur son sol, mais importe la quasi-totalité du pétrole et du gaz qu'elle consomme. Produire chez soi suppose des investissements longs et coûteux. Les partisans estiment que dépendre d'autres pays pour l'énergie expose à des ruptures et à des hausses de prix décidées ailleurs. Les opposants estiment qu'aucun pays ne produit tout ce dont il a besoin, et qu'acheter là où c'est moins cher laisse des moyens pour d'autres priorités."
+  },
+  {
+    "id": "GLO_28",
+    "text": "L'État doit obliger les radios à diffuser une majorité de chansons françaises.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "politique culturelle",
+    "explanation": "Depuis 1994, la loi impose aux radios musicales un pourcentage minimum de chansons d'expression française aux heures d'écoute importantes. Le niveau exact de ce quota a été assoupli en 2016. Les partisans estiment qu'un quota protège la création francophone face à la production internationale, qui dispose de moyens bien supérieurs. Les opposants estiment qu'imposer une langue à l'antenne ne fait pas naître de public, et que le quota conduit à repasser en boucle les mêmes titres."
   }
 ]

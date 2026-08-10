@@ -10,12 +10,17 @@
 /**
  * Banque de questions : incrémenter à tout ajout/retrait/reformulation d'une question active.
  *
- * 2026.08-128q — révision éditoriale complète : 22 questions retirées (composites,
+ * 2026.08-128q-r2 — révision éditoriale complète, corrigée après contre-audit : 22 questions retirées (composites,
  * tautologiques, non mesurables, quasi-doublons), 22 créées, 93 reformulées. Le nombre de
  * questions actives est inchangé, mais un profil calculé sous 2026.07 ne repose PAS sur les
  * mêmes items : les deux versions ne sont pas comparables item par item.
+ *
+ * Suffixe -r2 : le contre-audit du 2026-08-10 a établi que 44 questions avaient conservé leur
+ * identifiant malgré un changement de population, de seuil, de bénéficiaire ou de dispositif.
+ * 38 ont vu leur sens restauré, 6 ont été retirées et remplacées. Voir
+ * docs/questions/id-semantics-2026-08.json.
  */
-export const QUESTIONNAIRE_VERSION = '2026.08-128q';
+export const QUESTIONNAIRE_VERSION = '2026.08-128q-r2';
 
 /** Algorithme de construction de la file de questions (quotas, ordre, tirage). */
 export const QUEUE_ALGORITHM_VERSION = 'v2-seeded';

@@ -20,6 +20,12 @@
       "textAtRetirement": "Les citoyens doivent pouvoir révoquer leurs élus avant la fin du mandat."
     },
     {
+      "id": "DEM_13",
+      "retiredAt": "2026-08",
+      "reason": "Le texte publié en 2026-08 réduisait le périmètre de tous les médias aux seules chaînes de télévision et remplaçait la régulation par des quotas de temps de parole. Remplacée par DEM_31.",
+      "textAtRetirement": "L'État doit imposer aux chaînes de télévision un temps de parole équilibré entre les partis."
+    },
+    {
       "id": "DEM_15",
       "retiredAt": "2026-08",
       "reason": "Question composite (réguler et rendre transparent) contenant en outre un anglicisme non traduit. Remplacée par DEM_28.",
@@ -38,6 +44,12 @@
       "textAtRetirement": "Les institutions internationales doivent pouvoir forcer les États à agir."
     },
     {
+      "id": "DEM_24",
+      "retiredAt": "2026-08",
+      "reason": "Le texte publié en 2026-08 supprimait l’inscription dans la Constitution, qui était la substance même de la proposition. Remplacée par DEM_32.",
+      "textAtRetirement": "Les citoyens doivent pouvoir demander un référendum en réunissant assez de signatures."
+    },
+    {
       "id": "DEM_3",
       "retiredAt": "2026-08",
       "reason": "Quasi-doublon de DEM_24, qui nomme le même mécanisme sous son nom français (référendum d’initiative citoyenne).",
@@ -48,6 +60,12 @@
       "retiredAt": "2026-07",
       "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
       "textAtRetirement": "Les juges doivent être totalement indépendants de la politique."
+    },
+    {
+      "id": "DEM_7",
+      "retiredAt": "2026-08",
+      "reason": "Le texte publié en 2026-08 ouvrait la révocation à tout motif, là où l’original la réservait à un élu ayant menti. Le déclencheur du dispositif disparaissait. Remplacée par DEM_30.",
+      "textAtRetirement": "Les électeurs doivent pouvoir révoquer un élu avant la fin de son mandat."
     },
     {
       "id": "DEM_9",
@@ -152,6 +170,12 @@
       "textAtRetirement": "La France doit sortir du nucléaire dans les vingt prochaines années."
     },
     {
+      "id": "ENV_3",
+      "retiredAt": "2026-08",
+      "reason": "Le texte publié en 2026-08 demandait d’AUGMENTER le prix du carbone, là où l’original demandait de CRÉER une taxe carbone. Deux décisions distinctes ; l’original était en outre inexact, une composante carbone existant depuis 2014. Remplacée par ENV_31.",
+      "textAtRetirement": "Le prix du carbone doit augmenter, même si cela fait monter le prix de l'essence."
+    },
+    {
       "id": "ENV_6",
       "retiredAt": "2026-08",
       "reason": "Intensificateur sans périmètre (« fortement réglementée ») sur un objet non défini (« agriculture intensive »). Remplacée par ENV_26, qui nomme les pesticides.",
@@ -162,6 +186,12 @@
       "retiredAt": "2026-07",
       "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
       "textAtRetirement": "Les multinationales doivent payer un impôt minimum mondial."
+    },
+    {
+      "id": "GLO_16",
+      "retiredAt": "2026-08",
+      "reason": "Le texte publié en 2026-08 (« produire ce dont elle a besoin ») n’avait aucune limite assignable, là où l’original visait l’alimentation et l’énergie. Remplacée par GLO_27, limitée à l’énergie.",
+      "textAtRetirement": "La France doit produire sur son sol ce dont elle a besoin, plutôt que d'importer."
     },
     {
       "id": "GLO_17",
@@ -180,6 +210,12 @@
       "retiredAt": "2026-07",
       "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
       "textAtRetirement": "Les pays doivent sanctionner les violations de droits humains."
+    },
+    {
+      "id": "GLO_22",
+      "retiredAt": "2026-08",
+      "reason": "« Défense de la culture française » ne désigne aucune politique publique identifiable, ni dans l’original ni dans la version de 2026-08. Remplacée par GLO_28, qui nomme un dispositif réel.",
+      "textAtRetirement": "L'État doit financer la défense de la culture française."
     },
     {
       "id": "GLO_24",
@@ -364,54 +400,39 @@
   ],
   "created": [
     {
+      "id": "DEM_27",
+      "createdAt": "2026-08",
+      "reason": "Formulation de sens minoritaire du thème : mesure la préférence pour un exécutif vertical."
+    },
+    {
+      "id": "DEM_28",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_15 et fournit une formulation de sens minoritaire sur les contre-pouvoirs."
+    },
+    {
+      "id": "DEM_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_1 sur une sous-dimension distincte : la source de légitimité des décisions."
+    },
+    {
+      "id": "DEM_30",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_7 : la révocation pour tout motif n’est pas la révocation d’un élu ayant menti."
+    },
+    {
+      "id": "DEM_31",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_13 : périmètre réduit aux chaînes de télévision et mécanisme changé en quotas."
+    },
+    {
+      "id": "DEM_32",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_24 : la demande par signatures n’est pas l’inscription du dispositif dans la Constitution."
+    },
+    {
       "id": "ECO_29",
       "createdAt": "2026-08",
       "reason": "Remplace ECO_8, composite (énergie + transports), en isolant un seul secteur."
-    },
-    {
-      "id": "SOC_28",
-      "createdAt": "2026-08",
-      "reason": "Comble la sous-dimension bioéthique et fournit une formulation de sens minoritaire au thème."
-    },
-    {
-      "id": "SOC_29",
-      "createdAt": "2026-08",
-      "reason": "Remplace SOC_24, composite (garantie + accessibilité territoriale), en isolant la garantie juridique."
-    },
-    {
-      "id": "SOC_30",
-      "createdAt": "2026-08",
-      "reason": "Remplace SOC_25, composite (couples de femmes + femmes seules), en isolant une seule population."
-    },
-    {
-      "id": "SOC_31",
-      "createdAt": "2026-08",
-      "reason": "Remplace SOC_26, dont la formulation (« mesures concrètes ») n'était pas mesurable."
-    },
-    {
-      "id": "IMM_24",
-      "createdAt": "2026-08",
-      "reason": "Comble la sous-dimension regroupement familial, non couverte auparavant."
-    },
-    {
-      "id": "IMM_25",
-      "createdAt": "2026-08",
-      "reason": "Comble la sous-dimension accès aux soins des personnes sans titre de séjour."
-    },
-    {
-      "id": "IMM_26",
-      "createdAt": "2026-08",
-      "reason": "Remplace la sous-dimension éloignement laissée par IMM_13, sur un objet distinct de IMM_12 (crimes)."
-    },
-    {
-      "id": "SEC_26",
-      "createdAt": "2026-08",
-      "reason": "Remplace SEC_20, composite (contrôle + fouille), en isolant les contrôles d'identité."
-    },
-    {
-      "id": "SEC_27",
-      "createdAt": "2026-08",
-      "reason": "Remplace SEC_23 sur une sous-dimension distincte et mesurable : l'exécution des peines."
     },
     {
       "id": "ENV_26",
@@ -439,24 +460,39 @@
       "reason": "Remplace ENV_24 et couvre le logement, sous-dimension environnementale absente de la banque."
     },
     {
-      "id": "DEM_27",
+      "id": "ENV_31",
       "createdAt": "2026-08",
-      "reason": "Formulation de sens minoritaire du thème : mesure la préférence pour un exécutif vertical."
-    },
-    {
-      "id": "DEM_28",
-      "createdAt": "2026-08",
-      "reason": "Remplace DEM_15 et fournit une formulation de sens minoritaire sur les contre-pouvoirs."
-    },
-    {
-      "id": "DEM_29",
-      "createdAt": "2026-08",
-      "reason": "Remplace DEM_1 sur une sous-dimension distincte : la source de légitimité des décisions."
+      "reason": "Remplace ENV_3 : augmenter un prix existant n’est pas créer une taxe, et l’original supposait à tort qu’aucune taxe carbone n’existait."
     },
     {
       "id": "GLO_26",
       "createdAt": "2026-08",
       "reason": "Remplace GLO_17, composite (neutralité + réduction des engagements militaires)."
+    },
+    {
+      "id": "GLO_27",
+      "createdAt": "2026-08",
+      "reason": "Remplace GLO_16, dont la formulation publiée n’avait aucune limite assignable."
+    },
+    {
+      "id": "GLO_28",
+      "createdAt": "2026-08",
+      "reason": "Remplace GLO_22 : « défense de la culture française » ne désignait aucune politique identifiable."
+    },
+    {
+      "id": "IMM_24",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension regroupement familial, non couverte auparavant."
+    },
+    {
+      "id": "IMM_25",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension accès aux soins des personnes sans titre de séjour."
+    },
+    {
+      "id": "IMM_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace la sous-dimension éloignement laissée par IMM_13, sur un objet distinct de IMM_12 (crimes)."
     },
     {
       "id": "PUB_26",
@@ -472,6 +508,36 @@
       "id": "PUB_28",
       "createdAt": "2026-08",
       "reason": "Remplace PUB_17 et fournit une formulation de sens minoritaire au thème."
+    },
+    {
+      "id": "SEC_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace SEC_20, composite (contrôle + fouille), en isolant les contrôles d'identité."
+    },
+    {
+      "id": "SEC_27",
+      "createdAt": "2026-08",
+      "reason": "Remplace SEC_23 sur une sous-dimension distincte et mesurable : l'exécution des peines."
+    },
+    {
+      "id": "SOC_28",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension bioéthique et fournit une formulation de sens minoritaire au thème."
+    },
+    {
+      "id": "SOC_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_24, composite (garantie + accessibilité territoriale), en isolant la garantie juridique."
+    },
+    {
+      "id": "SOC_30",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_25, composite (couples de femmes + femmes seules), en isolant une seule population."
+    },
+    {
+      "id": "SOC_31",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_26, dont la formulation (« mesures concrètes ») n'était pas mesurable."
     }
   ]
 }

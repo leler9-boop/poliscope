@@ -32,7 +32,7 @@ export const questionHints = {
 
   // ── ENVIRONNEMENT ───────────────────────────────────────────────────────
   ENV_1: "Le climat se réchauffe à cause des activités humaines. Certains veulent en faire la priorité numéro un du gouvernement ; d'autres pensent que d'autres urgences (pouvoir d'achat, sécurité) ne doivent pas passer au second plan.",
-  ENV_3: "Une taxe carbone fait payer davantage ceux qui polluent (voitures, avions, industries). Ça incite à polluer moins, mais ça pèse surtout sur les gens qui n'ont pas d'autre choix (zones rurales, etc.).",
+  ENV_31: "Une taxe carbone fait payer davantage ceux qui polluent (voitures, avions, industries). Ça incite à polluer moins, mais ça pèse surtout sur les gens qui n'ont pas d'autre choix (zones rurales, etc.).",
 
   // ── DÉMOCRATIE ──────────────────────────────────────────────────────────
   // (DEM_1 retiré 2026-08 — le vote obligatoire mesurait autant un rapport à la contrainte

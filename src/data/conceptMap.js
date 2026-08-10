@@ -395,7 +395,7 @@ export const QUESTION_CONCEPTS = {
   // ENVIRONMENT
   ENV_1:  ['changement_climatique'],
   ENV_2:  ['nucleaire'],
-  ENV_3:  ['taxe_carbone', 'changement_climatique'],
+  ENV_31: ['taxe_carbone', 'changement_climatique'],   // reprend ENV_3
   ENV_4:  ['changement_climatique'],
   ENV_8:  ['decroissance'],
   ENV_22: ['changement_climatique'],
@@ -404,15 +404,15 @@ export const QUESTION_CONCEPTS = {
   ENV_29: ['changement_climatique'],   // reprend ENV_23
   ENV_30: ['changement_climatique'],
   // DEMOCRACY
-  DEM_7:  ['democratie_directe'],
-  DEM_24: ['democratie_directe'],      // reprend DEM_3
+  DEM_30: ['democratie_directe'],      // reprend DEM_7
+  DEM_32: ['democratie_directe'],      // reprend DEM_3 puis DEM_24
   DEM_25: ['pluralisme_medias'],
   // GLOBAL
   GLO_3:  ['otan'],
   GLO_6:  ['protectionnisme'],
   GLO_8:  ['union_europeenne'],
-  GLO_16: ['souverainete'],
-  GLO_22: ['souverainete'],
+  GLO_27: ['souverainete'],            // reprend GLO_16
+  GLO_28: ['souverainete'],            // reprend GLO_22
   GLO_23: ['otan'],
   GLO_26: ['otan', 'souverainete'],    // reprend GLO_17
   // PUBLIC_SERVICES

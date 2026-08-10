@@ -1,0 +1,664 @@
+{
+  "comment": "Classification sémantique des 93 questions réécrites lors de la révision 2026-08, exigée par le contre-audit P0-1. Un identifiant ne peut être conservé QUE si une réponse donnée à l ancien texte reste strictement interprétable de la même manière avec le nouveau. Les catégories simplification et precision seules autorisent la conservation ; toute autre catégorie a donné lieu soit à une restauration du sens, soit à un nouvel identifiant.",
+  "categories": [
+    "simplification",
+    "precision",
+    "population",
+    "seuil",
+    "mecanisme",
+    "beneficiaire",
+    "calendrier",
+    "institution",
+    "perimetre",
+    "politique"
+  ],
+  "reviewedAt": "2026-08-10",
+  "questions": [
+    {
+      "id": "DEM_10",
+      "categorie": "mecanisme",
+      "verdict": "restaure",
+      "textAvantRevision": "Les pouvoirs d'urgence doivent expirer automatiquement après 30 jours.",
+      "motif": "L ajout de « sauf prolongation votée par le Parlement » introduisait une exception absente de l originale, qui posait une expiration inconditionnelle. Exception retirée.",
+      "textApresRevisionFautive": "L'état d'urgence doit prendre fin au bout de 30 jours, sauf prolongation votée par le Parlement."
+    },
+    {
+      "id": "DEM_13",
+      "categorie": "perimetre",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "Les médias doivent être régulés pour garantir un équilibre politique.",
+      "motif": "Périmètre réduit de tous les médias aux seules chaînes de télévision, et mécanisme changé en quotas de temps de parole.",
+      "remplacePar": "DEM_31"
+    },
+    {
+      "id": "DEM_14",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Les immunités parlementaires doivent être réduites.",
+      "motif": "« comme tout autre citoyen » équivaut à une suppression totale, là où l originale demandait une réduction. Seuil restauré.",
+      "textApresRevisionFautive": "Un parlementaire doit pouvoir être poursuivi en justice comme tout autre citoyen."
+    },
+    {
+      "id": "DEM_16",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Les juges doivent pouvoir annuler les lois du parlement."
+    },
+    {
+      "id": "DEM_19",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les partis politiques doivent être financés publiquement."
+    },
+    {
+      "id": "DEM_21",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les gouvernements doivent pouvoir révoquer les juges."
+    },
+    {
+      "id": "DEM_24",
+      "categorie": "institution",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "Le référendum d'initiative citoyenne (RIC) doit être introduit dans la Constitution française.",
+      "motif": "L inscription du référendum d initiative citoyenne dans la Constitution n est pas la simple possibilité de demander un référendum par signatures.",
+      "remplacePar": "DEM_32"
+    },
+    {
+      "id": "DEM_25",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "La loi doit limiter la concentration de plusieurs grands médias entre les mains d'un même propriétaire.",
+      "motif": "« ne doit pas pouvoir posséder » est une interdiction, l originale demandait une limitation. Seuil restauré.",
+      "textApresRevisionFautive": "Une même personne ne doit pas pouvoir posséder plusieurs grands médias."
+    },
+    {
+      "id": "DEM_26",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les critères des algorithmes utilisés par l'administration pour des décisions comme Parcoursup doivent être rendus publics."
+    },
+    {
+      "id": "DEM_5",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Le système électoral doit utiliser la proportionnelle."
+    },
+    {
+      "id": "DEM_7",
+      "categorie": "mecanisme",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "Un élu qui ment délibérément à ses concitoyens sur un sujet important doit pouvoir être révoqué.",
+      "motif": "La révocation d un élu « qui ment » et la révocation libre par les électeurs sont deux dispositifs distincts ; le déclencheur disparaît.",
+      "remplacePar": "DEM_30"
+    },
+    {
+      "id": "DEM_8",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les dons privés importants aux partis politiques doivent être interdits.",
+      "motif": "La suppression de « importants » interdisait TOUS les dons privés, pas seulement les gros. Périmètre restauré.",
+      "textApresRevisionFautive": "Les partis politiques ne doivent plus pouvoir recevoir de dons privés."
+    },
+    {
+      "id": "ECO_13",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "L'économie des plateformes (Uber, Deliveroo...) doit être davantage réglementée pour protéger les travailleurs indépendants.",
+      "motif": "« plateformes numériques » couvre bien plus que l économie de plateforme visée (moteurs de recherche, réseaux sociaux) : périmètre élargi. Texte restauré sur les plateformes qui font travailler des indépendants.",
+      "textApresRevisionFautive": "L'État doit imposer plus de règles aux plateformes numériques comme Uber."
+    },
+    {
+      "id": "ECO_23",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "La priorité économique doit être la croissance, même si elle creuse les inégalités.",
+      "motif": "« la priorité » sans qualificatif porte sur toute l action publique, alors que l originale ne visait que la priorité économique. Qualificatif restauré.",
+      "textApresRevisionFautive": "La priorité doit être la croissance économique, même si les inégalités augmentent."
+    },
+    {
+      "id": "ECO_24",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Le taux minimum mondial d'imposition des multinationales (actuellement 15 %) doit être relevé."
+    },
+    {
+      "id": "ECO_26",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'âge légal de départ à la retraite devrait être abaissé par rapport au niveau actuel (64 ans)."
+    },
+    {
+      "id": "ECO_28",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Le développement de l'intelligence artificielle doit être strictement réglementé par la loi, même au risque de ralentir l'innovation.",
+      "motif": "« encadrer » est plus faible que « strictement réglementé » : le degré EST la proposition testée. Intensité restaurée (exception de lint déclarée).",
+      "textApresRevisionFautive": "La loi doit encadrer l'intelligence artificielle, même si cela ralentit l'innovation."
+    },
+    {
+      "id": "ECO_4",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'impôt sur la fortune doit être élargi aux placements financiers, et pas seulement à l'immobilier."
+    },
+    {
+      "id": "ECO_6",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les syndicats doivent avoir davantage de pouvoir dans les entreprises."
+    },
+    {
+      "id": "ECO_9",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Le secteur financier (banques, marchés boursiers) doit être strictement réglementé."
+    },
+    {
+      "id": "ENV_1",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Lutter contre le changement climatique doit être une priorité absolue pour le gouvernement."
+    },
+    {
+      "id": "ENV_10",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les pays riches doivent payer les pays pauvres pour les dommages climatiques."
+    },
+    {
+      "id": "ENV_15",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les plastiques à usage unique doivent être complètement interdits."
+    },
+    {
+      "id": "ENV_22",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "L'usage des voitures personnelles en ville doit être limité pour favoriser les transports en commun.",
+      "motif": "« centres-villes » réduit le périmètre de « en ville », et « les voitures » l élargit aux utilitaires. Périmètre d origine restauré.",
+      "textApresRevisionFautive": "La circulation des voitures dans les centres-villes doit être limitée."
+    },
+    {
+      "id": "ENV_25",
+      "categorie": "institution",
+      "verdict": "restaure",
+      "textAvantRevision": "Les normes environnementales européennes sur l'agriculture devraient être assouplies pour mieux tenir compte des réalités des agriculteurs français.",
+      "motif": "La suppression de « européennes » étendait la question à toutes les règles, y compris françaises. Niveau institutionnel restauré.",
+      "textApresRevisionFautive": "Les règles écologiques imposées aux agriculteurs doivent être allégées."
+    },
+    {
+      "id": "ENV_3",
+      "categorie": "politique",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "Une taxe sur les émissions de CO₂ doit être mise en place pour décourager l'usage des carburants fossiles.",
+      "motif": "Passage de la CRÉATION d une taxe carbone à l AUGMENTATION du prix du carbone. Ce ne sont pas les mêmes décisions, et l originale était en outre inexacte : une composante carbone existe depuis 2014.",
+      "remplacePar": "ENV_31"
+    },
+    {
+      "id": "ENV_4",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Des réglementations environnementales strictes doivent être maintenues, même si elles entraînent des pertes d'emplois dans certains secteurs."
+    },
+    {
+      "id": "ENV_7",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Les voitures thermiques doivent être interdites avant 2035."
+    },
+    {
+      "id": "ENV_8",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'État doit abandonner la croissance du PIB comme objectif prioritaire de sa politique économique."
+    },
+    {
+      "id": "ENV_9",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La viande doit être taxée pour son impact environnemental."
+    },
+    {
+      "id": "GLO_1",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "L'intérêt national doit primer sur les engagements internationaux."
+    },
+    {
+      "id": "GLO_12",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les anciens pays colonisateurs doivent verser des réparations à leurs anciennes colonies.",
+      "motif": "Le sujet passait des anciens pays colonisateurs en général à la France en particulier. Sujet d origine restauré.",
+      "textApresRevisionFautive": "La France doit verser des réparations financières à ses anciennes colonies."
+    },
+    {
+      "id": "GLO_13",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les tribunaux internationaux (CPI) doivent juger les crimes de guerre.",
+      "motif": "« de tous les pays » ajoutait une compétence universelle absente de l originale. Ajout retiré.",
+      "textApresRevisionFautive": "La Cour pénale internationale doit pouvoir juger les crimes de guerre de tous les pays."
+    },
+    {
+      "id": "GLO_14",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Les pays doivent restreindre la propriété étrangère des secteurs stratégiques.",
+      "motif": "Sujet restreint à la France et « restreindre » durci en « empêcher ». Sujet et seuil restaurés.",
+      "textApresRevisionFautive": "La France doit empêcher des entreprises étrangères de racheter ses entreprises stratégiques."
+    },
+    {
+      "id": "GLO_15",
+      "categorie": "population",
+      "verdict": "restaure",
+      "textAvantRevision": "La communauté internationale doit intervenir militairement pour stopper un génocide, même sans mandat de l'ONU.",
+      "motif": "Sujet restreint à la France et « génocide » élargi en « massacre ». Sujet et qualification restaurés.",
+      "textApresRevisionFautive": "La France doit pouvoir intervenir militairement pour stopper un massacre, même sans accord de l'ONU."
+    },
+    {
+      "id": "GLO_16",
+      "categorie": "perimetre",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "La France doit réduire ses dépendances stratégiques en produisant davantage localement, notamment en alimentation et en énergie.",
+      "motif": "« produire ce dont elle a besoin » est sans limite assignable ; l originale visait alimentation et énergie. La nouvelle question porte sur la seule énergie.",
+      "remplacePar": "GLO_27"
+    },
+    {
+      "id": "GLO_22",
+      "categorie": "politique",
+      "verdict": "nouvel-id",
+      "textAvantRevision": "L'État doit financer activement la préservation de la culture et des traditions françaises.",
+      "motif": "« défense de la culture française » ne désigne aucune politique publique identifiable. Remplacée par un dispositif réel et vérifiable.",
+      "remplacePar": "GLO_28"
+    },
+    {
+      "id": "GLO_23",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La France doit quitter le commandement militaire intégré de l'OTAN."
+    },
+    {
+      "id": "GLO_25",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "La France doit continuer à fournir une aide militaire à l'Ukraine face à la Russie.",
+      "motif": "« envoyer des armes » est une catégorie plus étroite que « aide militaire » (renseignement, formation, financement). Périmètre restauré.",
+      "textApresRevisionFautive": "La France doit continuer à envoyer des armes à l'Ukraine."
+    },
+    {
+      "id": "GLO_3",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'OTAN est une alliance militaire essentielle pour la sécurité de la France."
+    },
+    {
+      "id": "GLO_4",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La France doit augmenter son aide publique au développement."
+    },
+    {
+      "id": "GLO_6",
+      "categorie": "mecanisme",
+      "verdict": "restaure",
+      "textAvantRevision": "La France doit utiliser des barrières douanières pour protéger ses industries, même au risque de tensions commerciales.",
+      "motif": "La suppression de « même au risque de tensions commerciales » retirait le coût explicite que le répondant devait peser. Arbitrage restauré.",
+      "textApresRevisionFautive": "La France doit taxer les produits importés pour protéger ses usines."
+    },
+    {
+      "id": "GLO_7",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La France et ses alliés doivent imposer des sanctions économiques aux régimes autoritaires."
+    },
+    {
+      "id": "GLO_8",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'Union européenne doit renforcer son intégration politique, même si cela réduit les pouvoirs des États membres."
+    },
+    {
+      "id": "IMM_1",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "L'immigration en France doit baisser sensiblement.",
+      "motif": "« moins » est un seuil plus faible que « sensiblement ». Intensité restaurée sans l adverbe administratif.",
+      "textApresRevisionFautive": "La France doit accueillir moins d'immigrés qu'aujourd'hui."
+    },
+    {
+      "id": "IMM_12",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les étrangers condamnés pour crimes graves doivent être expulsés."
+    },
+    {
+      "id": "IMM_14",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Les demandes d'asile doivent être traitées hors de France."
+    },
+    {
+      "id": "IMM_16",
+      "categorie": "institution",
+      "verdict": "restaure",
+      "textAvantRevision": "La France doit fixer chaque année un plafond d'immigration légale, voté par le Parlement.",
+      "motif": "La suppression de « voté par le Parlement » changeait le niveau institutionnel qui fixe le plafond. Institution restaurée.",
+      "textApresRevisionFautive": "La France doit fixer chaque année un nombre maximum d'immigrés à accueillir."
+    },
+    {
+      "id": "IMM_2",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les demandeurs d'asile doivent avoir le droit de travailler dès le dépôt de leur dossier."
+    },
+    {
+      "id": "IMM_20",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les immigrés doivent apprendre le français pour résider durablement en France."
+    },
+    {
+      "id": "IMM_21",
+      "categorie": "institution",
+      "verdict": "restaure",
+      "textAvantRevision": "L'UE doit imposer une répartition contraignante des demandeurs d'asile entre ses États membres.",
+      "motif": "La tournure passive « doivent être obligés » supprimait l acteur qui impose. L Union européenne est de nouveau nommée.",
+      "textApresRevisionFautive": "Les pays européens doivent être obligés d'accueillir chacun une part des demandeurs d'asile."
+    },
+    {
+      "id": "IMM_23",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Tout enfant né en France doit pouvoir obtenir la nationalité française, quelle que soit l'origine de ses parents."
+    },
+    {
+      "id": "IMM_3",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les étrangers en situation irrégulière installés depuis de nombreuses années en France doivent pouvoir être régularisés."
+    },
+    {
+      "id": "IMM_5",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La France doit rétablir des contrôles systématiques à ses frontières pour réguler les entrées."
+    },
+    {
+      "id": "IMM_7",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "L'État doit valoriser et préserver les cultures d'origine des immigrés installés en France."
+    },
+    {
+      "id": "IMM_8",
+      "categorie": "population",
+      "verdict": "restaure",
+      "textAvantRevision": "Les étrangers en situation régulière qui travaillent et cotisent en France doivent avoir les mêmes droits sociaux que les citoyens.",
+      "motif": "« aides sociales » (prestations) n est pas « droits sociaux » (santé, retraite, chômage), et « travaillent légalement » n est pas « en situation régulière ». Population et nature des droits restaurées.",
+      "textApresRevisionFautive": "Les étrangers qui travaillent légalement en France doivent avoir les mêmes aides sociales que les Français."
+    },
+    {
+      "id": "IMM_9",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "La France doit accueillir plus de réfugiés climatiques.",
+      "motif": "La suppression de « plus » transformait une demande d augmentation en simple principe d accueil. Comparatif restauré.",
+      "textApresRevisionFautive": "La France doit accueillir des personnes qui fuient les catastrophes liées au climat."
+    },
+    {
+      "id": "PUB_12",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les transports en commun doivent être gratuits pour les usagers."
+    },
+    {
+      "id": "PUB_13",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Les dépenses de protection sociale françaises devraient être significativement réduites.",
+      "motif": "« doivent baisser » est plus faible que « significativement réduites ». Intensité restaurée.",
+      "textApresRevisionFautive": "Les dépenses sociales de la France doivent baisser."
+    },
+    {
+      "id": "PUB_14",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'État doit garantir un emploi à qui veut travailler."
+    },
+    {
+      "id": "PUB_15",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Limiter le remboursement de certains soins très coûteux est nécessaire pour préserver l'équilibre des finances publiques."
+    },
+    {
+      "id": "PUB_19",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Garantir le niveau des pensions de retraite doit être une priorité, même si cela implique d'augmenter les cotisations."
+    },
+    {
+      "id": "PUB_23",
+      "categorie": "beneficiaire",
+      "verdict": "restaure",
+      "textAvantRevision": "L'inscription à l'université publique doit être gratuite pour les étudiants français.",
+      "motif": "La suppression de « pour les étudiants français » changeait les bénéficiaires de la gratuité. Périmètre restauré.",
+      "textApresRevisionFautive": "Les études à l'université publique doivent être gratuites."
+    },
+    {
+      "id": "PUB_24",
+      "categorie": "population",
+      "verdict": "restaure",
+      "textAvantRevision": "L'État doit obliger les médecins à s'installer dans les déserts médicaux.",
+      "motif": "« jeunes médecins » restreint la population assujettie, et « soignants » l élargit au-delà des médecins. Population restaurée.",
+      "textApresRevisionFautive": "L'État doit obliger les jeunes médecins à s'installer dans les zones qui manquent de soignants."
+    },
+    {
+      "id": "PUB_25",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "L'État doit investir massivement dans les hôpitaux publics, notamment aux urgences et dans les lits d'hospitalisation.",
+      "motif": "« plus d argent » est plus faible que « investir massivement ». Intensité restaurée.",
+      "textApresRevisionFautive": "L'État doit donner plus d'argent aux hôpitaux publics."
+    },
+    {
+      "id": "PUB_3",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les services publics essentiels doivent être ouverts à la concurrence du secteur privé.",
+      "motif": "La suppression de « essentiels » étendait la question à tous les services publics. Périmètre restauré.",
+      "textApresRevisionFautive": "Les services publics doivent être ouverts à la concurrence des entreprises privées."
+    },
+    {
+      "id": "PUB_4",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Le système de retraite français doit reposer principalement sur la répartition plutôt que sur la capitalisation."
+    },
+    {
+      "id": "PUB_6",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Le logement social doit être massivement étendu.",
+      "motif": "« plus » est un seuil plus faible que « massivement étendu ». Intensité restaurée.",
+      "textApresRevisionFautive": "L'État doit construire plus de logements sociaux."
+    },
+    {
+      "id": "PUB_7",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Un revenu de base doit remplacer les allocations actuelles."
+    },
+    {
+      "id": "SEC_1",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "La surveillance de masse des communications doit être arrêtée.",
+      "motif": "« soupçonnées d un crime » introduisait un seuil pénal absent de l originale. Seuil retiré.",
+      "textApresRevisionFautive": "La surveillance des communications doit être réservée aux personnes soupçonnées d'un crime."
+    },
+    {
+      "id": "SEC_11",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "L'État doit pouvoir retirer la nationalité aux terroristes."
+    },
+    {
+      "id": "SEC_12",
+      "categorie": "institution",
+      "verdict": "restaure",
+      "textAvantRevision": "Les services secrets doivent accéder aux messages chiffrés des suspects.",
+      "motif": "Les services secrets ont été remplacés par la police : acteur et cadre juridique différents. Acteur d origine restauré.",
+      "textApresRevisionFautive": "La police doit pouvoir lire les messages privés protégés des personnes suspectes."
+    },
+    {
+      "id": "SEC_13",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Le déclenchement des caméras-piétons des policiers doit être automatique, sans possibilité de désactivation."
+    },
+    {
+      "id": "SEC_14",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Les jeunes délinquants doivent être jugés moins sévèrement."
+    },
+    {
+      "id": "SEC_19",
+      "categorie": "mecanisme",
+      "verdict": "restaure",
+      "textAvantRevision": "Les terroristes doivent rester détenus longtemps après leur peine.",
+      "motif": "« doit pouvoir rester » (faculté) au lieu de « doivent rester » (obligation), et « longtemps » supprimé. Mécanisme et durée restaurés.",
+      "textApresRevisionFautive": "Une personne condamnée pour terrorisme doit pouvoir rester enfermée après avoir purgé sa peine."
+    },
+    {
+      "id": "SEC_21",
+      "categorie": "population",
+      "verdict": "restaure",
+      "textAvantRevision": "Les lanceurs d'alerte doivent être protégés légalement.",
+      "motif": "« salariés » face à « leur employeur » exclut les agents publics et les signalements externes. Population d origine restaurée.",
+      "textApresRevisionFautive": "La loi doit protéger les salariés qui révèlent des faits illégaux commis par leur employeur."
+    },
+    {
+      "id": "SEC_25",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Les policiers soupçonnés d'usage excessif de la force doivent faire l'objet d'une enquête totalement indépendante de la police.",
+      "motif": "« accusés » au lieu de « soupçonnés », « violences » au lieu de « usage excessif de la force », et « totalement indépendante » affaibli en « indépendant ». Seuils restaurés.",
+      "textApresRevisionFautive": "Les enquêtes sur les policiers accusés de violences doivent être menées par un service indépendant."
+    },
+    {
+      "id": "SEC_3",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les lois antiterroristes qui limitent les libertés sont justifiées."
+    },
+    {
+      "id": "SEC_6",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Les peines de prison doivent donner la priorité à la réinsertion des détenus."
+    },
+    {
+      "id": "SEC_8",
+      "categorie": "seuil",
+      "verdict": "restaure",
+      "textAvantRevision": "Les services secrets doivent être plus contrôlés par le parlement.",
+      "motif": "La suppression de « plus » transformait un renforcement du contrôle en simple existence du contrôle. Comparatif restauré.",
+      "textApresRevisionFautive": "Le Parlement doit contrôler l'activité des services secrets."
+    },
+    {
+      "id": "SEC_9",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La possession de drogues destinées à un usage personnel doit être dépénalisée."
+    },
+    {
+      "id": "SOC_10",
+      "categorie": "population",
+      "verdict": "restaure",
+      "textAvantRevision": "L'euthanasie doit être légale pour les personnes atteintes d'une maladie incurable à un stade avancé qui la demandent.",
+      "motif": "La suppression de « à un stade avancé » élargit matériellement la population concernée. Critère restauré.",
+      "textApresRevisionFautive": "L'euthanasie doit être autorisée pour les malades incurables qui la demandent."
+    },
+    {
+      "id": "SOC_14",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'accès aux sites pornographiques doit être soumis à une vérification obligatoire de l'âge."
+    },
+    {
+      "id": "SOC_16",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les élèves doivent pouvoir porter des signes religieux visibles dans les établissements scolaires publics.",
+      "motif": "« école publique » se lit comme le primaire seul, alors que l interdiction de 2004 couvre écoles, collèges et lycées. Périmètre d origine restauré.",
+      "textApresRevisionFautive": "Les élèves doivent pouvoir porter des signes religieux visibles à l'école publique."
+    },
+    {
+      "id": "SOC_20",
+      "categorie": "precision",
+      "verdict": "restaure",
+      "textAvantRevision": "Le travail du sexe entre adultes consentants doit être décriminalisé.",
+      "motif": "La formulation laissait deviner qui est puni, alors qu en France c est le client depuis 2016. Les deux populations sont désormais nommées dans la question, pas dans l explication.",
+      "textApresRevisionFautive": "La loi ne doit pas punir la prostitution entre adultes consentants."
+    },
+    {
+      "id": "SOC_22",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La liberté d'expression doit permettre de critiquer les religions, même lorsque cela offense certains croyants."
+    },
+    {
+      "id": "SOC_23",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "L'école doit enseigner la notion de consentement dans le cadre de l'éducation à la sexualité."
+    },
+    {
+      "id": "SOC_27",
+      "categorie": "mecanisme",
+      "verdict": "restaure",
+      "textAvantRevision": "L'État doit sanctionner financièrement les entreprises qui ne réduisent pas leurs écarts de salaire entre femmes et hommes.",
+      "motif": "Passage d une obligation de progrès (« ne réduisent pas leurs écarts ») à une obligation de résultat (« paient moins »). Critère d origine restauré.",
+      "textApresRevisionFautive": "L'État doit infliger des amendes aux entreprises qui paient moins les femmes que les hommes."
+    },
+    {
+      "id": "SOC_3",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "Le cannabis doit être légalisé et encadré par l'État."
+    },
+    {
+      "id": "SOC_5",
+      "categorie": "simplification",
+      "verdict": "conserve",
+      "textAvantRevision": "La religion doit influencer plus les lois françaises."
+    },
+    {
+      "id": "SOC_6",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "Les personnes transgenres doivent pouvoir modifier leur identité de genre à l'état civil sans passer par un suivi médical obligatoire.",
+      "motif": "« changer son état civil » couvre aussi le nom et la situation familiale. Mention du sexe restaurée.",
+      "textApresRevisionFautive": "Une personne transgenre doit pouvoir changer son état civil sans passer par un médecin."
+    },
+    {
+      "id": "SOC_7",
+      "categorie": "perimetre",
+      "verdict": "restaure",
+      "textAvantRevision": "L'État doit promouvoir la famille traditionnelle hétérosexuelle.",
+      "motif": "La suppression de « hétérosexuelle » retirait la définition explicite du modèle visé et rendait la question interprétable de plusieurs façons. Formulation d origine restaurée.",
+      "textApresRevisionFautive": "L'État doit encourager le modèle de la famille traditionnelle."
+    },
+    {
+      "id": "SOC_8",
+      "categorie": "precision",
+      "verdict": "conserve",
+      "textAvantRevision": "Les lois contre les discours haineux doivent être renforcées."
+    }
+  ]
+}

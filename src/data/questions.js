@@ -168,6 +168,17 @@ export const DIRECTION_MAP = {
   PUB_26: 1,  // interdiction des dépassements d'honoraires = pro-service public = PUBLIC_SERVICES up
   PUB_27: 1,  // crèche gratuite = pro-service public = PUBLIC_SERVICES up
   PUB_28:-1,  // durée d'indemnisation raccourcie = réduction de la protection = PUBLIC_SERVICES down
+
+  // ── Correction P0-1 (contre-audit 2026-08-10) ──────────────────────────────
+  // Six questions de 2026-08 avaient conservé un identifiant alors que leur dispositif,
+  // leur périmètre ou leur niveau institutionnel avait changé. Elles sont retirées et
+  // remplacées. Classification complète : docs/questions/id-semantics-2026-08.json.
+  ENV_31: 1,  // hausse du prix du carbone = écologiste = ENVIRONMENT up (remplace ENV_3)
+  DEM_30: 1,  // révocation des élus = participation = DEMOCRACY up (remplace DEM_7)
+  DEM_31: 1,  // temps de parole imposé = pluralisme = DEMOCRACY up (remplace DEM_13)
+  DEM_32: 1,  // référendum par signatures = démocratie directe = DEMOCRACY up (remplace DEM_24)
+  GLO_27:-1,  // produire son énergie = repli = GLOBAL down (remplace GLO_16)
+  GLO_28:-1,  // quotas de chansons françaises = protection culturelle = GLOBAL down (remplace GLO_22)
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────
@@ -182,7 +193,7 @@ const STATUS_WEIGHTS = { CORE: 10, PRIMARY: 5, SECONDARY: 2 };
 // profils, là où les signes religieux à l'école séparent nettement.
 export const EDITORIAL_CORE_IDS = new Set([
   'ECO_23', 'ECO_29', 'SOC_7', 'SOC_16', 'IMM_1', 'IMM_23',
-  'SEC_3', 'SEC_25', 'ENV_3', 'ENV_25', 'DEM_8', 'DEM_21',
+  'SEC_3', 'SEC_25', 'ENV_31', 'ENV_25', 'DEM_8', 'DEM_21',
   'GLO_1', 'GLO_8', 'PUB_13', 'PUB_25',
 ]);
 
@@ -208,6 +219,8 @@ export const EDITORIALLY_RETIRED_IDS = new Set([
   'DEM_1', 'DEM_3', 'DEM_15',
   'GLO_17',
   'PUB_1', 'PUB_9', 'PUB_17',
+  // Correction P0-1 : identifiants conservés à tort malgré un changement de sens
+  'ENV_3', 'DEM_7', 'DEM_13', 'DEM_24', 'GLO_16', 'GLO_22',
 ]);
 
 function processQuestion(raw) {

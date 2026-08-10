@@ -81,13 +81,22 @@ const STOPWORDS = new Set([
  * « aucune exception éditoriale inutile » : on la retire alors.
  */
 export const RULE_EXCEPTIONS = {
+  ECO_28: {
+    rules: ['VAGUE'],
+    reason:
+      '« strictement » est ici la proposition testée, pas un remplissage : l’opposition politique ' +
+      'porte précisément sur le DEGRÉ d’encadrement de l’intelligence artificielle. Le retirer ' +
+      '(révision 2026-08, « la loi doit encadrer ») avait affaibli le seuil et changé le sens ' +
+      'd’une question dont l’identifiant était conservé — défaut relevé au contre-audit P0-1.',
+  },
   ENV_7: {
     rules: ['COMPOSITE'],
     reason:
-      '« à essence et diesel » nomme UNE catégorie de véhicules par ses deux carburants, pas ' +
-      'deux politiques : personne ne peut vouloir interdire l’un sans l’autre dans le calendrier ' +
-      'européen de 2035. La formulation savante « voitures thermiques » évitait la coordination ' +
-      'mais restait opaque pour le niveau de lecture visé.',
+      '« à essence et diesel » nomme UNE catégorie de véhicules par ses deux carburants. Le ' +
+      'calendrier européen de 2035 porte sur cette catégorie prise ensemble, et aucun parti ' +
+      'français ne défend aujourd’hui d’interdire un seul des deux carburants — ce qui n’exclut ' +
+      'pas qu’une telle position existe ou apparaisse. La formulation savante « voitures ' +
+      'thermiques » évitait la coordination mais restait opaque pour le niveau de lecture visé.',
   },
 };
 

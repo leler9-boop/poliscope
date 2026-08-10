@@ -1,6 +1,15 @@
 # Révision éditoriale du questionnaire — août 2026
 
-Version de banque : `2026.07-128q` → **`2026.08-128q`** (`src/engine/versions.js`).
+Version de banque : `2026.07-128q` → `2026.08-128q` → **`2026.08-128q-r2`** (`src/engine/versions.js`).
+
+> ⚠️ **Correction du 2026-08-10.** La première publication de cette révision affirmait qu'aucun
+> identifiant conservé n'avait changé de sens. **C'était faux.** Un contre-audit a établi que
+> 44 des 93 questions réécrites avaient conservé leur identifiant malgré un changement de
+> population, de seuil, de bénéficiaire, de dispositif ou de niveau institutionnel. 38 ont vu
+> leur sens restauré, 6 ont été retirées et remplacées par de nouveaux identifiants. La
+> classification des 93, question par question, est dans
+> [`id-semantics-2026-08.json`](id-semantics-2026-08.json) et vérifiée par
+> `tests/data/questions.id-semantics.test.mjs`.
 
 Objectif : un questionnaire politique français lisible par un élève de 5e, où chaque question
 mesure **une seule** proposition politique, et où aucun thème ne peut classer quelqu'un à une
@@ -27,8 +36,10 @@ aucun ne remplace l'autre.
 ## Règle d'identifiant appliquée
 
 Un identifiant de question est une **clé de données** : des réponses persistées y sont
-rattachées, dans `localStorage` comme dans `user_answers`. La règle suivante a été appliquée
-sans exception, et elle est vérifiée par test :
+rattachées, dans `localStorage` comme dans `user_answers`. La règle suivante est celle qui
+aurait dû être appliquée dès la première passe ; elle l'est maintenant, et elle est **vérifiée
+par test** — la classification humaine des 93 réécritures est figée dans un registre, et un
+identifiant classé « changement matériel » ne peut plus rester actif :
 
 - **Même identifiant** — la proposition politique testée est préservée. Sont concernés : le
   registre de langue, la longueur, le passage à la voix active, la glose d'un terme technique,
@@ -38,11 +49,20 @@ sans exception, et elle est vérifiée par test :
   d'une question composite, mécanisme différent, périmètre restreint. *Un répondant cohérent
   peut donner une réponse différente.*
 
+Le test décisif, appliqué aux 93 : *une réponse donnée à l'ancien texte reste-t-elle
+strictement interprétable de la même manière avec le nouveau ?* Résultat :
+
+| Verdict | Nombre | Catégories rencontrées |
+|---|---|---|
+| **Conservé** — simplification ou précision sans effet de sens | 49 | `simplification`, `precision` |
+| **Restauré** — l'élément sémantique perdu a été remis dans la question | 38 | `population`, `seuil`, `mecanisme`, `beneficiaire`, `institution`, `perimetre` |
+| **Nouvel identifiant** — changement irréductible, ancien retiré | 6 | `politique`, `institution`, `mecanisme`, `perimetre` |
+
 Aucune direction de score n'a été inversée sur un identifiant conservé. Rééquilibrer les
 comptes en basculant `direction: 1` en `-1` aurait faussé tous les profils déjà enregistrés
 sans changer une seule phrase — c'est explicitement ce qu'il fallait ne pas faire.
 
-Les 22 identifiants retirés restent lisibles dans `questions_final.json` et sont figés avec
+Les 28 identifiants retirés restent lisibles dans `questions_final.json` et sont figés avec
 leur libellé de l'époque dans `docs/questions/retired-ids.json`. Le test
 « aucun identifiant retiré n'est réutilisé pour une autre opinion » échoue si l'un d'eux se met
 à porter une autre proposition politique.
@@ -89,37 +109,47 @@ le voit.
 
 ## Ambiguïtés résiduelles assumées
 
-Ces points subsistent volontairement. Ils sont documentés plutôt que masqués.
+⚠️ **Révisé le 2026-08-10 après contre-audit.** Quatre points de cette liste étaient de faux
+arbitrages : c'étaient des défauts à corriger, pas des imprécisions à assumer. Ils l'ont été.
+
+Corrigés depuis :
+
+- **`SOC_20`** — la question laissait deviner qui est puni. Les deux populations sont
+  désormais nommées dans la question elle-même : « La loi ne doit punir ni les personnes qui se
+  prostituent ni leurs clients. » Une ambiguïté de la question ne se répare pas dans
+  l'explication.
+- **`GLO_16`** — « produire ce dont elle a besoin » n'avait aucune limite assignable. Retirée,
+  remplacée par `GLO_27`, limitée à l'énergie.
+- **`GLO_22`** — « défense de la culture française » ne désignait aucune politique publique
+  identifiable. Retirée, remplacée par `GLO_28` (quotas de chansons françaises à la radio).
+- **`DEM_28`** — « pouvoir politique fort » était une notion abstraite. Remplacée par un
+  dispositif nommé : « Le gouvernement doit pouvoir faire adopter une loi sans vote des députés. »
+
+Subsistent volontairement :
 
 1. **`IMM_3` — « depuis longtemps ».** Le débat français sur la régularisation par ancienneté
    n'a pas de seuil consensuel. Inventer « dix ans » aurait fabriqué un chiffre que personne ne
    défend sous cette forme. L'imprécision porte sur la population visée, pas sur la politique.
 2. **`ENV_7` — « à essence et diesel ».** Seule coordination conservée dans la banque. Elle
-   nomme une catégorie de véhicules par ses deux carburants, pas deux politiques. Exception
-   déclarée et testée dans `scripts/lib/question-rules.mjs`.
-3. **`DEM_28` — « pouvoir fort » contre « contre-pouvoirs ».** Formulation d'un arbitrage
-   abstrait. Elle reste la façon la plus directe de mesurer une préférence pour la verticalité
-   sans passer par un mécanisme institutionnel technique.
+   nomme une catégorie de véhicules par ses deux carburants ; le calendrier européen de 2035
+   porte sur cette catégorie prise ensemble. Exception déclarée et testée.
+3. **`ECO_28` — « strictement ».** Seul intensificateur conservé. Le degré d'encadrement de
+   l'intelligence artificielle EST la ligne de partage politique ; le retirer avait affaibli le
+   seuil et changé le sens. Exception déclarée et testée.
 4. **`ECO_10` et `PUB_7` — revenu de base.** Deux questions proches mais distinctes :
    l'existence d'un revenu universel (`ECO_10`) et sa substitution aux aides existantes
-   (`PUB_7`). Similarité mesurée : 0,36, sous le seuil. Conservées séparément, sciemment.
+   (`PUB_7`). Similarité mesurée sous le seuil. Conservées séparément, sciemment.
 5. **`GLO_3` et `GLO_23` — OTAN.** L'utilité de l'alliance et l'appartenance au commandement
    intégré sont deux positions distinctes en France ; on peut tenir la première sans la seconde.
 6. **`ENV_25` et `ENV_26` — agriculture.** L'allègement des normes européennes et l'interdiction
-   des pesticides dangereux sont deux mécanismes différents. Le rapprochement est assumé :
+   des pesticides dangereux sont deux mécanismes différents. Rapprochement assumé :
    l'agriculture est la principale ligne de fracture environnementale française.
-7. **Niveau de lecture.** Aucune mesure automatique de lisibilité française (type Flesch adapté)
-   n'a été utilisée : elles sont peu fiables sur des phrases de moins de 25 mots. Le contrôle
-   porte sur la longueur, les sigles, la voix passive et le jargon, relus un par un.
-8. **`SOC_20` — qui est puni ?** « La loi ne doit pas punir la prostitution entre adultes
-   consentants » ne dit pas si l'on vise la personne prostituée ou le client — en France, c'est
-   le client qui est pénalisé depuis 2016. La proposition testée reste la dépénalisation du
-   travail du sexe consenti ; la distinction relève de l'explication. Repéré à la relecture à
-   l'aveugle, laissé en l'état, à trancher lors de la refonte des explications.
-9. **`DEM_8` et `DEM_19` — financement des partis.** Interdire les dons privés et financer les
-   partis par l'État sont deux décisions séparables, mais elles vont politiquement de pair et
-   tirent toutes deux le score vers le haut. Similarité mesurée sous le seuil ; le risque est
-   éditorial, pas lexical. Conservées, signalées.
+7. **`DEM_8` et `DEM_19` — financement des partis.** Interdire les gros dons privés et financer
+   les partis par l'État sont deux décisions séparables mais politiquement solidaires, toutes
+   deux ↑. Similarité sous le seuil ; le risque est éditorial, pas lexical.
+8. **Niveau de lecture.** Aucune mesure automatique de lisibilité française n'a été utilisée :
+   elles sont peu fiables sur des phrases de moins de 25 mots. Le contrôle porte sur la
+   longueur, les sigles, la voix passive et le jargon, relus un par un.
 
 ## Ce que les contrôles automatiques ne prouvent pas
 
