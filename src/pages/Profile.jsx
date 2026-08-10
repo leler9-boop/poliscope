@@ -5,12 +5,13 @@ import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS, recalculateAxes, isScorable } from '../engine/scorer.js';
 import { formatProximity, coverageLabel, coverageTitle, scoreToCssPercent } from '../engine/scoreDisplay.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_QUESTION_COUNT, canonicalMode } from '../data/questions.js';
+import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_QUESTION_COUNT, canonicalMode, coreQuestions } from '../data/questions.js';
 // `rankLegacyFigures` ne sert plus qu'aux COURANTS idéologiques et aux figures : des
 // profils de référence documentés, pas des candidats à une élection en cours. Le classement
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
 import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
-import { rankCandidates } from '../engine/candidateMatch.js';
+import { rankCandidatesForSurface, MATCH_MODE } from '../engine/candidateRanking.js';
+import EstimateNotice from '../components/EstimateNotice.jsx';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
 const THEME_AXES = {
@@ -280,19 +281,30 @@ export default function Profile() {
   // donc « Meilleur match 2027 — … — 66/100 » alors qu'aucune position n'avait été sourcée
   // ni relue. `rankCandidates()` n'accepte que des positions approuvées : tant qu'il n'y en a
   // aucune, `results` est vide et `unscored` porte le motif à afficher.
-  const { results: rankedCandidates, unscored: unscoredCandidates } = useMemo(() => {
-    if (!themes || fr2027Candidates.length === 0) return { results: [], unscored: [] };
-    const r = rankCandidates(
-      { userThemes: themes, priorityOrder: priorityOrder ?? [], themeWeights: themeWeights ?? null, language },
-      fr2027Candidates,
-    );
-    // `rankCandidates` renvoie { candidate, match } ; les surfaces existantes attendent un
-    // objet candidat plat portant `alignment`.
+  // 2026-08-10 : la voie stricte reste tentée en premier. Faute de position approuvée, la page
+  // n'affichait plus rien du tout. On autorise EXPLICITEMENT le repli éditorial, qui compare
+  // les réponses de l'utilisateur à celles attribuées aux candidats — et dont chaque résultat
+  // est étiqueté « estimation », jamais « vérifié ».
+  const { results: rankedCandidates, unscored: unscoredCandidates, matchMode } = useMemo(() => {
+    if (!themes || fr2027Candidates.length === 0) return { results: [], unscored: [], matchMode: null };
+    const r = rankCandidatesForSurface({
+      candidates: fr2027Candidates,
+      userThemes: themes,
+      userAnswers: answers ?? {},
+      questions: coreQuestions,
+      questionSet: 'general',
+      allowEditorial: true,
+      priorityOrder: priorityOrder ?? [],
+      themeWeights: themeWeights ?? null,
+      language,
+    });
+    // Les surfaces existantes attendent un objet candidat plat portant `alignment`.
     return {
       results: r.results.map(x => ({ ...x.candidate, alignment: x.match.score, match: x.match })),
       unscored: r.unscored.map(x => ({ ...x.candidate, match: x.match })),
+      matchMode: r.mode,
     };
-  }, [themes, fr2027Candidates, priorityOrder, themeWeights, language]);
+  }, [themes, answers, fr2027Candidates, priorityOrder, themeWeights, language]);
 
   // Lot 2 (proposal #3, robustness simulation): ~48% of profiles have their top-2 matches
   // within 1 point in a stress test — a single "best match" badge overstates precision
@@ -1094,6 +1106,14 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
+          {matchMode === MATCH_MODE.EDITORIAL && (
+            <EstimateNotice
+              language={language}
+              questionsCompared={rankedCandidates[0]?.match?.questionsCompared ?? null}
+              questionsAvailable={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+              updatedAt={rankedCandidates[0]?.match?.updatedAt ?? null}
+            />
+          )}
           <div className="flex items-baseline justify-between mb-4 gap-3">
             <div>
               <h2 className="font-bold text-slate-900 text-lg tracking-tight">

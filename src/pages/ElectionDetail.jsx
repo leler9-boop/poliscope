@@ -6,6 +6,8 @@ import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
+import { rankCandidatesForSurface, MATCH_MODE } from '../engine/candidateRanking.js';
+import EstimateNotice from '../components/EstimateNotice.jsx';
 import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
 import { getRegistryEntry, getTrackedCandidates, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
 import { getSource } from '../data/candidateProvenance.js';
@@ -737,39 +739,37 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   // Candidats pour lesquels le moteur refuse de produire un score (couverture insuffisante,
   // tous les thèmes comparables à poids nul, aucune donnée). Ils restent VISIBLES avec leur
   // motif : les faire disparaître laisserait croire qu'ils n'existent pas.
-  const unscoredCandidates = useMemo(() => {
-    return election.candidates
-      .filter(c => !c.variantOf)
-      .map(c => ({
-        ...c,
-        match: computeCandidateMatch({
-          userThemes: globalProfile.themes, candidate: c, priorityOrder, themeWeights,
-          electionAnswers: thisElectionAnswers, questions, language,
-        }),
-      }))
-      .filter(c => c.match.score == null);
-  }, [election, globalProfile, thisElectionAnswers, priorityOrder, themeWeights, language]);
+  // 2026-08-10 — la voie stricte reste tentée d'abord. Sans position approuvée, la page
+  // affichait « Aucune donnée comparable » pour les dix candidats. Le repli éditorial est
+  // demandé EXPLICITEMENT ici, et compare les réponses de l'utilisateur aux 17 questions
+  // 2027 avec celles attribuées aux candidats. Tout résultat porte sa provenance.
+  const ranking = useMemo(() => {
+    const eligible = election.candidates.filter(c => !c.variantOf);
+    return rankCandidatesForSurface({
+      candidates: eligible,
+      userThemes: globalProfile.themes,
+      userAnswers: thisElectionAnswers,
+      questions,
+      questionSet: election.id,
+      allowEditorial: true,
+      priorityOrder,
+      themeWeights,
+      language,
+    });
+  }, [election, globalProfile, thisElectionAnswers, questions, priorityOrder, themeWeights, language]);
 
-  const rankedCandidates = useMemo(() => {
-    return election.candidates
-      .filter(c => !c.variantOf) // filter any remaining variant candidates
-      .map(c => {
-        const match = computeCandidateMatch({
-          userThemes: globalProfile.themes,
-          candidate: c,
-          priorityOrder,
-          themeWeights,           // transmis : la page Élection les ignorait auparavant
-          electionAnswers: thisElectionAnswers,
-          questions,
-          language,
-        });
-        // `?? 0` afficherait « 0/100 » — un score, faux — là où le moteur dit « pas de score ».
-        // Les candidats sans score sont séparés et présentés avec leur motif.
-        return { ...c, alignment: match.score, match };
-      })
-      .filter(c => c.alignment != null)
-      .sort((a, b) => b.alignment - a.alignment);
-  }, [election, globalProfile, thisElectionAnswers, priorityOrder, themeWeights, language]);
+  // Candidats pour lesquels le moteur refuse de produire un score. Ils restent VISIBLES avec
+  // leur motif : les faire disparaître laisserait croire qu'ils n'existent pas.
+  const unscoredCandidates = useMemo(
+    () => ranking.unscored.map(({ candidate, match }) => ({ ...candidate, match })),
+    [ranking],
+  );
+
+  const rankedCandidates = useMemo(
+    // `?? 0` afficherait « 0/100 » — un score, faux — là où le moteur dit « pas de score ».
+    () => ranking.results.map(({ candidate, match }) => ({ ...candidate, alignment: match.score, match })),
+    [ranking],
+  );
 
   // Deux premiers trop proches pour être départagés → on le dit au lieu d'afficher un ordre
   // catégorique que le bruit de mesure ne soutient pas.
@@ -918,6 +918,15 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
             ))}
           </div>
         </div>
+      )}
+
+      {ranking.mode === MATCH_MODE.EDITORIAL && rankedCandidates.length > 0 && (
+        <EstimateNotice
+          language={language}
+          questionsCompared={rankedCandidates[0]?.match?.questionsCompared ?? null}
+          questionsAvailable={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+          updatedAt={rankedCandidates[0]?.match?.updatedAt ?? null}
+        />
       )}
 
       {/* Annuaire : personnes suivies mais volontairement hors classement */}

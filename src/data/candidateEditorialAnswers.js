@@ -135,8 +135,101 @@ function buildFromElection(electionId, review) {
   return out;
 }
 
+// ─── Banque générale : les 16 questions CORE ────────────────────────────────
+//
+// Les CORE couvrent les huit thèmes, deux par thème : c'est le socle minimal pour dériver un
+// profil thématique complet, et c'est exactement le contenu du mode Découverte. Les 112 autres
+// questions actives restent à coder — leur absence est déclarée, pas masquée.
+//
+// Ordre des colonnes, une fois pour toutes :
+const GENERAL_CANDIDATE_ORDER = [
+  'lepen_2027', 'philippe', 'attal', 'melenchon_2027', 'glucksmann',
+  'tondelier', 'retailleau', 'ruffin', 'roussel_2027', 'zemmour_2027',
+];
+
+/**
+ * Réponses attribuées sur les questions CORE.
+ *
+ * Codées AVANT tout calcul de profil, à partir des déclarations publiques, des programmes et
+ * de la ligne endossée — pas en ajustant jusqu'à obtenir un classement voulu. Les écarts par
+ * rapport au parti sont notés : ce sont eux qui empêchent un candidat de devenir la copie de
+ * sa famille politique.
+ */
+const CORE_ANSWERS = {
+  //            LePen Phil Attal Mélen Gluck Tond Retail Ruffin Rouss Zemm
+  ECO_23: { v: [   2,   4,    4,    1,    2,   1,     4,     1,    2,   4], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    notes: { lepen_2027: 'Ligne social-nationaliste : le RN ne défend pas la croissance au prix des inégalités.' } },
+  SOC_7:  { v: [   4,   2,    1,    1,    1,   1,     5,     2,    2,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    notes: { attal: 'Position personnelle nettement progressiste, distincte d’une partie de sa majorité.',
+             retailleau: 'Engagement constant et ancien contre le mariage pour tous.' } },
+  SOC_16: { v: [   1,   2,    1,    4,    2,   4,     1,     2,    1,   1], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
+    notes: { attal: 'A interdit l’abaya comme ministre de l’Éducation : laïcité stricte malgré un profil progressiste.',
+             roussel_2027: 'Laïcité stricte assumée, à l’opposé de LFI sur ce point précis.',
+             melenchon_2027: 'LFI conteste l’extension des interdictions de signes religieux.' } },
+  IMM_1:  { v: [   5,   4,    3,    1,    2,   1,     5,     3,    2,   5], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    notes: { ruffin: 'Refuse le cadrage identitaire sans défendre l’ouverture : position médiane assumée.' } },
+  SEC_3:  { v: [   5,   4,    4,    1,    3,   2,     5,     2,    3,   5], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
+    notes: { roussel_2027: 'Ligne sécuritaire plus ferme que le reste de la gauche.' } },
+  DEM_8:  { v: [   3,   2,    3,    5,    4,   5,     2,     5,    5,   2], basis: ANSWER_BASIS.PARTY_ENDORSED, notes: {} },
+  DEM_21: { v: [   3,   1,    1,    2,    1,   1,     2,     2,    1,   4], basis: ANSWER_BASIS.EDITORIAL_INFERENCE,
+    notes: { zemmour_2027: 'Seul à défendre ouvertement une reprise en main de la magistrature.' } },
+  GLO_1:  { v: [   5,   2,    2,    4,    1,   1,     4,     4,    4,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    notes: { melenchon_2027: 'Souverainisme de gauche : primauté nationale sans rejet identitaire.',
+             roussel_2027: 'Même souverainisme, motivé par la protection sociale et industrielle.' } },
+  GLO_8:  { v: [   1,   4,    5,    1,    5,   4,     2,     1,    1,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    notes: { glucksmann: 'Fédéraliste assumé : c’est ce qui le sépare le plus nettement de LFI.' } },
+  PUB_13: { v: [   2,   4,    3,    1,    1,   1,     4,     1,    1,   4], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    notes: { lepen_2027: 'Le RN défend la dépense sociale pour les nationaux : ni libéral, ni redistributif universel.' } },
+  IMM_23: { v: [   1,   3,    3,    5,    5,   5,     1,     4,    4,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    notes: { retailleau: 'Remise en cause du droit du sol portée personnellement.' } },
+  ENV_25: { v: [   5,   4,    4,    2,    2,   1,     5,     3,    4,   5], basis: ANSWER_BASIS.DIRECT_CURRENT,
+    notes: { roussel_2027: 'Soutien aux agriculteurs qui le distingue du reste de la gauche.' } },
+  PUB_25: { v: [   4,   3,    3,    5,    4,   5,     3,     5,    5,   2], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, notes: {} },
+  SEC_25: { v: [   1,   3,    3,    5,    4,   5,     1,     4,    3,   1], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    notes: { roussel_2027: 'Plus réservé que le reste de la gauche sur le contrôle de la police.' } },
+  ECO_29: { v: [   4,   2,    2,    5,    3,   4,     2,     5,    5,   3], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    notes: { lepen_2027: 'Le RN défend la renationalisation de l’énergie, contrairement à la droite libérale.' } },
+  ENV_31: { v: [   1,   3,    3,    2,    4,   4,     1,     1,    1,   1], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    notes: { melenchon_2027: 'LFI rejette la taxe carbone sur les ménages, comme le PCF.',
+             roussel_2027: 'Opposition constante à la fiscalité carbone pesant sur les ménages modestes.',
+             ruffin: 'Hostile à toute écologie punitive pour les classes populaires.' } },
+};
+
+/** Construit les réponses éditoriales sur la banque générale. */
+function buildGeneralAnswers() {
+  const out = [];
+  for (const [questionId, row] of Object.entries(CORE_ANSWERS)) {
+    GENERAL_CANDIDATE_ORDER.forEach((electionCandidateId, index) => {
+      const value = row.v[index];
+      const known = [1, 2, 3, 4, 5].includes(value);
+      out.push({
+        candidateId: resolveCandidateId(electionCandidateId) ?? electionCandidateId,
+        electionCandidateId,
+        questionId,
+        questionSet: 'general',
+        answerValue: known ? value : null,
+        answerState: known ? ANSWER_STATE.ESTIMATED : ANSWER_STATE.UNKNOWN,
+        basis: known ? row.basis : ANSWER_BASIS.UNKNOWN,
+        rationale: row.notes?.[electionCandidateId] ?? null,
+        sourceIds: [],
+        validFrom: EDITORIAL_REVIEWED_AT,
+        reviewedAt: EDITORIAL_REVIEWED_AT,
+        supersedesId: null,
+        questionnaireVersion: QUESTIONNAIRE_VERSION,
+        questionSetVersion: `general@${QUESTIONNAIRE_VERSION}`,
+        codedBy: 'poliscop-editorial-2026-08',
+        provenance: EDITORIAL_ANSWERS_VERSION,
+      });
+    });
+  }
+  return out;
+}
+
 /** Toutes les réponses éditoriales connues. */
-export const EDITORIAL_ANSWERS = Object.freeze(buildFromElection('fr_2027', FR2027_REVIEW));
+export const EDITORIAL_ANSWERS = Object.freeze([
+  ...buildFromElection('fr_2027', FR2027_REVIEW),
+  ...buildGeneralAnswers(),
+]);
 
 const BY_CANDIDATE = new Map();
 for (const answer of EDITORIAL_ANSWERS) {
