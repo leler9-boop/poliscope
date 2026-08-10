@@ -12,6 +12,9 @@ import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { setMeasurementConsent } from '../lib/anonymous.js';
 import { normalizeConsent } from '../lib/consent.js';
+import {
+  normalizeThemeImportance, PRIORITY_SOURCE, VOTE_INFLUENCE_MULTIPLIER,
+} from '../engine/priorityWeights.js';
 import { toCloudAnswerRow, cloudAnsweredCount } from '../lib/cloudAnswers.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 import {
@@ -174,6 +177,18 @@ export const useStore = create(
 
       // ── Priority weights (100 points allocated across themes, null = equal) ──
       themeWeights: null, // { ECONOMY: 20, SOCIAL: 15, … } summing to 100
+
+      // ── TROIS DONNÉES DISTINCTES (contrat priority-v1) ──────────────────────
+      //
+      //   `answers`         — CE QUE PENSE la personne. Construit le profil idéologique.
+      //   `themeImportance` — le poids GÉNÉRAL qu'elle accorde à un sujet.
+      //   `voteInfluence`   — la capacité d'une question PRÉCISE à faire basculer son vote.
+      //
+      // ⚠ Ne JAMAIS fusionner ces champs. « Ce sujet ne changera pas mon vote » ne doit
+      // jamais devenir une réponse neutre, une absence de réponse, ni une ligne supprimée :
+      // l'opinion reste dans le profil, seul son poids électoral tombe à zéro.
+      themeImportance: null,   // { levels: { [THEME]: niveau }, source }
+      voteInfluence: {},       // { [questionId]: { level, multiplier, askedAt, answeredAt } }
 
       // ── Reproductibilité et reprise de la passation ──
       // Graine du tirage des questions. Persistée avec le profil : sans elle, la file exacte
@@ -412,6 +427,57 @@ export const useStore = create(
 
       setThemeWeights: (weights) => set({ themeWeights: weights }),
 
+      /**
+       * Importance générale d'UN thème. Ne touche à aucune réponse politique.
+       * @param {string} theme
+       * @param {string} level  IMPORTANCE_LEVEL
+       */
+      setThemeImportanceLevel: (theme, level) => {
+        const current = normalizeThemeImportance({
+          themeImportance: get().themeImportance, priorityOrder: get().priorityOrder,
+        });
+        set({
+          themeImportance: {
+            levels: { ...current.levels, [theme]: level },
+            source: PRIORITY_SOURCE.INDEPENDENT,
+            updatedAt: new Date().toISOString(),
+          },
+        });
+      },
+
+      /** Applique un jeu complet d'importances (raccourci « tout compte autant », conversion). */
+      setThemeImportance: (importance) => set({
+        themeImportance: importance
+          ? { ...importance, updatedAt: new Date().toISOString() }
+          : null,
+      }),
+
+      /**
+       * Influence d'UNE question sur le vote.
+       *
+       * ⚠ N'efface JAMAIS `answers[questionId]`. Une influence nulle laisse l'opinion intacte
+       * dans le profil idéologique — c'est tout l'objet de la séparation.
+       */
+      setVoteInfluence: (questionId, level, { askedAt = null } = {}) => {
+        const previous = get().voteInfluence?.[questionId] ?? null;
+        set({
+          voteInfluence: {
+            ...get().voteInfluence,
+            [questionId]: {
+              level,
+              multiplier: VOTE_INFLUENCE_MULTIPLIER[level] ?? null,
+              askedAt: askedAt ?? previous?.askedAt ?? new Date().toISOString(),
+              answeredAt: new Date().toISOString(),
+            },
+          },
+        });
+      },
+
+      /** Importance thématique effective, anciens profils compris. */
+      effectiveThemeImportance: () => normalizeThemeImportance({
+        themeImportance: get().themeImportance, priorityOrder: get().priorityOrder,
+      }),
+
       selectElection: (id) => {
         set({ selectedElectionId: id, currentPage: 'electionDetail' });
         routerNavigate(`/elections/${id}`);
@@ -623,6 +689,8 @@ export const useStore = create(
           profile: null,
           profileAdjustments: {},
           themeWeights: null,
+          themeImportance: null,
+          voteInfluence: {},
           testMode: null,
           questionsQueue: [],
           currentQuestionIndex: 0,
@@ -743,6 +811,8 @@ export const useStore = create(
         electionAnswers: state.electionAnswers,
         profileAdjustments: state.profileAdjustments,
         themeWeights: state.themeWeights,
+        themeImportance: state.themeImportance,
+        voteInfluence: state.voteInfluence,
         queueSeed: state.queueSeed,
         testMode: state.testMode,
         // Reprise du questionnaire après rechargement : IDs + position + métadonnées de

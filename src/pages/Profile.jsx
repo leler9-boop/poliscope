@@ -10,7 +10,7 @@ import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_Q
 // profils de référence documentés, pas des candidats à une élection en cours. Le classement
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
 import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
-import { rankCandidatesForSurface, MATCH_MODE } from '../engine/candidateRanking.js';
+import { rankCandidatesForSurface, MATCH_MODE, rankBothWays } from '../engine/candidateRanking.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
@@ -158,6 +158,9 @@ export default function Profile() {
   const language           = useStore(s => s.language);
   const profile            = useStore(s => s.profile);
   const answers            = useStore(s => s.answers);
+  const themeImportance    = useStore(s => s.themeImportance);
+  const voteInfluence      = useStore(s => s.voteInfluence);
+  const effectiveThemeImportance = useStore(s => s.effectiveThemeImportance);
   const priorityOrder      = useStore(s => s.priorityOrder);
   const profileAdjustments = useStore(s => s.profileAdjustments);
   const applyRefinement    = useStore(s => s.applyRefinement);
@@ -308,6 +311,22 @@ export default function Profile() {
       matchMode: r.mode,
     };
   }, [themes, answers, fr2027Candidates, priorityOrder, themeWeights, language]);
+
+  // ── LES DEUX RÉSULTATS ────────────────────────────────────────────────────
+  // Ressemblance politique (réponses seules) et proximité électorale (pondérée par les
+  // priorités déclarées). Ils peuvent désigner des candidats différents : c'est l'information
+  // la plus utile du dispositif, pas une incohérence.
+  const dualRanking = useMemo(() => {
+    if (!answers || fr2027Candidates.length === 0) return null;
+    return rankBothWays({
+      candidates: fr2027Candidates,
+      userAnswers: answers,
+      questions: coreQuestions,
+      questionSet: 'general',
+      themeImportance: effectiveThemeImportance(),
+      voteInfluence: voteInfluence ?? {},
+    });
+  }, [answers, fr2027Candidates, themeImportance, voteInfluence]);
 
   // Lot 2 (proposal #3, robustness simulation): ~48% of profiles have their top-2 matches
   // within 1 point in a stress test — a single "best match" badge overstates precision
@@ -1102,6 +1121,53 @@ export default function Profile() {
       </motion.div>
 
       {/* ═══ CANDIDATS 2027 — now before axes for mobile-first hierarchy ═══ */}
+      {dualRanking?.ideological.results.length > 0 && dualRanking?.electoral.results.length > 0 && (
+        <div className="mb-6 sm:mb-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+          <h2 className="font-bold text-slate-900 text-lg tracking-tight mb-1">
+            {language === 'fr' ? 'Deux façons de vous comparer' : 'Two ways of comparing you'}
+          </h2>
+          <p className="text-xs text-slate-500 leading-relaxed mb-4">
+            {language === 'fr'
+              ? 'Ces deux résultats peuvent être différents. Vous pouvez ressembler globalement à un candidat, mais préférer un autre candidat sur les sujets les plus importants pour vous.'
+              : 'These two results can differ. You may resemble one candidate overall, yet prefer another on the topics that matter most to you.'}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                {language === 'fr' ? 'Le candidat dont les idées vous ressemblent le plus' : 'Closest to your ideas'}
+              </p>
+              <p className="text-sm font-bold text-slate-900">{dualRanking.ideological.results[0].candidate.name}</p>
+              <p className="text-lg font-bold tabular-nums text-slate-900">
+                {dualRanking.ideological.results[0].match.score}/100
+              </p>
+            </div>
+            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                {language === 'fr'
+                  ? 'Le plus proche sur les sujets qui peuvent influencer votre vote'
+                  : 'Closest on the topics that could sway your vote'}
+              </p>
+              <p className="text-sm font-bold text-slate-900">{dualRanking.electoral.results[0].candidate.name}</p>
+              <p className="text-lg font-bold tabular-nums text-slate-900">
+                {dualRanking.electoral.results[0].match.score}/100
+              </p>
+              <p className="text-[11px] text-slate-500 mt-1">
+                {language === 'fr'
+                  ? `Calculé sur ${dualRanking.electoral.results[0].match.questionsWeighted} question(s) qui pèsent dans votre choix.`
+                  : `Based on ${dualRanking.electoral.results[0].match.questionsWeighted} question(s) that weigh in your choice.`}
+              </p>
+            </div>
+          </div>
+          {dualRanking.sameWinner && (
+            <p className="text-xs text-slate-500 mt-3">
+              {language === 'fr'
+                ? 'Ici, les deux méthodes désignent la même personne.'
+                : 'Here, both methods point to the same person.'}
+            </p>
+          )}
+        </div>
+      )}
+
       {rankedCandidates.length > 0 && (
         <motion.div
           className="mb-6 sm:mb-8"

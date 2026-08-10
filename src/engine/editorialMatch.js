@@ -27,6 +27,10 @@ import {
   EDITORIAL_ANSWERS_VERSION, EDITORIAL_REVIEWED_AT, ANSWER_STATE,
   getEditorialAnswers,
 } from '../data/candidateEditorialAnswers.js';
+import {
+  PRIORITY_CONTRACT_VERSION, normalizeThemeImportance, themeMultiplier,
+  voteInfluenceMultiplier, computeEffectiveQuestionWeight, balanceWeightsAcrossThemes,
+} from './priorityWeights.js';
 
 /** Provenance d'un résultat. Un mélange reste une estimation : jamais « vérifié ». */
 export const SCORE_PROVENANCE = Object.freeze({
@@ -268,6 +272,113 @@ export function computeEditorialMatch({
     disagreements: sorted.filter(x => x.distance >= 2).slice(-3).reverse(),
     breakdownSource: EDITORIAL_ANSWERS_VERSION,
   };
+}
+
+/**
+ * RÉSULTAT 1 — Ressemblance politique.
+ *
+ * « Quel candidat répondrait le plus souvent comme moi ? »
+ *
+ * Utilise les réponses politiques SEULES : ni importance de thème, ni influence sur le vote.
+ * C'est le classement qui doit rester intact quand quelqu'un déclare qu'un sujet ne changera
+ * pas son vote — son opinion compte toujours pour dire à qui il ressemble.
+ */
+export const computeIdeologicalMatch = computeEditorialMatch;
+
+/**
+ * RÉSULTAT 2 — Proximité électorale pondérée.
+ *
+ * « Quel candidat est le plus proche de moi sur les sujets qui comptent dans mon choix ? »
+ *
+ * poids effectif = importance du thème × influence de la question sur le vote × poids éditorial
+ * puis : plafonnement par question, puis répartition pour qu'un thème riche en questions ne
+ * domine pas, puis normalisation par la somme des poids réellement comparables.
+ *
+ * ⚠ Une question de poids nul reste COMPARÉE et COMPTÉE (`questionsCompared`) : elle ne pèse
+ * simplement pas. La distinction entre « je n'ai pas d'avis » et « mon avis ne changera pas
+ * mon vote » vit précisément dans cet écart entre `questionsCompared` et `questionsWeighted`.
+ */
+export function computeElectoralPriorityMatch({
+  userAnswers = {},
+  candidateAnswers = [],
+  questions = [],
+  themeImportance = null,
+  voteInfluence = {},
+  config = EDITORIAL_MATCH_CONFIG,
+  candidateDataVersion = EDITORIAL_ANSWERS_VERSION,
+  updatedAt = EDITORIAL_REVIEWED_AT,
+  questionnaireVersion = QUESTIONNAIRE_VERSION,
+  baselineWeight = 2,
+} = {}) {
+  // On repart du résultat idéologique : mêmes exclusions, mêmes seuils de couverture, mêmes
+  // métadonnées de provenance. Seule la pondération diffère.
+  const base = computeIdeologicalMatch({
+    userAnswers, candidateAnswers, questions, config,
+    candidateDataVersion, updatedAt, questionnaireVersion,
+  });
+
+  const withPriority = (extra) => ({
+    ...base,
+    scoreType: 'electoral-priority-weighted',
+    priorityContractVersion: PRIORITY_CONTRACT_VERSION,
+    themeImportanceSource: themeImportance?.source ?? null,
+    ...extra,
+  });
+
+  if (base.score == null) return withPriority({ questionsWeighted: 0 });
+
+  const importance = normalizeThemeImportance({ themeImportance });
+  const byId = new Map(questions.map(q => [q.id, q]));
+  const pairs = comparableAnswers(userAnswers, candidateAnswers, questions, { questionnaireVersion });
+
+  // 1. Poids propre de chaque question : influence × poids éditorial, plafonné.
+  const entries = pairs.map(p => {
+    const question = byId.get(p.questionId);
+    const influenceFactor = voteInfluenceMultiplier(voteInfluence, p.questionId);
+    return {
+      ...p,
+      themeFactor: themeMultiplier(importance, p.theme),
+      ownWeight: computeEffectiveQuestionWeight({
+        themeFactor: 1,               // appliqué à l'étape 2, thème par thème
+        influenceFactor,
+        editorialWeight: question?.weight ?? baselineWeight,
+        baselineWeight,
+      }),
+      influenceFactor,
+    };
+  });
+
+  // 2. Répartition : masse d'un thème = son importance, quel que soit son nombre de questions.
+  const weighted = balanceWeightsAcrossThemes(entries);
+
+  const totalWeight = weighted.reduce((s, e) => s + e.weight, 0);
+  const questionsWeighted = weighted.filter(e => e.weight > 0).length;
+
+  // Aucun poids : tous les thèmes concernés sont à « pas important », ou toutes les questions
+  // comparées sont sans influence. On ne divise pas par zéro et on n'invente pas de score.
+  if (!(totalWeight > 0)) {
+    return withPriority({ score: null, reason: 'no_weighted_questions', questionsWeighted: 0 });
+  }
+
+  const weightedSum = weighted.reduce(
+    (s, e) => s + e.weight * (1 - Math.abs(e.user - e.candidate) / 4), 0,
+  );
+  const raw = (weightedSum / totalWeight) * 100;
+  const score = Number.isFinite(raw) ? Math.max(0, Math.min(100, Math.round(raw))) : null;
+
+  const sortedByWeight = [...weighted]
+    .filter(e => e.weight > 0)
+    .sort((a, b) => (b.weight * Math.abs(b.user - b.candidate)) - (a.weight * Math.abs(a.user - a.candidate)));
+
+  return withPriority({
+    score,
+    reason: score == null ? 'weighting_failed' : null,
+    questionsWeighted,
+    themesCovered: [...new Set(weighted.filter(e => e.weight > 0).map(e => e.theme))],
+    // Les désaccords qui pèsent RÉELLEMENT dans ce classement — pas les plus grands écarts
+    // dans l'absolu, ce qui induirait en erreur sur un sujet déclaré sans importance.
+    weightedDisagreements: sortedByWeight.slice(0, 3).map(e => e.questionId),
+  });
 }
 
 /**

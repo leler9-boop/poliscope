@@ -23,7 +23,10 @@
 // produit explicite, prise quand le corpus vérifié sera suffisant — pas un effet de bord.
 
 import { rankCandidates } from './candidateMatch.js';
-import { rankEditorialMatches, SCORE_PROVENANCE } from './editorialMatch.js';
+import {
+  rankEditorialMatches, SCORE_PROVENANCE,
+  computeIdeologicalMatch, computeElectoralPriorityMatch,
+} from './editorialMatch.js';
 import {
   getEditorialAnswers,
   EDITORIAL_ANSWERS_VERSION,
@@ -117,6 +120,60 @@ export function rankCandidatesForSurface({
     mode: MATCH_MODE.EDITORIAL,
     provenance: editorial.results.length ? SCORE_PROVENANCE.EDITORIAL : null,
     dataSource: MODE_PROVENANCE[MATCH_MODE.EDITORIAL],
+    contractVersion: RANKING_CONTRACT_VERSION,
+  };
+}
+
+/**
+ * Les DEUX classements demandés par le produit, calculés sur les mêmes entrées.
+ *
+ *   `ideological` — « Le candidat dont les idées vous ressemblent le plus ».
+ *                   Réponses politiques seules, sans aucune pondération de priorité.
+ *   `electoral`   — « Le candidat le plus proche sur les sujets qui peuvent réellement
+ *                   influencer votre vote ». Pondéré par l'importance des thèmes et
+ *                   l'influence déclarée de chaque question.
+ *
+ * Les deux peuvent désigner des candidats différents : c'est le résultat le plus utile du
+ * dispositif, pas un défaut. Aucun des deux n'est une consigne de vote.
+ */
+export function rankBothWays({
+  candidates = [],
+  userAnswers = {},
+  questions = [],
+  questionSet = 'general',
+  themeImportance = null,
+  voteInfluence = {},
+} = {}) {
+  const build = (compute, extra) => {
+    const results = [];
+    const unscored = [];
+    for (const candidate of candidates) {
+      const match = compute({
+        userAnswers, questions,
+        candidateAnswers: getEditorialAnswers(candidate.id, questionSet),
+        ...extra,
+      });
+      if (match.score == null) unscored.push({ candidate, match });
+      else results.push({ candidate, match });
+    }
+    results.sort((a, b) => b.match.score - a.match.score
+      || String(a.candidate.id).localeCompare(String(b.candidate.id)));
+    return { results, unscored };
+  };
+
+  const ideological = build(computeIdeologicalMatch, {});
+  const electoral = build(computeElectoralPriorityMatch, { themeImportance, voteInfluence });
+
+  return {
+    ideological,
+    electoral,
+    // Les deux méthodes convergent-elles ? Si oui, l'interface le DIT au lieu d'afficher deux
+    // fois le même classement, ce qui laisserait croire à deux résultats indépendants.
+    sameWinner: Boolean(
+      ideological.results[0] && electoral.results[0]
+      && ideological.results[0].candidate.id === electoral.results[0].candidate.id,
+    ),
+    provenance: SCORE_PROVENANCE.EDITORIAL,
     contractVersion: RANKING_CONTRACT_VERSION,
   };
 }

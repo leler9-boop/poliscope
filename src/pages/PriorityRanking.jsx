@@ -4,6 +4,11 @@ import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { trackPriorityCompleted } from '../lib/analytics.js';
+import ThemeImportanceRating from '../components/ThemeImportanceRating.jsx';
+import {
+  equalImportance, importanceFromRanking, normalizeThemeImportance,
+  PRIORITY_SOURCE, IMPORTANCE_LEVEL,
+} from '../engine/priorityWeights.js';
 
 // Short descriptions shown under each theme name in the ranking list.
 // Aim: a 17-year-old immediately understands what each theme covers.
@@ -40,25 +45,38 @@ export default function PriorityRanking() {
   const storedPriority = useStore(s => s.priorityOrder);
   const t = createTranslator(language);
 
+  const setThemeImportance = useStore(s => s.setThemeImportance);
+  const storedImportance   = useStore(s => s.themeImportance);
+
   const [order, setOrder] = useState(storedPriority ?? [...THEMES_ORDER]);
+  // Mode d'évaluation. Le classement par glisser-déposer devient FACULTATIF : il n'est plus
+  // qu'un moyen d'affiner, et il alimente exactement le même contrat de pondération.
+  const [mode, setMode] = useState('rating');   // 'rating' | 'ranking'
+  const [levels, setLevels] = useState(
+    () => normalizeThemeImportance({ themeImportance: storedImportance, priorityOrder: storedPriority }).levels,
+  );
+
+  const fr = language !== 'en';
+
+  const startWith = (importance, source) => {
+    setThemeImportance({ ...importance, source });
+    // `themeWeights` (allocation sur 100) appartient à l'ancien modèle : on le neutralise pour
+    // qu'il ne coexiste pas avec une importance déclarée, ce qui produirait deux pondérations.
+    setThemeWeights(null);
+    trackPriorityCompleted({ priorityOrder: order, method: source });
+    startTest(testMode ?? 'medium');
+  };
+
+  const handleRatingConfirm = () => startWith({ levels }, PRIORITY_SOURCE.INDEPENDENT);
+  const handleEqual = () => startWith(equalImportance(), PRIORITY_SOURCE.EQUAL);
 
   const handleConfirm = () => {
-    trackPriorityCompleted({ priorityOrder: order });
     setPriority(order);
-    // An explicit ranking replaces any previous equal/custom weight allocation.
-    setThemeWeights(null);
-    startTest(testMode ?? 'medium');
+    // Le classement précis est CONVERTI vers le même contrat que les évaluations simples :
+    // sans cela, deux parcours produiraient deux échelles de poids incomparables.
+    startWith(importanceFromRanking(order), PRIORITY_SOURCE.RANKING);
   };
 
-  const handleSkip = () => {
-    setPriority([...THEMES_ORDER]);
-    // The button promises "all themes count equally" — without this, the matcher
-    // falls back to priorityOrder and silently applies 8→1 declaration-order weights.
-    const equal = {};
-    THEMES_ORDER.forEach(theme => { equal[theme] = 100 / THEMES_ORDER.length; });
-    setThemeWeights(equal);
-    startTest(testMode ?? 'medium');
-  };
 
   const title = language === 'fr'
     ? 'Quels sujets comptent le plus pour vous ?'
@@ -87,14 +105,63 @@ export default function PriorityRanking() {
         transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 leading-tight">
-          {title}
+          {mode === 'rating'
+            ? (fr ? 'Quelle importance ces sujets auront-ils dans votre choix ?' : 'How much will these topics matter in your choice?')
+            : title}
         </h1>
-        <div className="mb-8 space-y-2">
-          {bodyLines.map((line, i) => (
-            <p key={i} className="text-gray-500 text-sm leading-relaxed">{line}</p>
-          ))}
+        <div className="mb-6 space-y-2">
+          {mode === 'rating'
+            ? (
+              <p className="text-gray-500 text-sm leading-relaxed">
+                {fr
+                  ? 'Jugez chaque sujet séparément. Il n’y a rien à classer : répondez dans l’ordre que vous voulez, et passez ce que vous ne savez pas trancher.'
+                  : 'Rate each topic on its own. Nothing to rank: answer in any order, and skip what you cannot decide.'}
+              </p>
+            )
+            : bodyLines.map((line, i) => (
+              <p key={i} className="text-gray-500 text-sm leading-relaxed">{line}</p>
+            ))}
         </div>
       </motion.div>
+
+      {mode === 'rating' && (
+        <>
+          <ThemeImportanceRating
+            language={language}
+            levels={levels}
+            onChange={(theme, level) => setLevels(prev => ({ ...prev, [theme]: level }))}
+          />
+
+          <div className="flex flex-col gap-3 mt-8">
+            <button
+              onClick={handleRatingConfirm}
+              className="w-full bg-gray-900 hover:bg-black text-white font-semibold min-h-[56px] py-3.5 rounded-xl transition-colors text-sm"
+            >
+              {fr ? 'Commencer le questionnaire' : 'Start the questionnaire'}
+            </button>
+            <button
+              onClick={handleEqual}
+              className="w-full min-h-[48px] border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium py-2.5 rounded-xl text-sm transition-colors"
+            >
+              {fr ? 'Tous les sujets comptent à peu près autant' : 'All topics matter about the same'}
+            </button>
+            <button
+              onClick={() => setMode('ranking')}
+              className="w-full text-gray-400 hover:text-gray-600 font-medium py-2 text-sm transition-colors"
+            >
+              {fr ? 'Je préfère faire un classement précis' : 'I would rather rank them precisely'}
+            </button>
+          </div>
+          <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">
+            {fr
+              ? 'Ces choix servent uniquement à pondérer les sujets dans la comparaison avec les candidats. Ils ne modifient jamais vos réponses ni votre profil politique.'
+              : 'These choices only weight topics when comparing with candidates. They never change your answers or your political profile.'}
+          </p>
+        </>
+      )}
+
+      {mode === 'ranking' && (
+      <>
 
       {/* Drag hint */}
       <motion.p
@@ -183,12 +250,14 @@ export default function PriorityRanking() {
           {t('priorities_confirm')}
         </motion.button>
         <button
-          onClick={handleSkip}
+          onClick={() => setMode('rating')}
           className="w-full text-gray-400 hover:text-gray-600 font-medium py-2 text-sm transition-colors"
         >
-          {t('priorities_skip')}
+          {fr ? '← Revenir aux évaluations simples' : '← Back to simple ratings'}
         </button>
       </div>
+      </>
+      )}
     </div>
   );
 }
