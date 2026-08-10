@@ -6,76 +6,101 @@
 // de 6, `themeWeights` ignoré. Les pages Profil et Élection classaient différemment la même
 // personne. La règle depuis : un seul moteur, appelé au même endroit par toutes les surfaces.
 //
-// Ce module ajoute la sélection de VOIE, qui est la même décision produit partout :
-//   1. voie stricte  (`sourced-positions`)     — positions approuvées et relues ;
-//   2. voie éditoriale (`editorial-estimate-v1`) — estimations, explicitement demandée.
+// SÉLECTION DE VOIE — CONTRAT EXPLICITE
+// -------------------------------------
+// ⚠ CORRECTION 2026-08-10. La version précédente calculait la voie stricte, puis retournait
+// celle-ci « dès qu'elle produisait au moins un résultat ». Ce comportement était une bombe à
+// retardement : le jour où UN SEUL candidat aurait franchi le seuil strict, les neuf autres
+// auraient disparu de Profil et de la page Élection, sans erreur ni message. Le classement
+// public se serait silencieusement réduit à une personne.
 //
-// La voie stricte est TOUJOURS tentée en premier. La voie éditoriale ne prend le relais que
-// si l'appelant l'a demandée — jamais par accident, jamais en silence.
+// La voie est désormais choisie par l'appelant, jamais par la disponibilité des données :
+//   • `mode: 'editorial'` — TOUS les candidats passent par la voie éditoriale ;
+//   • `mode: 'strict'`    — TOUS les candidats passent par la voie stricte, et ceux qui
+//                           n'y sont pas admissibles restent visibles dans `unscored`.
+//
+// Aucun mélange, aucune sélection automatique. Passer en mode strict sera une décision
+// produit explicite, prise quand le corpus vérifié sera suffisant — pas un effet de bord.
 
 import { rankCandidates } from './candidateMatch.js';
 import { rankEditorialMatches, SCORE_PROVENANCE } from './editorialMatch.js';
 import { getEditorialAnswers } from '../data/candidateEditorialAnswers.js';
 
-/** Voies disponibles. */
+/** Voies disponibles. Le mode est une DÉCISION, pas une conséquence des données. */
 export const MATCH_MODE = Object.freeze({
-  STRICT:   'sourced-positions',
-  EDITORIAL: 'editorial-estimate-v1',
+  STRICT:    'strict',
+  EDITORIAL: 'editorial',
+});
+
+/** Provenance de données associée à chaque voie, pour l'affichage. */
+export const MODE_PROVENANCE = Object.freeze({
+  [MATCH_MODE.STRICT]:    'sourced-positions',
+  [MATCH_MODE.EDITORIAL]: 'editorial-estimate-v1',
 });
 
 /** Version du contrat de sélection de voie. */
-export const RANKING_CONTRACT_VERSION = 'ranking-v1';
+export const RANKING_CONTRACT_VERSION = 'ranking-v2-explicit-mode';
 
 /**
- * Classe des candidats, en choisissant la voie de façon explicite et traçable.
+ * Classe des candidats dans une voie EXPLICITEMENT choisie.
  *
  * @param {Object}  params
- * @param {Array}   params.candidates      candidats de l'élection
- * @param {Object}  params.userThemes      profil thématique de l'utilisateur (voie stricte)
- * @param {Object}  params.userAnswers     réponses brutes de l'utilisateur (voie éditoriale)
- * @param {Array}   params.questions       jeu de questions comparé
- * @param {string}  params.questionSet     `general` ou identifiant d'élection
- * @param {boolean} [params.allowEditorial] autorise la voie éditoriale en repli. FAUX par
- *                  défaut : aucune estimation ne s'affiche sans que l'appelant l'ait voulu.
+ * @param {Array}   params.candidates       candidats de l'élection
+ * @param {string}  params.mode             `'editorial'` ou `'strict'` — obligatoire en pratique
+ * @param {Object}  params.userThemes       profil thématique (voie stricte)
+ * @param {Object}  params.userAnswers      réponses brutes (voie éditoriale)
+ * @param {Object}  params.electionAnswers  réponses aux questions spécifiques (voie stricte)
+ * @param {Array}   params.questions        jeu de questions comparé
+ * @param {string}  params.questionSet      `general` ou identifiant d'élection
  * @returns {{results: Array, unscored: Array, mode: string, provenance: string|null}}
  */
 export function rankCandidatesForSurface({
   candidates = [],
+  mode = MATCH_MODE.EDITORIAL,
   userThemes = null,
   userAnswers = {},
+  electionAnswers = {},
   questions = [],
   questionSet = 'general',
-  allowEditorial = false,
   priorityOrder = [],
   themeWeights = null,
   language = 'fr',
+  // Injection utilisée par les tests et par un futur appelant qui fournirait lui-même le
+  // corpus : sans ces deux paramètres, la voie stricte ne voyait que les données globales.
+  approvedPositions = null,
+  sourceIsVerified = null,
+  // Conservé pour ne pas casser un appelant historique : `allowEditorial: true` demandait
+  // bien la voie éditoriale. Il ne peut plus, lui, provoquer de bascule automatique.
+  allowEditorial = undefined,
 } = {}) {
-  // ── Voie stricte ────────────────────────────────────────────────────────
-  const strict = userThemes
-    ? rankCandidates({ userThemes, priorityOrder, themeWeights, language, questions }, candidates)
-    : { results: [], unscored: candidates.map(candidate => ({ candidate, match: { score: null, reason: 'no_user_profile' } })) };
+  const resolvedMode = allowEditorial === true && mode == null ? MATCH_MODE.EDITORIAL : mode;
 
-  if (strict.results.length > 0) {
+  if (resolvedMode === MATCH_MODE.STRICT) {
+    // Voie stricte pour TOUS. Les non-admissibles restent visibles avec leur motif.
+    const strict = userThemes
+      ? rankCandidates(
+        {
+          userThemes, priorityOrder, themeWeights, language, questions,
+          // ⚠ Sans ceci, les réponses spécifiques de l'utilisateur n'atteignaient jamais le
+          // moteur strict : la page Élection aurait classé exactement comme la page Profil.
+          electionAnswers,
+          ...(approvedPositions ? { approvedPositions } : {}),
+          ...(sourceIsVerified ? { sourceIsVerified } : {}),
+        },
+        candidates,
+      )
+      : { results: [], unscored: candidates.map(candidate => ({ candidate, match: { score: null, reason: 'no_user_profile' } })) };
+
     return {
       ...strict,
       mode: MATCH_MODE.STRICT,
-      provenance: SCORE_PROVENANCE.VERIFIED,
+      provenance: strict.results.length ? SCORE_PROVENANCE.VERIFIED : null,
+      dataSource: MODE_PROVENANCE[MATCH_MODE.STRICT],
       contractVersion: RANKING_CONTRACT_VERSION,
     };
   }
 
-  // Aucune position approuvée : sans autorisation explicite, on n'affiche RIEN plutôt qu'une
-  // estimation présentée comme une vérification.
-  if (!allowEditorial) {
-    return {
-      ...strict,
-      mode: MATCH_MODE.STRICT,
-      provenance: null,
-      contractVersion: RANKING_CONTRACT_VERSION,
-    };
-  }
-
-  // ── Voie éditoriale, demandée explicitement ─────────────────────────────
+  // Voie éditoriale pour TOUS. Aucun candidat ne peut recevoir la provenance « vérifié ».
   const editorial = rankEditorialMatches(candidates, {
     userAnswers,
     questions,
@@ -86,6 +111,7 @@ export function rankCandidatesForSurface({
     ...editorial,
     mode: MATCH_MODE.EDITORIAL,
     provenance: editorial.results.length ? SCORE_PROVENANCE.EDITORIAL : null,
+    dataSource: MODE_PROVENANCE[MATCH_MODE.EDITORIAL],
     contractVersion: RANKING_CONTRACT_VERSION,
   };
 }

@@ -627,8 +627,11 @@ function MatchCoverageNotice({ rankedCandidates, answeredCount, totalQuestions, 
           {fr ? 'Indice de proximité sur 100' : 'Proximity index out of 100'}
         </span>{' '}
         {fr
-          ? '— ce n’est ni un pourcentage de mesures communes, ni une probabilité de vote, ni une recommandation. C’est une distance pondérée par vos priorités, amplifiée volontairement pour différencier les profils.'
-          : '— not a percentage of shared positions, not a probability, not a voting recommendation. It is a distance weighted by your priorities, deliberately amplified to separate profiles.'}
+          // ⚠ « amplifiée volontairement » décrivait l'étirement du moteur STRICT. La voie
+          // éditoriale V1 ne l'applique pas : son indice est une moyenne directe des écarts
+          // de réponse. Laisser cette phrase ici décrivait un calcul qui n'a pas lieu.
+          ? '— ce n’est ni un pourcentage de mesures communes, ni une probabilité de vote, ni une recommandation. C’est la moyenne des écarts entre vos réponses et celles attribuées au candidat, sur les sujets que vous avez tous les deux traités.'
+          : '— not a percentage of shared positions, not a probability, not a voting recommendation. It is the average gap between your answers and those attributed to the candidate, over the topics you both covered.'}
       </p>
       {answeredCount > 0 && (
         <p>
@@ -751,7 +754,8 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
       userAnswers: thisElectionAnswers,
       questions,
       questionSet: election.id,
-      allowEditorial: true,
+      mode: MATCH_MODE.EDITORIAL,
+      electionAnswers: thisElectionAnswers,
       priorityOrder,
       themeWeights,
       language,
@@ -924,7 +928,8 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         <EstimateNotice
           language={language}
           questionsCompared={rankedCandidates[0]?.match?.questionsCompared ?? null}
-          questionsAvailable={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+          questionsDocumented={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+          userAnswered={rankedCandidates[0]?.match?.userAnswered ?? null}
           updatedAt={rankedCandidates[0]?.match?.updatedAt ?? null}
         />
       )}
@@ -1264,7 +1269,11 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
   const match = candidate.match ?? null;
   const agreements    = match?.agreements    ?? [];
   const disagreements = match?.disagreements ?? [];
-  const aDesPreuves   = match?.breakdownSource === 'sourced-positions';
+  // Les deux voies produisent la même FORME d'accords/désaccords. Ce qui les distingue est
+  // dit ailleurs (bandeau d'estimation) : ici, refuser d'afficher les sujets comparés
+  // laisserait un score sans la moindre justification visible.
+  const aDesPreuves   = match?.breakdownSource === 'sourced-positions'
+                     || match?.breakdownSource === 'editorial-estimate-v1';
 
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition-all hover:shadow-sm ${

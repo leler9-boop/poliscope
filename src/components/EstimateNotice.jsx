@@ -17,7 +17,8 @@ import React from 'react';
 export default function EstimateNotice({
   language = 'fr',
   questionsCompared = null,
-  questionsAvailable = null,
+  questionsDocumented = null,
+  userAnswered = null,
   updatedAt = null,
   compact = false,
 }) {
@@ -34,10 +35,21 @@ export default function EstimateNotice({
       + 'estimates, not individually verified positions. They are dated and revised as '
       + 'announcements come.';
 
-  const coverage = questionsCompared != null && questionsAvailable != null
+  // ⚠ Ne JAMAIS écrire « 16 sur 16 ». Cette forme se lit comme « tout le questionnaire est
+  // couvert », alors que 112 questions de la banque ne sont pas encore documentées pour les
+  // candidats. On énonce les trois nombres séparément, chacun avec ce qu'il désigne vraiment.
+  const coverage = questionsCompared != null
     ? (fr
-      ? `Comparaison fondée sur ${questionsCompared} sujets communs sur ${questionsAvailable}.`
-      : `Based on ${questionsCompared} shared topics out of ${questionsAvailable}.`)
+      ? `Comparaison fondée sur ${questionsCompared} question${questionsCompared > 1 ? 's' : ''} `
+        + `actuellement documentée${questionsCompared > 1 ? 's' : ''} pour les candidats`
+        + (userAnswered != null ? `, parmi vos ${userAnswered} réponse${userAnswered > 1 ? 's' : ''}` : '')
+        + (questionsDocumented != null && questionsDocumented !== questionsCompared
+          ? ` (${questionsDocumented} documentées au total)` : '')
+        + '.'
+      : `Based on ${questionsCompared} question${questionsCompared > 1 ? 's' : ''} currently `
+        + `documented for candidates`
+        + (userAnswered != null ? `, out of your ${userAnswered} answer${userAnswered > 1 ? 's' : ''}` : '')
+        + '.')
     : null;
 
   const updated = updatedAt

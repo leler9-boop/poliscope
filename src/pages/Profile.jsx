@@ -293,7 +293,9 @@ export default function Profile() {
       userAnswers: answers ?? {},
       questions: coreQuestions,
       questionSet: 'general',
-      allowEditorial: true,
+      // V1 : voie éditoriale demandée EXPLICITEMENT pour tous les candidats. Le passage en
+      // mode strict sera une décision produit, pas une conséquence des données disponibles.
+      mode: MATCH_MODE.EDITORIAL,
       priorityOrder: priorityOrder ?? [],
       themeWeights: themeWeights ?? null,
       language,
@@ -1110,7 +1112,8 @@ export default function Profile() {
             <EstimateNotice
               language={language}
               questionsCompared={rankedCandidates[0]?.match?.questionsCompared ?? null}
-              questionsAvailable={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+              questionsDocumented={rankedCandidates[0]?.match?.questionsAvailable ?? null}
+              userAnswered={rankedCandidates[0]?.match?.userAnswered ?? null}
               updatedAt={rankedCandidates[0]?.match?.updatedAt ?? null}
             />
           )}

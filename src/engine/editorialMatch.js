@@ -52,11 +52,18 @@ export const EDITORIAL_MATCH_CONFIG = Object.freeze({
 });
 
 /**
- * Profil thématique dérivé de réponses 1–5, avec la MÊME normalisation que `calculateProfile`.
+ * Profil thématique dérivé de réponses 1–5.
  *
- * Volontairement sans `stretchScore` : l'étirement de la v1 sert à écarter les profils
- * utilisateurs les uns des autres pour l'affichage. L'appliquer ici déformerait la
- * comparaison, puisque les deux côtés ne passent pas par le même nombre de questions.
+ * ⚠ CE N'EST PAS le même pipeline que `calculateProfile()` / `calculateProfileV2()`, et il ne
+ * faut pas le prétendre. Ce qui est réellement partagé :
+ *   • l'échelle 1–5 et sa normalisation `(v - 1) / 4` ;
+ *   • l'application de `direction` question par question ;
+ *   • la pondération par `weight` ;
+ *   • le refus d'attribuer une valeur par défaut à un thème sans réponse.
+ * Ce qui diffère : le scorer canonique itère la banque ACTIVE complète et applique
+ * `stretchScore()` en v1. Ici on itère le jeu de questions fourni (les 17 d'une élection ne
+ * sont pas dans la banque générale) et on n'étire pas — l'étirement écarte les profils pour
+ * l'affichage, et l'appliquer à un seul des deux côtés fausserait la comparaison.
  *
  * @param {Object} answers  { questionId: 1..5 }
  * @param {Array}  questions questions portant `id`, `theme`, `direction`, `weight`
@@ -199,9 +206,17 @@ export function computeEditorialMatch({
   }
 
   const score = proximityFrom(pairs);
-  const sorted = [...pairs].sort(
-    (a, b) => Math.abs(a.user - a.candidate) - Math.abs(b.user - b.candidate),
-  );
+  const byId = new Map(questions.map(q => [q.id, q]));
+  // Forme IDENTIQUE à celle du moteur strict (`{ q, distance, position }`), pour que les
+  // surfaces affichent les accords et désaccords sans savoir quelle voie a produit le score.
+  const sorted = [...pairs]
+    .map(p => ({
+      q: byId.get(p.questionId),
+      distance: Math.abs(p.user - p.candidate),
+      position: { stance: p.candidate - 3, basis: p.basis },
+      userAnswer: p.user,
+    }))
+    .sort((a, b) => a.distance - b.distance);
   const candidateAnswerMap = Object.fromEntries(
     candidateAnswers.map(a => [a.questionId, a.answerValue]),
   );
@@ -211,10 +226,11 @@ export function computeEditorialMatch({
     score,
     reason: null,
     themes: themesFromAnswers(candidateAnswerMap, questions).themes,
-    // Les trois sujets les plus proches et les trois plus éloignés : c'est ce qui rend un
-    // score explicable. Un indice sans ses raisons n'est pas vérifiable par l'utilisateur.
-    agreements:    sorted.slice(0, 3).map(p => p.questionId),
-    disagreements: sorted.slice(-3).reverse().map(p => p.questionId),
+    // Les sujets les plus proches et les plus éloignés : c'est ce qui rend un score
+    // explicable. Un indice sans ses raisons n'est pas vérifiable par l'utilisateur.
+    agreements:    sorted.filter(x => x.distance <= 1).slice(0, 3),
+    disagreements: sorted.filter(x => x.distance >= 2).slice(-3).reverse(),
+    breakdownSource: EDITORIAL_ANSWERS_VERSION,
   };
 }
 

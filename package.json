@@ -22,7 +22,8 @@
     "test:migrations": "./supabase/tests/run-migration-tests.sh",
     "check:learn": "node scripts/check-learn-content.mjs",
     "lint": "npm run check:undef && npm run check:conventions && npm run check:brand && npm run check:learn && npm run check:questions",
-    "verify": "npm run lint && npm run test && npm run build"
+    "verify": "npm run lint && npm run check:matching && npm run test && npm run build",
+    "check:matching": "node scripts/check-matching.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.0",
