@@ -849,8 +849,8 @@ export default function Profile() {
                   </p>
                   <p className="text-[11px] text-amber-800 leading-relaxed">
                     {language === 'fr'
-                      ? <>Aucune position de candidat n’est encore sourcée et relue. Nous préférons ne rien afficher plutôt qu’un « meilleur match » calculé sur des estimations non vérifiées. {unscoredCandidates.length} candidats sont suivis — voir la page Élection.</>
-                      : <>No candidate position has been sourced and reviewed yet. We would rather show nothing than a “best match” computed from unverified estimates. {unscoredCandidates.length} candidates are tracked — see the Election page.</>}
+                      ? <>Vos réponses et les estimations disponibles pour les candidats n’ont pas encore assez de questions en commun pour produire un classement honnête. {unscoredCandidates.length} candidats sont suivis — voir la page Élection.</>
+                      : <>Your answers and the available candidate estimates do not yet share enough questions to produce an honest ranking. {unscoredCandidates.length} candidates are tracked — see the Election page.</>}
                   </p>
                 </motion.div>
               )}

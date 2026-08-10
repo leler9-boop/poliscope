@@ -56,7 +56,7 @@ export const RANKING_CONTRACT_VERSION = 'ranking-v2-explicit-mode';
  */
 export function rankCandidatesForSurface({
   candidates = [],
-  mode = MATCH_MODE.EDITORIAL,
+  mode,
   userThemes = null,
   userAnswers = {},
   electionAnswers = {},
@@ -69,13 +69,15 @@ export function rankCandidatesForSurface({
   // corpus : sans ces deux paramètres, la voie stricte ne voyait que les données globales.
   approvedPositions = null,
   sourceIsVerified = null,
-  // Conservé pour ne pas casser un appelant historique : `allowEditorial: true` demandait
-  // bien la voie éditoriale. Il ne peut plus, lui, provoquer de bascule automatique.
-  allowEditorial = undefined,
 } = {}) {
-  const resolvedMode = allowEditorial === true && mode == null ? MATCH_MODE.EDITORIAL : mode;
+  if (!Object.values(MATCH_MODE).includes(mode)) {
+    throw new TypeError(
+      `Mode de matching invalide ou absent : ${String(mode)}. `
+      + `Utilisez explicitement "${MATCH_MODE.EDITORIAL}" ou "${MATCH_MODE.STRICT}".`,
+    );
+  }
 
-  if (resolvedMode === MATCH_MODE.STRICT) {
+  if (mode === MATCH_MODE.STRICT) {
     // Voie stricte pour TOUS. Les non-admissibles restent visibles avec leur motif.
     const strict = userThemes
       ? rankCandidates(

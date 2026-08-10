@@ -46,12 +46,12 @@ const fullStrictCorpus = FR2027.specificQuestions.map(q => ({
 const STRONG = new Set(Object.values(ANSWER_BASIS)
   .filter(b => b !== ANSWER_BASIS.EDITORIAL_INFERENCE && b !== ANSWER_BASIS.UNKNOWN));
 
-test('une provenance forte exige toujours un raisonnement individuel', () => {
+test('une provenance forte exige toujours un raisonnement individuel et une source', () => {
   const offenders = EDITORIAL_ANSWERS
-    .filter(a => STRONG.has(a.basis) && !a.rationale)
+    .filter(a => STRONG.has(a.basis) && (!a.rationale || a.sourceIds.length === 0))
     .map(a => `${a.electionCandidateId}/${a.questionId} (${a.basis})`);
   assert.deepEqual(offenders.slice(0, 10), [],
-    `${offenders.length} réponses portent une base forte sans justification propre`);
+    `${offenders.length} réponses portent une base forte sans justification et source propres`);
 });
 
 test('aucune question ne distribue une provenance forte à ses dix candidats par héritage', () => {
@@ -142,6 +142,17 @@ test('le mode est une décision de l’appelant, jamais une conséquence des don
     userThemes, questions: CORE, questionSet: 'general',
   });
   assert.notEqual(editorial.mode, strict.mode, 'le mode demandé n’est pas respecté');
+});
+
+test('un mode absent ou inconnu échoue fermé au lieu de publier une estimation implicite', () => {
+  assert.throws(
+    () => rankCandidatesForSurface({ candidates: FR2027.candidates }),
+    /Mode de matching invalide ou absent/,
+  );
+  assert.throws(
+    () => rankCandidatesForSurface({ candidates: FR2027.candidates, mode: 'automatique' }),
+    /Mode de matching invalide ou absent/,
+  );
 });
 
 // ─── 3. Les réponses électorales atteignent le moteur strict ───────────────

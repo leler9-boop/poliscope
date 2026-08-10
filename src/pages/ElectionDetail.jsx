@@ -680,8 +680,8 @@ function TrackedNotComparable({ electionId, language }) {
       </p>
       <p className="text-xs text-gray-500 mb-3 leading-relaxed">
         {fr
-          ? 'Cet annuaire distingue les candidatures déclarées, conditionnelles, les primaires, les personnes seulement pressenties et les retraits. Aucun de ces noms n’entre dans le classement tant que ses positions n’ont pas été sourcées et relues.'
-          : 'This directory distinguishes declared and conditional candidacies, primaries, potential candidates and withdrawals. Nobody enters the ranking until their positions are sourced and reviewed.'}
+          ? 'Cet annuaire distingue les candidatures déclarées, conditionnelles, les primaires, les personnes seulement pressenties et les retraits. Un nom n’entre dans le classement que lorsqu’une estimation éditoriale suffisamment complète a été préparée pour lui.'
+          : 'This directory distinguishes declared and conditional candidacies, primaries, potential candidates and withdrawals. A person enters the ranking only after a sufficiently complete editorial estimate has been prepared.'}
         <span className="block mt-1 text-gray-400">
           {fr
             ? 'Programme : M0 aucun corpus 2027 · M1 orientations · M2 propositions thématiques · M3 programme officiel partiel · M4 complet · M5 version électorale archivée.'

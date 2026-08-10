@@ -57,6 +57,35 @@ export const ANSWER_STATE = Object.freeze({
 });
 
 /**
+ * Normalise la documentation individuelle d'une estimation.
+ *
+ * Une justification éditoriale explique la valeur, mais ne prouve pas à elle seule qu'elle
+ * vient d'un programme officiel, d'un vote parlementaire ou d'une déclaration directe. Une
+ * base forte n'est donc conservée que lorsque des identifiants de sources sont effectivement
+ * enregistrés. Les entrées historiques sous forme de texte restent des déductions éditoriales.
+ */
+function candidateEvidence(row, candidateId) {
+  const entry = row?.evidence?.[candidateId];
+  if (!entry) {
+    return { basis: ANSWER_BASIS.EDITORIAL_INFERENCE, rationale: null, sourceIds: [] };
+  }
+
+  const rationale = typeof entry === 'string' ? entry : (entry.rationale ?? null);
+  const sourceIds = typeof entry === 'object' && Array.isArray(entry.sourceIds)
+    ? entry.sourceIds.filter(Boolean)
+    : [];
+  const requestedBasis = typeof entry === 'object' && entry.basis ? entry.basis : row?.basis;
+
+  return {
+    basis: sourceIds.length > 0
+      ? (requestedBasis ?? ANSWER_BASIS.EDITORIAL_INFERENCE)
+      : ANSWER_BASIS.EDITORIAL_INFERENCE,
+    rationale,
+    sourceIds,
+  };
+}
+
+/**
  * Relecture des 17 questions de `fr_2027`.
  *
  * ⚠ CORRECTION 2026-08-10 : `basis` s'appliquait autrefois à la LIGNE ENTIÈRE, donc aux dix
@@ -134,11 +163,8 @@ function buildFromElection(electionId, review) {
     for (const candidate of election.candidates) {
       const value = question.positions?.[candidate.id];
       const known = [1, 2, 3, 4, 5].includes(value);
-      // Provenance INDIVIDUELLE : une base forte exige un raisonnement propre au candidat.
-      const individual = row?.evidence?.[candidate.id] ?? null;
-      const basis = !known ? ANSWER_BASIS.UNKNOWN
-        : individual ? (row?.basis ?? ANSWER_BASIS.EDITORIAL_INFERENCE)
-        : ANSWER_BASIS.EDITORIAL_INFERENCE;
+      // Provenance INDIVIDUELLE : une base forte exige un raisonnement et une source propres.
+      const individual = candidateEvidence(row, candidate.id);
       out.push({
         candidateId: resolveCandidateId(candidate.id) ?? candidate.id,
         electionCandidateId: candidate.id,
@@ -146,9 +172,9 @@ function buildFromElection(electionId, review) {
         questionSet: electionId,
         answerValue: known ? value : null,
         answerState: known ? ANSWER_STATE.ESTIMATED : ANSWER_STATE.UNKNOWN,
-        basis,
-        rationale: individual,
-        sourceIds: [],
+        basis: known ? individual.basis : ANSWER_BASIS.UNKNOWN,
+        rationale: individual.rationale,
+        sourceIds: known ? individual.sourceIds : [],
         validFrom: EDITORIAL_REVIEWED_AT,
         reviewedAt: EDITORIAL_REVIEWED_AT,
         supersedesId: null,
@@ -229,10 +255,7 @@ function buildGeneralAnswers() {
     GENERAL_CANDIDATE_ORDER.forEach((electionCandidateId, index) => {
       const value = row.v[index];
       const known = [1, 2, 3, 4, 5].includes(value);
-      const individual = row.evidence?.[electionCandidateId] ?? null;
-      const basis = !known ? ANSWER_BASIS.UNKNOWN
-        : individual ? row.basis
-        : ANSWER_BASIS.EDITORIAL_INFERENCE;
+      const individual = candidateEvidence(row, electionCandidateId);
       out.push({
         candidateId: resolveCandidateId(electionCandidateId) ?? electionCandidateId,
         electionCandidateId,
@@ -240,9 +263,9 @@ function buildGeneralAnswers() {
         questionSet: 'general',
         answerValue: known ? value : null,
         answerState: known ? ANSWER_STATE.ESTIMATED : ANSWER_STATE.UNKNOWN,
-        basis,
-        rationale: individual,
-        sourceIds: [],
+        basis: known ? individual.basis : ANSWER_BASIS.UNKNOWN,
+        rationale: individual.rationale,
+        sourceIds: known ? individual.sourceIds : [],
         validFrom: EDITORIAL_REVIEWED_AT,
         reviewedAt: EDITORIAL_REVIEWED_AT,
         supersedesId: null,

@@ -86,8 +86,8 @@ export default function Landing() {
       Icon: IconVote,
       title: language === 'fr' ? 'Élections réelles' : 'Real elections',
       desc:  language === 'fr'
-        ? 'Comparez votre profil aux candidats des vraies élections, à partir de positions sourcées et relues.'
-        : 'Compare yourself to candidates in real elections, with precise alignment scores.',
+        ? 'Comparez vos réponses à celles que Poliscop attribue aux candidats à partir de leurs positions publiques. Chaque résultat indique clairement qu’il s’agit d’une estimation.'
+        : 'Compare your answers with those Poliscop attributes to candidates from their public positions. Every result is clearly labelled as an estimate.',
       action:      profile ? () => navigate('elections') : null,
       actionLabel: language === 'fr' ? 'Explorer les élections →' : 'Explore elections →',
     },
