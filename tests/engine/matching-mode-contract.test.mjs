@@ -8,7 +8,7 @@
 //    message, sans qu'aucun test ne bouge. Le classement public se serait réduit à une
 //    personne.
 //
-// 2. La provenance était déclarée par LIGNE de question, donc héritée par les dix candidats :
+// 2. La provenance était déclarée par LIGNE de question, donc héritée par tous les candidats :
 //    285 réponses sur 330 portaient `official-programme`, `parliamentary-record` ou
 //    `direct-current` sans le moindre raisonnement individuel et avec `sourceIds` vide.
 //
@@ -26,7 +26,7 @@ import { computeCandidateMatch } from '../../src/engine/candidateMatch.js';
 import { elections } from '../../src/data/elections.js';
 import { questions as allQuestions, THEMES_ORDER } from '../../src/data/questions.js';
 import { resolveCandidateId } from '../../src/data/candidateRegistry.js';
-import { REVIEW_STATUS } from '../../src/data/candidateProvenance.js';
+import { REVIEW_STATUS, SOURCE_DOCUMENTS } from '../../src/data/candidateProvenance.js';
 
 const FR2027 = elections.find(e => e.id === 'fr_2027');
 const CORE = allQuestions.filter(q => q.status === 'CORE');
@@ -54,7 +54,7 @@ test('une provenance forte exige toujours un raisonnement individuel et une sour
     `${offenders.length} réponses portent une base forte sans justification et source propres`);
 });
 
-test('aucune question ne distribue une provenance forte à ses dix candidats par héritage', () => {
+test('aucune question ne distribue une provenance forte à tous ses candidats par héritage', () => {
   const byQuestion = new Map();
   for (const a of EDITORIAL_ANSWERS) {
     if (!byQuestion.has(a.questionId)) byQuestion.set(a.questionId, []);
@@ -71,11 +71,15 @@ test('aucune question ne distribue une provenance forte à ses dix candidats par
   }
 });
 
-test('aucune source n’est inventée', () => {
+test('toute source éditoriale citée existe dans le registre vérifié', () => {
+  const knownSourceIds = new Set(SOURCE_DOCUMENTS
+    .filter(source => source.status === 'active' && source.verifiedAt)
+    .map(source => source.id));
   for (const a of EDITORIAL_ANSWERS) {
     assert.ok(Array.isArray(a.sourceIds), `${a.questionId} : sourceIds absent`);
-    // Aucune source n'est enregistrée à ce jour. En fabriquer une donnerait une preuve fausse.
-    assert.equal(a.sourceIds.length, 0, `${a.questionId} : source inventée`);
+    for (const sourceId of a.sourceIds) {
+      assert.ok(knownSourceIds.has(sourceId), `${a.questionId} : source inconnue ou non vérifiée « ${sourceId} »`);
+    }
   }
 });
 
@@ -100,7 +104,7 @@ test('le mode éditorial garde TOUS les candidats, même si la voie stricte pour
     approvedPositions: fullStrictCorpus,
   });
   assert.equal(r.mode, MATCH_MODE.EDITORIAL);
-  assert.equal(r.results.length, 10, 'des candidats ont disparu du classement éditorial');
+  assert.equal(r.results.length, 11, 'des candidats ont disparu du classement éditorial');
   assert.equal(r.dataSource, MODE_PROVENANCE[MATCH_MODE.EDITORIAL]);
 });
 
@@ -128,7 +132,7 @@ test('le mode strict n’emprunte jamais la voie éditoriale et garde les autres
   assert.equal(r.dataSource, MODE_PROVENANCE[MATCH_MODE.STRICT]);
   // Aucun corpus approuvé aujourd'hui : zéro score, mais les dix restent visibles.
   assert.equal(r.results.length, 0);
-  assert.equal(r.unscored.length, 10, 'des candidats non admissibles ont été escamotés');
+  assert.equal(r.unscored.length, 11, 'des candidats non admissibles ont été escamotés');
   for (const { match } of r.unscored) assert.ok(match.reason, 'un motif est requis');
 });
 

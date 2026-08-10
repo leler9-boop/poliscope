@@ -120,12 +120,7 @@ test('chaque candidat d’élection se résout vers le registre canonique', () =
  * personne à la liste des candidats d'une présidentielle est une décision de contenu
  * politique, qui ne se prend pas depuis un test.
  */
-const CORPUS_SANS_SURFACE = {
-  'david-lisnard':
-    'Déclaré au registre et doté du corpus le plus avancé (17 positions, 11 tranchées), mais '
-    + 'absent de la liste des candidats de fr_2027 dans elections.js. Signalé le 2026-08-10 : '
-    + 'l’inscrire dans la comparaison présidentielle est une décision éditoriale, pas technique.',
-};
+const CORPUS_SANS_SURFACE = {};
 
 test('les positions codées sont rattachées à des candidats réellement atteignables', () => {
   // Défaut classique : positions saisies sous un identifiant que plus aucune surface

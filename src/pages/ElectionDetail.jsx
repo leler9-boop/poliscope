@@ -743,7 +743,7 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   // tous les thèmes comparables à poids nul, aucune donnée). Ils restent VISIBLES avec leur
   // motif : les faire disparaître laisserait croire qu'ils n'existent pas.
   // 2026-08-10 — la voie stricte reste tentée d'abord. Sans position approuvée, la page
-  // affichait « Aucune donnée comparable » pour les dix candidats. Le repli éditorial est
+  // affichait « Aucune donnée comparable » pour tous les candidats. Le repli éditorial est
   // demandé EXPLICITEMENT ici, et compare les réponses de l'utilisateur aux 17 questions
   // 2027 avec celles attribuées aux candidats. Tout résultat porte sa provenance.
   const ranking = useMemo(() => {

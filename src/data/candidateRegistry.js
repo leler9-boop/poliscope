@@ -127,7 +127,7 @@ export const CANDIDATE_REGISTRY = [
     statusSource: 'Candidature annoncée le 3 septembre 2024 ; campagne officiellement lancée à l’été 2026.',
     statusSourceIds: ['src-philippe-campagne-2027', 'src-lcp-candidats-2027-2026-07-10'],
     trackedFor: ['fr_2027'], matchReady: false, profileSource: PROFILE_SOURCE.LEGACY_MANUAL_V1,
-    programMaturity: 'M1', programSourceIds: ['src-philippe-campagne-2027'], lastReviewed: '2026-08-10',
+    programMaturity: 'M1', programSourceIds: ['src-philippe-campagne-2027', 'src-lemonde-philippe-vision-2026-07-06'], lastReviewed: '2026-08-10',
   },
   {
     id: 'gabriel-attal', displayName: 'Gabriel Attal', legacyIds: ['attal'],
@@ -144,6 +144,7 @@ export const CANDIDATE_REGISTRY = [
       'src-attal-europe-2026-06-24',
       'src-attal-profile-2026-05-22',
       'src-attal-tf1-rn-2026-07-07',
+      'src-lemonde-attal-campagne-2026-08-08',
     ], lastReviewed: '2026-08-10',
   },
   {
@@ -206,20 +207,19 @@ export const CANDIDATE_REGISTRY = [
     matchReady: false, profileSource: PROFILE_SOURCE.LEGACY_MANUAL_V1, programMaturity: 'M1', lastReviewed: '2026-08-10',
   },
 
-  // ── France — présidentielle 2027 : suivis, PAS encore comparables ──────────
+  // ── France — présidentielle 2027 : autres personnes suivies ───────────────
   //
-  // Ces personnes sont vérifiées et déclarées, mais aucun profil thématique sourcé n'existe
-  // pour elles. Conformément à la règle « mieux vaut exclure du matching que publier un score
-  // non sourcé », elles apparaissent à l'annuaire et jamais dans le classement.
+  // `matchReady` décrit ici la voie stricte sourcée et relue. La voie éditoriale V1 peut
+  // néanmoins comparer explicitement une estimation quand un corpus complet est publié.
   {
-    id: 'david-lisnard', displayName: 'David Lisnard', legacyIds: [],
-    party: 'Nouvelle Énergie', elections: [],
+    id: 'david-lisnard', displayName: 'David Lisnard', legacyIds: ['lisnard'],
+    party: 'Nouvelle Énergie', elections: ['fr_2027'],
     trackedFor: ['fr_2027'],
     status: CANDIDACY_STATUS.DECLARED, statusDate: '2026-03-31',
     statusSource: 'Candidature officialisée fin mars 2026 ; programme officiel structuré sur le site de Nouvelle Énergie.',
     statusSourceIds: ['src-lcp-candidats-2027-2026-07-10', 'src-lisnard-programme-2027'],
     matchReady: false,
-    notMatchReadyReason: '11 positions sourcées sont codées, mais aucune n’est encore relue indépendamment. Elles restent exclues du matching jusqu’à validation.',
+    notMatchReadyReason: 'La comparaison V1 repose sur une estimation éditoriale complète. La voie « vérifiée » reste indisponible tant que les positions sourcées ne sont pas relues indépendamment.',
     profileSource: PROFILE_SOURCE.SOURCED_POSITIONS, programMaturity: 'M3',
     programSourceIds: [
       'src-lisnard-programme-2027',
@@ -227,6 +227,11 @@ export const CANDIDATE_REGISTRY = [
       'src-lisnard-programme-ambition-2027',
       'src-lisnard-programme-security-2027',
       'src-lisnard-programme-immigration-2027',
+      'src-lisnard-programme-sante-2027',
+      'src-lisnard-programme-education-2027',
+      'src-lisnard-logement-2027',
+      'src-lisnard-fiscalite-2027',
+      'src-lisnard-ppe3-2027',
       'src-lisnard-bayeux-2026-06-17',
       'src-lisnard-strategy-2026-06-29',
       'src-lisnard-saint-raphael-2026-07-03',

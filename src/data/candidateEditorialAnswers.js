@@ -18,7 +18,7 @@
 //
 // ORIGINE DES VALEURS
 // -------------------
-// Les 170 valeurs proviennent de `elections.js → specificQuestions[].positions`, qui servaient
+// Les 187 valeurs proviennent de `elections.js → specificQuestions[].positions`, qui servaient
 // déjà de repli silencieux avant `83bde2b`. Elles ne sont PAS réactivées telles quelles : chaque
 // ligne de question a été relue le 2026-08-10, sa base de codage déclarée, et les divergences
 // individuelles par rapport à la ligne du parti explicitement notées ci-dessous.
@@ -101,44 +101,62 @@ function candidateEvidence(row, candidateId) {
  */
 const FR2027_REVIEW = {
   fr_2027_q1:  { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { lepen_2027: 'Le RN a défendu la retraite à 60 ans puis reculé vers 62 : position moins tranchée que la gauche.' } },
+    evidence: { lepen_2027: 'Le RN a défendu la retraite à 60 ans puis reculé vers 62 : position moins tranchée que la gauche.',
+      lisnard: { rationale: 'Rejette explicitement l’abaissement de l’âge légal proposé par le RN.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-bfmtv-retraites-2025-11-18'] } } },
   fr_2027_q2:  { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
     evidence: { ruffin: 'Ruffin refuse le cadrage identitaire mais ne défend pas l’ouverture des frontières, d’où une position médiane.',
-             roussel_2027: 'Le PCF lie immigration et dumping social : ni fermeture, ni accueil inconditionnel.' } },
+             roussel_2027: 'Le PCF lie immigration et dumping social : ni fermeture, ni accueil inconditionnel.',
+             lisnard: { rationale: 'Propose notamment de diviser par huit le nombre de titres de séjour.', sourceIds: ['src-lisnard-programme-immigration-2027'] } } },
   fr_2027_q3:  { basis: ANSWER_BASIS.PARTY_ENDORSED,
     evidence: { roussel_2027: 'Divergence majeure avec le reste de la gauche : le PCF est ouvertement pro-nucléaire.',
-             melenchon_2027: 'LFI défend la sortie du nucléaire, à l’opposé du PCF.' } },
+             melenchon_2027: 'LFI défend la sortie du nucléaire, à l’opposé du PCF.',
+             lisnard: { rationale: 'Défend de nouveaux EPR2 et de petits réacteurs modulaires.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-strategy-2026-06-29'] } } },
   fr_2027_q4:  { basis: ANSWER_BASIS.CONSISTENT_RECORD,
-    evidence: { melenchon_2027: 'Souverainisme de gauche : opposition à l’intégration, distincte du rejet identitaire du RN.' } },
-  fr_2027_q5:  { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, evidence: {} },
+    evidence: { melenchon_2027: 'Souverainisme de gauche : opposition à l’intégration, distincte du rejet identitaire du RN.',
+      lisnard: { rationale: 'Juge l’Union nécessaire mais refuse le fédéralisme et veut redistribuer ses compétences.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-institutions-2027'] } } },
+  fr_2027_q5:  { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lisnard: { rationale: 'Promet des moyens ciblés, notamment pour les enseignants, mais présente la santé comme un problème d’organisation plutôt que de dépense globale.', sourceIds: ['src-lisnard-programme-sante-2027', 'src-lisnard-programme-education-2027'] } } },
   fr_2027_q6:  { basis: ANSWER_BASIS.PARTY_ENDORSED,
-    evidence: { roussel_2027: 'Le PCF conditionne l’effort climatique au pouvoir d’achat des ménages modestes.' } },
+    evidence: { roussel_2027: 'Le PCF conditionne l’effort climatique au pouvoir d’achat des ménages modestes.',
+      lisnard: { rationale: 'Rejette explicitement l’écologie punitive et les mesures qui renchérissent la vie quotidienne.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-saint-raphael-2026-07-03'] } } },
   fr_2027_q7:  { basis: ANSWER_BASIS.CONSISTENT_RECORD,
-    evidence: { roussel_2027: 'Roussel assume une ligne sécuritaire nettement plus marquée que LFI.' } },
+    evidence: { roussel_2027: 'Roussel assume une ligne sécuritaire nettement plus marquée que LFI.',
+      lisnard: { rationale: 'Propose plus de moyens et de pouvoirs pour les forces de sécurité.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-security-2027'] } } },
   fr_2027_q8:  { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { lepen_2027: 'Le RN ne défend pas la baisse de l’impôt sur les sociétés comme la droite libérale.' } },
+    evidence: { lepen_2027: 'Le RN ne défend pas la baisse de l’impôt sur les sociétés comme la droite libérale.',
+      lisnard: { rationale: 'Propose une baisse de l’impôt sur les sociétés à 20 % et des impôts de production.', sourceIds: ['src-lisnard-fiscalite-2027', 'src-lisnard-programme-ambition-2027'] } } },
   fr_2027_q9:  { basis: ANSWER_BASIS.DIRECT_CURRENT,
     evidence: { melenchon_2027: 'LFI soutient l’Ukraine mais refuse la livraison d’armes ; position basse, non nulle.',
-             zemmour_2027: 'Position la plus défavorable au soutien militaire.' } },
+             zemmour_2027: 'Position la plus défavorable au soutien militaire.',
+             lisnard: { rationale: 'Soutient l’Ukraine et le renforcement des capacités européennes de défense, sans engagement littéral illimité.', sourceIds: ['src-lisnard-strategy-2026-06-29'] } } },
   fr_2027_q10: { basis: ANSWER_BASIS.CONSISTENT_RECORD,
     evidence: { roussel_2027: 'Laïcité stricte assumée, contrairement à LFI.',
-             melenchon_2027: 'LFI conteste la laïcité dite « de combat ».' } },
-  fr_2027_q11: { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, evidence: {} },
-  fr_2027_q12: { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, evidence: {} },
-  fr_2027_q13: { basis: ANSWER_BASIS.PARTY_ENDORSED, evidence: {} },
+             melenchon_2027: 'LFI conteste la laïcité dite « de combat ».',
+             lisnard: { rationale: 'Propose notamment l’interdiction du voile à l’université, sans interdiction générale dans tout espace public.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-security-2027'] } } },
+  fr_2027_q11: { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lisnard: { rationale: 'Privilégie l’augmentation du salaire net par la baisse des charges plutôt qu’une hausse administrée du SMIC.', sourceIds: ['src-lisnard-saint-raphael-2026-07-03'] } } },
+  fr_2027_q12: { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lisnard: { rationale: 'Privilégie la libération de l’offre et de la propriété plutôt que l’encadrement des loyers.', sourceIds: ['src-lisnard-logement-2027'] } } },
+  fr_2027_q13: { basis: ANSWER_BASIS.PARTY_ENDORSED,
+    evidence: { lisnard: 'Aucune position directe trouvée sur la gratuité universitaire ; valeur prudente déduite de sa doctrine de financement et de libre choix.' } },
   fr_2027_q14: { basis: ANSWER_BASIS.PARTY_ENDORSED,
-    evidence: { roussel_2027: 'Sortie des fossiles adossée au nucléaire, pas aux seules renouvelables.' } },
+    evidence: { roussel_2027: 'Sortie des fossiles adossée au nucléaire, pas aux seules renouvelables.',
+      lisnard: { rationale: 'Soutient la décarbonation mais rejette les calendriers contraints jugés irréalistes ; le délai exact de 2040 n’est pas documenté.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-ppe3-2027'] } } },
   fr_2027_q15: { basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { lepen_2027: 'Le RN défend le référendum d’initiative citoyenne, comme une partie de la gauche.' } },
+    evidence: { lepen_2027: 'Le RN défend le référendum d’initiative citoyenne, comme une partie de la gauche.',
+      lisnard: { rationale: 'Promet de rendre praticable le référendum d’initiative populaire.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-bayeux-2026-06-17'] } } },
   fr_2027_q16: { basis: ANSWER_BASIS.CONSISTENT_RECORD,
-    evidence: { roussel_2027: 'Le PCF a rompu avec sa tradition de désarmement unilatéral.' } },
-  fr_2027_q17: { basis: ANSWER_BASIS.PARTY_ENDORSED, evidence: {} },
+    evidence: { roussel_2027: 'Le PCF a rompu avec sa tradition de désarmement unilatéral.',
+      lisnard: { rationale: 'Demande une réévaluation à la hausse de l’arsenal et le maintien de l’autonomie stratégique.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-dissuasion-2026-03-06'] } } },
+  fr_2027_q17: { basis: ANSWER_BASIS.PARTY_ENDORSED,
+    evidence: { lisnard: { rationale: 'Sa doctrine fiscale vise une baisse générale des prélèvements et de l’impôt sur les sociétés, donc pas une forte hausse sectorielle.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-fiscalite-2027'] } } },
 };
 
 // REDONDANCE OBSERVÉE — à ne pas décrire de travers.
 //
 // `fr_2027_q1` (abaisser l'âge de la retraite) et `fr_2027_q11` (augmenter le SMIC) reçoivent
-// exactement la même ligne de dix réponses : 4 2 2 5 4 5 1 5 5 1. De même `q12` et `q13` ne
+// produisaient exactement la même ligne de dix réponses avant l’ajout de Lisnard. De même
+// `q12` et `q13` ne
 // diffèrent que sur un candidat.
 //
 // Ce n'est PAS un « pouvoir discriminant nul » : chacune sépare fortement les candidats, et
@@ -147,7 +165,7 @@ const FR2027_REVIEW = {
 // dans le corpus candidat actuel. Le poids de ce clivage économique est ainsi compté deux fois.
 //
 // Constat consigné, questions conservées : il faudra vérifier si la redondance vient des
-// questions elles-mêmes ou d'un codage trop grossier, ce que 10 candidats ne suffisent pas à
+// questions elles-mêmes ou d'un codage trop grossier, ce que ce corpus réduit ne suffit pas à
 // trancher.
 
 /**
@@ -197,7 +215,7 @@ function buildFromElection(electionId, review) {
 // Ordre des colonnes, une fois pour toutes :
 const GENERAL_CANDIDATE_ORDER = [
   'lepen_2027', 'philippe', 'attal', 'melenchon_2027', 'glucksmann',
-  'tondelier', 'retailleau', 'ruffin', 'roussel_2027', 'zemmour_2027',
+  'tondelier', 'retailleau', 'ruffin', 'roussel_2027', 'zemmour_2027', 'lisnard',
 ];
 
 /**
@@ -209,43 +227,59 @@ const GENERAL_CANDIDATE_ORDER = [
  * sa famille politique.
  */
 const CORE_ANSWERS = {
-  //            LePen Phil Attal Mélen Gluck Tond Retail Ruffin Rouss Zemm
-  ECO_23: { v: [   2,   4,    4,    1,    2,   1,     4,     1,    2,   4], basis: ANSWER_BASIS.CONSISTENT_RECORD,
-    evidence: { lepen_2027: 'Ligne social-nationaliste : le RN ne défend pas la croissance au prix des inégalités.' } },
-  SOC_7:  { v: [   4,   2,    1,    1,    1,   1,     5,     2,    2,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+  //            LePen Phil Attal Mélen Gluck Tond Retail Ruffin Rouss Zemm Lisn
+  ECO_23: { v: [   2,   4,    4,    1,    2,   1,     4,     1,    2,   4,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    evidence: { lepen_2027: 'Ligne social-nationaliste : le RN ne défend pas la croissance au prix des inégalités.',
+      lisnard: { rationale: 'Place la croissance, l’entreprise et la baisse des prélèvements au cœur de son projet.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-fiscalite-2027'] } } },
+  SOC_7:  { v: [   4,   2,    1,    1,    1,   1,     5,     2,    2,   5,   3], basis: ANSWER_BASIS.CONSISTENT_RECORD,
     evidence: { attal: 'Position personnelle nettement progressiste, distincte d’une partie de sa majorité.',
-             retailleau: 'Engagement constant et ancien contre le mariage pour tous.' } },
-  SOC_16: { v: [   1,   2,    1,    4,    2,   4,     1,     2,    1,   1], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
+             retailleau: 'Engagement constant et ancien contre le mariage pour tous.',
+             lisnard: 'Aucune proposition suffisamment directe sur la famille dans le corpus actuel : valeur médiane, à revoir.' } },
+  SOC_16: { v: [   1,   2,    1,    4,    2,   4,     1,     2,    1,   1,   1], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
     evidence: { attal: 'A interdit l’abaya comme ministre de l’Éducation : laïcité stricte malgré un profil progressiste.',
              roussel_2027: 'Laïcité stricte assumée, à l’opposé de LFI sur ce point précis.',
-             melenchon_2027: 'LFI conteste l’extension des interdictions de signes religieux.' } },
-  IMM_1:  { v: [   5,   4,    3,    1,    2,   1,     5,     3,    2,   5], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { ruffin: 'Refuse le cadrage identitaire sans défendre l’ouverture : position médiane assumée.' } },
-  SEC_3:  { v: [   5,   4,    4,    1,    3,   2,     5,     2,    3,   5], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
-    evidence: { roussel_2027: 'Ligne sécuritaire plus ferme que le reste de la gauche.' } },
-  DEM_8:  { v: [   3,   2,    3,    5,    4,   5,     2,     5,    5,   2], basis: ANSWER_BASIS.PARTY_ENDORSED, evidence: {} },
-  DEM_21: { v: [   3,   1,    1,    2,    1,   1,     2,     2,    1,   4], basis: ANSWER_BASIS.EDITORIAL_INFERENCE,
-    evidence: { zemmour_2027: 'Seul à défendre ouvertement une reprise en main de la magistrature.' } },
-  GLO_1:  { v: [   5,   2,    2,    4,    1,   1,     4,     4,    4,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+             melenchon_2027: 'LFI conteste l’extension des interdictions de signes religieux.',
+             lisnard: { rationale: 'Défend une laïcité stricte et des interdictions supplémentaires dans l’enseignement.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-security-2027'] } } },
+  IMM_1:  { v: [   5,   4,    3,    1,    2,   1,     5,     3,    2,   5,   5], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { ruffin: 'Refuse le cadrage identitaire sans défendre l’ouverture : position médiane assumée.',
+      lisnard: { rationale: 'Propose une réduction très forte des titres de séjour.', sourceIds: ['src-lisnard-programme-immigration-2027'] } } },
+  SEC_3:  { v: [   5,   4,    4,    1,    3,   2,     5,     2,    3,   5,   4], basis: ANSWER_BASIS.PARLIAMENTARY_RECORD,
+    evidence: { roussel_2027: 'Ligne sécuritaire plus ferme que le reste de la gauche.',
+      lisnard: { rationale: 'Défend des pouvoirs de sécurité renforcés, sans documenter ici une suspension générale des libertés.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-security-2027'] } } },
+  DEM_8:  { v: [   3,   2,    3,    5,    4,   5,     2,     5,    5,   2,   3], basis: ANSWER_BASIS.PARTY_ENDORSED,
+    evidence: { lisnard: 'Aucune position directe trouvée sur l’interdiction des grands dons privés : valeur médiane, à revoir.' } },
+  DEM_21: { v: [   3,   1,    1,    2,    1,   1,     2,     2,    1,   4,   1], basis: ANSWER_BASIS.EDITORIAL_INFERENCE,
+    evidence: { zemmour_2027: 'Seul à défendre ouvertement une reprise en main de la magistrature.',
+      lisnard: { rationale: 'Son projet institutionnel maintient la séparation des pouvoirs et ne donne pas au gouvernement ce pouvoir de révocation.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-institutions-2027'] } } },
+  GLO_1:  { v: [   5,   2,    2,    4,    1,   1,     4,     4,    4,   5,   5], basis: ANSWER_BASIS.CONSISTENT_RECORD,
     evidence: { melenchon_2027: 'Souverainisme de gauche : primauté nationale sans rejet identitaire.',
-             roussel_2027: 'Même souverainisme, motivé par la protection sociale et industrielle.' } },
-  GLO_8:  { v: [   1,   4,    5,    1,    5,   4,     2,     1,    1,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { glucksmann: 'Fédéraliste assumé : c’est ce qui le sépare le plus nettement de LFI.' } },
-  PUB_13: { v: [   2,   4,    3,    1,    1,   1,     4,     1,    1,   4], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { lepen_2027: 'Le RN défend la dépense sociale pour les nationaux : ni libéral, ni redistributif universel.' } },
-  IMM_23: { v: [   1,   3,    3,    5,    5,   5,     1,     4,    4,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { retailleau: 'Remise en cause du droit du sol portée personnellement.' } },
-  ENV_25: { v: [   5,   4,    4,    2,    2,   1,     5,     3,    4,   5], basis: ANSWER_BASIS.DIRECT_CURRENT,
-    evidence: { roussel_2027: 'Soutien aux agriculteurs qui le distingue du reste de la gauche.' } },
-  PUB_25: { v: [   4,   3,    3,    5,    4,   5,     3,     5,    5,   2], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, evidence: {} },
-  SEC_25: { v: [   1,   3,    3,    5,    4,   5,     1,     4,    3,   1], basis: ANSWER_BASIS.CONSISTENT_RECORD,
-    evidence: { roussel_2027: 'Plus réservé que le reste de la gauche sur le contrôle de la police.' } },
-  ECO_29: { v: [   4,   2,    2,    5,    3,   4,     2,     5,    5,   3], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
-    evidence: { lepen_2027: 'Le RN défend la renationalisation de l’énergie, contrairement à la droite libérale.' } },
-  ENV_31: { v: [   1,   3,    3,    2,    4,   4,     1,     1,    1,   1], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+             roussel_2027: 'Même souverainisme, motivé par la protection sociale et industrielle.',
+             lisnard: { rationale: 'Défend explicitement la primauté nationale quand les règles européennes excèdent les compétences consenties.', basis: ANSWER_BASIS.OFFICIAL_PROGRAMME, sourceIds: ['src-lisnard-programme-institutions-2027'] } } },
+  GLO_8:  { v: [   1,   4,    5,    1,    5,   4,     2,     1,    1,   1,   2], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { glucksmann: 'Fédéraliste assumé : c’est ce qui le sépare le plus nettement de LFI.',
+      lisnard: { rationale: 'Soutient la coopération européenne mais refuse une Europe fédérale qui déciderait davantage à la place des États.', sourceIds: ['src-lisnard-programme-institutions-2027'] } } },
+  PUB_13: { v: [   2,   4,    3,    1,    1,   1,     4,     1,    1,   4,   5], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lepen_2027: 'Le RN défend la dépense sociale pour les nationaux : ni libéral, ni redistributif universel.',
+      lisnard: { rationale: 'La baisse des dépenses publiques et le recentrage de l’État sont des piliers explicites du projet.', sourceIds: ['src-lisnard-programme-institutions-2027', 'src-lisnard-fiscalite-2027'] } } },
+  IMM_23: { v: [   1,   3,    3,    5,    5,   5,     1,     4,    4,   1,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { retailleau: 'Remise en cause du droit du sol portée personnellement.',
+      lisnard: { rationale: 'Propose de mettre fin à l’automaticité du droit du sol.', sourceIds: ['src-lisnard-programme-immigration-2027'] } } },
+  ENV_25: { v: [   5,   4,    4,    2,    2,   1,     5,     3,    4,   5,   5], basis: ANSWER_BASIS.DIRECT_CURRENT,
+    evidence: { roussel_2027: 'Soutien aux agriculteurs qui le distingue du reste de la gauche.',
+      lisnard: 'Doctrine générale d’allègement des normes appliquée ici à l’agriculture ; source directe spécifique encore à ajouter.' } },
+  PUB_25: { v: [   4,   3,    3,    5,    4,   5,     3,     5,    5,   2,   2], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lisnard: { rationale: 'Dit explicitement que les difficultés de la santé ne viennent pas d’un manque global d’argent et privilégie une réorganisation.', sourceIds: ['src-lisnard-programme-sante-2027'] } } },
+  SEC_25: { v: [   1,   3,    3,    5,    4,   5,     1,     4,    3,   1,   3], basis: ANSWER_BASIS.CONSISTENT_RECORD,
+    evidence: { roussel_2027: 'Plus réservé que le reste de la gauche sur le contrôle de la police.',
+      lisnard: 'Aucune position directe trouvée sur ce mécanisme précis de contrôle de l’usage de la force : valeur médiane, à revoir.' } },
+  ECO_29: { v: [   4,   2,    2,    5,    3,   4,     2,     5,    5,   3,   1], basis: ANSWER_BASIS.OFFICIAL_PROGRAMME,
+    evidence: { lepen_2027: 'Le RN défend la renationalisation de l’énergie, contrairement à la droite libérale.',
+      lisnard: { rationale: 'Doctrine libérale de réduction du périmètre économique de l’État, sans proposition de nationalisation énergétique.', sourceIds: ['src-lisnard-programme-ambition-2027'] } } },
+  ENV_31: { v: [   1,   3,    3,    2,    4,   4,     1,     1,    1,   1,   1], basis: ANSWER_BASIS.CONSISTENT_RECORD,
     evidence: { melenchon_2027: 'LFI rejette la taxe carbone sur les ménages, comme le PCF.',
              roussel_2027: 'Opposition constante à la fiscalité carbone pesant sur les ménages modestes.',
-             ruffin: 'Hostile à toute écologie punitive pour les classes populaires.' } },
+             ruffin: 'Hostile à toute écologie punitive pour les classes populaires.',
+             lisnard: { rationale: 'Rejette une politique climatique qui augmenterait directement le coût supporté par les ménages.', basis: ANSWER_BASIS.DIRECT_CURRENT, sourceIds: ['src-lisnard-saint-raphael-2026-07-03', 'src-lisnard-ppe3-2027'] } } },
 };
 
 /** Construit les réponses éditoriales sur la banque générale. */

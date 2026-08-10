@@ -21,11 +21,13 @@ import {
 } from '../../src/data/candidateEditorialAnswers.js';
 import { computeCandidateMatch } from '../../src/engine/candidateMatch.js';
 import { elections } from '../../src/data/elections.js';
+import { questions as GENERAL_QUESTIONS } from '../../src/data/questions.js';
 import { NO_OPINION } from '../../src/engine/scorer.js';
 import { QUESTIONNAIRE_VERSION } from '../../src/engine/versions.js';
 
 const FR2027 = elections.find(e => e.id === 'fr_2027');
 const QUESTIONS = FR2027.specificQuestions;
+const CORE_QUESTIONS = GENERAL_QUESTIONS.filter(question => question.status === 'CORE');
 const answersFor = c => getEditorialAnswers(c.id, 'fr_2027');
 
 /** Profil de gauche écologiste et pro-européen. */
@@ -56,9 +58,9 @@ test('un candidat éditorialement complet produit un score', () => {
   assert.equal(match.questionsCompared, 17);
 });
 
-test('les dix candidats suivis sont comparables sur 2027', () => {
+test('les onze candidats suivis sont comparables sur 2027', () => {
   const { results, unscored } = rank(LEFT_GREEN);
-  assert.equal(results.length, 10, `non classés : ${unscored.map(u => `${u.candidate.id}(${u.match.reason})`).join(', ')}`);
+  assert.equal(results.length, 11, `non classés : ${unscored.map(u => `${u.candidate.id}(${u.match.reason})`).join(', ')}`);
 });
 
 test('le classement est déterministe', () => {
@@ -176,7 +178,7 @@ test('un candidat sans aucune réponse éditoriale le dit, sans bloquer les autr
   assert.equal(unscored.length, 1);
   assert.equal(unscored[0].candidate.id, 'tondelier');
   assert.equal(unscored[0].match.reason, 'no_editorial_answers');
-  assert.equal(results.length, 9, 'un candidat sans données a empêché les autres d’être classés');
+  assert.equal(results.length, 10, 'un candidat sans données a empêché les autres d’être classés');
 });
 
 // ─── Cohérence politique (Partie D) ─────────────────────────────────────────
@@ -203,7 +205,7 @@ test('un profil de droite conservatrice classe la droite devant la gauche', () =
 
 test('les candidats proches restent distinguables', () => {
   // Aucun clone : deux candidats ne doivent pas recevoir exactement le même profil de réponses.
-  const paires = [['zemmour_2027', 'lepen_2027'], ['philippe', 'attal'],
+  const paires = [['zemmour_2027', 'lepen_2027'], ['philippe', 'attal'], ['lisnard', 'retailleau'],
     ['glucksmann', 'melenchon_2027'], ['ruffin', 'roussel_2027']];
   for (const [a, b] of paires) {
     const A = answersFor({ id: a }); const B = answersFor({ id: b });
@@ -213,6 +215,35 @@ test('les candidats proches restent distinguables', () => {
     }).length;
     assert.ok(diff >= 3, `${a} et ${b} ne diffèrent que sur ${diff} question(s) : clonage probable`);
   }
+});
+
+test('le profil Lisnard reste libéral, restrictif et distinct de la droite LR', () => {
+  const lisnard = answersFor({ id: 'lisnard' });
+  const retailleau = answersFor({ id: 'retailleau' });
+  const val = (set, id) => set.find(a => a.questionId === id)?.answerValue;
+  assert.equal(lisnard.length, 17);
+  assert.equal(val(lisnard, 'fr_2027_q2'), 5, 'immigration insuffisamment restrictive');
+  assert.equal(val(lisnard, 'fr_2027_q8'), 5, 'baisse des impôts sur les sociétés absente');
+  assert.equal(val(lisnard, 'fr_2027_q15'), 5, 'référendum d’initiative populaire absent');
+  assert.equal(val(lisnard, 'fr_2027_q17'), 1, 'doctrine de baisse des impôts inversée');
+  const differences = lisnard.filter(answer =>
+    val(retailleau, answer.questionId) !== answer.answerValue).length;
+  assert.ok(differences >= 3, `Lisnard et Retailleau ne diffèrent que sur ${differences} questions`);
+});
+
+test('répondre comme Lisnard le place en tête sur le profil général', () => {
+  const lisnardAnswers = getEditorialAnswers('lisnard', 'general');
+  assert.equal(lisnardAnswers.length, 16, 'profil général Lisnard incomplet');
+  const userAnswers = Object.fromEntries(
+    lisnardAnswers.map(answer => [answer.questionId, answer.answerValue]),
+  );
+  const ranking = rankEditorialMatches(FR2027.candidates, {
+    userAnswers,
+    questions: CORE_QUESTIONS,
+    answersFor: candidate => getEditorialAnswers(candidate.id, 'general'),
+  });
+  assert.equal(ranking.results[0]?.candidate.id, 'lisnard');
+  assert.equal(ranking.results[0]?.match.score, 100);
 });
 
 test('les particularités individuelles sont conservées face à la ligne du parti', () => {
