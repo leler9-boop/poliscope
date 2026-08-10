@@ -8,7 +8,9 @@ export const questionHints = {
   // ── ÉCONOMIE ────────────────────────────────────────────────────────────
   ECO_1: "En France, les gens qui gagnent beaucoup paient un pourcentage plus élevé d'impôts. Certains veulent augmenter encore cet écart pour financer les services publics. D'autres pensent que ça décourage les entreprises de créer des emplois.",
   ECO_3: "Quand les impôts sur les entreprises baissent, certaines viennent s'installer en France et créent des emplois. Mais ça réduit les recettes de l'État, donc il peut moins financer les hôpitaux ou les écoles.",
-  ECO_8: "Nationaliser = l'État rachète et gère une entreprise (comme SNCF ou EDF). Avantage : les profits servent à tous. Inconvénient : l'État est souvent moins efficace qu'une entreprise privée.",
+  // (ECO_8 retiré 2026-08 — question composite, remplacée par ECO_29. Le hint affirmait par
+  // ailleurs que « l'État est souvent moins efficace qu'une entreprise privée » : un argument
+  // débattu présenté comme un fait établi. L'explication de ECO_29 le restitue comme argument.)
   ECO_10: "Un revenu de base = l'État donne chaque mois un montant fixe à chaque citoyen, sans condition. L'idée : garantir la survie de tous. Le débat : est-ce que ça décourage de travailler ?",
   ECO_23: "Faut-il d'abord faire grandir l'économie (plus de richesses globales) ou d'abord réduire les inégalités (mieux répartir les richesses existantes) ? Ce choix divise fortement droite et gauche.",
 
@@ -33,14 +35,18 @@ export const questionHints = {
   ENV_3: "Une taxe carbone fait payer davantage ceux qui polluent (voitures, avions, industries). Ça incite à polluer moins, mais ça pèse surtout sur les gens qui n'ont pas d'autre choix (zones rurales, etc.).",
 
   // ── DÉMOCRATIE ──────────────────────────────────────────────────────────
-  DEM_1: "Dans certains pays (Belgique, Australie), voter est obligatoire, avec parfois une amende en cas d'abstention. Cela pourrait renforcer la légitimité des élus, mais certains y voient une atteinte à la liberté de ne pas voter.",
+  // (DEM_1 retiré 2026-08 — le vote obligatoire mesurait autant un rapport à la contrainte
+  // qu'à la participation démocratique.)
 
   // ── MONDIALISATION ──────────────────────────────────────────────────────
   GLO_1: "La France a des engagements internationaux (traités, UE, ONU) qui peuvent limiter certaines décisions nationales. Faut-il toujours les respecter, ou l'intérêt national doit-il parfois passer avant ?",
   GLO_3: "L'OTAN est une alliance militaire entre pays européens et nord-américains, fondée en 1949. Elle garantit une défense commune, mais certains estiment qu'elle limite l'indépendance stratégique de la France.",
 
   // ── SERVICES PUBLICS ────────────────────────────────────────────────────
-  PUB_1: "La Sécurité sociale rembourse une grande partie des soins, mais les restes à charge peuvent encore freiner certains patients. Réduire ces obstacles améliore l'accès aux soins, mais demande davantage de financement public ou de solidarité entre assurés.",
+  // (PUB_1 retiré 2026-08 : la question a été remplacée par PUB_26, qui porte sa propre
+  // explication dans questions_final.json. Aucun hint n'est recréé ici — questionHints
+  // ÉCRASE silencieusement l'explication dans l'interface, et cette révision réduit le
+  // nombre de sources concurrentes plutôt que de l'augmenter.)
   PUB_4: "En France, les retraites sont payées par les cotisations des actifs (système par répartition), pas par une épargne individuelle (capitalisation). Certains veulent introduire une part de capitalisation ; d'autres défendent la solidarité entre générations du système actuel.",
 };
 

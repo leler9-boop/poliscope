@@ -1,0 +1,477 @@
+{
+  "comment": "Registre des identifiants de questions. Un identifiant est une clé de DONNÉE : des réponses persistées y sont rattachées. textAtRetirement fige le libellé au moment du retrait ; tests/data/questions.editorial.test.mjs échoue si un identifiant retiré se met à porter une autre proposition politique.",
+  "retired": [
+    {
+      "id": "DEM_1",
+      "retiredAt": "2026-08",
+      "reason": "Rattachement contestable à l’axe démocratique : le vote obligatoire mesure autant une conception de la contrainte que de la participation. Retirée au profit de formulations de sens inverse.",
+      "textAtRetirement": "Le vote doit être obligatoire pour tous."
+    },
+    {
+      "id": "DEM_11",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les mandats politiques doivent être limités en durée."
+    },
+    {
+      "id": "DEM_12",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les citoyens doivent pouvoir révoquer leurs élus avant la fin du mandat."
+    },
+    {
+      "id": "DEM_15",
+      "retiredAt": "2026-08",
+      "reason": "Question composite (réguler et rendre transparent) contenant en outre un anglicisme non traduit. Remplacée par DEM_28.",
+      "textAtRetirement": "Le lobbying d'entreprises doit être strictement régulé et transparent."
+    },
+    {
+      "id": "DEM_2",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les réseaux sociaux ont trop de pouvoir politique."
+    },
+    {
+      "id": "DEM_23",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les institutions internationales doivent pouvoir forcer les États à agir."
+    },
+    {
+      "id": "DEM_3",
+      "retiredAt": "2026-08",
+      "reason": "Quasi-doublon de DEM_24, qui nomme le même mécanisme sous son nom français (référendum d’initiative citoyenne).",
+      "textAtRetirement": "Les citoyens doivent pouvoir déclencher un référendum sur n'importe quelle loi par voie de pétition."
+    },
+    {
+      "id": "DEM_4",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les juges doivent être totalement indépendants de la politique."
+    },
+    {
+      "id": "DEM_9",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Le Sénat doit être profondément réformé pour être plus représentatif des citoyens."
+    },
+    {
+      "id": "ECO_12",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les grandes entreprises technologiques en position dominante doivent être démantelées."
+    },
+    {
+      "id": "ECO_14",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "L'impôt sur les successions doit augmenter fortement."
+    },
+    {
+      "id": "ECO_17",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Dans l'ensemble, le commerce international est bénéfique pour la France."
+    },
+    {
+      "id": "ECO_18",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Le lobbying des grandes entreprises doit être davantage encadré par la loi."
+    },
+    {
+      "id": "ECO_2",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Le SMIC doit augmenter significativement."
+    },
+    {
+      "id": "ECO_20",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La Banque centrale européenne doit rendre davantage de comptes aux parlements nationaux et européen."
+    },
+    {
+      "id": "ECO_25",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Le partage obligatoire des bénéfices avec les salariés doit être imposé aux grandes entreprises."
+    },
+    {
+      "id": "ECO_27",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La France doit imposer des droits de douane ciblés en réponse aux pratiques commerciales déloyales d'autres pays (dumping, subventions massives)."
+    },
+    {
+      "id": "ECO_7",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La France devrait conclure davantage d'accords de libre-échange."
+    },
+    {
+      "id": "ECO_8",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : nationaliser l’énergie et nationaliser les transports sont deux décisions distinctes. Remplacée par ECO_29, limitée à l’énergie.",
+      "textAtRetirement": "L'État doit nationaliser les secteurs stratégiques comme l'énergie et les transports."
+    },
+    {
+      "id": "ENV_11",
+      "retiredAt": "2026-08",
+      "reason": "Question tautologique : sanctionner une action « lorsqu’elle enfreint la loi » ne mesure aucune opinion. Remplacée par ENV_27.",
+      "textAtRetirement": "La désobéissance civile pour le climat doit pouvoir être sanctionnée lorsqu'elle enfreint la loi."
+    },
+    {
+      "id": "ENV_13",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les traités écologiques doivent pouvoir forcer les États à agir."
+    },
+    {
+      "id": "ENV_14",
+      "retiredAt": "2026-08",
+      "reason": "Terme technique non expliqué (« géo-ingénierie ») et verbe sans portée politique (« doit être étudiée »). Remplacée par ENV_28.",
+      "textAtRetirement": "La géo-ingénierie doit être étudiée comme solution climatique."
+    },
+    {
+      "id": "ENV_21",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La biodiversité doit avoir la même urgence que le climat."
+    },
+    {
+      "id": "ENV_23",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : réduire la production et réduire la consommation sont deux décisions distinctes. Sujet déjà couvert par ENV_8.",
+      "textAtRetirement": "Une réduction volontaire de la production et de la consommation est nécessaire pour respecter les limites de la planète."
+    },
+    {
+      "id": "ENV_24",
+      "retiredAt": "2026-08",
+      "reason": "Quasi-doublon en miroir de ENV_2 sur le nucléaire, avec un horizon arbitraire (« vingt prochaines années »).",
+      "textAtRetirement": "La France doit sortir du nucléaire dans les vingt prochaines années."
+    },
+    {
+      "id": "ENV_6",
+      "retiredAt": "2026-08",
+      "reason": "Intensificateur sans périmètre (« fortement réglementée ») sur un objet non défini (« agriculture intensive »). Remplacée par ENV_26, qui nomme les pesticides.",
+      "textAtRetirement": "L'agriculture intensive doit être fortement réglementée."
+    },
+    {
+      "id": "GLO_10",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les multinationales doivent payer un impôt minimum mondial."
+    },
+    {
+      "id": "GLO_17",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : adopter une politique étrangère neutre et réduire les engagements militaires sont deux décisions distinctes. Remplacée par GLO_26, limitée à la neutralité.",
+      "textAtRetirement": "La France doit adopter une politique étrangère plus neutre et réduire ses engagements militaires à l'étranger."
+    },
+    {
+      "id": "GLO_2",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les institutions mondiales (ONU, OMC, FMI) ont trop de pouvoir."
+    },
+    {
+      "id": "GLO_20",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les pays doivent sanctionner les violations de droits humains."
+    },
+    {
+      "id": "GLO_24",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "L'Union européenne doit avoir davantage de compétences et de budget pour agir au-delà des capacités individuelles des États membres."
+    },
+    {
+      "id": "GLO_5",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les intérêts nationaux de la France doivent toujours passer avant les obligations des traités internationaux."
+    },
+    {
+      "id": "GLO_9",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "L'État devrait mieux protéger la culture française face à l'influence culturelle américaine (films, séries, réseaux sociaux)."
+    },
+    {
+      "id": "IMM_10",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les centres de rétention des migrants doivent fermer."
+    },
+    {
+      "id": "IMM_11",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les immigrés apportent des bénéfices économiques importants."
+    },
+    {
+      "id": "IMM_13",
+      "retiredAt": "2026-08",
+      "reason": "Quasi-doublon en miroir de IMM_7 : même sous-dimension (place des cultures d’origine). Formulation abstraite (« primer sur les appartenances culturelles »).",
+      "textAtRetirement": "L'identité nationale française doit primer sur les autres appartenances culturelles dans l'intégration des enfants d'immigrés."
+    },
+    {
+      "id": "IMM_15",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : test de langue et test de valeurs républicaines sont deux conditions distinctes. Le volet langue reste couvert par IMM_20.",
+      "textAtRetirement": "Les immigrés qui demandent un titre de séjour doivent passer un test de langue et de valeurs républicaines."
+    },
+    {
+      "id": "IMM_4",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La France doit cibler les immigrés hautement qualifiés."
+    },
+    {
+      "id": "IMM_6",
+      "retiredAt": "2026-08",
+      "reason": "Formulation administrative et non mesurable (« évaluation de l’intégration »), redondante avec IMM_15 et IMM_20. Retirée sans remplacement direct.",
+      "textAtRetirement": "La délivrance d'un titre de séjour durable doit être conditionnée à une évaluation de l'intégration."
+    },
+    {
+      "id": "PUB_1",
+      "retiredAt": "2026-08",
+      "reason": "Double négation (« sans obstacle financier ») et formulation si consensuelle qu’elle ne distingue aucun profil. Remplacée par PUB_26.",
+      "textAtRetirement": "Toute personne doit pouvoir accéder aux soins nécessaires sans obstacle financier."
+    },
+    {
+      "id": "PUB_10",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La santé mentale doit recevoir autant de financement que la santé physique."
+    },
+    {
+      "id": "PUB_17",
+      "retiredAt": "2026-08",
+      "reason": "Quasi-doublon en miroir de PUB_3 sur la gestion privée des services publics, avec une énumération imposant trois secteurs à la fois.",
+      "textAtRetirement": "Les services publics essentiels (eau, électricité, santé) ne doivent pas être gérés par des entreprises privées à but lucratif."
+    },
+    {
+      "id": "PUB_2",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les écoles publiques doivent recevoir beaucoup plus de financement."
+    },
+    {
+      "id": "PUB_5",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les frais d'inscription à l'université doivent être fortement réduits."
+    },
+    {
+      "id": "PUB_8",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "L'État doit augmenter ses subventions aux bibliothèques, musées et théâtres publics."
+    },
+    {
+      "id": "PUB_9",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : gratuité et accessibilité de la garde d’enfants sont deux décisions distinctes. Remplacée par PUB_27, limitée à la gratuité.",
+      "textAtRetirement": "La garde d'enfants doit être gratuite et accessible à toutes les familles."
+    },
+    {
+      "id": "SEC_10",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Diffuser de fausses informations en ligne doit avoir des conséquences légales."
+    },
+    {
+      "id": "SEC_16",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "La surveillance de masse est acceptable pour combattre le terrorisme."
+    },
+    {
+      "id": "SEC_20",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : pouvoirs de contrôle et pouvoirs de fouille sont deux décisions distinctes. Remplacée par SEC_26, limitée aux contrôles d’identité.",
+      "textAtRetirement": "La police doit avoir plus de pouvoirs de contrôle et de fouille."
+    },
+    {
+      "id": "SEC_23",
+      "retiredAt": "2026-08",
+      "reason": "Formulation non mesurable (« plus de pouvoirs ») doublant SEC_20, avec un périmètre stigmatisant (« quartiers difficiles »).",
+      "textAtRetirement": "La police doit avoir plus de pouvoirs pour maintenir l'ordre dans les quartiers difficiles."
+    },
+    {
+      "id": "SEC_24",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Face à la délinquance dans les quartiers difficiles, la priorité doit être le renforcement policier plutôt que les aides sociales."
+    },
+    {
+      "id": "SEC_7",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les dépenses militaires doivent augmenter fortement."
+    },
+    {
+      "id": "SOC_12",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les écoles et universités doivent employer un langage inclusif dans leurs communications officielles."
+    },
+    {
+      "id": "SOC_15",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les réseaux sociaux doivent être juridiquement responsables des contenus dangereux que leurs algorithmes recommandent."
+    },
+    {
+      "id": "SOC_19",
+      "retiredAt": "2026-08",
+      "reason": "Quasi-doublon en miroir de SOC_6 : même sous-dimension (état civil et identité de genre), ce qui doublait le poids de cette seule opinion dans le thème.",
+      "textAtRetirement": "L'identité de genre reconnue par l'état civil doit correspondre au sexe inscrit à la naissance."
+    },
+    {
+      "id": "SOC_21",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Consommer des drogues doit être considéré comme un choix personnel relevant de la liberté individuelle."
+    },
+    {
+      "id": "SOC_24",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : garantir le droit à l’avortement et le rendre accessible partout sont deux décisions distinctes. Remplacée par SOC_29.",
+      "textAtRetirement": "Le droit à l'avortement doit être garanti et accessible à toutes les femmes sur tout le territoire."
+    },
+    {
+      "id": "SOC_25",
+      "retiredAt": "2026-08",
+      "reason": "Question composite : ouvrir la procréation médicalement assistée aux couples de femmes et aux femmes seules sont deux décisions distinctes. Remplacée par SOC_30.",
+      "textAtRetirement": "La procréation médicalement assistée (PMA) doit être accessible aux couples de femmes et aux femmes seules."
+    },
+    {
+      "id": "SOC_26",
+      "retiredAt": "2026-08",
+      "reason": "Formulation non mesurable (« prendre des mesures concrètes ») et explication contenant du franglais. Remplacée par SOC_31, qui nomme un mécanisme précis.",
+      "textAtRetirement": "L'État doit prendre des mesures concrètes pour réduire les discriminations liées à l'origine ethnique."
+    },
+    {
+      "id": "SOC_4",
+      "retiredAt": "2026-07",
+      "reason": "Revue éditoriale de juillet 2026 : item redondant, à faible signal ou hors thème. Motif détaillé non consigné par identifiant à l’époque.",
+      "textAtRetirement": "Les politiques d'aide aux groupes discriminés sont justifiées."
+    }
+  ],
+  "created": [
+    {
+      "id": "ECO_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace ECO_8, composite (énergie + transports), en isolant un seul secteur."
+    },
+    {
+      "id": "SOC_28",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension bioéthique et fournit une formulation de sens minoritaire au thème."
+    },
+    {
+      "id": "SOC_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_24, composite (garantie + accessibilité territoriale), en isolant la garantie juridique."
+    },
+    {
+      "id": "SOC_30",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_25, composite (couples de femmes + femmes seules), en isolant une seule population."
+    },
+    {
+      "id": "SOC_31",
+      "createdAt": "2026-08",
+      "reason": "Remplace SOC_26, dont la formulation (« mesures concrètes ») n'était pas mesurable."
+    },
+    {
+      "id": "IMM_24",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension regroupement familial, non couverte auparavant."
+    },
+    {
+      "id": "IMM_25",
+      "createdAt": "2026-08",
+      "reason": "Comble la sous-dimension accès aux soins des personnes sans titre de séjour."
+    },
+    {
+      "id": "IMM_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace la sous-dimension éloignement laissée par IMM_13, sur un objet distinct de IMM_12 (crimes)."
+    },
+    {
+      "id": "SEC_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace SEC_20, composite (contrôle + fouille), en isolant les contrôles d'identité."
+    },
+    {
+      "id": "SEC_27",
+      "createdAt": "2026-08",
+      "reason": "Remplace SEC_23 sur une sous-dimension distincte et mesurable : l'exécution des peines."
+    },
+    {
+      "id": "ENV_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace ENV_6, dont l'intensificateur (« fortement réglementée ») n'avait pas de périmètre."
+    },
+    {
+      "id": "ENV_27",
+      "createdAt": "2026-08",
+      "reason": "Remplace ENV_11, tautologique, par une formulation qui mesure réellement une opinion."
+    },
+    {
+      "id": "ENV_28",
+      "createdAt": "2026-08",
+      "reason": "Remplace ENV_14 et couvre les énergies renouvelables, sous-dimension absente de la banque."
+    },
+    {
+      "id": "ENV_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace ENV_23 par une sous-dimension distincte : les instruments de la politique écologique."
+    },
+    {
+      "id": "ENV_30",
+      "createdAt": "2026-08",
+      "reason": "Remplace ENV_24 et couvre le logement, sous-dimension environnementale absente de la banque."
+    },
+    {
+      "id": "DEM_27",
+      "createdAt": "2026-08",
+      "reason": "Formulation de sens minoritaire du thème : mesure la préférence pour un exécutif vertical."
+    },
+    {
+      "id": "DEM_28",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_15 et fournit une formulation de sens minoritaire sur les contre-pouvoirs."
+    },
+    {
+      "id": "DEM_29",
+      "createdAt": "2026-08",
+      "reason": "Remplace DEM_1 sur une sous-dimension distincte : la source de légitimité des décisions."
+    },
+    {
+      "id": "GLO_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace GLO_17, composite (neutralité + réduction des engagements militaires)."
+    },
+    {
+      "id": "PUB_26",
+      "createdAt": "2026-08",
+      "reason": "Remplace PUB_1, à double négation et sans pouvoir discriminant."
+    },
+    {
+      "id": "PUB_27",
+      "createdAt": "2026-08",
+      "reason": "Remplace PUB_9, composite (gratuité + accessibilité), en isolant la gratuité."
+    },
+    {
+      "id": "PUB_28",
+      "createdAt": "2026-08",
+      "reason": "Remplace PUB_17 et fournit une formulation de sens minoritaire au thème."
+    }
+  ]
+}

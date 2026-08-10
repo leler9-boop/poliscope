@@ -4,7 +4,7 @@
     "text": "Les impôts sur les plus hauts revenus doivent augmenter.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "income redistribution",
+    "cluster": "redistribution des revenus",
     "explanation": "En France, l'impôt sur le revenu est progressif : plus on gagne, plus le taux est élevé. Le débat porte sur le niveau du taux maximum : certains veulent le relever pour financer les services publics ; d'autres estiment que cela décourage l'effort et l'investissement."
   },
   {
@@ -20,15 +20,15 @@
     "text": "Les impôts sur les bénéfices des entreprises doivent baisser.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "corporate taxes",
+    "cluster": "impôt sur les sociétés",
     "explanation": "Le taux d'impôt sur les bénéfices des entreprises a été ramené à 25 % en France. Des taux bas peuvent attirer des investisseurs et créer des emplois ; mais certains estiment que cela réduit les recettes fiscales nécessaires aux services publics."
   },
   {
     "id": "ECO_4",
-    "text": "L'impôt sur la fortune doit être élargi aux placements financiers, et pas seulement à l'immobilier.",
+    "text": "L'impôt sur la fortune doit aussi porter sur les placements financiers, pas seulement sur l'immobilier.",
     "axis": "economic",
     "status": "PRIMARY",
-    "cluster": "eco",
+    "cluster": "impôt sur la fortune",
     "explanation": "L'impôt de solidarité sur la fortune (ISF) a été supprimé en 2018 et remplacé par un impôt uniquement sur l'immobilier. Le débat porte sur la nécessité de taxer aussi les placements financiers pour réduire les inégalités de patrimoine. Ses opposants estiment que cela pourrait pousser des investisseurs à quitter la France et réduire l'épargne dirigée vers les entreprises."
   },
   {
@@ -36,15 +36,15 @@
     "text": "L'État doit réduire ses dépenses publiques.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "dépenses publiques",
     "explanation": "La France dépense plus qu'elle ne perçoit chaque année, avec une dette publique qui dépasse désormais 3 500 milliards d'euros. Réduire les dépenses permettrait de rééquilibrer les comptes, mais implique des choix difficiles : quels services couper, et pour quels effets sur la vie quotidienne ?"
   },
   {
     "id": "ECO_6",
-    "text": "Les syndicats doivent avoir davantage de pouvoir dans les entreprises.",
+    "text": "Les syndicats doivent avoir plus de pouvoir dans les entreprises.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "relations sociales en entreprise",
     "explanation": "Les syndicats négocient les salaires et conditions de travail au nom des salariés. La France a un faible taux de syndicalisation (environ 11 %). Certains veulent leur donner plus de pouvoir dans les décisions de l'entreprise ; d'autres préfèrent des accords négociés directement entre employeurs et salariés, sans intermédiaire syndical."
   },
   {
@@ -65,10 +65,10 @@
   },
   {
     "id": "ECO_9",
-    "text": "Le secteur financier (banques, marchés boursiers) doit être strictement réglementé.",
+    "text": "L'État doit imposer des règles plus strictes à la finance.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "régulation de la finance",
     "explanation": "La crise financière de 2008 a montré les risques d'un secteur bancaire et boursier peu contrôlé. Le débat porte sur le niveau de régulation : des règles strictes protègent contre les crises, mais peuvent aussi freiner le financement des entreprises et de l'économie."
   },
   {
@@ -76,7 +76,7 @@
     "text": "Un revenu universel de base doit être versé à tous les citoyens, sans conditions.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "social safety net",
+    "cluster": "revenu universel",
     "explanation": "Le revenu universel est une allocation versée à tous les citoyens, sans condition de ressources ni d'emploi. Il simplifierait le système social et protégerait contre la précarité ; ses critiques estiment qu'il coûterait trop cher et pourrait réduire l'incitation à travailler."
   },
   {
@@ -84,7 +84,7 @@
     "text": "Réduire la dette française doit être la priorité budgétaire.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "dette publique",
     "explanation": "La dette publique française dépasse 3 500 milliards d'euros. Certains veulent la réduire en priorité pour alléger les charges d'intérêts, qui atteignent désormais plus de 77 milliards d'euros par an ; d'autres estiment qu'en période de crise, s'endetter est nécessaire pour investir dans les services publics et ne pas sacrifier la croissance."
   },
   {
@@ -97,10 +97,10 @@
   },
   {
     "id": "ECO_13",
-    "text": "L'économie des plateformes (Uber, Deliveroo...) doit être davantage réglementée pour protéger les travailleurs indépendants.",
+    "text": "L'État doit imposer plus de règles aux plateformes numériques comme Uber.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "travail de plateforme",
     "explanation": "Les livreurs et chauffeurs de plateformes comme Uber ou Deliveroo travaillent souvent comme indépendants, sans congés payés ni assurance chômage. Une réglementation plus stricte leur donnerait davantage de protections sociales ; ses opposants craignent qu'elle ne réduise la flexibilité qui attire ces plateformes et fasse disparaître des emplois."
   },
   {
@@ -116,7 +116,7 @@
     "text": "Les entreprises publiques doivent être privatisées.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "privatisations",
     "explanation": "Privatiser signifie vendre une entreprise publique à des acteurs privés. Cela permet à l'État de récupérer des fonds et peut améliorer l'efficacité ; mais cela signifie aussi perdre le contrôle sur des secteurs stratégiques et soumettre des services essentiels à la logique du profit."
   },
   {
@@ -149,7 +149,7 @@
     "text": "La semaine de 4 jours doit être imposée par la loi.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "eco",
+    "cluster": "temps de travail",
     "explanation": "Plusieurs entreprises françaises ont testé la semaine de 4 jours avec des résultats positifs sur la productivité et le bien-être. La rendre obligatoire par la loi est plus controversé : est-elle adaptée à tous les secteurs, notamment ceux qui fonctionnent 7 jours sur 7 ?"
   },
   {
@@ -180,10 +180,10 @@
   },
   {
     "id": "ECO_23",
-    "text": "La priorité économique doit être la croissance, même si elle creuse les inégalités.",
+    "text": "La priorité doit être la croissance économique, même si les inégalités augmentent.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "growth vs equality",
+    "cluster": "croissance contre égalité",
     "explanation": "Deux visions s'affrontent : favoriser la croissance en laissant les entreprises prospérer librement, quitte à ce que les inégalités augmentent ; ou redistribuer les richesses pour que tous en bénéficient, même si cela peut freiner l'activité économique."
   },
   {
@@ -206,10 +206,10 @@
   },
   {
     "id": "SOC_3",
-    "text": "Le cannabis doit être légalisé et encadré par l'État.",
+    "text": "Le cannabis doit être vendu légalement sous le contrôle de l'État.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "politique des drogues",
     "explanation": "Le cannabis est illégal en France, mais très consommé. Le Luxembourg l'a légalisé en 2023. La légalisation permettrait de réguler la qualité et de financer la prévention ; ses opposants craignent une augmentation de la consommation, notamment chez les jeunes."
   },
   {
@@ -222,34 +222,34 @@
   },
   {
     "id": "SOC_5",
-    "text": "La religion doit influencer plus les lois françaises.",
+    "text": "La religion doit avoir plus d'influence sur les lois françaises.",
     "axis": "cultural",
     "status": "CORE",
-    "cluster": "religion in politics",
+    "cluster": "religion et loi",
     "explanation": "La France est un État laïque depuis 1905 : la religion est séparée du pouvoir politique. Certains estiment que les valeurs des grandes religions devraient davantage inspirer la législation ; d'autres considèrent cela comme une atteinte au principe de laïcité."
   },
   {
     "id": "SOC_6",
-    "text": "Les personnes transgenres doivent pouvoir modifier leur identité de genre à l'état civil sans passer par un suivi médical obligatoire.",
+    "text": "Une personne transgenre doit pouvoir changer son état civil sans passer par un médecin.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "identité de genre",
     "explanation": "En France, le changement d'état civil (prénom, sexe) est possible depuis 2017, mais nécessite une procédure judiciaire. Certains souhaitent la rendre purement administrative ; d'autres estiment qu'un suivi médical ou psychologique garantit une décision éclairée."
   },
   {
     "id": "SOC_7",
-    "text": "L'État doit promouvoir la famille traditionnelle hétérosexuelle.",
+    "text": "L'État doit encourager le modèle de la famille traditionnelle.",
     "axis": "cultural",
     "status": "CORE",
-    "cluster": "traditional values",
+    "cluster": "valeurs familiales",
     "explanation": "Depuis la légalisation du mariage pour tous en 2013, la définition légale de la famille s'est élargie. Certains estiment que l'État devrait valoriser le modèle de la famille hétérosexuelle ; d'autres considèrent que toutes les configurations familiales méritent une reconnaissance égale."
   },
   {
     "id": "SOC_8",
-    "text": "Les lois contre les discours haineux doivent être renforcées.",
+    "text": "La loi doit punir plus sévèrement les propos haineux.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "religious expression",
+    "cluster": "discours de haine",
     "explanation": "Les discours incitant à la haine raciale, religieuse ou homophobe sont déjà illégaux en France. Le débat porte sur leur efficacité et leur périmètre : faut-il des sanctions plus sévères, ou le risque est-il de censurer des opinions légitimes au nom d'une définition trop large de la haine ?"
   },
   {
@@ -263,10 +263,10 @@
   },
   {
     "id": "SOC_10",
-    "text": "L'euthanasie doit être légale pour les personnes atteintes d'une maladie incurable à un stade avancé qui la demandent.",
+    "text": "L'euthanasie doit être autorisée pour les malades incurables qui la demandent.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "fin de vie",
     "explanation": "L'euthanasie active est aujourd'hui interdite en France ; la loi Claeys-Leonetti permet uniquement une sédation profonde jusqu'au décès. Une proposition de loi créant un « droit à l'aide à mourir » a été adoptée à plusieurs reprises par l'Assemblée nationale (dont une troisième fois le 30 juin 2026), mais rejetée par le Sénat le 7 juillet 2026 ; son sort se joue dans les prochains jours. Le débat porte sur le droit à mourir dans la dignité, le rôle du corps médical, et le risque de dérives si le cadre légal s'élargit."
   },
   {
@@ -297,10 +297,10 @@
   },
   {
     "id": "SOC_14",
-    "text": "L'accès aux sites pornographiques doit être soumis à une vérification obligatoire de l'âge.",
+    "text": "Les sites pornographiques doivent vérifier l'âge de leurs visiteurs.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "protection des mineurs en ligne",
     "explanation": "Certains sites pornographiques sont accessibles aux mineurs malgré les dispositions légales. Le débat porte sur comment imposer une vérification d'âge efficace sans compromettre l'anonymat des adultes, et sur la responsabilité des plateformes dans la diffusion de ces contenus."
   },
   {
@@ -313,11 +313,11 @@
   },
   {
     "id": "SOC_16",
-    "text": "Les élèves doivent pouvoir porter des signes religieux visibles dans les établissements scolaires publics.",
+    "text": "Les élèves doivent pouvoir porter des signes religieux visibles à l'école publique.",
     "axis": "cultural",
     "status": "CORE",
-    "cluster": "religious expression",
-    "explanation": "Depuis la loi de 2004, les signes religieux ostensibles sont interdits aux élèves des écoles, collèges et lycées publics. Certains considèrent cette règle nécessaire à la neutralité scolaire ; d'autres estiment qu'elle limite excessivement la liberté religieuse des élèves."
+    "cluster": "laïcité à l école",
+    "explanation": "La loi de 2004 interdit aux élèves de porter des signes religieux visibles dans les écoles, collèges et lycées publics. Cette interdiction ne s'applique ni à l'université, ni aux établissements privés. Les partisans de l'interdiction estiment qu'elle protège les élèves des pressions et met tout le monde sur un pied d'égalité. Ses opposants estiment qu'elle restreint une liberté personnelle et vise en pratique surtout certaines familles."
   },
   {
     "id": "SOC_17",
@@ -347,10 +347,10 @@
   },
   {
     "id": "SOC_20",
-    "text": "Le travail du sexe entre adultes consentants doit être décriminalisé.",
+    "text": "La loi ne doit pas punir la prostitution entre adultes consentants.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "travail du sexe",
     "explanation": "La prostitution n'est pas illégale en France, mais acheter des services sexuels l'est depuis 2016. La décriminalisation totale signifierait supprimer cette loi. Le débat oppose ceux qui veulent protéger les travailleuses du sexe via des droits, à ceux qui considèrent la prostitution intrinsèquement exploitatrice."
   },
   {
@@ -363,42 +363,42 @@
   },
   {
     "id": "SOC_22",
-    "text": "La liberté d'expression doit permettre de critiquer les religions, même lorsque cela offense certains croyants.",
+    "text": "On doit pouvoir critiquer les religions, même si cela choque des croyants.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "liberté de critique religieuse",
     "explanation": "La loi française protège à la fois la liberté d'expression et la lutte contre les discriminations. Des tensions surgissent quand des caricatures ou critiques de religions sont jugées offensantes. Le débat porte sur les limites légitimes de la satire et de la critique religieuse."
   },
   {
     "id": "SOC_23",
-    "text": "L'école doit enseigner la notion de consentement dans le cadre de l'éducation à la sexualité.",
+    "text": "L'éducation à la sexualité à l'école doit aborder le consentement.",
     "axis": "cultural",
     "status": "SECONDARY",
-    "cluster": "soc",
+    "cluster": "éducation à la sexualité",
     "explanation": "L'éducation à la sexualité est obligatoire à l'école en France, mais son application est inégale. Le débat porte sur le contenu : doit-elle inclure le consentement, l'identité de genre, la contraception ? Certains parents s'y opposent pour des raisons culturelles ou religieuses."
   },
   {
     "id": "IMM_1",
-    "text": "L'immigration en France doit baisser sensiblement.",
+    "text": "La France doit accueillir moins d'immigrés qu'aujourd'hui.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "immigration volume",
+    "cluster": "volume de l immigration",
     "explanation": "La France a délivré environ 384 000 nouveaux titres de séjour en 2025 (+11 % sur un an), un niveau record. Le débat porte sur ce niveau : certains estiment qu'il est trop élevé et met sous pression les services publics ; d'autres soulignent les contributions économiques et démographiques de l'immigration."
   },
   {
     "id": "IMM_2",
-    "text": "Les demandeurs d'asile doivent avoir le droit de travailler dès le dépôt de leur dossier.",
+    "text": "Les demandeurs d'asile doivent pouvoir travailler dès qu'ils déposent leur demande.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "travail des demandeurs d asile",
     "explanation": "Les demandeurs d'asile en France ont accès à certaines aides, mais pas au droit de travailler pendant l'instruction de leur dossier, qui peut durer plusieurs mois voire plus d'un an. Ses partisans y voient un moyen de favoriser l'autonomie financière et l'intégration ; ses opposants craignent que cela n'incite davantage de demandes, y compris infondées."
   },
   {
     "id": "IMM_3",
-    "text": "Les étrangers en situation irrégulière installés depuis de nombreuses années en France doivent pouvoir être régularisés.",
+    "text": "Les étrangers sans papiers qui vivent en France depuis longtemps doivent pouvoir être régularisés.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "régularisation",
     "explanation": "Des centaines de milliers de personnes vivent en France sans titre de séjour. Certains y sont depuis des années, scolarisent leurs enfants et paient des cotisations. Le débat porte sur la légitimité d'une régularisation pour les personnes bien intégrées, face au risque d'encourager d'autres arrivées irrégulières."
   },
   {
@@ -411,10 +411,10 @@
   },
   {
     "id": "IMM_5",
-    "text": "La France doit rétablir des contrôles systématiques à ses frontières pour réguler les entrées.",
+    "text": "La France doit rétablir des contrôles systématiques à ses frontières.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "frontières",
     "explanation": "L'espace Schengen permet la libre circulation sans contrôles aux frontières entre 27 pays. Face aux flux migratoires, certains États ont rétabli des contrôles temporaires. Le débat porte sur l'équilibre entre libre circulation et sécurité des frontières extérieures."
   },
   {
@@ -427,26 +427,26 @@
   },
   {
     "id": "IMM_7",
-    "text": "L'État doit valoriser et préserver les cultures d'origine des immigrés installés en France.",
+    "text": "L'État doit aider les immigrés à préserver leur culture d'origine.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "multiculturalism",
+    "cluster": "multiculturalisme",
     "explanation": "Le multiculturalisme valorise la coexistence de cultures distinctes dans une même société. La France a traditionnellement privilégié l'assimilation (une culture commune partagée). Le débat porte sur la manière dont une société plurielle peut maintenir une identité nationale cohérente."
   },
   {
     "id": "IMM_8",
-    "text": "Les étrangers en situation régulière qui travaillent et cotisent en France doivent avoir les mêmes droits sociaux que les citoyens.",
+    "text": "Les étrangers qui travaillent légalement en France doivent avoir les mêmes aides sociales que les Français.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "droits sociaux des étrangers",
     "explanation": "Des travailleurs étrangers contribuent aux cotisations sociales et paient des impôts en France, sans toujours bénéficier des mêmes protections que les citoyens. Ses partisans y voient une question d'équité directement liée à la contribution ; ses opposants estiment que l'égalité totale des droits doit rester progressive, certaines prestations non contributives restant réservées aux citoyens ou aux résidents de très longue durée."
   },
   {
     "id": "IMM_9",
-    "text": "La France doit accueillir plus de réfugiés climatiques.",
+    "text": "La France doit accueillir des personnes qui fuient les catastrophes liées au climat.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "déplacements climatiques",
     "explanation": "Le dérèglement climatique pousse des populations à fuir des zones inhabitables. Ces personnes ne sont pas reconnues comme réfugiés au sens de la Convention de Genève. Ses partisans y voient une réponse nécessaire à une crise appelée à s'aggraver ; ses opposants s'inquiètent de la difficulté à définir juridiquement un tel statut et de la capacité d'accueil qu'il impliquerait."
   },
   {
@@ -467,11 +467,11 @@
   },
   {
     "id": "IMM_12",
-    "text": "Les étrangers condamnés pour crimes graves doivent être expulsés.",
+    "text": "Un étranger condamné pour un crime grave doit être expulsé de France.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
-    "explanation": "Un étranger condamné pour un crime grave peut faire l'objet d'une expulsion, mais des protections existent (né en France, long séjour légal). Le débat porte sur l'équilibre entre sanction et respect des droits fondamentaux, notamment quand la personne a des attaches familiales en France."
+    "cluster": "éloignement après condamnation",
+    "explanation": "L'expulsion consiste à renvoyer une personne étrangère vers son pays. La loi la permet après une condamnation pénale grave, mais protège certaines catégories : personnes nées en France, arrivées très jeunes, ou installées légalement depuis longtemps. La loi de 2024 a réduit ces protections. Les partisans estiment qu'un pays n'a pas à garder sur son sol une personne étrangère condamnée pour des faits graves. Les opposants estiment qu'une double peine frappe des personnes dont toute la vie est en France, et que le pays d'origine peut refuser de les reprendre."
   },
   {
     "id": "IMM_13",
@@ -483,10 +483,10 @@
   },
   {
     "id": "IMM_14",
-    "text": "Les demandes d'asile doivent être traitées hors de France.",
+    "text": "Les demandes d'asile doivent être examinées à l'étranger, avant l'arrivée en France.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "asile examiné à l étranger",
     "explanation": "Certains pays européens envisagent de traiter les demandes d'asile dans des pays tiers avant toute entrée en Europe. Ses partisans estiment que cela découragerait les traversées dangereuses ; ses critiques craignent que cela expose les demandeurs à des conditions indignes."
   },
   {
@@ -499,10 +499,10 @@
   },
   {
     "id": "IMM_16",
-    "text": "La France doit fixer chaque année un plafond d'immigration légale, voté par le Parlement.",
+    "text": "La France doit fixer chaque année un nombre maximum d'immigrés à accueillir.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "quotas d immigration",
     "explanation": "La loi immigration de 2024 prévoyait un débat annuel au Parlement sur un objectif chiffré d'immigration, mais cette disposition a été censurée par le Conseil constitutionnel en janvier 2024, qui a jugé qu'aucune exigence constitutionnelle ne permet d'imposer un tel débat ou de tels objectifs chiffrés au Parlement. Un système de plafond voté existe au Royaume-Uni et en Australie. Le débat porte sur la pertinence d'un tel plafond et sur les moyens constitutionnels de l'instaurer en France."
   },
   {
@@ -534,18 +534,18 @@
   },
   {
     "id": "IMM_20",
-    "text": "Les immigrés doivent apprendre le français pour résider durablement en France.",
+    "text": "Les immigrés doivent apprendre le français pour pouvoir rester durablement en France.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "condition de langue",
     "explanation": "La maîtrise du français est généralement considérée comme un facteur clé d'intégration. Des cours sont déjà proposés, mais leur accès est inégal. Le débat porte sur la possibilité de conditionner le droit au séjour à un niveau de langue, et à partir de quel seuil."
   },
   {
     "id": "IMM_21",
-    "text": "L'UE doit imposer une répartition contraignante des demandeurs d'asile entre ses États membres.",
+    "text": "Les pays européens doivent être obligés d'accueillir chacun une part des demandeurs d'asile.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "imm",
+    "cluster": "répartition européenne de l asile",
     "explanation": "Chaque pays de l'UE gère actuellement ses demandes d'asile de façon largement indépendante, avec des disparités importantes. Le Pacte européen sur la migration et l'asile, entré en vigueur le 12 juin 2026, instaure un mécanisme de solidarité entre États membres, mais laisse le choix entre accueillir des demandeurs, verser une compensation financière, ou apporter un soutien opérationnel — sans obligation d'accueil. Ses partisans veulent une répartition pleinement contraignante ; ses opposants défendent la souveraineté des États sur leurs politiques migratoires."
   },
   {
@@ -559,10 +559,10 @@
   },
   {
     "id": "SEC_1",
-    "text": "La surveillance de masse des communications doit être arrêtée.",
+    "text": "La surveillance des communications doit être réservée aux personnes soupçonnées d'un crime.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "privacy/surveillance",
+    "cluster": "surveillance des communications",
     "explanation": "Les agences de renseignement collectent massivement des données numériques pour prévenir des attentats. Le débat porte sur la proportionnalité : cette surveillance peut anticiper des menaces terroristes, mais représente aussi une atteinte à la vie privée de millions de citoyens."
   },
   {
@@ -576,10 +576,10 @@
   },
   {
     "id": "SEC_3",
-    "text": "Les lois antiterroristes qui limitent les libertés sont justifiées.",
+    "text": "Il est justifié de limiter certaines libertés pour lutter contre le terrorisme.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "security/liberty",
+    "cluster": "sécurité contre libertés",
     "explanation": "Après les attentats de 2015, la France a adopté des lois élargissant les pouvoirs de surveillance et d'arrestation préventive. Ces mesures ont permis de neutraliser des menaces ; mais certains juristes estiment qu'elles fragilisent les libertés fondamentales et l'État de droit."
   },
   {
@@ -587,7 +587,7 @@
     "text": "La reconnaissance faciale par la police doit être interdite.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "reconnaissance faciale",
     "explanation": "La reconnaissance faciale identifie des personnes dans l'espace public en temps réel. Ses partisans y voient un outil efficace pour identifier rapidement des suspects ou retrouver des personnes disparues ; ses opposants soulignent qu'elle est aussi utilisée par des États autoritaires pour surveiller leurs populations, et s'inquiètent des biais algorithmiques et des risques pour les libertés civiles. La France l'expérimente déjà dans certains contextes."
   },
   {
@@ -595,15 +595,15 @@
     "text": "Les peines de prison doivent être plus longues.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "sévérité des peines",
     "explanation": "Des études montrent que la certitude d'être puni est plus dissuasive que la sévérité de la peine. Pourtant, certains estiment que des peines plus longues protègent mieux la société. Le débat porte sur l'efficacité réelle de la sévérité pénale pour réduire la criminalité."
   },
   {
     "id": "SEC_6",
-    "text": "Les peines de prison doivent donner la priorité à la réinsertion des détenus.",
+    "text": "La prison doit d'abord servir à préparer la réinsertion des détenus.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "réinsertion",
     "explanation": "La prison poursuit plusieurs objectifs : sanctionner, protéger la société et préparer la sortie. Certains veulent donner la priorité à la réinsertion pour réduire la récidive ; d'autres estiment que la peine doit d'abord rester proportionnée à la gravité de l'infraction."
   },
   {
@@ -616,18 +616,18 @@
   },
   {
     "id": "SEC_8",
-    "text": "Les services secrets doivent être plus contrôlés par le parlement.",
+    "text": "Le Parlement doit contrôler l'activité des services secrets.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "contrôle des services secrets",
     "explanation": "Les services de renseignement français sont contrôlés par une délégation parlementaire. Certains estiment ce contrôle insuffisant ; d'autres craignent que trop de transparence nuise à l'efficacité des opérations."
   },
   {
     "id": "SEC_9",
-    "text": "La possession de drogues destinées à un usage personnel doit être dépénalisée.",
+    "text": "Posséder de la drogue pour sa consommation personnelle ne doit plus être un délit.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "usage personnel de drogues",
     "explanation": "La possession de drogues pour un usage personnel est sanctionnée en France. Les partisans de la dépénalisation privilégient la prévention et les soins ; ses opposants estiment que la sanction pénale contribue à décourager la consommation et à protéger la santé publique."
   },
   {
@@ -640,34 +640,34 @@
   },
   {
     "id": "SEC_11",
-    "text": "L'État doit pouvoir retirer la nationalité aux terroristes.",
+    "text": "L'État doit pouvoir retirer la nationalité française aux personnes condamnées pour terrorisme.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "déchéance de nationalité",
     "explanation": "La déchéance de nationalité pour les terroristes binationaux a été débattue après les attentats de 2015. Ses partisans y voient une sanction symbolique forte ; ses opposants estiment qu'elle crée deux catégories de citoyens et viole des principes fondamentaux."
   },
   {
     "id": "SEC_12",
-    "text": "Les services secrets doivent accéder aux messages chiffrés des suspects.",
+    "text": "La police doit pouvoir lire les messages privés protégés des personnes suspectes.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "accès aux messages chiffrés",
     "explanation": "Le chiffrement des communications (WhatsApp, Signal) protège la vie privée mais complique les enquêtes. Créer des « portes dérobées » pour les services de l'État affaiblirait la sécurité de tous en créant des failles exploitables par des acteurs malveillants."
   },
   {
     "id": "SEC_13",
-    "text": "Le déclenchement des caméras-piétons des policiers doit être automatique, sans possibilité de désactivation.",
+    "text": "Les caméras portées par les policiers doivent filmer en continu pendant leur service.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "caméras-piétons",
     "explanation": "Les policiers sont déjà équipés de caméras-piétons en France, mais leur déclenchement reste souvent laissé à l'appréciation de l'agent. Des études montrent que leur usage réduit les incidents lors des interventions. Le débat porte sur le passage à un enregistrement systématique, la conservation des enregistrements et l'accès à ces images en cas de litige."
   },
   {
     "id": "SEC_14",
-    "text": "Les jeunes délinquants doivent être jugés moins sévèrement.",
+    "text": "Les mineurs qui commettent un délit doivent être jugés moins sévèrement que les adultes.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "justice des mineurs",
     "explanation": "Le droit pénal des mineurs distingue enfants et adultes, avec une priorité à l'éducation. La réforme de 2021 a modernisé ce régime. Le débat porte sur la limite d'âge de la responsabilité pénale et la sévérité des sanctions pour les mineurs récidivistes."
   },
   {
@@ -707,10 +707,10 @@
   },
   {
     "id": "SEC_19",
-    "text": "Les terroristes doivent rester détenus longtemps après leur peine.",
+    "text": "Une personne condamnée pour terrorisme doit pouvoir rester enfermée après avoir purgé sa peine.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "sec",
+    "cluster": "rétention après peine",
     "explanation": "La France dispose de mesures de sûreté pour les détenus terroristes après leur libération. Le débat porte sur leur constitutionnalité : peut-on restreindre la liberté d'une personne qui a purgé sa peine sur la seule base d'un risque de récidive ?"
   },
   {
@@ -723,10 +723,10 @@
   },
   {
     "id": "SEC_21",
-    "text": "Les lanceurs d'alerte doivent être protégés légalement.",
+    "text": "La loi doit protéger les salariés qui révèlent des faits illégaux commis par leur employeur.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "whistleblower protection",
+    "cluster": "lanceurs d alerte",
     "explanation": "Les lanceurs d'alerte signalent des comportements illégaux au sein d'organisations. La loi Sapin 2 les protège partiellement. Des affaires comme celle d'Edward Snowden illustrent leur vulnérabilité. Ses partisans veulent étendre cette protection ; ses opposants craignent qu'une protection trop large ne facilite la divulgation d'informations sensibles (secret défense, secrets d'affaires, enquêtes en cours) sans garde-fou suffisant."
   },
   {
@@ -740,10 +740,10 @@
   },
   {
     "id": "ENV_1",
-    "text": "Lutter contre le changement climatique doit être une priorité absolue pour le gouvernement.",
+    "text": "La lutte contre le changement climatique doit être la première priorité du gouvernement.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "climate urgency",
+    "cluster": "priorité climatique",
     "explanation": "Le consensus scientifique est clair : les activités humaines provoquent le réchauffement climatique. Le débat politique porte sur l'urgence et l'ampleur des mesures à prendre, leur coût économique, et leur répartition entre pays riches et pauvres. Ses opposants ne nient pas nécessairement cette urgence, mais estiment que d'autres priorités (pouvoir d'achat, sécurité, santé) ne doivent pas être reléguées au second plan."
   },
   {
@@ -751,23 +751,23 @@
     "text": "La France doit construire de nouveaux réacteurs nucléaires.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "nucléaire",
     "explanation": "Le nucléaire produit très peu de CO₂ mais génère des déchets radioactifs durables et présente des risques d'accidents. La France produit environ 70 % de son électricité via le nucléaire. Le débat porte sur sa place dans la transition énergétique face aux renouvelables."
   },
   {
     "id": "ENV_3",
-    "text": "Une taxe sur les émissions de CO₂ doit être mise en place pour décourager l'usage des carburants fossiles.",
+    "text": "Le prix du carbone doit augmenter, même si cela fait monter le prix de l'essence.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "prix du carbone",
     "explanation": "La taxe carbone renchérit le prix des carburants fossiles pour inciter à les consommer moins. La hausse de 2018 a déclenché le mouvement des Gilets jaunes. Le débat porte sur son efficacité et sa justice sociale, son impact étant plus fort sur les ménages modestes."
   },
   {
     "id": "ENV_4",
-    "text": "Des réglementations environnementales strictes doivent être maintenues, même si elles entraînent des pertes d'emplois dans certains secteurs.",
+    "text": "Les normes écologiques doivent être maintenues, même si elles coûtent des emplois.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "normes contre emplois",
     "explanation": "Des normes environnementales strictes peuvent forcer des industries polluantes à se transformer ou fermer. Le débat porte sur l'équilibre entre protection de l'environnement et maintien des emplois dans les régions dépendantes de ces industries."
   },
   {
@@ -789,34 +789,34 @@
   },
   {
     "id": "ENV_7",
-    "text": "Les voitures thermiques doivent être interdites avant 2035.",
+    "text": "Les voitures à essence et diesel doivent être interdites à la vente avant 2035.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "transport automobile",
     "explanation": "Le règlement européen prévoyait une interdiction totale des voitures neuves à moteur thermique à partir de 2035. En décembre 2025, la Commission européenne a proposé d'assouplir cette règle : une réduction de 90 % des émissions serait exigée plutôt qu'une interdiction totale, avec des exceptions pour les hybrides rechargeables, les biocarburants et les e-carburants — une proposition encore soumise à l'approbation du Parlement européen et du Conseil. Le débat porte sur la faisabilité (réseau de recharge, prix des voitures électriques) et sur la nécessité de maintenir une trajectoire claire vers l'électrique face aux pressions de l'industrie."
   },
   {
     "id": "ENV_8",
-    "text": "L'État doit abandonner la croissance du PIB comme objectif prioritaire de sa politique économique.",
+    "text": "L'État doit renoncer à faire de la croissance économique son objectif principal.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "décroissance",
     "explanation": "Le Produit Intérieur Brut mesure la production de richesse, mais ignore les impacts environnementaux et les inégalités. Ses partisans veulent le remplacer par des indicateurs de bien-être ou de soutenabilité ; ses opposants estiment que la croissance du PIB reste nécessaire pour financer les services publics et créer des emplois."
   },
   {
     "id": "ENV_9",
-    "text": "La viande doit être taxée pour son impact environnemental.",
+    "text": "La consommation de viande doit être découragée par une taxe.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "alimentation",
     "explanation": "L'élevage est responsable d'environ 15 % des émissions mondiales de gaz à effet de serre. Taxer la viande inciterait à réduire sa consommation. Ses partisans y voient un outil efficace ; ses critiques estiment que cela pénalise surtout les ménages modestes."
   },
   {
     "id": "ENV_10",
-    "text": "Les pays riches doivent payer les pays pauvres pour les dommages climatiques.",
+    "text": "Les pays riches doivent indemniser les pays pauvres pour les dégâts du changement climatique.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "justice climatique internationale",
     "explanation": "Les pays riches ont émis la majorité des gaz à effet de serre depuis l'industrialisation, causant des dommages dans des pays qui ont peu contribué. Le fonds « pertes et préjudices » créé lors de la COP27 tente d'y répondre, mais son financement reste insuffisant."
   },
   {
@@ -854,10 +854,10 @@
   },
   {
     "id": "ENV_15",
-    "text": "Les plastiques à usage unique doivent être complètement interdits.",
+    "text": "Les plastiques jetables doivent être totalement interdits.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "déchets",
     "explanation": "L'UE a déjà interdit de nombreux plastiques à usage unique. Le débat porte sur l'élargissement de ces interdictions, la disponibilité des alternatives et la gestion des plastiques déjà répandus dans l'environnement."
   },
   {
@@ -915,10 +915,10 @@
   },
   {
     "id": "ENV_22",
-    "text": "L'usage des voitures personnelles en ville doit être limité pour favoriser les transports en commun.",
+    "text": "La circulation des voitures dans les centres-villes doit être limitée.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "env",
+    "cluster": "mobilité urbaine",
     "explanation": "La voiture individuelle contribue fortement aux émissions. Des zones à faibles émissions et des péages urbains poussent à préférer les transports en commun, mais soulèvent des questions d'équité pour les personnes qui n'ont pas accès à ces alternatives."
   },
   {
@@ -963,10 +963,10 @@
   },
   {
     "id": "DEM_5",
-    "text": "Le système électoral doit utiliser la proportionnelle.",
+    "text": "Les députés doivent être élus à la proportionnelle, selon le score de chaque parti.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "mode de scrutin",
     "explanation": "Le scrutin majoritaire à deux tours favorise les grands partis et assure une majorité stable. La proportionnelle donne une représentation fidèle des votes mais produit souvent des coalitions fragiles. Le débat porte sur l'équilibre entre gouvernabilité et représentativité."
   },
   {
@@ -974,23 +974,23 @@
     "text": "L'âge du vote doit être abaissé à 16 ans.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "âge du vote",
     "explanation": "L'Autriche et l'Écosse permettent déjà le vote à 16 ans. Ses partisans estiment que les jeunes sont directement concernés par les décisions politiques et capables de voter ; ses opposants considèrent que la maturité civique s'acquiert à 18 ans, âge légal de la majorité."
   },
   {
     "id": "DEM_7",
-    "text": "Un élu qui ment délibérément à ses concitoyens sur un sujet important doit pouvoir être révoqué.",
+    "text": "Les électeurs doivent pouvoir révoquer un élu avant la fin de son mandat.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "révocation des élus",
     "explanation": "Les politiciens peuvent tenir des propos faux sans sanction légale directe. Certains souhaitent des mécanismes de vérification et de révocation pour les élus qui mentent délibérément. Le débat porte sur la définition du mensonge politique et les risques d'usage partisan."
   },
   {
     "id": "DEM_8",
-    "text": "Les dons privés importants aux partis politiques doivent être interdits.",
+    "text": "Les partis politiques ne doivent plus pouvoir recevoir de dons privés.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "campaign finance",
+    "cluster": "financement privé des partis",
     "explanation": "Le financement des partis est encadré en France : les dons d'entreprises sont interdits depuis 1995. Le débat porte sur l'influence résiduelle des grands donateurs individuels et la nécessité d'un financement encore plus public et transparent."
   },
   {
@@ -1003,10 +1003,10 @@
   },
   {
     "id": "DEM_10",
-    "text": "Les pouvoirs d'urgence doivent expirer automatiquement après 30 jours.",
+    "text": "L'état d'urgence doit prendre fin au bout de 30 jours, sauf prolongation votée par le Parlement.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "pouvoirs d urgence",
     "explanation": "Les pouvoirs d'urgence donnent au gouvernement des capacités exceptionnelles en cas de crise grave. L'état d'urgence sanitaire lié au Covid a duré près de deux ans. Le débat porte sur des limites temporelles automatiques pour éviter que ces régimes d'exception ne se normalisent."
   },
   {
@@ -1027,18 +1027,18 @@
   },
   {
     "id": "DEM_13",
-    "text": "Les médias doivent être régulés pour garantir un équilibre politique.",
+    "text": "L'État doit imposer aux chaînes de télévision un temps de parole équilibré entre les partis.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "régulation des médias",
     "explanation": "La France dispose de l'ARCOM pour garantir le pluralisme dans les médias. Des études montrent une concentration croissante de la propriété médiatique. Le débat porte sur les pouvoirs du régulateur et sur la définition légale du pluralisme politique."
   },
   {
     "id": "DEM_14",
-    "text": "Les immunités parlementaires doivent être réduites.",
+    "text": "Un parlementaire doit pouvoir être poursuivi en justice comme tout autre citoyen.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "immunité parlementaire",
     "explanation": "Les parlementaires bénéficient d'une immunité protégeant leur liberté d'expression dans l'hémicycle. Mais elle peut aussi protéger des élus accusés de faits sans rapport avec leur mandat. Le débat porte sur le périmètre de cette immunité et les conditions de la lever."
   },
   {
@@ -1051,10 +1051,10 @@
   },
   {
     "id": "DEM_16",
-    "text": "Les juges doivent pouvoir annuler les lois du parlement.",
+    "text": "Le Conseil constitutionnel doit pouvoir annuler une loi votée par le Parlement.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "contrôle de constitutionnalité",
     "explanation": "Le Conseil constitutionnel peut censurer des lois votées par le Parlement si elles violent la Constitution. Certains veulent renforcer ce contrôle pour protéger les droits fondamentaux ; d'autres estiment que cela donne trop de pouvoir à des juges non élus."
   },
   {
@@ -1077,10 +1077,10 @@
   },
   {
     "id": "DEM_19",
-    "text": "Les partis politiques doivent être financés publiquement.",
+    "text": "Les partis politiques doivent être financés par l'État.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "financement public des partis",
     "explanation": "Les partis politiques français reçoivent déjà une aide publique proportionnelle à leurs résultats. Certains souhaitent renforcer ce financement et réduire l'influence des dons privés ; d'autres y voient un financement contraint de partis auxquels les contribuables ne souscrivent pas."
   },
   {
@@ -1094,10 +1094,10 @@
   },
   {
     "id": "DEM_21",
-    "text": "Les gouvernements doivent pouvoir révoquer les juges.",
+    "text": "Le gouvernement doit pouvoir révoquer un juge.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "dem",
+    "cluster": "indépendance des juges",
     "explanation": "Dans certains pays comme la Pologne sous le PiS, les gouvernements ont limogé des juges dont ils n'approuvaient pas les décisions. Cela fragilise l'État de droit. Le débat porte sur le niveau de protection nécessaire pour garantir l'indépendance de la magistrature."
   },
   {
@@ -1119,10 +1119,10 @@
   },
   {
     "id": "GLO_1",
-    "text": "L'intérêt national doit primer sur les engagements internationaux.",
+    "text": "L'intérêt de la France doit passer avant le respect des traités internationaux.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "nationalism",
+    "cluster": "primauté nationale",
     "explanation": "La France est membre de l'UE, de l'OTAN et signataire de nombreux traités. Parfois, les engagements internationaux contraignent les choix nationaux. Le débat porte sur le niveau de souveraineté nationale que la France doit préserver face à ses obligations."
   },
   {
@@ -1135,18 +1135,18 @@
   },
   {
     "id": "GLO_3",
-    "text": "L'OTAN est une alliance militaire essentielle pour la sécurité de la France.",
+    "text": "L'OTAN est indispensable à la sécurité de la France.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
-    "explanation": "L'OTAN est une alliance militaire de défense collective entre pays occidentaux. Depuis l'invasion de l'Ukraine en 2022, son rôle est central en Europe. Le débat porte sur le niveau d'engagement de la France et son autonomie stratégique au sein de l'alliance."
+    "cluster": "alliance atlantique",
+    "explanation": "L'OTAN est une alliance militaire créée en 1949. Ses membres s'engagent à se défendre mutuellement en cas d'attaque : c'est l'article 5 du traité. La France en fait partie depuis l'origine. Les partisans estiment que cette garantie collective est ce qui protège le mieux le pays, pour un coût partagé. Les opposants estiment qu'elle lie la France aux décisions américaines et limite son indépendance militaire."
   },
   {
     "id": "GLO_4",
-    "text": "La France doit augmenter son aide publique au développement.",
+    "text": "La France doit augmenter l'aide qu'elle verse aux pays pauvres.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "aide au développement",
     "explanation": "La France s'était engagée en 2021 à atteindre 0,7 % de son revenu national brut consacré à l'aide publique au développement d'ici 2025, l'objectif recommandé par l'ONU. Elle s'en est au contraire éloignée : le budget a été réduit cinq années de suite, avec un taux tombé à environ 0,43 % en 2025 et une nouvelle coupe prévue pour 2026 (autour de 0,38 %). Le débat porte sur le niveau et les conditions de cette aide : sert-elle réellement les pays bénéficiaires ou les intérêts diplomatiques français ?"
   },
   {
@@ -1159,26 +1159,26 @@
   },
   {
     "id": "GLO_6",
-    "text": "La France doit utiliser des barrières douanières pour protéger ses industries, même au risque de tensions commerciales.",
+    "text": "La France doit taxer les produits importés pour protéger ses usines.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "protection commerciale",
     "explanation": "Le protectionnisme consiste à taxer les importations pour protéger les industries locales. L'UE a imposé des droits de douane sur les voitures électriques chinoises. Le débat porte sur son efficacité à long terme et les risques de représailles commerciales."
   },
   {
     "id": "GLO_7",
-    "text": "La France et ses alliés doivent imposer des sanctions économiques aux régimes autoritaires.",
+    "text": "La France doit sanctionner économiquement les régimes autoritaires.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "sanctions économiques",
     "explanation": "Les sanctions économiques visent à pénaliser des régimes autoritaires sans recourir à la guerre. Des études montrent des résultats mitigés : elles peuvent affaiblir une économie, mais ne changent pas toujours la politique du régime et pèsent d'abord sur les populations."
   },
   {
     "id": "GLO_8",
-    "text": "L'Union européenne doit renforcer son intégration politique, même si cela réduit les pouvoirs des États membres.",
+    "text": "L'Union européenne doit décider de plus de choses à la place des États.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "eu integration",
+    "cluster": "intégration européenne",
     "explanation": "L'UE a une monnaie commune et des règles budgétaires partagées. Certains souhaitent aller plus loin : budget européen plus important, politique étrangère commune, harmonisation fiscale. Ses opposants craignent une perte de souveraineté nationale supplémentaire."
   },
   {
@@ -1202,47 +1202,47 @@
     "text": "La France doit réduire sa dépendance à la Chine.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "dépendance à la Chine",
     "explanation": "La France et l'UE dépendent de la Chine pour des produits stratégiques (batteries, terres rares, médicaments). La pandémie et les tensions géopolitiques ont révélé ces risques. Le débat porte sur les investissements nécessaires pour diversifier les approvisionnements."
   },
   {
     "id": "GLO_12",
-    "text": "Les anciens pays colonisateurs doivent verser des réparations à leurs anciennes colonies.",
+    "text": "La France doit verser des réparations financières à ses anciennes colonies.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "réparations coloniales",
     "explanation": "La colonisation a engendré des richesses pour les métropoles et des traumatismes durables pour les pays colonisés. Certains demandent des réparations financières ; d'autres estiment que les États actuels ne peuvent pas être tenus responsables d'actes passés."
   },
   {
     "id": "GLO_13",
-    "text": "Les tribunaux internationaux (CPI) doivent juger les crimes de guerre.",
+    "text": "La Cour pénale internationale doit pouvoir juger les crimes de guerre de tous les pays.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
-    "explanation": "La Cour Pénale Internationale juge les crimes contre l'humanité et crimes de guerre. Elle a émis un mandat d'arrêt contre Vladimir Poutine en 2023. Certains pays (États-Unis, Russie, Chine) ne reconnaissent pas sa juridiction. Le débat porte sur son autorité internationale."
+    "cluster": "justice pénale internationale",
+    "explanation": "Créée en 2002, cette juridiction siège à La Haye et poursuit les personnes accusées de génocide, de crimes contre l'humanité ou de crimes de guerre. Elle n'intervient que si l'État concerné ne juge pas lui-même. Les États-Unis, la Russie, la Chine et Israël n'ont pas reconnu sa compétence. Les partisans estiment qu'aucun dirigeant ne doit échapper à la justice. Les opposants estiment qu'une cour qui ne peut juger que les ressortissants des pays coopératifs applique le droit de façon inégale."
   },
   {
     "id": "GLO_14",
-    "text": "Les pays doivent restreindre la propriété étrangère des secteurs stratégiques.",
+    "text": "La France doit empêcher des entreprises étrangères de racheter ses entreprises stratégiques.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "propriété étrangère",
     "explanation": "Des entreprises ou fonds étrangers investissent dans des secteurs comme l'énergie ou la défense. La France dispose de mécanismes de contrôle. Le débat porte sur la définition de ce qui est « stratégique » et la frontière entre ouverture économique et protection nationale."
   },
   {
     "id": "GLO_15",
-    "text": "La communauté internationale doit intervenir militairement pour stopper un génocide, même sans mandat de l'ONU.",
+    "text": "La France doit pouvoir intervenir militairement pour stopper un massacre, même sans accord de l'ONU.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "intervention militaire",
     "explanation": "La communauté internationale n'est pas intervenue lors du génocide rwandais (1994). Elle est intervenue en Libye (2011) avec des résultats controversés. Le débat porte sur le « droit d'ingérence » humanitaire : quand une intervention extérieure est-elle légitime face aux crimes de masse ?"
   },
   {
     "id": "GLO_16",
-    "text": "La France doit réduire ses dépendances stratégiques en produisant davantage localement, notamment en alimentation et en énergie.",
+    "text": "La France doit produire sur son sol ce dont elle a besoin, plutôt que d'importer.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "autonomie stratégique",
     "explanation": "La pandémie a révélé la dépendance française en médicaments et équipements médicaux. L'autosuffisance offre une sécurité stratégique, mais a un coût économique : produire localement est souvent plus cher qu'importer."
   },
   {
@@ -1290,10 +1290,10 @@
   },
   {
     "id": "GLO_22",
-    "text": "L'État doit financer activement la préservation de la culture et des traditions françaises.",
+    "text": "L'État doit financer la défense de la culture française.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "glo",
+    "cluster": "politique culturelle",
     "explanation": "La mondialisation homogénéise les cultures. La France défend l'exception culturelle via des subventions et des quotas. Le débat porte sur l'efficacité de ces protections et leur adéquation à l'ère des plateformes numériques mondiales."
   },
   {
@@ -1314,18 +1314,18 @@
   },
   {
     "id": "PUB_3",
-    "text": "Les services publics essentiels doivent être ouverts à la concurrence du secteur privé.",
+    "text": "Les services publics doivent être ouverts à la concurrence des entreprises privées.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "public contre privé",
     "explanation": "Des entreprises privées opèrent déjà dans des services publics comme la santé ou l'éducation. Ses partisans estiment que la concurrence peut améliorer la qualité et l'efficacité du service ; ses opposants craignent qu'elle crée un système à deux vitesses où les plus aisés accèdent à de meilleurs soins et à de meilleures écoles."
   },
   {
     "id": "PUB_4",
-    "text": "Le système de retraite français doit reposer principalement sur la répartition plutôt que sur la capitalisation.",
+    "text": "Les retraites doivent rester financées par les cotisations plutôt que par l'épargne personnelle.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "financement des retraites",
     "explanation": "Le système français fonctionne par répartition : les cotisations des actifs financent directement les retraites d'aujourd'hui. Le vieillissement de la population le fragilise, et certains proposent d'introduire une part de capitalisation (épargne individuelle investie sur les marchés, comme en Suède) pour diversifier le financement. Ses opposants craignent que cela affaiblisse la solidarité entre générations et expose les pensions aux aléas des marchés financiers."
   },
   {
@@ -1338,18 +1338,18 @@
   },
   {
     "id": "PUB_6",
-    "text": "Le logement social doit être massivement étendu.",
+    "text": "L'État doit construire plus de logements sociaux.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "logement social",
     "explanation": "La France compte plus de 2,9 millions de ménages en attente d'un logement social, un chiffre en forte hausse. Le délai médian d'attribution dépasse 30 mois, et davantage encore dans les zones les plus tendues comme l'Île-de-France. Le débat porte sur les moyens de relancer la construction et sur l'accès : faut-il réserver les HLM aux plus précaires ou maintenir une mixité sociale ?"
   },
   {
     "id": "PUB_7",
-    "text": "Un revenu de base doit remplacer les allocations actuelles.",
+    "text": "Un revenu de base versé à tous doit remplacer les aides sociales actuelles.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "revenu de base",
     "explanation": "Le revenu universel remplacerait les multiples allocations existantes (RSA, chômage) par une somme versée à tous, sans conditions. Ses partisans y voient une simplification et une sécurité pour tous ; ses critiques doutent de sa faisabilité financière et de son effet sur l'emploi."
   },
   {
@@ -1381,39 +1381,39 @@
     "text": "L'État doit plafonner les loyers dans les grandes villes.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "encadrement des loyers",
     "explanation": "L'encadrement des loyers existe déjà dans plusieurs grandes villes (Paris, Bordeaux). Il plafonne les hausses. Ses partisans estiment qu'il protège les locataires ; ses critiques affirment qu'il décourage la construction et peut réduire l'offre de logements disponibles."
   },
   {
     "id": "PUB_12",
-    "text": "Les transports en commun doivent être gratuits pour les usagers.",
+    "text": "Les transports en commun doivent être gratuits.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "transports publics",
     "explanation": "Certaines villes françaises (Dunkerque, Montpellier) ont rendu les transports en commun gratuits. Cela augmente leur usage mais représente un coût pour les collectivités. Le débat porte sur qui doit financer les transports et si la gratuité est le meilleur outil pour réduire la place de la voiture."
   },
   {
     "id": "PUB_13",
-    "text": "Les dépenses de protection sociale françaises devraient être significativement réduites.",
+    "text": "Les dépenses sociales de la France doivent baisser.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "dépenses sociales",
     "explanation": "La France a l'un des systèmes de protection sociale les plus étendus au monde (~32 % du PIB). Certains estiment qu'il est trop coûteux et freine la compétitivité ; d'autres y voient la garantie d'une société cohésive où personne n'est laissé sans filet de sécurité."
   },
   {
     "id": "PUB_14",
-    "text": "L'État doit garantir un emploi à qui veut travailler.",
+    "text": "L'État doit garantir un emploi à toute personne qui en cherche un.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "garantie d emploi",
     "explanation": "L'emploi garanti est un programme où l'État propose un emploi à toute personne qui en cherche un, dans des activités d'utilité sociale. Des expériences ont eu lieu en Inde et aux États-Unis. Ses partisans y voient une réponse au chômage ; ses critiques estiment le coût trop élevé."
   },
   {
     "id": "PUB_15",
-    "text": "Limiter le remboursement de certains soins très coûteux est nécessaire pour préserver l'équilibre des finances publiques.",
+    "text": "La Sécurité sociale doit rembourser moins les soins les plus coûteux.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "remboursement des soins",
     "explanation": "Les dépenses de santé augmentent avec le vieillissement de la population et l'arrivée de traitements innovants très onéreux. Ses partisans estiment qu'il faut prioriser les remboursements pour préserver la pérennité du système ; ses opposants considèrent que la solidarité nationale doit couvrir tous les soins nécessaires, quel qu'en soit le coût."
   },
   {
@@ -1444,10 +1444,10 @@
   },
   {
     "id": "PUB_19",
-    "text": "Garantir le niveau des pensions de retraite doit être une priorité, même si cela implique d'augmenter les cotisations.",
+    "text": "Les retraites doivent être maintenues à leur niveau, même s'il faut augmenter les cotisations.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "pub",
+    "cluster": "niveau des pensions",
     "explanation": "Les pensions de retraite représentent ~14 % du PIB en France. Face au déficit du système, certains proposent de les indexer différemment. Le débat porte sur l'équité intergénérationnelle entre retraités actuels et actifs qui cotiseront pour des pensions futures incertaines."
   },
   {
@@ -1479,18 +1479,18 @@
   },
   {
     "id": "PUB_23",
-    "text": "L'inscription à l'université publique doit être gratuite pour les étudiants français.",
+    "text": "Les études à l'université publique doivent être gratuites.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "education",
+    "cluster": "université",
     "explanation": "Les universités françaises facturent aux étudiants français et européens des frais modestes (environ 280 à 500 € par an, droits d'inscription et CVEC compris) — un montant nettement plus élevé pour les étudiants hors Union européenne (jusqu'à environ 3 900 € par an depuis un décret de mai 2026). La gratuité totale permettrait un accès sans barrière financière. Le débat porte aussi sur l'équité : les études supérieures profitent surtout aux enfants de milieux favorisés, ce qui interroge la pertinence d'une gratuité universelle plutôt que ciblée sur les plus modestes."
   },
   {
     "id": "ECO_24",
-    "text": "Le taux minimum mondial d'imposition des multinationales (actuellement 15 %) doit être relevé.",
+    "text": "Les multinationales doivent payer un impôt minimum plus élevé dans tous les pays.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "corporate taxes",
+    "cluster": "fiscalité internationale",
     "explanation": "Un accord international de 2021 a établi un taux plancher de 15 % pour l'impôt sur les sociétés, afin de limiter la concurrence fiscale entre États. Ses partisans jugent ce taux trop bas pour vraiment dissuader l'optimisation fiscale et réclament un relèvement, parfois jusqu'à 25 % ; ses opposants estiment que 15 % constitue déjà un compromis international difficile à obtenir, et que le relever risquerait de faire échouer l'accord."
   },
   {
@@ -1519,10 +1519,10 @@
   },
   {
     "id": "IMM_23",
-    "text": "Tout enfant né en France doit pouvoir obtenir la nationalité française, quelle que soit l'origine de ses parents.",
+    "text": "Tout enfant né en France doit pouvoir devenir français, quelle que soit la nationalité de ses parents.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "citizenship",
+    "cluster": "accès à la nationalité",
     "explanation": "Le droit du sol permet à un enfant né en France d'acquérir la nationalité française sous certaines conditions. Une dérogation restreignant ce droit existe déjà à Mayotte, durcie en 2025-2026 (résidence régulière des deux parents désormais exigée, contre un seul parent auparavant). Certains veulent l'étendre ou conditionner plus largement la nationalité à celle des parents ; d'autres considèrent le droit du sol fondamental à l'identité républicaine française, et rappellent qu'une extension nationale de restrictions similaires nécessiterait une réforme constitutionnelle."
   },
   {
@@ -1543,18 +1543,18 @@
   },
   {
     "id": "DEM_24",
-    "text": "Le référendum d'initiative citoyenne (RIC) doit être introduit dans la Constitution française.",
+    "text": "Les citoyens doivent pouvoir demander un référendum en réunissant assez de signatures.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "direct democracy",
+    "cluster": "démocratie directe",
     "explanation": "Le RIC (Référendum d'Initiative Citoyenne) est une demande portée notamment par les Gilets jaunes. Il permettrait à des citoyens de forcer l'organisation d'un référendum via une pétition. Ses partisans y voient un correctif démocratique ; ses critiques craignent des votes sur les droits des minorités."
   },
   {
     "id": "GLO_23",
-    "text": "La France doit quitter le commandement militaire intégré de l'OTAN.",
+    "text": "La France ne doit plus placer ses armées sous le commandement de l'OTAN.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "sovereignty",
+    "cluster": "commandement de l OTAN",
     "explanation": "La France a quitté le commandement militaire intégré de l'OTAN en 1966 avant d'y revenir en 2009. Certains souhaitent un nouveau retrait pour préserver l'autonomie stratégique française ; d'autres considèrent que l'alliance est indispensable face aux menaces actuelles."
   },
   {
@@ -1567,42 +1567,42 @@
   },
   {
     "id": "ECO_26",
-    "text": "L'âge légal de départ à la retraite devrait être abaissé par rapport au niveau actuel (64 ans).",
+    "text": "L'âge de départ à la retraite doit être abaissé en dessous de 64 ans.",
     "axis": "economic",
     "status": "CORE",
-    "cluster": "pensions",
+    "cluster": "retraites",
     "explanation": "La réforme des retraites de 2023 a repoussé l'âge légal de départ de 62 à 64 ans, malgré une forte opposition sociale. Ses partisans l'estiment nécessaire pour équilibrer le système ; ses opposants jugent qu'elle pénalise les travailleurs aux carrières longues et aux métiers pénibles."
   },
   {
     "id": "GLO_25",
-    "text": "La France doit continuer à fournir une aide militaire à l'Ukraine face à la Russie.",
+    "text": "La France doit continuer à envoyer des armes à l'Ukraine.",
     "axis": "global",
     "status": "CORE",
-    "cluster": "ukraine",
+    "cluster": "Ukraine",
     "explanation": "Depuis l'invasion russe de 2022, la France fournit du matériel militaire et forme des soldats ukrainiens. Certains estiment que cette aide est nécessaire à la sécurité européenne ; d'autres craignent qu'elle prolonge la guerre ou augmente le risque d'escalade avec la Russie."
   },
   {
     "id": "ENV_25",
-    "text": "Les normes environnementales européennes sur l'agriculture devraient être assouplies pour mieux tenir compte des réalités des agriculteurs français.",
+    "text": "Les règles écologiques imposées aux agriculteurs doivent être allégées.",
     "axis": "global",
     "status": "SECONDARY",
-    "cluster": "agriculture",
+    "cluster": "normes agricoles",
     "explanation": "Les agriculteurs français dénoncent une concurrence déloyale avec des pays soumis à des normes moins strictes. Le débat porte sur l'équilibre entre les objectifs environnementaux de l'UE (réduction des pesticides, biodiversité) et la compétitivité du modèle agricole français."
   },
   {
     "id": "PUB_24",
-    "text": "L'État doit obliger les médecins à s'installer dans les déserts médicaux.",
+    "text": "L'État doit obliger les jeunes médecins à s'installer dans les zones qui manquent de soignants.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "healthcare access",
+    "cluster": "déserts médicaux",
     "explanation": "Les déserts médicaux touchent des millions de Français, notamment en zone rurale. L'obligation d'installation dans ces zones existe dans certains pays. Le débat porte sur l'équilibre entre la liberté d'installation des médecins et le droit à la santé de tous les citoyens."
   },
   {
     "id": "PUB_25",
-    "text": "L'État doit investir massivement dans les hôpitaux publics, notamment aux urgences et dans les lits d'hospitalisation.",
+    "text": "L'État doit donner plus d'argent aux hôpitaux publics.",
     "axis": "economic",
     "status": "SECONDARY",
-    "cluster": "public healthcare",
+    "cluster": "hôpital public",
     "explanation": "Les hôpitaux publics manquent de lits, de personnel et de matériel selon de nombreux soignants. Des fermetures de services et des temps d'attente aux urgences illustrent cette crise. Ses partisans y voient une urgence sanitaire à traiter en priorité ; ses opposants soulignent que ces investissements doivent être financés dans un contexte de déficit public, et s'interrogent sur l'efficacité de la dépense sans réforme de l'organisation hospitalière."
   },
   {
@@ -1615,18 +1615,18 @@
   },
   {
     "id": "SOC_27",
-    "text": "L'État doit sanctionner financièrement les entreprises qui ne réduisent pas leurs écarts de salaire entre femmes et hommes.",
+    "text": "L'État doit infliger des amendes aux entreprises qui paient moins les femmes que les hommes.",
     "axis": "cultural",
     "status": "CORE",
-    "cluster": "gender pay gap",
+    "cluster": "égalité salariale",
     "explanation": "Depuis 2019, un Index de l'égalité professionnelle (noté sur 100) impose aux entreprises de plus de 50 salariés une pénalité pouvant atteindre 1 % de la masse salariale en cas de score insuffisant. Une directive européenne censée durcir ces règles devait être transposée en droit français au plus tard en juin 2026, un délai déjà dépassé. À poste comparable, l'écart de salaire entre femmes et hommes reste d'environ 4 % en France. Ses partisans réclament des sanctions plus systématiques ; ses opposants jugent la contrainte excessive pour les entreprises."
   },
   {
     "id": "DEM_25",
-    "text": "La loi doit limiter la concentration de plusieurs grands médias entre les mains d'un même propriétaire.",
+    "text": "Une même personne ne doit pas pouvoir posséder plusieurs grands médias.",
     "axis": "authority",
     "status": "SECONDARY",
-    "cluster": "media plurality",
+    "cluster": "concentration des médias",
     "explanation": "Quelques milliardaires contrôlent une grande partie des médias français. Le risque est une orientation éditoriale au service de leurs intérêts économiques ou politiques. Ses opposants à une régulation stricte estiment que la propriété privée reste un facteur d'investissement essentiel pour des médias en difficulté financière, et que la diversité de l'offre en ligne limite ce risque."
   },
   {
@@ -1639,10 +1639,10 @@
   },
   {
     "id": "SEC_25",
-    "text": "Les policiers soupçonnés d'usage excessif de la force doivent faire l'objet d'une enquête totalement indépendante de la police.",
+    "text": "Les enquêtes sur les policiers accusés de violences doivent être menées par un service indépendant.",
     "axis": "authority",
     "status": "CORE",
-    "cluster": "police accountability",
+    "cluster": "contrôle de la police",
     "explanation": "Aujourd'hui, quand un policier est mis en cause après un usage de la force, l'enquête est généralement menée par l'Inspection Générale de la Police Nationale (IGPN), un service composé de policiers que la presse surnomme « police des polices ». Ses partisans estiment que l'expertise du métier est nécessaire pour juger de décisions prises en quelques secondes ; ses opposants, dont le Défenseur des droits, y voient un risque de partialité qui nourrit la défiance envers la police, et réclament que ces enquêtes soient confiées à un organisme totalement extérieur à la hiérarchie policière, comme il en existe dans d'autres pays européens."
   },
   {
@@ -1655,18 +1655,194 @@
   },
   {
     "id": "ECO_28",
-    "text": "Le développement de l'intelligence artificielle doit être strictement réglementé par la loi, même au risque de ralentir l'innovation.",
+    "text": "La loi doit encadrer l'intelligence artificielle, même si cela ralentit l'innovation.",
     "axis": "economic",
     "status": "PRIMARY",
-    "cluster": "tech regulation",
-    "explanation": "L'AI Act européen, entré en vigueur en 2024, est le premier cadre légal complet au monde sur l'intelligence artificielle. Ses obligations de transparence (informer qu'on interagit avec une IA) restent prévues pour août 2026, mais un accord européen en cours d'adoption mi-2026 (« Digital Omnibus ») reporterait la plupart des obligations plus lourdes, pour les systèmes à haut risque, à décembre 2027 voire août 2028. Ses partisans estiment qu'un encadrement strict reste nécessaire face aux risques de biais, de désinformation ou de perte de contrôle sur des décisions automatisées ; ses opposants, dont une partie a obtenu ce report, jugeaient le calendrier initial trop contraignant pour l'investissement et l'innovation en Europe face aux États-Unis et à la Chine."
+    "cluster": "régulation des technologies",
+    "explanation": "L'intelligence artificielle désigne des programmes capables de produire des textes, des images ou des décisions. L'Union européenne a adopté en 2024 un règlement qui classe ces systèmes selon leur risque et interdit certains usages. Les partisans d'un encadrement strict estiment qu'il faut fixer les règles avant que les usages ne se répandent. Les opposants craignent que des règles trop lourdes freinent la recherche européenne face aux entreprises américaines et chinoises."
   },
   {
     "id": "DEM_26",
-    "text": "Les critères des algorithmes utilisés par l'administration pour des décisions comme Parcoursup doivent être rendus publics.",
+    "text": "L'administration doit publier les règles des algorithmes qui décident, comme Parcoursup.",
     "axis": "authority",
     "status": "PRIMARY",
-    "cluster": "algorithmic transparency",
+    "cluster": "transparence des algorithmes",
     "explanation": "Depuis 2018, les algorithmes locaux des universités sur Parcoursup restent partiellement confidentiels, et plusieurs caisses d'allocations familiales ont été critiquées pour l'usage d'algorithmes de notation ciblant leurs contrôles sur les allocataires les plus précaires. La loi impose déjà aux administrations d'informer un usager qu'une décision individuelle repose sur un algorithme et de lui en communiquer les règles sur demande, mais pas de les publier systématiquement. Ses partisans estiment qu'une transparence totale permettrait de comprendre et contester les décisions, et de vérifier l'absence de biais ; ses opposants craignent qu'une divulgation complète ne permette de contourner les critères ou ne complexifie des procédures déjà techniques."
+  },
+  {
+    "id": "ECO_29",
+    "text": "L'État doit être propriétaire des grandes entreprises de l'énergie.",
+    "axis": "economic",
+    "status": "SECONDARY",
+    "cluster": "propriété publique",
+    "explanation": "Être propriétaire signifie que l'État détient l'entreprise et nomme ses dirigeants. EDF a été renationalisée en 2023 ; les entreprises du gaz et du pétrole restent privées. Les partisans estiment que l'énergie est un bien de première nécessité, dont les prix et les investissements de long terme ne devraient pas dépendre d'actionnaires. Les opposants estiment que l'État gestionnaire investit selon des calendriers politiques et fait porter les pertes au contribuable. Les comparaisons internationales ne tranchent pas clairement en faveur d'un modèle."
+  },
+  {
+    "id": "SOC_28",
+    "text": "Le recours à une mère porteuse doit rester interdit en France.",
+    "axis": "cultural",
+    "status": "SECONDARY",
+    "cluster": "bioéthique",
+    "explanation": "Une mère porteuse porte un enfant pour d'autres parents. Cette pratique est interdite en France depuis 1994. Des couples se rendent à l'étranger, et les enfants nés ainsi sont depuis 2019 reconnus à l'état civil français. Les partisans du maintien de l'interdiction estiment qu'elle empêche que le corps et la grossesse deviennent un service marchand. Les opposants estiment qu'un cadre légal encadré protégerait mieux les femmes concernées que le recours à l'étranger."
+  },
+  {
+    "id": "SOC_29",
+    "text": "Le droit à l'avortement doit rester protégé par la Constitution.",
+    "axis": "cultural",
+    "status": "SECONDARY",
+    "cluster": "avortement",
+    "explanation": "L'avortement est légal en France depuis 1975. En mars 2024, le Parlement réuni en Congrès a inscrit dans la Constitution la liberté garantie de la femme d'y recourir. Une révision constitutionnelle est beaucoup plus difficile à défaire qu'une loi ordinaire. Les partisans de cette protection estiment qu'elle met le droit à l'abri d'une majorité future. Les opposants estiment que la Constitution n'a pas vocation à figer des choix de société, et que la loi suffisait."
+  },
+  {
+    "id": "SOC_30",
+    "text": "La procréation médicalement assistée doit rester accessible aux femmes seules.",
+    "axis": "cultural",
+    "status": "SECONDARY",
+    "cluster": "aide à la procréation",
+    "explanation": "Il s'agit des techniques médicales permettant d'avoir un enfant sans rapport sexuel : insémination, fécondation in vitro, don de gamètes. La loi de bioéthique de 2021 a ouvert ces techniques aux femmes seules et aux couples de femmes ; elles étaient auparavant réservées aux couples formés d'un homme et d'une femme, pour raison médicale. Les partisans estiment qu'un projet parental ne dépend pas de la situation conjugale. Les opposants estiment que la loi organise la naissance d'enfants sans père identifiable."
+  },
+  {
+    "id": "SOC_31",
+    "text": "L'État doit contrôler les entreprises pour repérer les discriminations à l'embauche.",
+    "axis": "cultural",
+    "status": "SECONDARY",
+    "cluster": "discriminations à l embauche",
+    "explanation": "Refuser un emploi à cause de l'origine d'une personne est interdit par la loi. Le contrôle consiste à envoyer des candidatures identiques ne différant que par le nom, puis à comparer les réponses reçues. L'État a mené plusieurs campagnes de ce type depuis 2016. Les partisans estiment que sans contrôle, une interdiction reste sans effet, faute de preuves. Les opposants estiment que la méthode place les entreprises en accusation sur la base de cas isolés et détourne le rôle de l'administration."
+  },
+  {
+    "id": "IMM_24",
+    "text": "Un étranger doit avoir des revenus suffisants pour faire venir sa famille en France.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "regroupement familial",
+    "explanation": "Le regroupement familial permet à une personne étrangère installée régulièrement de faire venir son conjoint et ses enfants mineurs. La loi impose déjà des conditions de ressources et de logement, dont le niveau est régulièrement débattu. Les partisans d'une condition de revenus estiment qu'accueillir une famille sans moyens de subsistance la précarise et pèse sur les aides publiques. Les opposants estiment que le droit de vivre en famille ne devrait pas dépendre du salaire, et que la condition écarte surtout les travailleurs modestes."
+  },
+  {
+    "id": "IMM_25",
+    "text": "Les étrangers sans papiers doivent pouvoir se faire soigner gratuitement.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "accès aux soins",
+    "explanation": "L'aide médicale de l'État prend en charge les soins des personnes étrangères en situation irrégulière résidant en France depuis plus de trois mois, sous condition de ressources. Son budget et son périmètre sont débattus à chaque loi de finances. Les partisans estiment que soigner tôt coûte moins cher que traiter en urgence, et limite la propagation des maladies contagieuses. Les opposants estiment que ce dispositif encourage à rester sur le territoire malgré une situation irrégulière."
+  },
+  {
+    "id": "IMM_26",
+    "text": "La France doit expulser tous les étrangers dont la demande d'asile a été refusée.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "éloignement des déboutés",
+    "explanation": "Une personne dont la demande d'asile est rejetée reçoit une obligation de quitter le territoire. Une minorité de ces décisions est effectivement exécutée : les raisons tiennent aux recours, à l'absence de laissez-passer du pays d'origine et aux situations personnelles. Les partisans estiment qu'une décision de justice non appliquée prive le droit d'asile de sa crédibilité. Les opposants estiment que l'exécution systématique ignorerait les attaches et les risques personnels apparus depuis la demande."
+  },
+  {
+    "id": "SEC_26",
+    "text": "La police doit pouvoir contrôler l'identité de toute personne, sans motif précis.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "pouvoirs de contrôle",
+    "explanation": "Un contrôle d'identité consiste à demander à une personne de justifier de son identité. Le code de procédure pénale encadre les cas où il est possible ; le Conseil constitutionnel a rappelé qu'il ne peut pas être totalement discrétionnaire. Les partisans d'un contrôle libre estiment qu'exiger un motif prive la police d'un outil de prévention. Les opposants estiment que l'absence de motif conduit en pratique à cibler certaines personnes en fonction de leur apparence."
+  },
+  {
+    "id": "SEC_27",
+    "text": "Les personnes condamnées à de la prison doivent toutes exécuter leur peine, même courte.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "exécution des peines",
+    "explanation": "Une peine de prison courte peut aujourd'hui être aménagée : bracelet électronique, travail d'intérêt général, semi-liberté. Le juge décide au cas par cas. Les partisans de l'exécution systématique estiment qu'une peine non subie n'a pas d'effet dissuasif. Les opposants estiment que les courtes peines désocialisent sans réduire la récidive, et que les places de prison manquent déjà. Les travaux de recherche sur l'effet des courtes peines ne convergent pas."
+  },
+  {
+    "id": "ENV_26",
+    "text": "Les pesticides les plus dangereux doivent être interdits, même sans solution de remplacement.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "pesticides",
+    "explanation": "Un pesticide sert à protéger les cultures des insectes, des champignons ou des herbes concurrentes. Certains sont interdits en France alors qu'ils restent autorisés ailleurs en Europe, ce qui alimente le débat sur la concurrence entre agriculteurs. Les partisans de l'interdiction invoquent les effets documentés sur la santé des agriculteurs et sur les pollinisateurs. Les opposants estiment qu'interdire sans alternative disponible fait baisser les récoltes et déplace la production vers des pays moins exigeants."
+  },
+  {
+    "id": "ENV_27",
+    "text": "Les militants qui bloquent une route pour le climat doivent être condamnés.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "désobéissance climatique",
+    "explanation": "Bloquer une voie de circulation est une infraction, que le motif soit écologique ou non. Les poursuites et les peines varient selon les parquets et les circonstances. Les partisans de condamnations estiment que la conviction ne crée aucun droit à entraver la vie des autres. Les opposants estiment que la désobéissance civile a historiquement fait avancer des causes que les institutions ignoraient, et qu'une réponse pénale sévère décourage l'engagement plus qu'elle ne règle le fond."
+  },
+  {
+    "id": "ENV_28",
+    "text": "La France doit arrêter de construire de nouvelles éoliennes.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "énergies renouvelables",
+    "explanation": "Une éolienne produit de l'électricité à partir du vent, sans émettre de gaz à effet de serre en fonctionnement. Sa production varie selon la météo, ce qui suppose d'autres moyens en complément. Les partisans de l'arrêt invoquent l'effet sur les paysages, le bruit pour les riverains et le coût du soutien public. Les opposants estiment que l'éolien est l'un des moyens les plus rapides à installer pour remplacer les énergies fossiles."
+  },
+  {
+    "id": "ENV_29",
+    "text": "La transition écologique doit reposer sur des incitations plutôt que sur des interdictions.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "instruments de la transition",
+    "explanation": "Une incitation encourage un comportement par une aide ou un avantage financier : prime à la rénovation, bonus à l'achat. Une interdiction supprime une option : fin de vente d'un produit, zone fermée à certains véhicules. Les partisans des incitations estiment qu'elles font accepter le changement et laissent le choix. Les opposants estiment qu'elles coûtent cher aux finances publiques, profitent surtout aux ménages déjà équipés et produisent des résultats plus lents que des règles obligatoires."
+  },
+  {
+    "id": "ENV_30",
+    "text": "Les logements mal isolés ne doivent plus pouvoir être loués.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "logement et énergie",
+    "explanation": "Un logement mal isolé consomme beaucoup d'énergie pour être chauffé. Le diagnostic de performance énergétique classe les logements de A à G. La loi retire progressivement de la location les plus mal classés. Les partisans estiment que cela protège les locataires de factures très élevées et pousse à rénover. Les opposants estiment que la mesure retire des logements du marché locatif là où ils manquent déjà, et que le coût des travaux dépasse les moyens de nombreux propriétaires."
+  },
+  {
+    "id": "DEM_27",
+    "text": "Le président doit pouvoir prendre seul les décisions importantes en cas de crise grave.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "pouvoir exécutif",
+    "explanation": "La Constitution prévoit déjà des pouvoirs exceptionnels : l'article 16 permet au président de concentrer les pouvoirs quand les institutions sont menacées. Il n'a été utilisé qu'une fois, en 1961. Les partisans estiment qu'une crise exige des décisions rapides que les débats parlementaires ne permettent pas. Les opposants estiment que les périodes de crise sont précisément celles où les contrôles comptent le plus, et que les pouvoirs exceptionnels durent souvent au-delà de la crise."
+  },
+  {
+    "id": "DEM_28",
+    "text": "Un pouvoir politique fort vaut mieux qu'un pouvoir limité par de nombreux contrôles.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "contre-pouvoirs",
+    "explanation": "Les contre-pouvoirs sont les institutions qui peuvent arrêter ou corriger une décision du gouvernement : juges, presse, autorités indépendantes, collectivités. Les partisans d'un pouvoir fort estiment que la multiplication des contrôles bloque les réformes et dilue les responsabilités. Les opposants estiment que ces contrôles sont ce qui distingue une démocratie d'un régime autoritaire, et qu'un pouvoir sans limite finit toujours par en abuser."
+  },
+  {
+    "id": "DEM_29",
+    "text": "Les grandes décisions politiques doivent être prises par des experts plutôt que par des élus.",
+    "axis": "authority",
+    "status": "SECONDARY",
+    "cluster": "expertise contre élection",
+    "explanation": "Un expert tient sa légitimité de ses compétences ; un élu, du vote des citoyens. En France, des autorités indépendantes composées de spécialistes décident déjà dans certains domaines. Les partisans estiment que des sujets techniques mal maîtrisés produisent de mauvaises décisions et des promesses intenables. Les opposants estiment qu'un choix politique tranche entre des intérêts, ce qu'aucune compétence technique ne légitime, et que l'expert ne rend de comptes à personne."
+  },
+  {
+    "id": "GLO_26",
+    "text": "La France doit rester neutre dans les conflits entre grandes puissances.",
+    "axis": "global",
+    "status": "SECONDARY",
+    "cluster": "non-alignement",
+    "explanation": "Rester neutre signifie ne soutenir militairement ni diplomatiquement aucun camp. La France est aujourd'hui engagée dans plusieurs alliances qui supposent le contraire. Les partisans de la neutralité estiment qu'elle préserve la liberté de parole du pays et l'éloigne de guerres qui ne sont pas les siennes. Les opposants estiment que la neutralité laisse le pays isolé au moment où il aurait besoin d'alliés, et prive ses positions de tout poids."
+  },
+  {
+    "id": "PUB_26",
+    "text": "Les dépassements d'honoraires des médecins doivent être interdits.",
+    "axis": "economic",
+    "status": "SECONDARY",
+    "cluster": "accès aux soins",
+    "explanation": "Un dépassement d'honoraires est la part du tarif d'un médecin qui excède le prix fixé avec l'Assurance maladie. Elle est payée par le patient ou sa complémentaire santé. Ces dépassements sont fréquents chez certains spécialistes et dans certaines villes. Les partisans de l'interdiction estiment qu'ils créent une médecine à deux vitesses et font renoncer à des soins. Les opposants estiment qu'ils compensent des tarifs conventionnés jugés trop bas et que les interdire aggraverait le manque de médecins dans certaines spécialités."
+  },
+  {
+    "id": "PUB_27",
+    "text": "La crèche doit être gratuite pour toutes les familles.",
+    "axis": "economic",
+    "status": "SECONDARY",
+    "cluster": "petite enfance",
+    "explanation": "Une crèche accueille les enfants avant l'école maternelle. Son coût est aujourd'hui partagé entre la famille, la commune et la branche famille de la Sécurité sociale ; le tarif payé dépend des revenus. Les partisans de la gratuité estiment qu'elle permettrait à plus de parents, et surtout de mères, de travailler. Les opposants estiment que le problème principal est le manque de places et de professionnels, et que la gratuité coûterait cher sans créer une seule place supplémentaire."
+  },
+  {
+    "id": "PUB_28",
+    "text": "La durée pendant laquelle on touche le chômage doit être raccourcie.",
+    "axis": "economic",
+    "status": "SECONDARY",
+    "cluster": "assurance chômage",
+    "explanation": "L'assurance chômage verse un revenu de remplacement aux personnes qui perdent leur emploi, pendant une durée qui dépend du temps travaillé et de l'âge. Cette durée a été réduite en 2023 et reste un sujet de négociation. Les partisans d'une durée plus courte estiment qu'elle accélère le retour à l'emploi. Les opposants estiment qu'elle pousse à accepter un poste moins adapté, ce qui fragilise les parcours. Les études disponibles mesurent des effets de sens opposés selon les périodes et les publics."
   }
 ]

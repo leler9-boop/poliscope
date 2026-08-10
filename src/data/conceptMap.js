@@ -364,61 +364,64 @@ export const THEME_INTROS = {
 // ─── Question → concept mapping ───────────────────────────────────────────────
 // Maps question IDs to arrays of concept keys shown as educational pills.
 
+// Révision 2026-08 : les entrées pointant vers des questions retirées ont été soit
+// reportées sur la question qui les remplace, soit supprimées. Une entrée orpheline
+// n'affichait rien du tout — le composant ne trouvait jamais la question correspondante.
+// `tests/data/questions.editorial.test.mjs` interdit désormais tout orphelin.
 export const QUESTION_CONCEPTS = {
   // ECONOMY
   ECO_3:  ['fiscalite'],
   ECO_4:  ['fiscalite'],
   ECO_5:  ['dette_publique'],
-  ECO_8:  ['service_public'],
   ECO_10: ['etat_providence'],
   ECO_13: ['libre_echange'],
-  ECO_17: ['libre_echange'],
   ECO_23: ['fiscalite'],
   ECO_24: ['fiscalite'],
   ECO_26: ['retraites'],
-  ECO_27: ['protectionnisme', 'libre_echange'],
+  ECO_29: ['service_public'],          // reprend ECO_8 (nationalisations)
   // SOCIAL
   SOC_16: ['laicite'],
-  SOC_24: ['ivg'],
+  SOC_29: ['ivg'],                     // reprend SOC_24
   // IMMIGRATION
   IMM_2:  ['asile', 'immigration'],
   IMM_3:  ['immigration'],
   IMM_5:  ['immigration', 'souverainete'],
-  IMM_6:  ['immigration'],
   IMM_7:  ['immigration'],
   IMM_8:  ['immigration'],
   IMM_23: ['immigration'],
+  IMM_24: ['immigration'],
+  IMM_25: ['immigration'],
+  IMM_26: ['asile', 'immigration'],
   // ENVIRONMENT
   ENV_1:  ['changement_climatique'],
   ENV_2:  ['nucleaire'],
   ENV_3:  ['taxe_carbone', 'changement_climatique'],
   ENV_4:  ['changement_climatique'],
   ENV_8:  ['decroissance'],
-  ENV_11: ['changement_climatique'],
   ENV_22: ['changement_climatique'],
-  ENV_23: ['decroissance'],
+  ENV_27: ['changement_climatique'],   // reprend ENV_11
+  ENV_28: ['changement_climatique'],
+  ENV_29: ['changement_climatique'],   // reprend ENV_23
+  ENV_30: ['changement_climatique'],
   // DEMOCRACY
-  DEM_3:  ['democratie_directe'],
   DEM_7:  ['democratie_directe'],
+  DEM_24: ['democratie_directe'],      // reprend DEM_3
   DEM_25: ['pluralisme_medias'],
   // GLOBAL
   GLO_3:  ['otan'],
   GLO_6:  ['protectionnisme'],
   GLO_8:  ['union_europeenne'],
-  GLO_9:  ['souverainete'],
   GLO_16: ['souverainete'],
-  GLO_17: ['otan', 'souverainete'],
   GLO_22: ['souverainete'],
   GLO_23: ['otan'],
-  GLO_24: ['union_europeenne'],
+  GLO_26: ['otan', 'souverainete'],    // reprend GLO_17
   // PUBLIC_SERVICES
-  PUB_1:  ['sante_publique'],
-  PUB_5:  ['service_public'],
-  PUB_8:  ['service_public'],
-  PUB_9:  ['service_public'],
+  PUB_3:  ['service_public'],          // reprend PUB_17
   PUB_12: ['service_public'],
   PUB_13: ['etat_providence'],
-  PUB_17: ['service_public'],
   PUB_19: ['retraites'],
   PUB_25: ['sante_publique'],
+  PUB_26: ['sante_publique'],          // reprend PUB_1
+  PUB_27: ['service_public'],          // reprend PUB_9
+  PUB_28: ['etat_providence'],
 };

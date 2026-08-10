@@ -7,8 +7,15 @@
 // Règle : on n'incrémente JAMAIS une version « au passage ». Chaque incrément est une
 // décision consignée dans docs/remediation/decisions.md.
 
-/** Banque de questions : incrémenter à tout ajout/retrait/reformulation d'une question active. */
-export const QUESTIONNAIRE_VERSION = '2026.07-128q';
+/**
+ * Banque de questions : incrémenter à tout ajout/retrait/reformulation d'une question active.
+ *
+ * 2026.08-128q — révision éditoriale complète : 22 questions retirées (composites,
+ * tautologiques, non mesurables, quasi-doublons), 22 créées, 93 reformulées. Le nombre de
+ * questions actives est inchangé, mais un profil calculé sous 2026.07 ne repose PAS sur les
+ * mêmes items : les deux versions ne sont pas comparables item par item.
+ */
+export const QUESTIONNAIRE_VERSION = '2026.08-128q';
 
 /** Algorithme de construction de la file de questions (quotas, ordre, tirage). */
 export const QUEUE_ALGORITHM_VERSION = 'v2-seeded';

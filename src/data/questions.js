@@ -77,7 +77,11 @@ const PREFIX_TO_THEME = {
 };
 
 // Direction preserved from original scoring logic (1 = agree shifts score up, -1 = down)
-const DIRECTION_MAP = {
+//
+// Exporté : `tests/data/questions.editorial.test.mjs` vérifie qu'aucune question active ne
+// tombe sur le repli `?? 1` de processQuestion() — une direction oubliée y était jusqu'ici
+// silencieusement traitée comme « +1 », donc scorée à l'envers une fois sur deux.
+export const DIRECTION_MAP = {
   ECO_1: -1, ECO_2: -1, ECO_3:  1, ECO_4: -1, ECO_5:  1, ECO_6: -1, ECO_7:  1, ECO_8: -1,
   ECO_9: -1, ECO_10:-1, ECO_11: 1, ECO_12:-1, ECO_13:-1, ECO_14:-1, ECO_15: 1, // ECO_13 flipped: reworded from a double negation to a positive framing, meaning of agreement is unchanged
   ECO_16:-1, ECO_17: 1, ECO_18:-1, ECO_19:-1, ECO_20:-1, ECO_21:-1, ECO_22:-1, ECO_23: 1,
@@ -131,11 +135,39 @@ const DIRECTION_MAP = {
   SEC_24: 1,  // banlieues police > aides = sécuritaire = SECURITY up
   ECO_27:-1,  // protectionnisme = anti-libre-échange = ECONOMY down
 
-  // Chantier 2 (2026-07-11) — comblement de lacunes thématiques (tech/IA, égalité F/H, accountability policière)
+  // Chantier 2 (2026-07-11) — comblement de lacunes thématiques (tech/IA, égalité F/H, contrôle de la police)
   ECO_28:-1,  // régulation stricte de l'IA = interventionnisme = ECONOMY down (même sens que ECO_9)
-  DEM_26: 1,  // transparence des algorithmes publics = accountability = DEMOCRACY up (même sens que DEM_8/15/16/25)
+  DEM_26: 1,  // transparence des algorithmes publics = contre-pouvoir = DEMOCRACY up (même sens que DEM_8/16/25)
   SEC_25:-1,  // enquête indépendante de la police = limite le pouvoir policier = SECURITY down (même sens que SEC_1/4/8/13/21)
-  SOC_27: 1,  // sanctionner les écarts de salaire = progressiste = SOCIAL up (même sens que SOC_26)
+  SOC_27: 1,  // sanctionner les écarts de salaire = progressiste = SOCIAL up
+
+  // ── Révision éditoriale 2026-08 ────────────────────────────────────────────
+  // 22 questions créées en remplacement de 22 retirées (composites, tautologiques, non
+  // mesurables ou quasi-doublons). Détail des arbitrages : docs/questions/2026-08-revision-matrix.md.
+  // Aucune direction n'a été inversée sur un identifiant conservé : rééquilibrer les comptes
+  // en basculant `1` en `-1` aurait faussé tous les profils déjà enregistrés.
+  ECO_29:-1,  // État propriétaire de l'énergie = interventionnisme = ECONOMY down
+  SOC_28:-1,  // maintien de l'interdiction des mères porteuses = conservateur = SOCIAL down
+  SOC_29: 1,  // protection constitutionnelle de l'avortement = progressiste = SOCIAL up
+  SOC_30: 1,  // PMA ouverte aux femmes seules = progressiste = SOCIAL up
+  SOC_31: 1,  // contrôle des discriminations à l'embauche = progressiste = SOCIAL up
+  IMM_24: 1,  // condition de revenus au regroupement familial = restrictif = IMMIGRATION up
+  IMM_25:-1,  // soins gratuits pour les sans-papiers = ouvert = IMMIGRATION down
+  IMM_26: 1,  // expulsion de tous les déboutés = restrictif = IMMIGRATION up
+  SEC_26: 1,  // contrôles d'identité sans motif = pouvoir policier accru = SECURITY up
+  SEC_27: 1,  // exécution de toutes les peines = répressif = SECURITY up
+  ENV_26: 1,  // interdiction des pesticides dangereux = écologiste = ENVIRONMENT up
+  ENV_27:-1,  // condamner les militants climat = anti-écologiste = ENVIRONMENT down
+  ENV_28:-1,  // arrêt de l'éolien = anti-transition = ENVIRONMENT down
+  ENV_29:-1,  // incitations plutôt qu'interdictions = écologie non contraignante = ENVIRONMENT down
+  ENV_30: 1,  // interdiction de louer les passoires thermiques = écologiste = ENVIRONMENT up
+  DEM_27:-1,  // décision présidentielle solitaire = verticalité = DEMOCRACY down
+  DEM_28:-1,  // pouvoir fort préféré aux contre-pouvoirs = DEMOCRACY down
+  DEM_29:-1,  // experts plutôt qu'élus = légitimité non élective = DEMOCRACY down
+  GLO_26:-1,  // neutralité dans les conflits = repli = GLOBAL down
+  PUB_26: 1,  // interdiction des dépassements d'honoraires = pro-service public = PUBLIC_SERVICES up
+  PUB_27: 1,  // crèche gratuite = pro-service public = PUBLIC_SERVICES up
+  PUB_28:-1,  // durée d'indemnisation raccourcie = réduction de la protection = PUBLIC_SERVICES down
 };
 
 // ─── Question processing ─────────────────────────────────────────────────────
@@ -144,15 +176,21 @@ const DIRECTION_MAP = {
 // This sharpens discrimination between profiles
 const STATUS_WEIGHTS = { CORE: 10, PRIMARY: 5, SECONDARY: 2 };
 
-const EDITORIAL_CORE_IDS = new Set([
-  'ECO_8', 'ECO_23', 'SOC_7', 'SOC_24', 'IMM_1', 'IMM_23',
+// Deux questions CORE par thème : ce sont EXACTEMENT les 16 questions du mode Découverte.
+// 2026-08 : ECO_8 (composite) remplacée par ECO_29 ; SOC_24 (composite) cède sa place CORE à
+// SOC_16 — l'avortement recueille en France un assentiment trop large pour discriminer deux
+// profils, là où les signes religieux à l'école séparent nettement.
+export const EDITORIAL_CORE_IDS = new Set([
+  'ECO_23', 'ECO_29', 'SOC_7', 'SOC_16', 'IMM_1', 'IMM_23',
   'SEC_3', 'SEC_25', 'ENV_3', 'ENV_25', 'DEM_8', 'DEM_21',
   'GLO_1', 'GLO_8', 'PUB_13', 'PUB_25',
 ]);
 
-// Low-signal, redundant, composite or off-theme items retired by the July 2026
-// editorial review. Their IDs remain readable for historical answer data.
-const EDITORIALLY_RETIRED_IDS = new Set([
+// Low-signal, redundant, composite or off-theme items retired by the July 2026 and
+// August 2026 editorial reviews. Their IDs remain readable for historical answer data
+// and are frozen in docs/questions/retired-ids.json (texte au moment du retrait).
+export const EDITORIALLY_RETIRED_IDS = new Set([
+  // Revue de juillet 2026
   'ECO_2', 'ECO_7', 'ECO_12', 'ECO_14', 'ECO_17', 'ECO_18', 'ECO_20', 'ECO_25', 'ECO_27',
   'SOC_4', 'SOC_12', 'SOC_15', 'SOC_21',
   'IMM_4', 'IMM_10', 'IMM_11',
@@ -161,6 +199,15 @@ const EDITORIALLY_RETIRED_IDS = new Set([
   'DEM_2', 'DEM_4', 'DEM_9', 'DEM_11', 'DEM_12', 'DEM_23',
   'GLO_2', 'GLO_5', 'GLO_9', 'GLO_10', 'GLO_20', 'GLO_24',
   'PUB_2', 'PUB_5', 'PUB_8', 'PUB_10',
+  // Revue d'août 2026 — composites, tautologies, quasi-doublons, formulations non mesurables
+  'ECO_8',
+  'SOC_19', 'SOC_24', 'SOC_25', 'SOC_26',
+  'IMM_6', 'IMM_13', 'IMM_15',
+  'SEC_20', 'SEC_23',
+  'ENV_6', 'ENV_11', 'ENV_14', 'ENV_23', 'ENV_24',
+  'DEM_1', 'DEM_3', 'DEM_15',
+  'GLO_17',
+  'PUB_1', 'PUB_9', 'PUB_17',
 ]);
 
 function processQuestion(raw) {
