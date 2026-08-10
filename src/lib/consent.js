@@ -20,6 +20,21 @@
 /** Version de la FORMULATION. À incrémenter dès que le texte affiché change en substance. */
 export const CONSENT_POLICY_VERSION = '2026-08';
 
+/**
+ * Version de la formulation présentée par `ConsentModal.jsx` avant août 2026.
+ *
+ * Ce texte décrivait : la sauvegarde du profil et des réponses sur un COMPTE, retrouvables
+ * sur un autre appareil, et l'exploitation « de façon groupée, jamais avec ton nom » des
+ * tendances politiques. Il ne mentionnait NI le temps passé sur chaque question, NI un
+ * identifiant pseudonyme d'analyse, NI la conservation des questions ignorées et des
+ * « sans opinion ». Il couvre donc `cloud_save` — et RIEN d'autre.
+ *
+ * L'interface de l'époque ne calculait aucune empreinte de texte. Il n'y en a donc pas à
+ * restituer, et en fabriquer une aujourd'hui recréerait la fausse preuve qu'on corrige :
+ * les décisions migrées portent `textHash: null` et `textHashAvailable: false`.
+ */
+export const LEGACY_POLICY_VERSION = '2026-07';
+
 export const PURPOSES = Object.freeze({
   MEASUREMENT:         'measurement',
   POLITICAL_ANALYTICS: 'political_analytics',
@@ -131,13 +146,77 @@ export function emptyConsentState() {
 }
 
 /**
+ * Décision relative à une finalité, sous forme normalisée.
+ *
+ * Une décision porte SA PROPRE provenance — la version du texte réellement présenté, son
+ * empreinte, la date. Un état global « version : 2026-08 » ne dit rien de ce qu'une personne
+ * a vu quand elle a cliqué, et c'est précisément ce qui permettait d'estampiller une décision
+ * de 2026-07 avec le texte de 2026-08.
+ *
+ * @typedef {{granted: boolean|null, decidedAt: string|null, policyVersion: string|null,
+ *            textHash: string|null, textHashAvailable: boolean}} ConsentDecision
+ */
+
+/** Décision « rien de décidé ». */
+function undecided() {
+  return { granted: null, decidedAt: null, policyVersion: null, textHash: null, textHashAvailable: false };
+}
+
+/**
+ * Lit la décision d'une finalité, quelle que soit la forme stockée.
+ *
+ * Accepte les trois formes qui coexistent : `null` (non décidé), un booléen nu (forme
+ * historique, sans provenance) et l'objet complet. Toute lecture passe par ici — c'est ce
+ * qui permet de faire évoluer la forme sans réécrire chaque appelant.
+ *
+ * @returns {ConsentDecision}
+ */
+export function decisionOf(consentState, purpose) {
+  const raw = consentState?.[purpose];
+  if (raw === true || raw === false) {
+    // Booléen nu : la provenance n'est portée que par l'état global. Sans version, la
+    // décision vient de l'interface courante ; avec une version antérieure, son texte n'est
+    // pas celui d'aujourd'hui et aucune empreinte courante ne peut lui être attribuée.
+    const policyVersion = consentState?.version ?? null;
+    return {
+      granted: raw,
+      decidedAt: consentState?.decidedAt ?? null,
+      policyVersion,
+      textHash: null,
+      textHashAvailable: policyVersion == null || policyVersion === CONSENT_POLICY_VERSION,
+    };
+  }
+  if (raw && typeof raw === 'object') return { ...undecided(), ...raw };
+  return undecided();
+}
+
+/** Construit une décision prise SOUS LE TEXTE COURANT, empreinte comprise. */
+export function currentDecision(granted, { purpose, language = 'fr', decidedAt } = {}) {
+  if (granted !== true && granted !== false) return undecided();
+  return {
+    granted,
+    decidedAt: decidedAt ?? new Date().toISOString(),
+    policyVersion: CONSENT_POLICY_VERSION,
+    textHash: textFingerprint(consentTextFor(purpose, language)),
+    textHashAvailable: true,
+  };
+}
+
+/**
  * Convertit l'ancien état à deux champs (`{politicalData, measurement}`) vers les quatre
  * finalités, sans jamais INVENTER un consentement.
  *
- * Choix de conversion, explicite : `politicalData: true` valait pour la sauvegarde cloud
- * ET pour l'analyse — c'était le défaut du modèle. On reporte donc l'acceptation sur ces
- * deux finalités, qui étaient effectivement décrites dans le texte accepté. `research`
- * reste `null` : elle n'a jamais été présentée, elle ne peut pas être déduite.
+ * ⚠ CORRECTION P0-3 (2026-08-10). La version précédente reportait `politicalData: true` sur
+ * `political_analytics` ET `cloud_save`. C'était fabriquer un consentement : le texte de
+ * 2026-07 ne mentionnait ni la mesure du temps par question, ni l'identifiant pseudonyme
+ * d'analyse, ni la conservation des questions ignorées. Une personne n'a pas pu accepter un
+ * texte qui n'existait pas.
+ *
+ * Règle appliquée :
+ *   • `cloud_save`          ← `politicalData`, avec la version 2026-07 (le texte le couvrait) ;
+ *   • `measurement`         ← `measurement`,   avec la version 2026-07 ;
+ *   • `political_analytics` ← TOUJOURS non décidé : à redemander sous le texte courant ;
+ *   • `research`            ← TOUJOURS non décidé : jamais présentée.
  */
 export function normalizeConsent(legacy) {
   if (!legacy) return emptyConsentState();
@@ -147,20 +226,30 @@ export function normalizeConsent(legacy) {
     return { ...emptyConsentState(), ...legacy };
   }
 
-  const political = legacy.politicalData;
+  const legacyDecision = (value) => {
+    if (value !== true && value !== false) return null;
+    return {
+      granted: value,
+      decidedAt: legacy.grantedAt ?? null,
+      policyVersion: LEGACY_POLICY_VERSION,
+      textHash: null,          // jamais calculée à l'époque ; ne pas en fabriquer une
+      textHashAvailable: false,
+    };
+  };
+
   return {
-    [PURPOSES.MEASUREMENT]:         legacy.measurement ?? null,
-    [PURPOSES.POLITICAL_ANALYTICS]: political ?? null,
-    [PURPOSES.CLOUD_SAVE]:          political ?? null,
+    [PURPOSES.MEASUREMENT]:         legacyDecision(legacy.measurement),
+    [PURPOSES.POLITICAL_ANALYTICS]: null,
+    [PURPOSES.CLOUD_SAVE]:          legacyDecision(legacy.politicalData),
     [PURPOSES.RESEARCH]:            null,
     decidedAt: legacy.grantedAt ?? null,
-    version:   legacy.version ?? null,
+    version:   legacy.version ?? LEGACY_POLICY_VERSION,
   };
 }
 
 /** `true` UNIQUEMENT sur une acceptation explicite. `null` et `undefined` valent refus. */
 export function isGranted(consentState, purpose) {
-  return consentState?.[purpose] === true;
+  return decisionOf(consentState, purpose).granted === true;
 }
 
 /**
@@ -184,22 +273,35 @@ export function canCollectAttemptData(consentState) {
  */
 export function buildConsentRecords(consentState, { anonymousSessionId, userId, language = 'fr', clientRelease } = {}) {
   const records = [];
-  const decidedAt = new Date().toISOString();
+  const now = new Date().toISOString();
 
   for (const purpose of ALL_PURPOSES) {
-    const decision = consentState?.[purpose];
-    if (decision !== true && decision !== false) continue;
+    const decision = decisionOf(consentState, purpose);
+    if (decision.granted !== true && decision.granted !== false) continue;
 
-    const text = consentTextFor(purpose, language);
+    // ⚠ La provenance vient de la DÉCISION, jamais des constantes du module. Estampiller
+    // toute ligne avec CONSENT_POLICY_VERSION revenait à déclarer qu'une personne avait
+    // accepté le texte courant, y compris quand sa décision datait d'une version antérieure.
+    const underCurrentText = decision.policyVersion === CONSENT_POLICY_VERSION
+      || decision.policyVersion == null;
+    const policyVersion = decision.policyVersion ?? CONSENT_POLICY_VERSION;
+    const textHash = decision.textHash
+      ?? (underCurrentText && decision.textHashAvailable !== false
+        ? textFingerprint(consentTextFor(purpose, language))
+        : null);
+
     records.push({
       anonymous_session_id: anonymousSessionId ?? null,
       user_id:              userId ?? null,
       purpose,
-      granted:              decision,
-      policy_version:       CONSENT_POLICY_VERSION,
-      text_hash:            textFingerprint(text),
-      decided_at:           decidedAt,
-      retention_until:      decision ? retentionUntil(purpose) : null,
+      granted:              decision.granted,
+      policy_version:       policyVersion,
+      text_hash:            textHash,
+      // Dit explicitement si l'empreinte est vérifiable. `null` seul serait ambigu : panne
+      // de calcul ou texte jamais empreint ? Ici, c'est une propriété connue de la décision.
+      text_hash_available:  textHash != null,
+      decided_at:           decision.decidedAt ?? now,
+      retention_until:      decision.granted ? retentionUntil(purpose) : null,
       client_release:       clientRelease ?? null,
       language,
     });

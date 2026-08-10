@@ -99,7 +99,26 @@ export function createAttemptSession({
   let meta = {};
   const detach = [];
 
+  /**
+   * Instant de l'accord à l'analyse politique. `null` tant qu'il n'a pas été donné.
+   *
+   * Sert de FRONTIÈRE : seul ce qui se produit après cet instant peut être transmis. Une
+   * réponse donnée avant reste locale définitivement, même si l'accord arrive ensuite —
+   * consentir à une collecte future n'est pas consentir à la divulgation du passé.
+   */
+  let consentGrantedAt = null;
+
+  /**
+   * Écrit la passation sur le terminal.
+   *
+   * ⚠ CORRECTION P0-5 (2026-08-10). `begin()` appelait ceci sans condition, et le blob
+   * contenait un identifiant aléatoire persistant — donc un traceur déposé avant toute
+   * décision (art. 82 loi Informatique et Libertés). Le test qui surveillait ce point ne
+   * regardait que `poliscop_analytics_sid` et n'appelait jamais `begin()` : l'identifiant
+   * passait par l'autre clé. Rien n'est écrit tant que l'analyse politique n'est pas accordée.
+   */
   function persistAttempt() {
+    if (!canCollectAttemptData(consentState)) return;
     try {
       storage?.setItem(ATTEMPT_KEY, JSON.stringify({ attemptId, anonymousSessionId, meta }));
     } catch { /* stockage indisponible */ }
@@ -133,6 +152,9 @@ export function createAttemptSession({
       consentState = nextConsentState;
       // L'identifiant est créé à l'acceptation et EFFACÉ au retrait, dans le même geste.
       anonymousSessionId = anonId ?? analyticsSessionId(isAllowed, storage) ?? anonymousSessionId;
+      // La frontière temporelle est posée à l'accord, et retirée au retrait.
+      if (!wasAllowed && isAllowed) consentGrantedAt = Date.now();
+      if (!isAllowed) consentGrantedAt = null;
 
       // La DÉCISION elle-même est enregistrée, accord comme refus : c'est la preuve.
       if (isIngestEnabled && anonymousSessionId) {
@@ -153,12 +175,16 @@ export function createAttemptSession({
       }
 
       if (!wasAllowed && isAllowed && attemptId) {
-        // Accord donné en cours de passation : on déclare la passation puis on envoie ce
-        // qui a été mesuré depuis le début. Rien n'avait été transmis avant cet instant.
+        // Accord donné en cours de passation : la passation est déclarée, et l'état local
+        // devient persistable. Les réponses ANTÉRIEURES à l'accord ne sont PAS rejouées.
+        //
+        // ⚠ CORRECTION P0-5 (2026-08-10). Le code précédent rejouait `timer.snapshotAll()`,
+        // c'est-à-dire tout ce qui avait été mesuré avant la décision. Une personne qui
+        // répond à dix questions puis accepte voyait partir ses dix réponses, alors qu'elle
+        // n'a autorisé la collecte qu'à cet instant. Consentir pour la suite n'est pas
+        // consentir pour ce qui précède.
+        persistAttempt();
         await this.declareAttempt(meta);
-        for (const snapshot of timer.snapshotAll()) {
-          if (snapshot.response_state) queue.enqueue(attemptId, snapshot);
-        }
       }
     },
 
@@ -178,7 +204,9 @@ export function createAttemptSession({
       }
 
       attemptId = randomUuid();
-      if (!anonymousSessionId) anonymousSessionId = randomUuid();
+      // L'identifiant pseudonyme n'est PAS créé ici : il naît à l'accord, dans setConsent().
+      // `attemptId` reste en mémoire tant que rien n'est accordé — persistAttempt() refuse
+      // d'écrire sans consentement, donc aucun identifiant ne touche le terminal.
       meta = {
         // NORMALISATION obligatoire : un `testMode` persisté par une ancienne version du
         // site vaut `quick` / `medium` / `full`. Envoyés tels quels, ces alias seraient

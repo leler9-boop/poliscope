@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PURPOSES, ALL_PURPOSES, CONSENT_POLICY_VERSION, RETENTION_MONTHS,
-  emptyConsentState, normalizeConsent, isGranted,
+  emptyConsentState, normalizeConsent, isGranted, decisionOf,
   canTransmitPoliticalData, canCollectAttemptData,
   buildConsentRecords, consentTextFor, textFingerprint,
 } from '../../src/lib/consent.js';
@@ -66,10 +66,16 @@ test('les quatre finalités sont distinctes et « research » n’est jamais dé
   assert.deepEqual([...ALL_PURPOSES].sort(),
     ['cloud_save', 'measurement', 'political_analytics', 'research']);
 
+  // ⚠ Ce test affirmait auparavant que `politicalData: true` accordait AUSSI
+  // `political_analytics`. C'était le défaut P0-3 : le texte de 2026-07 ne décrivait ni le
+  // temps par question, ni l'identifiant pseudonyme d'analyse. La règle est maintenant
+  // vérifiée sur les onze combinaisons héritées dans tests/lib/consent-migration.test.mjs.
   const migrated = normalizeConsent({ politicalData: true, measurement: true, version: '2026-07' });
-  assert.equal(migrated[PURPOSES.POLITICAL_ANALYTICS], true);
-  assert.equal(migrated[PURPOSES.CLOUD_SAVE], true);
-  assert.equal(migrated[PURPOSES.RESEARCH], null,
+  assert.equal(isGranted(migrated, PURPOSES.POLITICAL_ANALYTICS), false,
+    'un accord de 2026-07 a été converti en accord à un texte de 2026-08');
+  assert.equal(isGranted(migrated, PURPOSES.CLOUD_SAVE), true,
+    'la sauvegarde compte était bien décrite par le texte de 2026-07');
+  assert.equal(isGranted(migrated, PURPOSES.RESEARCH), false,
     'la recherche a été déduite d’un autre consentement — elle n’a jamais été présentée');
 });
 
@@ -163,20 +169,25 @@ test('la MESURE locale continue sans consentement — seule la transmission est 
   assert.equal(snapshot.answer_value, 4);
 });
 
-test('APRÈS consentement : la collecte démarre, y compris pour ce qui précède', async () => {
+test('APRÈS consentement : la collecte démarre, mais SANS rattraper le passé', async () => {
+  // ⚠ Ce test exigeait auparavant l'inverse : que la réponse donnée avant l'accord soit
+  // « rattrapée ». C'était le défaut P0-5. Consentir à une collecte future n'autorise pas
+  // la divulgation de ce qui a été mesuré avant la décision.
   const { session, sent } = spySession();
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1', language: 'fr' });
 
   session.showQuestion('ECO_1', 0);
-  session.recordAnswer('ECO_1', 'answered', 4);
+  session.recordAnswer('ECO_1', 'answered', 4);      // avant l'accord
 
   await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111' });
+
+  session.showQuestion('SOC_3', 1);
+  session.recordAnswer('SOC_3', 'answered', 2);      // après l'accord
   await session.queue.flush();
 
-  assert.equal(sent.length, 1, 'rien n’a été envoyé après l’accord');
-  const questions = sent[0].batch.items.map(i => i.question_id);
-  assert.ok(questions.includes('ECO_1'),
-    'la réponse donnée AVANT l’accord n’a pas été rattrapée après');
+  const questions = sent.flatMap(s => s.batch.items.map(i => i.question_id));
+  assert.ok(!questions.includes('ECO_1'), 'une réponse antérieure à l’accord a été transmise');
+  assert.deepEqual(questions, ['SOC_3'], 'la collecte doit démarrer à l’accord, et seulement là');
 });
 
 test('« sans opinion » est transmis comme un ÉTAT, jamais supprimé ni converti', async () => {

@@ -42,12 +42,34 @@ export const CONSENT_VERSION = '2026-07';
 function syncAttemptConsent(consent, state) {
   import('../lib/attemptSession.js')
     .then(({ attemptSession }) => {
-      attemptSession.setConsent(normalizeConsent(consent), {
+      attemptSession.setConsent(effectiveConsent(consent, state?.collectionConsent), {
         userId: state?.userId ?? null,
         language: state?.language ?? 'fr',
       });
     })
     .catch(() => { /* module indisponible (test unitaire) : l'état local reste la référence */ });
+}
+
+/**
+ * État de consentement RÉEL : l'ancien état à deux champs, complété par les décisions
+ * prises sous le texte courant.
+ *
+ * Les deux sources coexistent volontairement pendant la migration. `consent` porte les
+ * décisions héritées (sauvegarde compte, mesure d'audience) avec leur version d'origine ;
+ * `collectionConsent` porte les décisions prises sous le texte 2026-08, chacune avec sa
+ * propre empreinte. Écraser l'un par l'autre reviendrait à réécrire une preuve.
+ *
+ * @param {object} legacy            état hérité `{politicalData, measurement, ...}`
+ * @param {object|null} collection   décisions par finalité prises sous le texte courant
+ */
+export function effectiveConsent(legacy, collection) {
+  const base = normalizeConsent(legacy);
+  if (!collection) return base;
+  const merged = { ...base };
+  for (const [purpose, decision] of Object.entries(collection)) {
+    if (decision) merged[purpose] = decision;
+  }
+  return merged;
 }
 
 /**
