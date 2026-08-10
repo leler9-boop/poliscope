@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { elections } from '../data/elections.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { questions as GENERAL_QUESTIONS, THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { ThemeComparisonThree } from '../components/CompareBar.jsx';
+import EstimateNotice from '../components/EstimateNotice.jsx';
+import { deriveEditorialCandidateThemes } from '../engine/editorialMatch.js';
 
 
 function findCandidate(id) {
@@ -73,6 +75,15 @@ export default function CandidateCompare() {
 
   const c1 = r1.candidate;
   const c2 = r2.candidate;
+  const editorial1 = deriveEditorialCandidateThemes({
+    candidateId: c1.id, questions: GENERAL_QUESTIONS, questionSet: 'general',
+  });
+  const editorial2 = deriveEditorialCandidateThemes({
+    candidateId: c2.id, questions: GENERAL_QUESTIONS, questionSet: 'general',
+  });
+  const themes1 = editorial1.knownAnswers > 0 ? editorial1.themes : null;
+  const themes2 = editorial2.knownAnswers > 0 ? editorial2.themes : null;
+  const hasEditorialComparison = Boolean(themes1 || themes2);
 
   const userThemes = React.useMemo(() => {
     if (!profile?.themes) return null;
@@ -124,10 +135,22 @@ export default function CandidateCompare() {
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Comparaison par thème' : 'Theme comparison'}
         </h2>
+        {hasEditorialComparison && (
+          <EstimateNotice
+            language={language}
+            questionsCompared={Math.min(
+              ...[editorial1, editorial2]
+                .filter(profile => profile.knownAnswers > 0)
+                .map(profile => profile.knownAnswers),
+            )}
+            questionsDocumented={GENERAL_QUESTIONS.length}
+            updatedAt={editorial1.updatedAt ?? editorial2.updatedAt}
+          />
+        )}
         <ThemeComparisonThree
           userThemes={userThemes}
-          themes1={c1.profile}
-          themes2={c2.profile}
+          themes1={themes1}
+          themes2={themes2}
           name1={c1.name}
           name2={c2.name}
           language={language}

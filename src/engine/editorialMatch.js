@@ -25,6 +25,7 @@ import { isScorable } from './scorer.js';
 import { MATCHING_VERSION, QUESTIONNAIRE_VERSION } from './versions.js';
 import {
   EDITORIAL_ANSWERS_VERSION, EDITORIAL_REVIEWED_AT, ANSWER_STATE,
+  getEditorialAnswers,
 } from '../data/candidateEditorialAnswers.js';
 
 /** Provenance d'un résultat. Un mélange reste une estimation : jamais « vérifié ». */
@@ -94,6 +95,41 @@ export function themesFromAnswers(answers, questions) {
     perTheme[t] = d.count;
   }
   return { themes, perTheme, answered: Object.values(perTheme).reduce((a, b) => a + b, 0) };
+}
+
+/**
+ * Dérive le profil thématique d'un candidat depuis le corpus éditorial explicite.
+ *
+ * Cette fonction alimente les vues « par sujet ». Elle ne transforme pas une estimation en
+ * preuve : la provenance et la couverture voyagent avec les huit thèmes calculés. Une fiche
+ * sans corpus reste indisponible au lieu de retomber sur un ancien profil manuel.
+ */
+export function deriveEditorialCandidateThemes({
+  candidateId,
+  questions = [],
+  questionSet = 'general',
+  questionnaireVersion = QUESTIONNAIRE_VERSION,
+} = {}) {
+  const questionIds = new Set(questions.map(question => question.id));
+  const usable = getEditorialAnswers(candidateId, questionSet).filter(answer =>
+    questionIds.has(answer.questionId)
+      && answer.answerState === ANSWER_STATE.ESTIMATED
+      && isScorable(answer.answerValue)
+      && (!answer.questionnaireVersion || answer.questionnaireVersion === questionnaireVersion));
+  const answerMap = Object.fromEntries(
+    usable.map(answer => [answer.questionId, answer.answerValue]),
+  );
+  const derived = themesFromAnswers(answerMap, questions);
+
+  return {
+    ...derived,
+    candidateId,
+    questionSet,
+    knownAnswers: usable.length,
+    questionsAvailable: questions.length,
+    provenance: usable.length ? EDITORIAL_ANSWERS_VERSION : null,
+    updatedAt: usable.length ? EDITORIAL_REVIEWED_AT : null,
+  };
 }
 
 /**

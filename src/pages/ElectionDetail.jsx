@@ -7,12 +7,13 @@ import { elections } from '../data/elections.js';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
 import { rankCandidatesForSurface, MATCH_MODE } from '../engine/candidateRanking.js';
+import { deriveEditorialCandidateThemes } from '../engine/editorialMatch.js';
 import { EDITORIAL_ANSWERS_VERSION } from '../data/candidateEditorialAnswers.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
 import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
 import { getRegistryEntry, getTrackedCandidates, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
 import { getSource } from '../data/candidateProvenance.js';
-import { THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
+import { questions as GENERAL_QUESTIONS, THEME_LABELS, THEMES_ORDER, THEME_COLORS } from '../data/questions.js';
 import LazyImage, { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackElectionViewed } from '../lib/analytics.js';
 
@@ -772,7 +773,26 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
 
   const rankedCandidates = useMemo(
     // `?? 0` afficherait « 0/100 » — un score, faux — là où le moteur dit « pas de score ».
-    () => ranking.results.map(({ candidate, match }) => ({ ...candidate, alignment: match.score, match })),
+    () => ranking.results.map(({ candidate, match }) => {
+      // Le score électoral reste calculé sur les 17 questions de l'élection. La ventilation
+      // par thème s'appuie sur le corpus général complet (128 questions), afin que les huit
+      // thèmes ne retombent pas sur « non sourcé » alors que le candidat vient d'être classé
+      // par la voie éditoriale.
+      const editorialThemeProfile = deriveEditorialCandidateThemes({
+        candidateId: candidate.id,
+        questions: GENERAL_QUESTIONS,
+        questionSet: 'general',
+      });
+      const enrichedMatch = editorialThemeProfile.knownAnswers > 0
+        ? {
+            ...match,
+            derivedThemes: editorialThemeProfile.themes,
+            themeBreakdownSource: editorialThemeProfile.provenance,
+            themeQuestionsKnown: editorialThemeProfile.knownAnswers,
+          }
+        : match;
+      return { ...candidate, alignment: match.score, match: enrichedMatch };
+    }),
     [ranking],
   );
 
@@ -1039,32 +1059,31 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
   );
 }
 
-/**
- * Ventilation par thème — profil candidat DÉRIVÉ des positions sourcées.
- *
- * Lisait auparavant `candidate.profile?.[theme] ?? 50`. Deux mensonges dans une ligne :
- * la valeur venait de `legacy-manual-v1` (huit nombres saisis à la main), et le `?? 50`
- * transformait « on ne sait pas » en « exactement au centre » — un thème inconnu était
- * affiché comme une position mesurée.
- *
- * Un thème sans assez de positions approuvées est désormais montré comme INCONNU : pas de
- * nombre, pas de barre candidat, une mention explicite.
- */
+/** Ventilation par thème, avec provenance explicite (estimation ou corpus strict). */
 function ThemeBreakdown({ userThemes, match, candidate, language }) {
-  const derived = match?.derivedThemes ?? null;
+  const derived = match?.derivedThemes ?? match?.themes ?? null;
   const connus = THEMES_ORDER.filter(theme => derived?.[theme] != null);
+  const isEditorial = match?.themeBreakdownSource === EDITORIAL_ANSWERS_VERSION
+    || match?.breakdownSource === EDITORIAL_ANSWERS_VERSION;
 
   return (
     <div className="mt-4 border-t border-gray-100 pt-4">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
         {language === 'fr' ? 'Scores par thème' : 'Theme scores'}
       </p>
+      {isEditorial && (
+        <p className="text-[11px] text-amber-700 mb-3 leading-relaxed">
+          {language === 'fr'
+            ? `Estimations Poliscop dérivées de ${match?.themeQuestionsKnown ?? match?.questionsAvailable ?? 'plusieurs'} réponses attribuées au candidat.`
+            : `Poliscop estimates derived from ${match?.themeQuestionsKnown ?? match?.questionsAvailable ?? 'multiple'} answers attributed to the candidate.`}
+        </p>
+      )}
 
       {connus.length === 0 && (
         <p className="text-xs text-gray-500 leading-relaxed mb-3">
           {language === 'fr'
-            ? `Aucun thème n'est encore comparable pour ce candidat : cela demande au moins deux positions sourcées et relues par thème.`
-            : `No theme is comparable for this candidate yet: this requires at least two sourced, reviewed positions per theme.`}
+            ? `Aucune estimation thématique exploitable n'est encore disponible pour ce candidat.`
+            : `No usable thematic estimate is available for this candidate yet.`}
         </p>
       )}
 
@@ -1083,7 +1102,7 @@ function ThemeBreakdown({ userThemes, match, candidate, language }) {
                   <span className="text-gray-300">·</span>
                   {candidateScore == null ? (
                     <span className="text-gray-400 not-italic">
-                      {language === 'fr' ? 'non sourcé' : 'not sourced'}
+                      {language === 'fr' ? 'indisponible' : 'unavailable'}
                     </span>
                   ) : (
                     <span style={{ color }}>{candidateScore}</span>
@@ -1193,17 +1212,15 @@ function ComparePanel({ candidates, userThemes, language }) {
                 <div key={theme} className="grid gap-3 items-center" style={{ gridTemplateColumns: '110px 1fr 1fr' }}>
                   <span className="text-xs text-gray-500 truncate">{label}</span>
                   {selected.map(c => {
-                    // Profil DÉRIVÉ des positions sourcées. `c.profile?.[theme] ?? 50` affichait
-                    // une barre et un nombre pour un thème dont rien n'est établi : la
-                    // comparaison côte à côte de deux candidats donnait un « Δ vs vous » calculé
-                    // sur des valeurs inventées. Un thème non sourcé ne se compare pas.
+                    // Le profil vient du corpus éditorial complet pour les candidats couverts,
+                    // jamais de l'ancien `candidate.profile` manuel.
                     const score = c.match?.derivedThemes?.[theme] ?? null;
                     const diff = score == null ? null : Math.abs(score - userScore);
                     return (
                       <div key={c.id}>
                         {score == null ? (
                           <p className="text-xs text-gray-400 italic">
-                            {language === 'fr' ? 'non sourcé' : 'not sourced'}
+                            {language === 'fr' ? 'indisponible' : 'unavailable'}
                           </p>
                         ) : (
                           <div className="flex items-center gap-1.5">

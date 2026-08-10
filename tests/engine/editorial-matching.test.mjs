@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 
 import {
   computeEditorialMatch, rankEditorialMatches, comparableAnswers, themesFromAnswers,
-  SCORE_PROVENANCE, EDITORIAL_MATCH_CONFIG,
+  deriveEditorialCandidateThemes, SCORE_PROVENANCE, EDITORIAL_MATCH_CONFIG,
 } from '../../src/engine/editorialMatch.js';
 import {
   getEditorialAnswers, editorialCoverage, EDITORIAL_ANSWERS,
@@ -317,6 +317,33 @@ test('chaque candidat possède 128 réponses générales explicites, sans doublo
     assert.ok(answers.every(answer => answer.answerState === ANSWER_STATE.ESTIMATED),
       `${candidate.id} : réponse générale inconnue`);
   }
+});
+
+test('les onze candidats ont huit scores thématiques éditoriaux utilisables par les fiches', () => {
+  for (const candidate of FR2027.candidates) {
+    const profile = deriveEditorialCandidateThemes({
+      candidateId: candidate.id,
+      questions: GENERAL_QUESTIONS,
+      questionSet: 'general',
+    });
+    assert.equal(profile.knownAnswers, 128, `${candidate.id} : couverture thématique incomplète`);
+    assert.equal(profile.provenance, EDITORIAL_ANSWERS_VERSION);
+    for (const [theme, score] of Object.entries(profile.themes)) {
+      assert.ok(Number.isFinite(score) && score >= 0 && score <= 100,
+        `${candidate.id}/${theme} : score thématique invalide « ${score} »`);
+    }
+  }
+});
+
+test('une personnalité sans corpus éditorial reste indisponible, jamais centrée par défaut', () => {
+  const profile = deriveEditorialCandidateThemes({
+    candidateId: 'personnalite-sans-corpus',
+    questions: GENERAL_QUESTIONS,
+    questionSet: 'general',
+  });
+  assert.equal(profile.knownAnswers, 0);
+  assert.equal(profile.provenance, null);
+  assert.ok(Object.values(profile.themes).every(score => score === null));
 });
 
 test('les onze profils complets sont distincts et se reconnaissent eux-mêmes', () => {

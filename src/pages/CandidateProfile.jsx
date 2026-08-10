@@ -5,15 +5,17 @@ import { elections } from '../data/elections.js';
 import { candidateDetails } from '../data/candidateDetails.js';
 import { getRegistryEntry } from '../data/candidateRegistry.js';
 import { getPositions, getSource, positionCoverage, REVIEW_STATUS } from '../data/candidateProvenance.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
+import { questions as GENERAL_QUESTIONS, THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
 import { CANDIDATE_POLICIES, POLICY_ELECTION_IDS } from '../data/candidatePolicies.js';
 import { CandidateAvatar } from '../components/LazyImage.jsx';
 import { trackCandidateViewed, trackCompareStarted } from '../lib/analytics.js';
 import { ThemeComparison } from '../components/CompareBar.jsx';
+import EstimateNotice from '../components/EstimateNotice.jsx';
 // La fiche candidat affichait ses « Positions idéologiques » depuis `candidate.profile`,
 // c'est-à-dire huit nombres `legacy-manual-v1` saisis à la main, sans preuve par position.
 // Le moteur dérive désormais ces thèmes des seules positions approuvées et relues.
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
+import { deriveEditorialCandidateThemes } from '../engine/editorialMatch.js';
 
 
 function findCandidate(id) {
@@ -163,11 +165,9 @@ export default function CandidateProfile() {
     return themes;
   }, [profile, profileAdjustments]);
 
-  // Profil candidat DÉRIVÉ. `derivedThemes[theme] === null` signifie « pas assez de positions
-  // sourcées pour ce thème » — un état distinct de « position centrale ». Ne jamais le
-  // remplacer par 50 : c'est exactement la substitution qui faisait passer une absence de
-  // donnée pour une mesure.
-  const derivedThemes = React.useMemo(() => {
+  // Voie stricte : conservée séparément pour le jour où un corpus approuvé couvrira assez de
+  // thèmes. Elle ne lit jamais les estimations éditoriales.
+  const strictThemes = React.useMemo(() => {
     if (!candidate || !election) return null;
     return computeCandidateMatch({
       userThemes: userThemes ?? {},
@@ -176,6 +176,23 @@ export default function CandidateProfile() {
       language,
     }).derivedThemes ?? null;
   }, [candidate, election, userThemes, language]);
+
+  // Voie éditoriale : les onze candidats du matching 2027 disposent désormais de 128 réponses
+  // explicites. C'est cette voie, clairement étiquetée, qui rend la comparaison par sujet
+  // cohérente avec le score général affiché sur Profil.
+  const editorialThemeProfile = React.useMemo(() => {
+    if (!candidate || !is2027) return null;
+    return deriveEditorialCandidateThemes({
+      candidateId: candidate.id,
+      questions: GENERAL_QUESTIONS,
+      questionSet: 'general',
+    });
+  }, [candidate, is2027]);
+  const hasEditorialThemes = (editorialThemeProfile?.knownAnswers ?? 0) > 0;
+  const hasStrictThemes = Object.values(strictThemes ?? {}).some(value => value != null);
+  const derivedThemes = hasEditorialThemes
+    ? editorialThemeProfile.themes
+    : hasStrictThemes ? strictThemes : null;
 
   if (!found || !candidate || !election) return null;
 
@@ -369,6 +386,14 @@ export default function CandidateProfile() {
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
           {language === 'fr' ? 'Positions idéologiques' : 'Ideological positions'}
         </h2>
+        {hasEditorialThemes && (
+          <EstimateNotice
+            language={language}
+            questionsCompared={editorialThemeProfile.knownAnswers}
+            questionsDocumented={editorialThemeProfile.questionsAvailable}
+            updatedAt={editorialThemeProfile.updatedAt}
+          />
+        )}
         {derivedThemes && Object.values(derivedThemes).some(v => v != null) ? (
           <ThemeComparison
             userThemes={userThemes}
@@ -376,7 +401,7 @@ export default function CandidateProfile() {
             targetName={candidate.name.split(' ').pop()}
             language={language}
             policyTexts={
-              POLICY_ELECTION_IDS.has(election.id)
+              !hasEditorialThemes && POLICY_ELECTION_IDS.has(election.id)
                 ? Object.fromEntries(
                     Object.entries(CANDIDATE_POLICIES[candidateId] ?? CANDIDATE_POLICIES[baseId(candidateId)] ?? {}).map(([theme, vals]) => [
                       theme,
@@ -398,23 +423,26 @@ export default function CandidateProfile() {
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
             <p className="text-sm text-gray-600 leading-relaxed">
               {language === 'fr'
-                ? `Aucune position sourcée et relue n'est encore publiée pour ${candidate.name}. Les positions idéologiques apparaîtront ici lorsqu'elles seront étayées par des sources vérifiées, question par question — nous n'affichons pas d'estimation à la place.`
-                : `No sourced, reviewed position has been published for ${candidate.name} yet. Ideological positions will appear here once backed by verified sources, question by question — we do not display an estimate instead.`}
+                ? `Aucune estimation thématique suffisamment complète n'est encore disponible pour ${candidate.name}. Aucun score n'est inventé en l'absence de corpus exploitable.`
+                : `No sufficiently complete thematic estimate is available for ${candidate.name} yet. No score is invented without usable data.`}
             </p>
-            {is2027 && approvedCoverage && (
-              <div className="mt-3 pt-3 border-t border-gray-200">
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-gray-600">
-                  <span>{codedPositionCount}/{approvedCoverage.total} {language === 'fr' ? 'positions codées' : 'positions coded'}</span>
-                  <span>{approvedCoverage.approved}/{approvedCoverage.total} {language === 'fr' ? 'positions validées' : 'positions approved'}</span>
-                </div>
-                {pendingPositionCount > 0 && (
-                  <p className="text-xs text-amber-700 mt-2 leading-relaxed">
-                    {language === 'fr'
-                      ? `${pendingPositionCount} positions sont en attente d’une relecture indépendante. Elles ne participent pas au matching avant cette validation.`
-                      : `${pendingPositionCount} positions await independent review. They do not contribute to matching before approval.`}
-                  </p>
-                )}
-              </div>
+          </div>
+        )}
+        {is2027 && approvedCoverage && (
+          <div className="mt-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5">
+              {language === 'fr' ? 'Progression de la vérification stricte' : 'Strict verification progress'}
+            </p>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-gray-600">
+              <span>{codedPositionCount}/{approvedCoverage.total} {language === 'fr' ? 'positions codées' : 'positions coded'}</span>
+              <span>{approvedCoverage.approved}/{approvedCoverage.total} {language === 'fr' ? 'positions validées' : 'positions approved'}</span>
+            </div>
+            {pendingPositionCount > 0 && (
+              <p className="text-xs text-amber-700 mt-2 leading-relaxed">
+                {language === 'fr'
+                  ? `${pendingPositionCount} positions sont en attente d’une relecture indépendante. Elles restent séparées de l’estimation tant que cette validation n’est pas terminée.`
+                  : `${pendingPositionCount} positions await independent review. They remain separate from the estimate until validation is complete.`}
+              </p>
             )}
           </div>
         )}

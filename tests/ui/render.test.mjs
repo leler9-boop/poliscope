@@ -155,6 +155,9 @@ test('une fiche 2027 ne republie pas les anciennes positions éditoriales non so
   assert.doesNotMatch(html, /Fortement pro-immigration/);
   assert.doesNotMatch(html, /Programme officiel complet/);
   assert.match(html, /Sources vérifiées/);
+  assert.match(html, /Estimation Poliscop/);
+  assert.match(html, /128 questions actuellement documentées/);
+  assert.doesNotMatch(html, /Aucune position sourcée et relue n.est encore publiée/);
 });
 
 test('la fiche Attal distingue ses chantiers 2027 codés d’un programme final et d’une validation', () => {
@@ -167,6 +170,8 @@ test('la fiche Attal distingue ses chantiers 2027 codés d’un programme final 
   assert.match(html, /0\/17 positions validées/);
   assert.match(html, /6 positions sont en attente d’une relecture indépendante/);
   assert.doesNotMatch(html, /Programme officiel complet/);
+  assert.match(html, /Estimation Poliscop/);
+  assert.match(html, /128 questions actuellement documentées/);
 });
 
 test('la page 2027 expose l’annuaire complet sans le présenter comme une liste officielle', () => {

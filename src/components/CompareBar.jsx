@@ -63,6 +63,19 @@ const THEME_AXES = {
 // label | ════════════════●══════════ | score
 
 function ScoreRow({ label, score, color, isUser = false, delay = 0, showPoles = false, leftPole, rightPole, language }) {
+  if (score == null) {
+    return (
+      <div className="flex items-center gap-2.5 py-0.5">
+        <span className="text-[11px] w-[90px] flex-shrink-0 truncate font-medium" style={{ color }}>
+          {label}
+        </span>
+        <div className="flex-1 h-[5px] bg-slate-100 rounded-full" />
+        <span className="text-[10px] text-slate-400 whitespace-nowrap">
+          {language === 'fr' ? 'Indisponible' : 'Unavailable'}
+        </span>
+      </div>
+    );
+  }
   const pct = Math.round(score ?? 50);
 
   return (
@@ -135,8 +148,8 @@ export function CompareBar({
   language, delay = 0, policyText = null,
 }) {
   const u    = Math.round(userScore ?? 50);
-  const t    = Math.round(targetScore ?? 50);
-  const diff = Math.abs(u - t);
+  const t    = targetScore == null ? null : Math.round(targetScore);
+  const diff = t == null ? null : Math.abs(u - t);
   const hasUser = userScore != null;
   const youLabel = language === 'fr' ? 'Vous' : 'You';
 
@@ -150,7 +163,7 @@ export function CompareBar({
             {themeLabel}
           </span>
         </div>
-        {hasUser && (
+        {hasUser && diff != null && (
           <span
             className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: diffBg(diff), color: diffColor(diff) }}
@@ -213,15 +226,15 @@ export function CompareBarThree({
   language, delay = 0,
 }) {
   const u  = Math.round(userScore ?? 50);
-  const s1 = Math.round(score1 ?? 50);
-  const s2 = Math.round(score2 ?? 50);
+  const s1 = score1 == null ? null : Math.round(score1);
+  const s2 = score2 == null ? null : Math.round(score2);
   const hasUser = userScore != null;
 
   const n1short = name1.split(' ').pop();
   const n2short = name2.split(' ').pop();
   const youLabel = language === 'fr' ? 'Vous' : 'You';
 
-  const diff12 = Math.abs(s1 - s2);
+  const diff12 = s1 == null || s2 == null ? null : Math.abs(s1 - s2);
 
   // Second color: slightly muted version of the theme color
   const color2 = themeColor + 'bb';
@@ -236,12 +249,14 @@ export function CompareBarThree({
             {themeLabel}
           </span>
         </div>
-        <span
-          className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-          style={{ backgroundColor: diffBg(diff12), color: diffColor(diff12) }}
-        >
-          {n1short} vs {n2short} · Δ {diff12}
-        </span>
+        {diff12 != null && (
+          <span
+            className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+            style={{ backgroundColor: diffBg(diff12), color: diffColor(diff12) }}
+          >
+            {n1short} vs {n2short} · Δ {diff12}
+          </span>
+        )}
       </div>
 
       {/* Three rows */}
@@ -287,12 +302,15 @@ export function CompareBarThree({
 
 export function AutoInsights({ userThemes, targetThemes, targetName, language }) {
   const sorted = THEMES_ORDER
+    .filter(theme => userThemes?.[theme] != null && targetThemes?.[theme] != null)
     .map(theme => ({
       theme,
       label: THEME_LABELS[language]?.[theme] ?? theme,
       diff: Math.abs((userThemes[theme] ?? 50) - (targetThemes[theme] ?? 50)),
     }))
     .sort((a, b) => a.diff - b.diff);
+
+  if (sorted.length === 0) return null;
 
   const agreements  = sorted.slice(0, 2);
   const divergences = sorted.slice(-2).reverse();
