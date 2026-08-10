@@ -7,6 +7,7 @@ import { elections } from '../data/elections.js';
 import { alignmentBarColor, alignmentColorClass, alignmentLabel } from '../engine/matcher.js';
 import { computeCandidateMatch } from '../engine/candidateMatch.js';
 import { rankCandidatesForSurface, MATCH_MODE } from '../engine/candidateRanking.js';
+import { EDITORIAL_ANSWERS_VERSION } from '../data/candidateEditorialAnswers.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
 import { formatProximity, noScoreReason, scoreToCssPercent } from '../engine/scoreDisplay.js';
 import { getRegistryEntry, getTrackedCandidates, getTrackedNotMatchReady } from '../data/candidateRegistry.js';
@@ -1273,7 +1274,7 @@ function CandidateResultCard({ candidate, rank, language, t, isTop, electionAnsw
   // dit ailleurs (bandeau d'estimation) : ici, refuser d'afficher les sujets comparés
   // laisserait un score sans la moindre justification visible.
   const aDesPreuves   = match?.breakdownSource === 'sourced-positions'
-                     || match?.breakdownSource === 'editorial-estimate-v1';
+                     || match?.breakdownSource === EDITORIAL_ANSWERS_VERSION;
 
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition-all hover:shadow-sm ${

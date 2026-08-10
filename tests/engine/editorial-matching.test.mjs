@@ -2,7 +2,7 @@
 //
 // Deux voies coexistent et ne doivent JAMAIS se confondre :
 //   • `sourced-positions`     — positions sourcées, vérifiées, relues. Aucune aujourd'hui.
-//   • `editorial-estimate-v1` — meilleure estimation raisonnable, publique mais étiquetée.
+//   • `editorial-estimate-v2` — meilleure estimation raisonnable, publique mais étiquetée.
 //
 // Ces tests verrouillent la frontière entre les deux, et les règles qui rendent une
 // estimation honnête : pas de centre par défaut, pas de basculement silencieux, provenance
@@ -22,12 +22,16 @@ import {
 import { computeCandidateMatch } from '../../src/engine/candidateMatch.js';
 import { elections } from '../../src/data/elections.js';
 import { questions as GENERAL_QUESTIONS } from '../../src/data/questions.js';
+import {
+  GENERAL_CANDIDATE_ORDER,
+  NON_CORE_ANSWERS,
+} from '../../src/data/candidateEditorialCorpus2027.js';
 import { NO_OPINION } from '../../src/engine/scorer.js';
 import { QUESTIONNAIRE_VERSION } from '../../src/engine/versions.js';
 
 const FR2027 = elections.find(e => e.id === 'fr_2027');
 const QUESTIONS = FR2027.specificQuestions;
-const CORE_QUESTIONS = GENERAL_QUESTIONS.filter(question => question.status === 'CORE');
+const NON_CORE_QUESTIONS = GENERAL_QUESTIONS.filter(question => question.status !== 'CORE');
 const answersFor = c => getEditorialAnswers(c.id, 'fr_2027');
 
 /** Profil de gauche écologiste et pro-européen. */
@@ -231,15 +235,15 @@ test('le profil Lisnard reste libéral, restrictif et distinct de la droite LR',
   assert.ok(differences >= 3, `Lisnard et Retailleau ne diffèrent que sur ${differences} questions`);
 });
 
-test('répondre comme Lisnard le place en tête sur le profil général', () => {
+test('répondre comme Lisnard le place en tête sur le profil général complet', () => {
   const lisnardAnswers = getEditorialAnswers('lisnard', 'general');
-  assert.equal(lisnardAnswers.length, 16, 'profil général Lisnard incomplet');
+  assert.equal(lisnardAnswers.length, 128, 'profil général Lisnard incomplet');
   const userAnswers = Object.fromEntries(
     lisnardAnswers.map(answer => [answer.questionId, answer.answerValue]),
   );
   const ranking = rankEditorialMatches(FR2027.candidates, {
     userAnswers,
-    questions: CORE_QUESTIONS,
+    questions: GENERAL_QUESTIONS,
     answersFor: candidate => getEditorialAnswers(candidate.id, 'general'),
   });
   assert.equal(ranking.results[0]?.candidate.id, 'lisnard');
@@ -282,6 +286,78 @@ test('la couverture éditoriale est mesurée, pas supposée', () => {
     const c = editorialCoverage(candidate.id, 'fr_2027');
     assert.equal(c.total, 17, `${candidate.id} : ${c.total} réponses au lieu de 17`);
     assert.equal(c.known + c.unknown, c.total);
+  }
+});
+
+test('les 112 questions non-CORE sont toutes codées pour les onze candidats', () => {
+  assert.equal(NON_CORE_QUESTIONS.length, 112, 'la banque active ne contient plus 112 non-CORE');
+  assert.equal(Object.keys(NON_CORE_ANSWERS).length, 112, 'le corpus non-CORE est incomplet');
+  assert.deepEqual(
+    new Set(Object.keys(NON_CORE_ANSWERS)),
+    new Set(NON_CORE_QUESTIONS.map(question => question.id)),
+    'le corpus contient une question retirée ou oublie une question active',
+  );
+  assert.equal(GENERAL_CANDIDATE_ORDER.length, 11);
+
+  for (const [questionId, row] of Object.entries(NON_CORE_ANSWERS)) {
+    assert.equal(row.v.length, 11, `${questionId} : nombre de candidats incorrect`);
+    assert.ok(row.v.every(value => [1, 2, 3, 4, 5].includes(value)),
+      `${questionId} : valeur hors de l’échelle 1–5`);
+  }
+});
+
+test('chaque candidat possède 128 réponses générales explicites, sans doublon ni inconnue', () => {
+  const expectedIds = new Set(GENERAL_QUESTIONS.map(question => question.id));
+  for (const candidate of FR2027.candidates) {
+    const answers = getEditorialAnswers(candidate.id, 'general');
+    const ids = answers.map(answer => answer.questionId);
+    assert.equal(answers.length, 128, `${candidate.id} : profil général incomplet`);
+    assert.equal(new Set(ids).size, 128, `${candidate.id} : question générale dupliquée`);
+    assert.deepEqual(new Set(ids), expectedIds, `${candidate.id} : mauvais jeu de questions`);
+    assert.ok(answers.every(answer => answer.answerState === ANSWER_STATE.ESTIMATED),
+      `${candidate.id} : réponse générale inconnue`);
+  }
+});
+
+test('les onze profils complets sont distincts et se reconnaissent eux-mêmes', () => {
+  const signatures = new Set();
+  for (const candidate of FR2027.candidates) {
+    const answers = getEditorialAnswers(candidate.id, 'general');
+    const byQuestion = new Map(answers.map(answer => [answer.questionId, answer.answerValue]));
+    const signature = GENERAL_QUESTIONS.map(question => byQuestion.get(question.id)).join('');
+    assert.ok(!signatures.has(signature), `${candidate.id} est le clone exact d’un autre candidat`);
+    signatures.add(signature);
+
+    const userAnswers = Object.fromEntries(
+      answers.map(answer => [answer.questionId, answer.answerValue]),
+    );
+    const ranking = rankEditorialMatches(FR2027.candidates, {
+      userAnswers,
+      questions: GENERAL_QUESTIONS,
+      answersFor: compared => getEditorialAnswers(compared.id, 'general'),
+    });
+    assert.equal(ranking.results[0]?.candidate.id, candidate.id,
+      `${candidate.id} ne se reconnaît pas lui-même`);
+    assert.equal(ranking.results[0]?.match.score, 100);
+    assert.equal(ranking.results[0]?.match.questionsCompared, 128);
+  }
+});
+
+test('les familles proches restent suffisamment séparées sur le corpus complet', () => {
+  const pairs = [
+    ['lepen_2027', 'zemmour_2027'],
+    ['philippe', 'attal'],
+    ['retailleau', 'lisnard'],
+    ['melenchon_2027', 'ruffin'],
+    ['melenchon_2027', 'roussel_2027'],
+    ['glucksmann', 'tondelier'],
+  ];
+  for (const [left, right] of pairs) {
+    const a = new Map(getEditorialAnswers(left, 'general').map(answer => [answer.questionId, answer.answerValue]));
+    const b = new Map(getEditorialAnswers(right, 'general').map(answer => [answer.questionId, answer.answerValue]));
+    const differences = [...a].filter(([id, value]) => b.get(id) !== value).length;
+    assert.ok(differences >= 20,
+      `${left}/${right} ne diffèrent que sur ${differences} questions : séparation trop faible`);
   }
 });
 

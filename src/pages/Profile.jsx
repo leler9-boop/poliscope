@@ -5,7 +5,7 @@ import { useStore } from '../store/useStore.js';
 import { createTranslator } from '../i18n/translations.js';
 import { getConfidenceMeta, AXES_LABELS, recalculateAxes, isScorable } from '../engine/scorer.js';
 import { formatProximity, coverageLabel, coverageTitle, scoreToCssPercent } from '../engine/scoreDisplay.js';
-import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_QUESTION_COUNT, canonicalMode, coreQuestions } from '../data/questions.js';
+import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_QUESTION_COUNT, canonicalMode } from '../data/questions.js';
 // `rankLegacyFigures` ne sert plus qu'aux COURANTS idéologiques et aux figures : des
 // profils de référence documentés, pas des candidats à une élection en cours. Le classement
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
@@ -274,26 +274,27 @@ export default function Profile() {
     return election.candidates;
   }, []);
 
-  // Classement 2027 — passe par le moteur SOURCÉ.
+  // Classement 2027 — voie éditoriale explicite, sur toutes les réponses disponibles.
   //
   // Avant le 2026-08-09, cette page appelait `rankByAlignment()`, qui compare le profil de
   // l'utilisateur aux huit nombres `legacy-manual-v1` de `candidate.profile`. Elle affichait
   // donc « Meilleur match 2027 — … — 66/100 » alors qu'aucune position n'avait été sourcée
   // ni relue. `rankCandidates()` n'accepte que des positions approuvées : tant qu'il n'y en a
   // aucune, `results` est vide et `unscored` porte le motif à afficher.
-  // 2026-08-10 : la voie stricte reste tentée en premier. Faute de position approuvée, la page
-  // n'affichait plus rien du tout. On autorise EXPLICITEMENT le repli éditorial, qui compare
-  // les réponses de l'utilisateur à celles attribuées aux candidats — et dont chaque résultat
-  // est étiqueté « estimation », jamais « vérifié ».
+  // 2026-08-10 : la voie éditoriale compare les réponses de l'utilisateur à celles attribuées
+  // aux candidats — et chaque résultat est étiqueté « estimation », jamais « vérifié ».
+  // 2026-08-10 v2 : le corpus couvre les 128 questions. La page ne doit donc plus limiter le
+  // matching aux 16 CORE : un parcours Standard, Approfondi ou un affinage doit réellement
+  // améliorer la comparaison candidat.
   const { results: rankedCandidates, unscored: unscoredCandidates, matchMode } = useMemo(() => {
     if (!themes || fr2027Candidates.length === 0) return { results: [], unscored: [], matchMode: null };
     const r = rankCandidatesForSurface({
       candidates: fr2027Candidates,
       userThemes: themes,
       userAnswers: answers ?? {},
-      questions: coreQuestions,
+      questions,
       questionSet: 'general',
-      // V1 : voie éditoriale demandée EXPLICITEMENT pour tous les candidats. Le passage en
+      // Voie éditoriale demandée EXPLICITEMENT pour tous les candidats. Le passage en
       // mode strict sera une décision produit, pas une conséquence des données disponibles.
       mode: MATCH_MODE.EDITORIAL,
       priorityOrder: priorityOrder ?? [],

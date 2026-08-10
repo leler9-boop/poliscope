@@ -1,4 +1,4 @@
-// POLISCOP — Réponses éditoriales des candidats (voie `editorial-estimate-v1`).
+// POLISCOP — Réponses éditoriales des candidats (voie `editorial-estimate-v2`).
 //
 // POURQUOI CETTE VOIE EXISTE
 // --------------------------
@@ -18,17 +18,22 @@
 //
 // ORIGINE DES VALEURS
 // -------------------
-// Les 187 valeurs proviennent de `elections.js → specificQuestions[].positions`, qui servaient
-// déjà de repli silencieux avant `83bde2b`. Elles ne sont PAS réactivées telles quelles : chaque
-// ligne de question a été relue le 2026-08-10, sa base de codage déclarée, et les divergences
-// individuelles par rapport à la ligne du parti explicitement notées ci-dessous.
+// Les réponses spécifiques à l'élection proviennent de
+// `elections.js → specificQuestions[].positions`. Les réponses générales sont un corpus
+// explicite de 128 questions × 11 candidats : 16 CORE ci-dessous et 112 non-CORE dans
+// candidateEditorialCorpus2027.js. Ce corpus ne remplace pas la voie stricte : il permet une
+// V1 produit complète en disant clairement qu'il s'agit d'estimations.
 
 import { elections } from './elections.js';
+import {
+  GENERAL_CANDIDATE_ORDER,
+  NON_CORE_ANSWERS,
+} from './candidateEditorialCorpus2027.js';
 import { QUESTIONNAIRE_VERSION } from '../engine/versions.js';
 import { resolveCandidateId } from './candidateRegistry.js';
 
 /** Version du jeu de réponses éditoriales. À incrémenter à toute révision de fond. */
-export const EDITORIAL_ANSWERS_VERSION = 'editorial-estimate-v1';
+export const EDITORIAL_ANSWERS_VERSION = 'editorial-estimate-v2';
 
 /** Date de la relecture éditoriale de ce jeu. */
 export const EDITORIAL_REVIEWED_AT = '2026-08-10';
@@ -208,15 +213,8 @@ function buildFromElection(electionId, review) {
 
 // ─── Banque générale : les 16 questions CORE ────────────────────────────────
 //
-// Les CORE couvrent les huit thèmes, deux par thème : c'est le socle minimal pour dériver un
-// profil thématique complet, et c'est exactement le contenu du mode Découverte. Les 112 autres
-// questions actives restent à coder — leur absence est déclarée, pas masquée.
-//
-// Ordre des colonnes, une fois pour toutes :
-const GENERAL_CANDIDATE_ORDER = [
-  'lepen_2027', 'philippe', 'attal', 'melenchon_2027', 'glucksmann',
-  'tondelier', 'retailleau', 'ruffin', 'roussel_2027', 'zemmour_2027', 'lisnard',
-];
+// Les CORE couvrent les huit thèmes, deux par thème : c'est le socle du mode Découverte.
+// Les 112 autres questions actives sont codées dans candidateEditorialCorpus2027.js.
 
 /**
  * Réponses attribuées sur les questions CORE.
@@ -285,7 +283,8 @@ const CORE_ANSWERS = {
 /** Construit les réponses éditoriales sur la banque générale. */
 function buildGeneralAnswers() {
   const out = [];
-  for (const [questionId, row] of Object.entries(CORE_ANSWERS)) {
+  const completeCorpus = { ...CORE_ANSWERS, ...NON_CORE_ANSWERS };
+  for (const [questionId, row] of Object.entries(completeCorpus)) {
     GENERAL_CANDIDATE_ORDER.forEach((electionCandidateId, index) => {
       const value = row.v[index];
       const known = [1, 2, 3, 4, 5].includes(value);

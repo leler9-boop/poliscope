@@ -35,9 +35,9 @@ export default function EstimateNotice({
       + 'estimates, not individually verified positions. They are dated and revised as '
       + 'announcements come.';
 
-  // ⚠ Ne JAMAIS écrire « 16 sur 16 ». Cette forme se lit comme « tout le questionnaire est
-  // couvert », alors que 112 questions de la banque ne sont pas encore documentées pour les
-  // candidats. On énonce les trois nombres séparément, chacun avec ce qu'il désigne vraiment.
+  // Les nombres gardent des libellés distincts : questions comparées, réponses utilisateur et
+  // questions candidat documentées ne sont pas nécessairement identiques (par exemple si la
+  // personne répond « sans opinion » ou n'a pas terminé le parcours).
   const coverage = questionsCompared != null
     ? (fr
       ? `Comparaison fondée sur ${questionsCompared} question${questionsCompared > 1 ? 's' : ''} `

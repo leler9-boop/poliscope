@@ -24,7 +24,10 @@
 
 import { rankCandidates } from './candidateMatch.js';
 import { rankEditorialMatches, SCORE_PROVENANCE } from './editorialMatch.js';
-import { getEditorialAnswers } from '../data/candidateEditorialAnswers.js';
+import {
+  getEditorialAnswers,
+  EDITORIAL_ANSWERS_VERSION,
+} from '../data/candidateEditorialAnswers.js';
 
 /** Voies disponibles. Le mode est une DÉCISION, pas une conséquence des données. */
 export const MATCH_MODE = Object.freeze({
@@ -35,7 +38,7 @@ export const MATCH_MODE = Object.freeze({
 /** Provenance de données associée à chaque voie, pour l'affichage. */
 export const MODE_PROVENANCE = Object.freeze({
   [MATCH_MODE.STRICT]:    'sourced-positions',
-  [MATCH_MODE.EDITORIAL]: 'editorial-estimate-v1',
+  [MATCH_MODE.EDITORIAL]: EDITORIAL_ANSWERS_VERSION,
 });
 
 /** Version du contrat de sélection de voie. */

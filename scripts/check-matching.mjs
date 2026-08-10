@@ -120,13 +120,13 @@ for (const election of elections) {
   }
 }
 
-// ─── Voie éditoriale V1 ──────────────────────────────────────────────────────
+// ─── Voie éditoriale ─────────────────────────────────────────────────────────
 
 console.log('════════════════════════════════════════════════════════════');
-console.log('Matching éditorial V1 (estimations, jamais « vérifié »)\n');
-
-const { getEditorialAnswers, editorialCoverage, candidatesWithEditorialAnswers } =
+const { getEditorialAnswers, editorialCoverage, candidatesWithEditorialAnswers,
+  EDITORIAL_ANSWERS_VERSION } =
   await import(`${base}/src/data/candidateEditorialAnswers.js`);
+console.log(`Matching éditorial — ${EDITORIAL_ANSWERS_VERSION} (estimations, jamais « vérifié »)\n`);
 const { rankEditorialMatches } = await import(`${base}/src/engine/editorialMatch.js`);
 
 const withEditorial = new Set(candidatesWithEditorialAnswers());
@@ -169,4 +169,4 @@ if (warnings) {
   console.log('régressions. `node scripts/check-matching.mjs --strict` les rend bloquantes.');
 }
 console.log('Voie stricte : aucun corpus approuvé à ce jour — aucun candidat n’y est scorable.');
-console.log('Voie éditoriale V1 : opérationnelle, résultats étiquetés « estimation ».');
+console.log(`Voie éditoriale ${EDITORIAL_ANSWERS_VERSION} : opérationnelle, résultats étiquetés « estimation ».`);
