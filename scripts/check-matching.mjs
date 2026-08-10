@@ -62,7 +62,10 @@ for (const election of elections) {
   const rows = [];
   for (const candidate of election.candidates) {
     const canonical = resolveCandidateId(candidate.id);
-    const all = CANDIDATE_POSITIONS.filter(p => p.candidateId === canonical);
+    // Filtrage par les questions DE CETTE élection : sans lui, les positions de Roussel
+    // codées sur fr_2027 étaient comptées comme corpus de fr_2022, où elles ne peuvent
+    // rien produire (le moteur les rejette en `unknown_question`, mais le rapport mentait).
+    const all = CANDIDATE_POSITIONS.filter(p => p.candidateId === canonical && byId.has(p.questionId));
     const coded = all.filter(p => p.stance != null);
     const approved = all.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
 
@@ -106,6 +109,42 @@ for (const election of elections) {
         + `et pourtant aucun score (« ${r.reason} »). Moteur ou mapping en cause.`);
     }
   }
+}
+
+// ─── Voie éditoriale V1 ──────────────────────────────────────────────────────
+
+console.log('════════════════════════════════════════════════════════════');
+console.log('Matching éditorial V1 (estimations, jamais « vérifié »)\n');
+
+const { getEditorialAnswers, editorialCoverage, candidatesWithEditorialAnswers } =
+  await import(`${base}/src/data/candidateEditorialAnswers.js`);
+const { rankEditorialMatches } = await import(`${base}/src/engine/editorialMatch.js`);
+
+const withEditorial = new Set(candidatesWithEditorialAnswers());
+for (const election of elections) {
+  const questions = election.specificQuestions ?? [];
+  if (!questions.length) continue;
+  const covered = election.candidates.filter(c => withEditorial.has(resolveCandidateId(c.id)));
+  if (!covered.length) {
+    console.log(`── ${election.id} : aucun profil éditorial`);
+    continue;
+  }
+  // Profil neutre : sert uniquement à vérifier que la chaîne produit un score, pas à juger.
+  const neutralAnswers = Object.fromEntries(questions.map(q => [q.id, 3]));
+  const { results, unscored } = rankEditorialMatches(election.candidates, {
+    userAnswers: neutralAnswers, questions,
+    answersFor: c => getEditorialAnswers(c.id, election.id),
+  });
+  console.log(`── ${election.id} — ${results.length}/${election.candidates.length} candidats comparables`);
+  for (const { candidate } of results) {
+    const c = editorialCoverage(candidate.id, election.id);
+    console.log(`   ${String(candidate.id).padEnd(16)} ${c.known}/${c.total} réponses estimées`
+      + `${c.unknown ? ` · ${c.unknown} inconnues` : ''}`);
+  }
+  for (const { candidate, match } of unscored) {
+    console.log(`   ${String(candidate.id).padEnd(16)} non comparable — ${match.reason}`);
+  }
+  console.log('');
 }
 
 console.log('════════════════════════════════════════════════════════════');
