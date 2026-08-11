@@ -83,3 +83,35 @@ test('la modification ne touche JAMAIS aux réponses politiques', () => {
   useStore.getState().setThemeImportanceLevel(THEMES_ORDER[0], IMPORTANCE_LEVEL.NOT);
   assert.deepEqual(useStore.getState().answers, { ECO_1: 4, SOC_7: 2 });
 });
+
+// ─── Export / import réels, à travers le store ──────────────────────────────
+
+test('un aller-retour export → réinitialisation → import conserve les priorités', async () => {
+  const { buildPriorityExport, parsePriorityImport } = await import('../../src/engine/priorityTransfer.js');
+  const { VOTE_INFLUENCE_LEVEL } = await import('../../src/engine/priorityWeights.js');
+
+  reset();
+  useStore.getState().setThemeImportanceLevel(THEMES_ORDER[0], IMPORTANCE_LEVEL.VERY_HIGH);
+  useStore.getState().setThemeImportanceLevel(THEMES_ORDER[4], IMPORTANCE_LEVEL.MEDIUM);
+  useStore.getState().setVoteInfluence('ENV_26', VOTE_INFLUENCE_LEVEL.NONE);
+  useStore.getState().setVoteInfluenceDeclined('SOC_28');
+
+  const payload = buildPriorityExport({
+    themeImportance: useStore.getState().themeImportance,
+    voteInfluence: useStore.getState().voteInfluence,
+  });
+
+  // Remise à zéro complète, puis import.
+  useStore.setState({ themeImportance: null, voteInfluence: {} });
+  const { questions } = await import('../../src/data/questions.js');
+  const back = parsePriorityImport(payload, { knownQuestionIds: new Set(questions.map(q => q.id)) });
+  useStore.setState({ themeImportance: back.themeImportance, voteInfluence: back.voteInfluence });
+
+  const state = normalizeThemeImportance({ themeImportance: useStore.getState().themeImportance });
+  assert.equal(answeredThemeCount(state), 2, 'les évaluations de thèmes ont été perdues');
+  assert.equal(state.levels[THEMES_ORDER[4]], IMPORTANCE_LEVEL.MEDIUM,
+    'un « moyennement important » explicite doit survivre à l’aller-retour');
+  assert.equal(useStore.getState().voteInfluence.ENV_26.level, VOTE_INFLUENCE_LEVEL.NONE);
+  assert.equal(useStore.getState().voteInfluence.SOC_28.declined, true);
+  assert.equal(useStore.getState().voteInfluence.SOC_28.level, null);
+});

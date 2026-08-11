@@ -15,6 +15,7 @@ import { normalizeConsent } from '../lib/consent.js';
 import {
   normalizeThemeImportance, PRIORITY_SOURCE, VOTE_INFLUENCE_MULTIPLIER,
 } from '../engine/priorityWeights.js';
+import { buildPriorityExport, parsePriorityImport } from '../engine/priorityTransfer.js';
 import { toCloudAnswerRow, cloudAnsweredCount } from '../lib/cloudAnswers.js';
 import { routerNavigate, PAGE_TO_PATH } from '../lib/router.js';
 import {
@@ -724,7 +725,8 @@ export const useStore = create(
       },
 
       exportProfile: () => {
-        const { answers, profile, priorityOrder, themeWeights, queueSeed, testMode, questionsQueue } = get();
+        const { answers, profile, priorityOrder, themeWeights, queueSeed, testMode, questionsQueue,
+          themeImportance, voteInfluence } = get();
         const data = {
           // Le format 1.0 embarquait les scores sans dire comment ils avaient été calculés :
           // relire un vieil export était impossible dès que la méthode changeait.
@@ -744,6 +746,10 @@ export const useStore = create(
           // `scoring: 'v1'` : un profil calculé en v2 s'exportait donc étiqueté v1, et se
           // relisait comme tel. La version d'origine fait foi.
           versions: profile?.versions ?? currentVersions(),
+          // Les priorités électorales sont des DÉCISIONS prises une par une : les omettre
+          // faisait perdre huit évaluations de thèmes et chaque influence déclarée, en
+          // silence, dès qu'on réimportait son propre fichier.
+          ...buildPriorityExport({ themeImportance, voteInfluence }),
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -795,7 +801,15 @@ export const useStore = create(
         // Un `?? get().champ` ferait survivre l'état local antérieur — c'est précisément le
         // défaut relevé sur `themeWeights` : des poids saisis par l'utilisateur continuaient
         // de pondérer un profil importé d'ailleurs.
+        // Les priorités sont relues du fichier, jamais héritées de l'état local : un import
+        // doit remplacer, pas se mélanger. Les entrées invalides sont écartées, pas corrigées.
+        const priorities = parsePriorityImport(parsed.raw ?? v, {
+          knownQuestionIds: new Set(allQuestions.map(q => q.id)),
+        });
+
         set({
+          themeImportance: priorities.themeImportance,
+          voteInfluence: priorities.voteInfluence,
           answers: v.answers,
           // Recalcul systématique, jamais `data.profile` — et avec la version ACTIVE.
           profile: calculateActiveProfile(v.answers, { askedQuestionIds: v.questionIds ?? null }),

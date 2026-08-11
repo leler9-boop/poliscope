@@ -101,7 +101,7 @@ export function validateTestMode(raw) {
  *
  * @param {string} jsonText
  * @param {{knownQuestionIds: Set<string>, isAcceptableAnswer: (v:any)=>boolean}} deps
- * @returns {{ok: true, value: Object, warnings: string[]} | {ok: false, error: string}}
+ * @returns {{ok: true, value: Object, warnings: string[], raw: Object} | {ok: false, error: string}}
  *
  * `value` contient TOUS les champs de session, y compris ceux à réinitialiser (`null`).
  * L'appelant doit les appliquer tels quels — ne jamais faire `?? étatCourant`.
@@ -239,6 +239,13 @@ export function parseImport(jsonText, { knownQuestionIds, isAcceptableAnswer }) 
       /** La file est-elle reproductible ? Faux ⇒ seules les réponses sont importées. */
       queueReproducible: questionIds != null,
     },
+    /**
+     * JSON validé tel quel, pour les blocs relus par un schéma dédié — aujourd'hui les
+     * priorités électorales (`priorityTransfer.js`). Exposer le brut ÉVITE de dupliquer ici
+     * une validation qui vit déjà ailleurs ; l'appelant ne doit pas s'en servir pour
+     * contourner les champs validés ci-dessus.
+     */
+    raw: data,
   };
 }
 
