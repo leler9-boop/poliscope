@@ -46,6 +46,8 @@ export default function PriorityRanking() {
   const t = createTranslator(language);
 
   const setThemeImportance = useStore(s => s.setThemeImportance);
+  const editMode           = useStore(s => s.priorityEditMode);
+  const closeEditor        = useStore(s => s.closePriorityEditor);
   const storedImportance   = useStore(s => s.themeImportance);
 
   const [order, setOrder] = useState(storedPriority ?? [...THEMES_ORDER]);
@@ -64,12 +66,24 @@ export default function PriorityRanking() {
     // `themeWeights` (allocation sur 100) appartient à l'ancien modèle : on le neutralise pour
     // qu'il ne coexiste pas avec une importance déclarée, ce qui produirait deux pondérations.
     setThemeWeights(null);
-    trackPriorityCompleted({ priorityOrder: order, method: source });
-    startTest(testMode ?? 'medium');
+    trackPriorityCompleted({ priorityOrder: order, method: source, mode: editMode ? 'edit' : 'create' });
+    // ⚠ En modification, on NE relance PAS de questionnaire : les réponses, la file et le
+    // profil idéologique doivent rester intacts. Seul le matching pondéré sera recalculé.
+    if (editMode) closeEditor();
+    else startTest(testMode ?? 'medium');
   };
 
   // Si la personne n'a évalué AUCUN thème, on n'enregistre pas « évaluations indépendantes » :
   // ce serait déclarer un travail qu'elle n'a pas fait. L'état reste neutre et non renseigné.
+  /** Déplacement au clavier : produit exactement le même ordre que le glisser-déposer. */
+  const moveTheme = (index, delta) => {
+    const target = index + delta;
+    if (target < 0 || target >= order.length) return;
+    const next = [...order];
+    [next[index], next[target]] = [next[target], next[index]];
+    setOrder(next);
+  };
+
   const handleRatingConfirm = () => {
     const answeredCount = THEMES_ORDER.filter(t => importance.answered?.[t]).length;
     if (answeredCount === 0) startWith(importance, null);
@@ -100,7 +114,7 @@ export default function PriorityRanking() {
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-10">
       <button
-        onClick={() => navigate('selectTest')}
+        onClick={() => (editMode ? closeEditor() : navigate('selectTest'))}
         className="text-sm text-gray-400 hover:text-gray-600 mb-6 flex items-center gap-1 transition-colors"
       >
         ← {t('back')}
@@ -148,7 +162,9 @@ export default function PriorityRanking() {
               onClick={handleRatingConfirm}
               className="w-full bg-gray-900 hover:bg-black text-white font-semibold min-h-[56px] py-3.5 rounded-xl transition-colors text-sm"
             >
-              {fr ? 'Commencer le questionnaire' : 'Start the questionnaire'}
+              {editMode
+                ? (fr ? 'Enregistrer mes priorités' : 'Save my priorities')
+                : (fr ? 'Commencer le questionnaire' : 'Start the questionnaire')}
             </button>
             <button
               onClick={handleEqual}
@@ -239,6 +255,28 @@ export default function PriorityRanking() {
                 style={{ backgroundColor: `${color}18`, color }}
               >
                 {idx + 1}
+              </span>
+              {/* Alternative CLAVIER au glisser-déposer. Sans elle, réordonner exigeait une
+                  souris ou un écran tactile : le classement « précis » était inaccessible. */}
+              <span className="flex flex-col gap-0.5 ml-1">
+                <button
+                  type="button"
+                  onClick={() => moveTheme(idx, -1)}
+                  disabled={idx === 0}
+                  aria-label={`${fr ? 'Monter' : 'Move up'} ${THEME_LABELS[fr ? 'fr' : 'en'][theme]}`}
+                  className="w-8 h-6 rounded border border-slate-200 text-slate-500 disabled:opacity-30 hover:bg-slate-100 text-[10px] leading-none"
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveTheme(idx, 1)}
+                  disabled={idx === order.length - 1}
+                  aria-label={`${fr ? 'Descendre' : 'Move down'} ${THEME_LABELS[fr ? 'fr' : 'en'][theme]}`}
+                  className="w-8 h-6 rounded border border-slate-200 text-slate-500 disabled:opacity-30 hover:bg-slate-100 text-[10px] leading-none"
+                >
+                  ▼
+                </button>
               </span>
             </Reorder.Item>
           );

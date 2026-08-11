@@ -188,7 +188,11 @@ export const useStore = create(
       // ⚠ Ne JAMAIS fusionner ces champs. « Ce sujet ne changera pas mon vote » ne doit
       // jamais devenir une réponse neutre, une absence de réponse, ni une ligne supprimée :
       // l'opinion reste dans le profil, seul son poids électoral tombe à zéro.
-      themeImportance: null,   // { levels: { [THEME]: niveau }, source }
+      themeImportance: null,   // { levels: { [THEME]: niveau }, answered, source }
+      // Vrai quand l'écran de priorités est ouvert DEPUIS le profil : à la validation on
+      // revient au profil au lieu de démarrer un questionnaire. Session seule — rouvrir
+      // l'application ne doit pas laisser l'utilisateur coincé dans un mode d'édition.
+      priorityEditMode: false,
       voteInfluence: {},       // { [questionId]: { level, multiplier, askedAt, answeredAt } }
 
       // ── Reproductibilité et reprise de la passation ──
@@ -494,6 +498,18 @@ export const useStore = create(
           },
         },
       }),
+
+      /** Ouvre l'écran de priorités en MODIFICATION : ne touche ni aux réponses ni à la file. */
+      openPriorityEditor: () => {
+        set({ priorityEditMode: true, currentPage: 'priorities' });
+        routerNavigate('/priorities');
+      },
+
+      /** Referme le mode modification et revient au profil. */
+      closePriorityEditor: () => {
+        set({ priorityEditMode: false, currentPage: 'profile' });
+        routerNavigate('/profile');
+      },
 
       /** Importance thématique effective, anciens profils compris. */
       effectiveThemeImportance: () => normalizeThemeImportance({

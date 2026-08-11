@@ -162,6 +162,7 @@ export default function Profile() {
   const themeImportance    = useStore(s => s.themeImportance);
   const voteInfluence      = useStore(s => s.voteInfluence);
   const effectiveThemeImportance = useStore(s => s.effectiveThemeImportance);
+  const openPriorityEditor = useStore(s => s.openPriorityEditor);
   const priorityOrder      = useStore(s => s.priorityOrder);
   const profileAdjustments = useStore(s => s.profileAdjustments);
   const applyRefinement    = useStore(s => s.applyRefinement);
@@ -1203,6 +1204,13 @@ export default function Profile() {
               </div>
             )}
           </div>
+          <button
+            type="button"
+            onClick={openPriorityEditor}
+            className="mt-3 w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium transition-colors"
+          >
+            {language === 'fr' ? 'Modifier les sujets importants pour moi' : 'Change the topics that matter to me'}
+          </button>
           {dualRanking.sameWinner && dualRanking.electoral.results.length > 0 && (
             <p className="text-xs text-slate-500 mt-3">
               {language === 'fr'
