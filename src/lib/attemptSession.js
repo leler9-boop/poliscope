@@ -167,6 +167,14 @@ export function createAttemptSession({
         }
       }
 
+      if (!isAllowed) {
+        // Sans autorisation, aucune passation ne doit rester écrite sur le terminal — y
+        // compris celles déposées AVANT le correctif P0-5, qui survivaient sur les appareils
+        // déjà visités. Empêcher les nouvelles écritures ne suffit pas : il faut effacer
+        // l'identifiant déjà déposé, sinon le traceur reste en place indéfiniment.
+        try { storage?.removeItem(ATTEMPT_KEY); } catch { /* stockage indisponible */ }
+      }
+
       if (wasAllowed && !isAllowed) {
         // RETRAIT : on cesse d'émettre ET on vide ce qui attendait. La suppression de ce
         // qui est déjà en base est faite côté serveur par `private.record_consent`.

@@ -258,3 +258,21 @@ test('un refus explicite ne déclenche aucune requête', async () => {
 
   assert.deepEqual(sent, [], 'un refus a laissé passer une transmission');
 });
+
+test('un terminal déjà marqué avant le correctif est purgé au premier refus', () => {
+  // Le correctif P0-5 empêche les nouvelles écritures, mais les appareils déjà visités
+  // conservaient un `poliscop_attempt` contenant un identifiant aléatoire. Empêcher
+  // l'écriture ne suffit pas : il faut effacer ce qui a déjà été déposé.
+  const storage = memoryStorage();
+  storage.setItem('poliscop_attempt', JSON.stringify({
+    attemptId: '854e0826-a0f4-41e8-96ad-a6cebf9bd03a',
+    anonymousSessionId: '566effaa-d412-487a-b10a-dc1b0926fac0',
+    meta: { mode: 'standard' },
+  }));
+  const session = createAttemptSession({ storage, transport: async () => {} });
+  return session.setConsent(emptyConsentState()).then(() => {
+    assert.equal(storage.getItem('poliscop_attempt'), null,
+      'un identifiant déposé avant le correctif survit à une absence de consentement');
+    assert.deepEqual(storage._dump().filter(([, v]) => UUID_RE.test(String(v))), []);
+  });
+});
