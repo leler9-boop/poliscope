@@ -11,7 +11,8 @@ import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_Q
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
 import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
 import { rankCandidatesForSurface, MATCH_MODE, rankBothWays } from '../engine/candidateRanking.js';
-import { answeredThemeCount } from '../engine/priorityWeights.js';
+import { answeredThemeCount, VOTE_INFLUENCE_LEVEL } from '../engine/priorityWeights.js';
+import { EDITORIAL_MATCH_CONFIG } from '../engine/editorialMatch.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
@@ -297,6 +298,12 @@ export default function Profile() {
       candidates: fr2027Candidates,
       userThemes: themes,
       userAnswers: answers ?? {},
+      // ⚠ Second motif, distinct de la couverture candidat : `userAnswered` est compté SUR
+      // L'UNIVERS passé au moteur (editorialMatch.js). Tronquer l'univers tronquait le
+      // dénominateur du contrôle de couverture, qui ne pouvait plus se déclencher — une
+      // personne ayant répondu à 64 questions était classée sur 16 avec un ratio de 1,0.
+      // Aucune des 18 questions `voteInfluencePrompt` n'étant CORE, les influences
+      // recueillies étaient elles aussi hors du calcul.
       questions,
       questionSet: 'general',
       // Voie éditoriale demandée EXPLICITEMENT pour tous les candidats. Le passage en
@@ -323,18 +330,30 @@ export default function Profile() {
     return rankBothWays({
       candidates: fr2027Candidates,
       userAnswers: answers,
-      questions: coreQuestions,
+      questions,                       // voir le commentaire de `rankedCandidates` ci-dessus
       questionSet: 'general',
       themeImportance: effectiveThemeImportance(),
       voteInfluence: voteInfluence ?? {},
     });
   }, [answers, fr2027Candidates, themeImportance, voteInfluence]);
 
-  // Ces deux compteurs décrivent ce que L'UTILISATEUR a fait, pas ce qui s'est trouvé dans
-  // l'intersection avec le candidat gagnant. Les lier au candidat ferait varier « vos choix »
-  // selon la personne affichée, ce qui n'a aucun sens.
-  const influenceDeclaredCount = useMemo(() => Object.values(voteInfluence ?? {})
+  // ── COMPTEURS D'INFLUENCE : quatre nombres DISTINCTS ──────────────────────
+  //
+  // Un seul compteur ne peut pas dire la vérité ici. « Vous avez indiqué 5 influences » et
+  // « 5 influences pèsent dans ce résultat » sont deux affirmations différentes, et elles
+  // divergent réellement : une influence peut porter sur une question que ce calcul ne compare
+  // pas (le candidat n'a pas de position documentée dessus), ou avoir été déclarée « sans effet
+  // sur mon vote », ce qui lui donne un poids nul.
+  //
+  // ⚠ Le libellé « thèmes ET décisions » ne doit dépendre QUE de `influenceInComparison`.
+  const influenceStated = useMemo(() => Object.values(voteInfluence ?? {})
     .filter(e => typeof e?.level === 'string').length, [voteInfluence]);
+  // Déclarées « ce sujet ne changera pas mon vote » : décision réelle, poids nul assumé.
+  const influenceNullified = useMemo(() => Object.values(voteInfluence ?? {})
+    .filter(e => e?.level === VOTE_INFLUENCE_LEVEL.NONE).length, [voteInfluence]);
+  // Combien entrent RÉELLEMENT dans l'intersection du résultat affiché.
+  const influenceInComparison = dualRanking?.electoral?.results?.[0]?.match?.influenceDeclared ?? 0;
+  const influenceOutsideComparison = Math.max(0, influenceStated - influenceInComparison);
   const themesAnsweredCount = useMemo(
     () => answeredThemeCount(effectiveThemeImportance()), [themeImportance, effectiveThemeImportance]);
 
@@ -1130,6 +1149,36 @@ export default function Profile() {
         </div>
       </motion.div>
 
+      {/* ⚠ COUVERTURE INSUFFISANTE — ne JAMAIS disparaître en silence.
+          Tant que les candidats ne sont documentés que sur une petite partie de la banque,
+          un questionnaire long produit légitimement un refus de classer : comparer 16 réponses
+          sur 64 ne permet pas d'annoncer un gagnant. Le contrôle de couverture n'est pas
+          abaissé pour faire apparaître un résultat — on explique pourquoi il n'y en a pas. */}
+      {dualRanking && dualRanking.ideological.results.length === 0
+        && dualRanking.ideological.unscored.length > 0 && (
+        <div className="mb-6 sm:mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5">
+          <h2 className="font-bold text-slate-900 text-lg tracking-tight mb-1">
+            {language === 'fr'
+              ? 'Nous ne pouvons pas encore vous classer les candidats'
+              : 'We cannot rank the candidates for you yet'}
+          </h2>
+          <p className="text-xs text-slate-700 leading-relaxed">
+            {(() => {
+              const m = dualRanking.ideological.unscored[0].match;
+              const pct = Math.round(EDITORIAL_MATCH_CONFIG.minComparedRatio * 100);
+              return language === 'fr'
+                ? `Vous avez répondu à ${m.userAnswered} question(s). Les candidats n'ont de position documentée que sur ${m.questionsCompared} d'entre elles, soit moins de ${pct} % de vos réponses. Annoncer un classement sur cette base donnerait à ${m.questionsCompared} réponses le poids de toutes les autres.`
+                : `You answered ${m.userAnswered} question(s). Candidates have a documented position on only ${m.questionsCompared} of them, under ${pct}% of your answers. Announcing a ranking on that basis would give ${m.questionsCompared} answers the weight of all the others.`;
+            })()}
+          </p>
+          <p className="text-[11px] text-slate-600 leading-relaxed mt-2">
+            {language === 'fr'
+              ? 'Vos réponses sont conservées. Le classement apparaîtra dès que les positions des candidats couvriront une part suffisante du questionnaire.'
+              : 'Your answers are kept. The ranking will appear once candidate positions cover enough of the questionnaire.'}
+          </p>
+        </div>
+      )}
+
       {/* ═══ CANDIDATS 2027 — now before axes for mobile-first hierarchy ═══ */}
       {dualRanking?.ideological.results.length > 0 && (
         <div className="mb-6 sm:mb-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
@@ -1165,7 +1214,7 @@ export default function Profile() {
             {dualRanking.electoral.results.length > 0 ? (
               <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  {influenceDeclaredCount > 0
+                  {influenceInComparison > 0
                     ? (language === 'fr'
                       ? 'Le candidat le plus proche sur les thèmes et les décisions qui peuvent influencer votre vote'
                       : 'Closest on the themes and decisions that could influence your vote')
@@ -1178,17 +1227,24 @@ export default function Profile() {
                   {dualRanking.electoral.results[0].match.score}
                   <span className="text-xs font-medium text-slate-400"> / 100</span>
                 </p>
-                {influenceDeclaredCount === 0 && (
+                {influenceInComparison === 0 && (
                   <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                    {language === 'fr'
-                      ? 'Ce résultat tient compte de l’importance donnée aux grands thèmes. Vous n’avez pas encore indiqué quelles décisions précises pourraient influencer votre vote.'
-                      : 'This result reflects the importance given to broad themes. You have not yet said which specific decisions could influence your vote.'}
+                    {/* Deux situations DIFFÉRENTES, jamais confondues : n'avoir rien indiqué,
+                        ou avoir indiqué des influences que ce calcul ne peut pas utiliser
+                        faute de position documentée chez les candidats. */}
+                    {influenceStated === 0
+                      ? (language === 'fr'
+                        ? 'Ce résultat tient compte de l’importance donnée aux grands thèmes. Vous n’avez pas encore indiqué quelles décisions précises pourraient influencer votre vote.'
+                        : 'This result reflects the importance given to broad themes. You have not yet said which specific decisions could influence your vote.')
+                      : (language === 'fr'
+                        ? `Ce résultat tient compte de l’importance donnée aux grands thèmes, mais pas encore des ${influenceStated} décision(s) que vous avez signalées : les candidats n’ont pas de position documentée sur ces questions précises.`
+                        : `This result reflects the importance given to broad themes, but not yet the ${influenceStated} decision(s) you flagged: candidates have no documented position on those specific questions.`)}
                   </p>
                 )}
                 <p className="text-[11px] text-slate-500 mt-1">
                   {language === 'fr'
-                    ? `${dualRanking.electoral.results[0].match.questionsWeighted} question(s) pesant dans le calcul · ${influenceDeclaredCount} influence(s) que vous avez indiquée(s) · ${themesAnsweredCount} thème(s) que vous avez évalué(s).`
-                    : `${dualRanking.electoral.results[0].match.questionsWeighted} weighted question(s) · ${influenceDeclaredCount} influence(s) you stated · ${themesAnsweredCount} theme(s) you rated.`}
+                    ? `${dualRanking.electoral.results[0].match.questionsWeighted} question(s) pesant dans le calcul · ${themesAnsweredCount} thème(s) que vous avez évalué(s) · ${influenceStated} décision(s) signalée(s), dont ${influenceInComparison} utilisée(s) ici${influenceOutsideComparison > 0 ? `, ${influenceOutsideComparison} hors comparaison` : ''}${influenceNullified > 0 ? `, ${influenceNullified} déclarée(s) sans effet sur votre vote` : ''}.`
+                    : `${dualRanking.electoral.results[0].match.questionsWeighted} weighted question(s) · ${themesAnsweredCount} theme(s) you rated · ${influenceStated} decision(s) flagged, ${influenceInComparison} used here${influenceOutsideComparison > 0 ? `, ${influenceOutsideComparison} outside this comparison` : ''}${influenceNullified > 0 ? `, ${influenceNullified} stated as not affecting your vote` : ''}.`}
                 </p>
               </div>
             ) : (
