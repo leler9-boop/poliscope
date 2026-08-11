@@ -6,6 +6,7 @@ import { trackQuestionAnswered, trackQuestionSkipped, trackConceptOpened } from 
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
 import VoteInfluencePrompt from '../components/VoteInfluencePrompt.jsx';
+import { canLeaveQuestion, shouldOpenInfluencePrompt, resolveOpenPrompt } from '../engine/influenceGate.js';
 import ConceptModal from '../components/ConceptModal.jsx';
 import { questionHints } from '../data/questionHints.js';
 import { QUESTION_EXPLANATIONS } from '../data/questionExplanations.js';
@@ -59,6 +60,15 @@ export default function Questionnaire() {
   // ── Theme transition banner ──
   const prevThemeRef = useRef(null);
   const [themeIntro, setThemeIntro] = useState(null); // { theme, icon, text }
+
+  // La demande est RECALÉE sur la question réellement affichée. Sans cela, un rechargement
+  // sur une question marquée déjà répondue n'affichait plus rien, et un `influencePromptFor`
+  // laissé sur une question précédente pouvait geler la navigation ailleurs.
+  useEffect(() => {
+    setInfluencePromptFor(prev => resolveOpenPrompt({
+      openFor: prev, question, currentAnswer, voteInfluence,
+    }));
+  }, [question?.id, currentAnswer, voteInfluence]);
 
   const handleIntroStart = () => {
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
@@ -233,7 +243,7 @@ export default function Questionnaire() {
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
     // Question marquée : on ouvre la demande d'influence et on NE lance pas l'auto-avance.
     // La navigation reprendra à la réponse, ou au « je préfère ne pas répondre ».
-    if (question.voteInfluencePrompt && voteInfluence?.[question.id] == null) {
+    if (shouldOpenInfluencePrompt({ question, currentAnswer: val, voteInfluence })) {
       setInfluencePromptFor(question.id);
     }
     if (!wasAnswered) {
@@ -247,7 +257,7 @@ export default function Questionnaire() {
       });
       clearTimeout(autoAdvanceTimer.current);
       // ⚠ Aucune auto-avance sur une question marquée tant que la demande n'est pas traitée.
-      if (question.voteInfluencePrompt && voteInfluence?.[question.id] == null) return;
+      if (shouldOpenInfluencePrompt({ question, currentAnswer: val, voteInfluence })) return;
       autoAdvanceTimer.current = setTimeout(() => {
         directionRef.current = 1;
         if (improveMode) nextImproveQuestion();
@@ -257,7 +267,13 @@ export default function Questionnaire() {
     }
   };
 
+  /** Vrai quand la demande d'influence bloque la sortie de la question courante. */
+  const influenceBlocks = !canLeaveQuestion({ question, currentAnswer, influencePromptFor, voteInfluence });
+
   const handleNext = () => {
+    // ⚠ Garde OBLIGATOIRE dans le gestionnaire : `disabled` ne protège pas d'un double clic,
+    // d'un minuteur d'auto-avance périmé ni d'un appel déclenché pendant l'animation.
+    if (influenceBlocks) return;
     clearTimeout(autoAdvanceTimer.current);
     directionRef.current = 1;
     if (improveMode) {
@@ -537,9 +553,9 @@ export default function Questionnaire() {
                 </button>
                 <button
                   onClick={handleNext}
-                  disabled={!hasAnswer}
+                  disabled={!hasAnswer || influenceBlocks}
                   className={`ml-auto min-h-[56px] px-6 rounded-xl font-semibold text-sm transition-colors ${
-                    hasAnswer
+                    hasAnswer && !influenceBlocks
                       ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   }`}
@@ -568,9 +584,9 @@ export default function Questionnaire() {
                 {/* Suivant / Terminer */}
                 <button
                   onClick={handleNext}
-                  disabled={!hasAnswer}
+                  disabled={!hasAnswer || influenceBlocks}
                   className={`ml-auto min-h-[56px] px-6 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
-                    hasAnswer
+                    hasAnswer && !influenceBlocks
                       ? isLast
                         ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-200'
                         : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200'

@@ -11,6 +11,7 @@ import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_Q
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
 import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
 import { rankCandidatesForSurface, MATCH_MODE, rankBothWays } from '../engine/candidateRanking.js';
+import { answeredThemeCount } from '../engine/priorityWeights.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
@@ -327,6 +328,14 @@ export default function Profile() {
       voteInfluence: voteInfluence ?? {},
     });
   }, [answers, fr2027Candidates, themeImportance, voteInfluence]);
+
+  // Ces deux compteurs décrivent ce que L'UTILISATEUR a fait, pas ce qui s'est trouvé dans
+  // l'intersection avec le candidat gagnant. Les lier au candidat ferait varier « vos choix »
+  // selon la personne affichée, ce qui n'a aucun sens.
+  const influenceDeclaredCount = useMemo(() => Object.values(voteInfluence ?? {})
+    .filter(e => typeof e?.level === 'string').length, [voteInfluence]);
+  const themesAnsweredCount = useMemo(
+    () => answeredThemeCount(effectiveThemeImportance()), [themeImportance, effectiveThemeImportance]);
 
   // Lot 2 (proposal #3, robustness simulation): ~48% of profiles have their top-2 matches
   // within 1 point in a stress test — a single "best match" badge overstates precision
@@ -1121,7 +1130,7 @@ export default function Profile() {
       </motion.div>
 
       {/* ═══ CANDIDATS 2027 — now before axes for mobile-first hierarchy ═══ */}
-      {dualRanking?.ideological.results.length > 0 && dualRanking?.electoral.results.length > 0 && (
+      {dualRanking?.ideological.results.length > 0 && (
         <div className="mb-6 sm:mb-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
           <h2 className="font-bold text-slate-900 text-lg tracking-tight mb-1">
             {language === 'fr' ? 'Deux façons de vous comparer' : 'Two ways of comparing you'}
@@ -1138,31 +1147,67 @@ export default function Profile() {
               </p>
               <p className="text-sm font-bold text-slate-900">{dualRanking.ideological.results[0].candidate.name}</p>
               <p className="text-lg font-bold tabular-nums text-slate-900">
-                {dualRanking.ideological.results[0].match.score}/100
-              </p>
-            </div>
-            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                {language === 'fr'
-                  ? 'Le plus proche sur les sujets qui peuvent influencer votre vote'
-                  : 'Closest on the topics that could sway your vote'}
-              </p>
-              <p className="text-sm font-bold text-slate-900">{dualRanking.electoral.results[0].candidate.name}</p>
-              <p className="text-lg font-bold tabular-nums text-slate-900">
-                {dualRanking.electoral.results[0].match.score}/100
+                {dualRanking.ideological.results[0].match.score}
+                <span className="text-xs font-medium text-slate-400"> / 100</span>
               </p>
               <p className="text-[11px] text-slate-500 mt-1">
                 {language === 'fr'
-                  ? `Calculé sur ${dualRanking.electoral.results[0].match.questionsWeighted} question(s) qui pèsent dans votre choix.`
-                  : `Based on ${dualRanking.electoral.results[0].match.questionsWeighted} question(s) that weigh in your choice.`}
+                  ? `${dualRanking.ideological.results[0].match.questionsCompared} réponses comparées.`
+                  : `${dualRanking.ideological.results[0].match.questionsCompared} answers compared.`}
               </p>
             </div>
+
+            {/* ⚠ LIBELLÉ CONDITIONNÉ AUX DONNÉES RÉELLEMENT RECUEILLIES.
+                Parler de « décisions qui peuvent influencer votre vote » alors qu'aucune
+                influence n'a été demandée décrirait une donnée qui n'existe pas : le calcul
+                reposerait entièrement sur le multiplicateur neutre par défaut. */}
+            {dualRanking.electoral.results.length > 0 ? (
+              <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                  {influenceDeclaredCount > 0
+                    ? (language === 'fr'
+                      ? 'Le candidat le plus proche sur les thèmes et les décisions qui peuvent influencer votre vote'
+                      : 'Closest on the themes and decisions that could influence your vote')
+                    : (language === 'fr'
+                      ? 'Le candidat le plus proche sur les thèmes les plus importants pour vous'
+                      : 'Closest on the themes that matter most to you')}
+                </p>
+                <p className="text-sm font-bold text-slate-900">{dualRanking.electoral.results[0].candidate.name}</p>
+                <p className="text-lg font-bold tabular-nums text-slate-900">
+                  {dualRanking.electoral.results[0].match.score}
+                  <span className="text-xs font-medium text-slate-400"> / 100</span>
+                </p>
+                {influenceDeclaredCount === 0 && (
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                    {language === 'fr'
+                      ? 'Ce résultat tient compte de l’importance donnée aux grands thèmes. Vous n’avez pas encore indiqué quelles décisions précises pourraient influencer votre vote.'
+                      : 'This result reflects the importance given to broad themes. You have not yet said which specific decisions could influence your vote.'}
+                  </p>
+                )}
+                <p className="text-[11px] text-slate-500 mt-1">
+                  {language === 'fr'
+                    ? `${dualRanking.electoral.results[0].match.questionsWeighted} question(s) pesant dans le calcul · ${influenceDeclaredCount} influence(s) que vous avez indiquée(s) · ${themesAnsweredCount} thème(s) que vous avez évalué(s).`
+                    : `${dualRanking.electoral.results[0].match.questionsWeighted} weighted question(s) · ${influenceDeclaredCount} influence(s) you stated · ${themesAnsweredCount} theme(s) you rated.`}
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                  {language === 'fr' ? 'Classement selon vos priorités' : 'Ranking by your priorities'}
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {language === 'fr'
+                    ? 'Votre ressemblance politique reste disponible, mais aucun classement selon vos priorités ne peut être calculé avec vos choix actuels.'
+                    : 'Your political resemblance is still available, but no ranking by your priorities can be computed with your current choices.'}
+                </p>
+              </div>
+            )}
           </div>
-          {dualRanking.sameWinner && (
+          {dualRanking.sameWinner && dualRanking.electoral.results.length > 0 && (
             <p className="text-xs text-slate-500 mt-3">
               {language === 'fr'
-                ? 'Ici, les deux méthodes désignent la même personne.'
-                : 'Here, both methods point to the same person.'}
+                ? 'Ici, les deux méthodes désignent la même personne. Elles restent calculées séparément.'
+                : 'Here, both methods point to the same person. They are still computed separately.'}
             </p>
           )}
         </div>

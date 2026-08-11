@@ -436,9 +436,14 @@ export const useStore = create(
         const current = normalizeThemeImportance({
           themeImportance: get().themeImportance, priorityOrder: get().priorityOrder,
         });
+        // ⚠ `answered` DOIT être reporté. La version précédente reconstruisait l'objet sans
+        // lui : chaque modification effaçait les marqueurs des autres thèmes, et un
+        // « moyennement important » explicitement choisi redevenait un niveau non renseigné —
+        // exactement la distinction que le défaut A avait servi à établir.
         set({
           themeImportance: {
-            levels: { ...current.levels, [theme]: level },
+            levels:   { ...current.levels, [theme]: level },
+            answered: { ...current.answered, [theme]: true },
             source: PRIORITY_SOURCE.INDEPENDENT,
             updatedAt: new Date().toISOString(),
           },
