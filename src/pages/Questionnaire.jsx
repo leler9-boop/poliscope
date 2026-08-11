@@ -61,13 +61,27 @@ export default function Questionnaire() {
   const prevThemeRef = useRef(null);
   const [themeIntro, setThemeIntro] = useState(null); // { theme, icon, text }
 
+  // ── Dérivations UNIQUES, avant tout hook qui les consomme ─────────────────
+  //
+  // ⚠ Ces trois valeurs étaient déclarées APRÈS le `return` conditionnel de la file vide, et
+  // l'effet ci-dessous les lisait depuis le haut du composant. Le tableau de dépendances
+  // étant évalué à chaque rendu, toute ouverture du quiz levait « Cannot access 'question'
+  // before initialization » : le questionnaire était entièrement cassé, sans que la
+  // compilation ni la suite ne le voient.
+  //
+  // Elles doivent rester ici : tous les hooks précèdent le premier `return` conditionnel, et
+  // les redéclarer plus bas recréerait la même zone temporelle morte.
+  const queueLength   = questionsQueue?.length ?? 0;
+  const question      = (queueLength > 0 && currentIndex >= 0)
+    ? (questionsQueue[currentIndex] ?? null)
+    : null;
+  const currentAnswer = question ? (answers[question.id] ?? null) : null;
+
   // La demande est RECALÉE sur la question réellement affichée. Sans cela, un rechargement
   // sur une question marquée déjà répondue n'affichait plus rien, et un `influencePromptFor`
   // laissé sur une question précédente pouvait geler la navigation ailleurs.
   useEffect(() => {
-    setInfluencePromptFor(prev => resolveOpenPrompt({
-      openFor: prev, question, currentAnswer, voteInfluence,
-    }));
+    setInfluencePromptFor(resolveOpenPrompt({ question, currentAnswer, voteInfluence }));
   }, [question?.id, currentAnswer, voteInfluence]);
 
   const handleIntroStart = () => {
@@ -109,7 +123,6 @@ export default function Questionnaire() {
 
   // Ouvre (ou reprend) la passation dès que la file est connue. Rien n'est TRANSMIS ici :
   // `attemptSession` n'émet qu'une fois `political_analytics` accordé.
-  const queueLength = questionsQueue?.length ?? 0;
   useEffect(() => {
     if (queueLength === 0 || !testMode) return;
     attemptSession.begin({
@@ -220,11 +233,9 @@ export default function Questionnaire() {
     );
   }
 
-  const total         = questionsQueue.length;
-  const question      = questionsQueue[currentIndex];
-  const currentAnswer = question ? answers[question.id] : null;
-  const isLast        = currentIndex === total - 1;
-  const hasAnswer     = currentAnswer != null;
+  const total    = queueLength;
+  const isLast   = currentIndex === total - 1;
+  const hasAnswer = currentAnswer != null;
 
   /* Progression en segments (inspired by 21st.dev segmented steps) */
   const progressPct = total > 0
@@ -268,7 +279,7 @@ export default function Questionnaire() {
   };
 
   /** Vrai quand la demande d'influence bloque la sortie de la question courante. */
-  const influenceBlocks = !canLeaveQuestion({ question, currentAnswer, influencePromptFor, voteInfluence });
+  const influenceBlocks = !canLeaveQuestion({ question, currentAnswer, voteInfluence });
 
   const handleNext = () => {
     // ⚠ Garde OBLIGATOIRE dans le gestionnaire : `disabled` ne protège pas d'un double clic,

@@ -74,11 +74,20 @@ test('sans réponse politique, la garde d’influence ne s’applique pas', () =
   assert.equal(canLeaveQuestion({ question: marked, currentAnswer: null, influencePromptFor: null, voteInfluence: {} }), true);
 });
 
-test('un prompt ouvert pour une AUTRE question ne bloque pas la question courante', () => {
+test('la sortie est interdite même quand aucun prompt n’est encore ouvert', () => {
+  // Le drapeau est posé par un effet, donc APRÈS le rendu qui suit la réponse. Si la garde en
+  // dépendait, le bouton serait franchissable pendant ce rendu intermédiaire.
+  assert.equal(
+    canLeaveQuestion({ question: marked, currentAnswer: 4, influencePromptFor: null, voteInfluence: {} }),
+    false,
+  );
+});
+
+test('un identifiant de prompt orphelin ne rouvre pas la sortie de la question réelle', () => {
   assert.equal(
     canLeaveQuestion({ question: marked, currentAnswer: 4, influencePromptFor: 'SOC_28', voteInfluence: {} }),
-    true,
-    'un influencePromptFor orphelin ne doit pas geler une question sans rapport',
+    false,
+    'la garde ne doit pas dépendre d’un drapeau transitoire',
   );
 });
 
@@ -115,26 +124,25 @@ test('une question non marquée n’ouvre jamais la demande', () => {
 
 // ─── Pas d'état orphelin ────────────────────────────────────────────────────
 
-test('un prompt ouvert pour une question qu’on a quittée est nettoyé', () => {
-  assert.equal(resolveOpenPrompt({ openFor: 'SOC_28', question: marked, currentAnswer: 4, voteInfluence: {} }), 'ENV_26',
-    'la demande doit se recaler sur la question affichée');
-  assert.equal(resolveOpenPrompt({ openFor: 'SOC_28', question: plain, currentAnswer: 4, voteInfluence: {} }), null,
+test('la demande se recale toujours sur la question affichée', () => {
+  assert.equal(resolveOpenPrompt({ question: marked, currentAnswer: 4, voteInfluence: {} }), 'ENV_26');
+  assert.equal(resolveOpenPrompt({ question: plain, currentAnswer: 4, voteInfluence: {} }), null,
     'aucune demande ne doit rester ouverte sur une question non marquée');
 });
 
 test('un prompt déjà satisfait est refermé', () => {
   assert.equal(
     resolveOpenPrompt({
-      openFor: 'ENV_26', question: marked, currentAnswer: 4,
+      question: marked, currentAnswer: 4,
       voteInfluence: { ENV_26: { level: VOTE_INFLUENCE_LEVEL.LIKELY } },
     }),
     null,
   );
 });
 
-test('resolveOpenPrompt est idempotent', () => {
-  const args = { openFor: 'ENV_26', question: marked, currentAnswer: 4, voteInfluence: {} };
-  assert.equal(resolveOpenPrompt(args), resolveOpenPrompt({ ...args, openFor: resolveOpenPrompt(args) }));
+test('resolveOpenPrompt est idempotent et ne dépend d’aucun état antérieur', () => {
+  const args = { question: marked, currentAnswer: 4, voteInfluence: {} };
+  assert.equal(resolveOpenPrompt(args), resolveOpenPrompt(args));
 });
 
 test('aucune entrée invalide ne fait planter la garde', () => {

@@ -501,8 +501,12 @@ export const useStore = create(
 
       /** Ouvre l'écran de priorités en MODIFICATION : ne touche ni aux réponses ni à la file. */
       openPriorityEditor: () => {
+        // ⚠ L'intention vit dans l'URL, pas seulement en mémoire. `priorityEditMode` n'étant
+        // pas persisté, un rechargement de /priorities pendant une modification transformait
+        // silencieusement l'écran en création : la validation relançait alors un
+        // questionnaire, effaçant le parcours en cours.
         set({ priorityEditMode: true, currentPage: 'priorities' });
-        routerNavigate('/priorities');
+        routerNavigate('/priorities?mode=edit');
       },
 
       /** Referme le mode modification et revient au profil. */

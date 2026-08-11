@@ -44,12 +44,17 @@ export function shouldOpenInfluencePrompt({ question, currentAnswer, voteInfluen
  * animation en cours ou un minuteur d'auto-avance périmé peuvent déclencher le gestionnaire
  * malgré l'attribut.
  */
-export function canLeaveQuestion({ question, currentAnswer, influencePromptFor, voteInfluence } = {}) {
-  if (!question?.voteInfluencePrompt) return true;
-  // Un prompt ouvert pour une AUTRE question ne doit pas geler celle-ci.
-  if (influencePromptFor !== question.id) return true;
-  if (!isScorable(currentAnswer)) return true;
-  return hasInfluenceDecision(voteInfluence, question.id);
+export function canLeaveQuestion({ question, currentAnswer, voteInfluence } = {}) {
+  // ⚠ La garde dérive de la VÉRITÉ PERSISTÉE, jamais de `influencePromptFor`.
+  //
+  // La version précédente autorisait la sortie dès que `influencePromptFor !== question.id`.
+  // Or ce drapeau est posé par un effet, donc APRÈS le rendu qui suit la réponse : pendant
+  // ce rendu intermédiaire, le bouton redevenait franchissable et la demande pouvait être
+  // sautée. Une autorisation de navigation ne peut pas dépendre du moment où React a
+  // exécuté un effet.
+  //
+  // `influencePromptFor` ne sert plus qu'à l'AFFICHAGE et à la cible d'écriture.
+  return !shouldOpenInfluencePrompt({ question, currentAnswer, voteInfluence });
 }
 
 /**
@@ -61,8 +66,9 @@ export function canLeaveQuestion({ question, currentAnswer, influencePromptFor, 
  *
  * @returns {string|null} identifiant de la question dont la demande doit être ouverte
  */
-export function resolveOpenPrompt({ openFor, question, currentAnswer, voteInfluence } = {}) {
-  if (shouldOpenInfluencePrompt({ question, currentAnswer, voteInfluence })) return question.id;
-  // Sinon, aucune demande n'a lieu d'être ouverte : surtout pas celle d'une autre question.
-  return openFor === question?.id ? null : null;
+export function resolveOpenPrompt({ question, currentAnswer, voteInfluence } = {}) {
+  // Soit la question affichée a besoin de la demande, soit aucune demande n'a lieu d'être
+  // ouverte. Il n'existe pas de troisième cas : garder ouvert le prompt d'une AUTRE question
+  // ferait écrire l'influence sur la mauvaise, défaut déjà constaté en navigateur.
+  return shouldOpenInfluencePrompt({ question, currentAnswer, voteInfluence }) ? question.id : null;
 }

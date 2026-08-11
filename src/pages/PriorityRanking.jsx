@@ -46,7 +46,10 @@ export default function PriorityRanking() {
   const t = createTranslator(language);
 
   const setThemeImportance = useStore(s => s.setThemeImportance);
-  const editMode           = useStore(s => s.priorityEditMode);
+  // Le mode est restauré depuis l'URL au rechargement : `priorityEditMode` seul disparaîtrait.
+  const editModeFlag       = useStore(s => s.priorityEditMode);
+  const editMode = editModeFlag || (typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).get('mode') === 'edit');
   const closeEditor        = useStore(s => s.closePriorityEditor);
   const storedImportance   = useStore(s => s.themeImportance);
 
