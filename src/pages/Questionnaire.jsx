@@ -5,6 +5,7 @@ import { createTranslator } from '../i18n/translations.js';
 import { trackQuestionAnswered, trackQuestionSkipped, trackConceptOpened } from '../lib/analytics.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
+import VoteInfluencePrompt from '../components/VoteInfluencePrompt.jsx';
 import ConceptModal from '../components/ConceptModal.jsx';
 import { questionHints } from '../data/questionHints.js';
 import { QUESTION_EXPLANATIONS } from '../data/questionExplanations.js';
@@ -17,6 +18,9 @@ import { attemptSession } from '../lib/attemptSession.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
+  const voteInfluence        = useStore(s => s.voteInfluence);
+  const setVoteInfluence     = useStore(s => s.setVoteInfluence);
+  const setVoteInfluenceDeclined = useStore(s => s.setVoteInfluenceDeclined);
   const questionsQueue       = useStore(s => s.questionsQueue);
   const currentIndex         = useStore(s => s.currentQuestionIndex);
   const answers              = useStore(s => s.answers);
@@ -43,6 +47,11 @@ export default function Questionnaire() {
 
   // ── Auto-advance timer ──
   const autoAdvanceTimer = useRef(null);
+
+  // Question dont la demande d'influence est OUVERTE. Tant qu'elle l'est, l'auto-avance est
+  // suspendue : sinon la demande disparaîtrait avant d'avoir été lue, ce qui reviendrait à ne
+  // pas la poser du tout.
+  const [influencePromptFor, setInfluencePromptFor] = useState(null);
 
   // ── Concept modal ──
   const [activeConceptKey, setActiveConceptKey] = useState(null);
@@ -222,6 +231,11 @@ export default function Questionnaire() {
     // Dismiss chapter banner on first answer of the new theme (V4)
     if (themeIntro && !wasAnswered) setThemeIntro(null);
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
+    // Question marquée : on ouvre la demande d'influence et on NE lance pas l'auto-avance.
+    // La navigation reprendra à la réponse, ou au « je préfère ne pas répondre ».
+    if (question.voteInfluencePrompt && voteInfluence?.[question.id] == null) {
+      setInfluencePromptFor(question.id);
+    }
     if (!wasAnswered) {
       trackQuestionAnswered({
         questionId:    question.id,
@@ -232,6 +246,8 @@ export default function Questionnaire() {
         isImprove:     improveMode,
       });
       clearTimeout(autoAdvanceTimer.current);
+      // ⚠ Aucune auto-avance sur une question marquée tant que la demande n'est pas traitée.
+      if (question.voteInfluencePrompt && voteInfluence?.[question.id] == null) return;
       autoAdvanceTimer.current = setTimeout(() => {
         directionRef.current = 1;
         if (improveMode) nextImproveQuestion();
@@ -279,6 +295,37 @@ export default function Questionnaire() {
     }
     if (isLast) finishQuestionnaire();
     else nextQuestion();
+  };
+
+  /** Avance après traitement de la demande d'influence. */
+  const advanceAfterPrompt = () => {
+    setInfluencePromptFor(null);
+    clearTimeout(autoAdvanceTimer.current);
+    autoAdvanceTimer.current = setTimeout(() => {
+      directionRef.current = 1;
+      if (improveMode) nextImproveQuestion();
+      else if (isLast) finishQuestionnaire();
+      else nextQuestion();
+    }, 400);
+  };
+
+  // ⚠ La cible est la question pour laquelle la demande a été OUVERTE, pas `question.id` lu au
+  // moment du clic. Vérification navigateur du 2026-08-11 : pendant la transition vers la
+  // question suivante, un clic écrivait l'influence sur la question PRÉCÉDENTE. Lier le
+  // gestionnaire à `influencePromptFor` supprime toute la classe de bug.
+  const handleInfluenceChoice = (level) => {
+    const target = influencePromptFor ?? question?.id;
+    if (!target) return;
+    setVoteInfluence(target, level);
+    advanceAfterPrompt();
+  };
+
+  /** « Je préfère ne pas répondre » : influence NON RENSEIGNÉE, pas `none`. */
+  const handleInfluenceSkip = () => {
+    const target = influencePromptFor ?? question?.id;
+    if (!target) return;
+    setVoteInfluenceDeclined(target);
+    advanceAfterPrompt();
   };
 
   const handlePrev = () => {
@@ -462,6 +509,16 @@ export default function Questionnaire() {
                     else attemptSession.unblock('modal:report');
                   }}
                 />
+                {question.voteInfluencePrompt
+                  && influencePromptFor === question.id
+                  && currentAnswer != null && (
+                  <VoteInfluencePrompt
+                    language={language}
+                    value={voteInfluence?.[question.id]?.level ?? null}
+                    onChoose={handleInfluenceChoice}
+                    onSkip={handleInfluenceSkip}
+                  />
+                )}
               </motion.div>
             )}
           </AnimatePresence>

@@ -19,7 +19,7 @@
 import { THEMES_ORDER } from '../data/questions.js';
 
 /** Version du contrat de pondération. Tout résultat pondéré l'embarque. */
-export const PRIORITY_CONTRACT_VERSION = 'priority-v1';
+export const PRIORITY_CONTRACT_VERSION = 'priority-v2';
 
 // ─── B. Importance générale d'un thème ───────────────────────────────────────
 
@@ -130,11 +130,49 @@ export const MAX_EFFECTIVE_WEIGHT_RATIO = 2;
 
 // ─── Construction de l'importance thématique ─────────────────────────────────
 
-/** Toutes les thématiques à « moyennement important ». Ne touche à AUCUNE réponse politique. */
+/** Un niveau est-il lisible par le contrat ? */
+function isKnownLevel(level) {
+  return typeof level === 'string' && level in IMPORTANCE_MULTIPLIER;
+}
+
+/**
+ * Ce thème a-t-il fait l'objet d'un CHOIX EXPLICITE ?
+ *
+ * ⚠ CORRECTION 2026-08-10 (défaut A). L'écran initialisait les huit thèmes à MEDIUM :
+ * quelqu'un qui ne touchait à rien produisait exactement l'état de quelqu'un ayant cliqué
+ * huit fois sur « moyennement important ». Les deux valent 1 dans le calcul — c'est voulu,
+ * un non-choix ne doit pas pénaliser — mais ils ne disent pas la même chose, et la donnée
+ * récoltée devenait ininterprétable.
+ */
+export function isExplicitlyAnswered(importance, theme) {
+  return importance?.answered?.[theme] === true && isKnownLevel(importance?.levels?.[theme]);
+}
+
+/** Nombre de thèmes réellement évalués. Sert à l'analytique et à l'honnêteté des libellés. */
+export function answeredThemeCount(importance) {
+  return THEMES_ORDER.filter(theme => isExplicitlyAnswered(importance, theme)).length;
+}
+
+/**
+ * État vierge : aucun choix exprimé. Les niveaux sont `null`, le multiplicateur retombe
+ * sur le neutre, et rien n'est enregistré comme une décision.
+ */
+export function blankImportance() {
+  const levels = {};
+  const answered = {};
+  for (const theme of THEMES_ORDER) { levels[theme] = null; answered[theme] = false; }
+  return { levels, answered, source: null };
+}
+
+/**
+ * « Tous les sujets comptent à peu près autant » : une DÉCISION explicite sur les huit
+ * thèmes, distincte d'une absence de choix qui donnerait pourtant le même multiplicateur.
+ */
 export function equalImportance() {
-  const out = {};
-  for (const theme of THEMES_ORDER) out[theme] = IMPORTANCE_LEVEL.MEDIUM;
-  return { levels: out, source: PRIORITY_SOURCE.EQUAL };
+  const levels = {};
+  const answered = {};
+  for (const theme of THEMES_ORDER) { levels[theme] = IMPORTANCE_LEVEL.MEDIUM; answered[theme] = true; }
+  return { levels, answered, source: PRIORITY_SOURCE.EQUAL };
 }
 
 /**
@@ -146,20 +184,33 @@ export function equalImportance() {
  * deux suivants « important », etc. Elle est volontairement grossière — un classement exprime
  * un ordre, pas une intensité.
  */
+export function isValidRanking(priorityOrder) {
+  // ⚠ CORRECTION 2026-08-10 (défaut D). Vérifier la seule LONGUEUR acceptait
+  // ['ECONOMY', 'ECONOMY', …] et produisait des poids silencieusement faux. On exige une
+  // permutation EXACTE des huit thèmes : ni doublon, ni intrus, ni manquant.
+  if (!Array.isArray(priorityOrder) || priorityOrder.length !== THEMES_ORDER.length) return false;
+  const seen = new Set(priorityOrder);
+  if (seen.size !== THEMES_ORDER.length) return false;
+  return THEMES_ORDER.every(theme => seen.has(theme));
+}
+
 export function importanceFromRanking(priorityOrder) {
-  const order = (priorityOrder && priorityOrder.length === THEMES_ORDER.length)
-    ? priorityOrder
-    : [...THEMES_ORDER];
+  // Une entrée invalide n'est jamais appliquée à moitié : on retombe sur un neutre EXPLICITE.
+  if (!isValidRanking(priorityOrder)) return blankImportance();
+  const order = priorityOrder;
   const byRank = [
     IMPORTANCE_LEVEL.VERY_HIGH, IMPORTANCE_LEVEL.VERY_HIGH,
     IMPORTANCE_LEVEL.HIGH, IMPORTANCE_LEVEL.HIGH,
     IMPORTANCE_LEVEL.MEDIUM, IMPORTANCE_LEVEL.MEDIUM,
     IMPORTANCE_LEVEL.LOW, IMPORTANCE_LEVEL.LOW,
   ];
-  const out = {};
-  order.forEach((theme, index) => { out[theme] = byRank[index] ?? IMPORTANCE_LEVEL.MEDIUM; });
-  for (const theme of THEMES_ORDER) out[theme] ??= IMPORTANCE_LEVEL.MEDIUM;
-  return { levels: out, source: PRIORITY_SOURCE.RANKING };
+  const levels = {};
+  const answered = {};
+  order.forEach((theme, index) => {
+    levels[theme] = byRank[index] ?? IMPORTANCE_LEVEL.MEDIUM;
+    answered[theme] = true;   // classer un thème EST un choix le concernant
+  });
+  return { levels, answered, source: PRIORITY_SOURCE.RANKING };
 }
 
 /**
@@ -172,30 +223,57 @@ export function importanceFromRanking(priorityOrder) {
  * et devient une importance égale.
  */
 export function normalizeThemeImportance({ themeImportance, priorityOrder } = {}) {
-  if (themeImportance?.levels && THEMES_ORDER.every(t => themeImportance.levels[t])) {
-    return {
-      levels: { ...themeImportance.levels },
-      source: themeImportance.source ?? PRIORITY_SOURCE.INDEPENDENT,
-    };
+  const raw = (themeImportance && typeof themeImportance === 'object') ? themeImportance : null;
+  const rawLevels = (raw?.levels && typeof raw.levels === 'object') ? raw.levels : null;
+
+  if (rawLevels) {
+    const levels = {};
+    const answered = {};
+    for (const theme of THEMES_ORDER) {
+      const level = rawLevels[theme];
+      const valid = isKnownLevel(level);
+      levels[theme] = valid ? level : null;
+      // Un niveau illisible ne peut pas compter comme une réponse valide, même si le
+      // drapeau `answered` prétend le contraire : la valeur ne veut rien dire.
+      answered[theme] = valid && raw?.answered?.[theme] === true;
+    }
+    const count = THEMES_ORDER.filter(t => answered[t]).length;
+    // Ne pas déclarer « évaluations indépendantes » si aucune évaluation n'existe.
+    const source = count === 0 ? null
+      : (raw.source === PRIORITY_SOURCE.EQUAL || raw.source === PRIORITY_SOURCE.RANKING)
+        ? raw.source
+        : PRIORITY_SOURCE.INDEPENDENT;
+    return { levels, answered, source };
   }
-  if (priorityOrder?.length === THEMES_ORDER.length) {
+
+  if (Array.isArray(priorityOrder) && isValidRanking(priorityOrder)) {
+    // L'ordre par défaut du store est l'ordre de DÉCLARATION : personne ne l'a choisi.
     const untouched = priorityOrder.every((t, i) => t === THEMES_ORDER[i]);
-    return untouched ? equalImportance() : importanceFromRanking(priorityOrder);
+    return untouched ? blankImportance() : importanceFromRanking(priorityOrder);
   }
-  return equalImportance();
+  return blankImportance();
 }
 
 /** Multiplicateur d'un thème, robuste à un niveau inconnu. */
 export function themeMultiplier(importance, theme) {
   const level = importance?.levels?.[theme];
-  return IMPORTANCE_MULTIPLIER[level] ?? IMPORTANCE_MULTIPLIER[IMPORTANCE_LEVEL.MEDIUM];
+  const value = isKnownLevel(level)
+    ? IMPORTANCE_MULTIPLIER[level]
+    : IMPORTANCE_MULTIPLIER[IMPORTANCE_LEVEL.MEDIUM];   // non renseigné ⇒ neutre, pas pénalisé
+  return Number.isFinite(value) ? value : 1;
 }
 
 /** Multiplicateur d'influence d'une question, robuste à un niveau inconnu ou absent. */
 export function voteInfluenceMultiplier(voteInfluence, questionId) {
-  const level = voteInfluence?.[questionId]?.level ?? voteInfluence?.[questionId];
-  if (level == null) return VOTE_INFLUENCE_MULTIPLIER[DEFAULT_VOTE_INFLUENCE];
-  return VOTE_INFLUENCE_MULTIPLIER[level] ?? VOTE_INFLUENCE_MULTIPLIER[DEFAULT_VOTE_INFLUENCE];
+  const entry = voteInfluence?.[questionId];
+  const level = (entry && typeof entry === 'object') ? entry.level : entry;
+  // Une influence explicitement nulle DOIT survivre : c'est une décision, pas une absence.
+  if (typeof level === 'string' && level in VOTE_INFLUENCE_MULTIPLIER) {
+    const value = VOTE_INFLUENCE_MULTIPLIER[level];
+    return Number.isFinite(value) ? value : 1;
+  }
+  // Tout le reste — jamais demandé, refus de répondre, valeur illisible — vaut neutre.
+  return VOTE_INFLUENCE_MULTIPLIER[DEFAULT_VOTE_INFLUENCE];
 }
 
 // ─── Poids effectif d'une question ───────────────────────────────────────────
@@ -243,6 +321,62 @@ export function computeEffectiveQuestionWeight({
  * @param {Array<{theme: string, ownWeight: number, themeFactor: number}>} entries
  * @returns {Array<{theme: string, weight: number}>} entrées portant leur poids effectif final
  */
+/**
+ * Plafonne la PART de chaque question dans le score final.
+ *
+ * ⚠ CORRECTION 2026-08-10 (défaut C). `computeEffectiveQuestionWeight()` plafonnait bien un
+ * poids intermédiaire, mais `balanceWeightsAcrossThemes()` redistribuait ensuite toute la
+ * masse d'un thème entre ses questions. Une question SEULE dans un thème « très important »
+ * captait donc l'intégralité de cette masse : mesurée sur les poids réellement utilisés dans
+ * le score, sa part atteignait 0,333 pour un plafond promis à 0,125 — 2,7 fois trop. La
+ * promesse « une question ne pèse jamais plus que deux questions normales » était fausse.
+ *
+ * CONTRAT FINAL, vérifiable sur les poids servant au score :
+ *     part normale  = 1 / (nombre de questions à poids positif)
+ *     part maximale = MAX_EFFECTIVE_WEIGHT_RATIO × part normale
+ *
+ * Le surplus retiré à une question plafonnée est redistribué aux AUTRES, proportionnellement
+ * à leur poids — jamais réinjecté dans la question plafonnée, ce qui annulerait le plafond.
+ * L'opération se répète tant qu'une redistribution fait dépasser une nouvelle question.
+ *
+ * Note : avec une ou deux questions, `2/N ≥ 1` et aucun plafond ne peut mordre. C'est
+ * arithmétique, pas un oubli : à deux questions, aucune ne peut « dominer » l'autre.
+ */
+export function capQuestionShares(entries, { maxRatio = MAX_EFFECTIVE_WEIGHT_RATIO } = {}) {
+  const positives = entries.filter(e => Number.isFinite(e.weight) && e.weight > 0);
+  const total = positives.reduce((s, e) => s + e.weight, 0);
+  if (!(total > 0) || positives.length === 0) {
+    return entries.map(e => ({ ...e, weight: 0 }));
+  }
+
+  const maxShare = maxRatio / positives.length;
+  if (maxShare >= 1) return entries.map(e => ({ ...e, weight: e.weight > 0 ? e.weight : 0 }));
+
+  // Parts normalisées, puis écrêtage itératif.
+  const shares = new Map(positives.map(e => [e, e.weight / total]));
+  const capped = new Set();
+
+  for (let pass = 0; pass < positives.length; pass++) {
+    const over = positives.filter(e => !capped.has(e) && shares.get(e) > maxShare + 1e-12);
+    if (over.length === 0) break;
+    for (const e of over) { shares.set(e, maxShare); capped.add(e); }
+
+    const usedByCapped = capped.size * maxShare;
+    const remaining = 1 - usedByCapped;
+    const free = positives.filter(e => !capped.has(e));
+    const freeMass = free.reduce((s, e) => s + shares.get(e), 0);
+    if (!(freeMass > 0) || !(remaining > 0)) {
+      // Plus rien à redistribuer : les non plafonnées tombent à zéro plutôt que de recevoir
+      // une part inventée.
+      for (const e of free) shares.set(e, 0);
+      break;
+    }
+    for (const e of free) shares.set(e, (shares.get(e) / freeMass) * remaining);
+  }
+
+  return entries.map(e => ({ ...e, weight: shares.has(e) ? shares.get(e) : 0 }));
+}
+
 export function balanceWeightsAcrossThemes(entries) {
   const totalPerTheme = new Map();
   for (const e of entries) {

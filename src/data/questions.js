@@ -242,6 +242,12 @@ function processQuestion(raw) {
     cluster:     raw.cluster,
     theme:       PREFIX_TO_THEME[prefix] ?? THEMES.ECONOMY,
     direction:   DIRECTION_MAP[raw.id] ?? 1,
+    // Marquage éditorial explicite : après cette question, on demande si la décision pourrait
+    // influencer le vote. Réservé aux questions SPÉCIALISÉES — une opinion peut y être forte
+    // sans peser sur un choix électoral. La liste est dans questions_final.json, pas déduite
+    // d'une heuristique : une sélection calculée ne serait ni stable ni relisible.
+    voteInfluencePrompt: raw.voteInfluencePrompt === true,
+    voteInfluenceReason: raw.voteInfluenceReason ?? null,
     isDuplicate:  raw.isDuplicate ?? false,
     duplicateOf:  raw.duplicateOf ?? null,
     explanation:  raw.explanation ?? null,

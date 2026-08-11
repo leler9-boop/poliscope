@@ -1,8 +1,6 @@
 import React from 'react';
 import { THEMES_ORDER, THEME_LABELS, THEME_COLORS } from '../data/questions.js';
-import {
-  IMPORTANCE_ORDER, IMPORTANCE_LABELS, IMPORTANCE_LEVEL,
-} from '../engine/priorityWeights.js';
+import { IMPORTANCE_ORDER, IMPORTANCE_LABELS } from '../engine/priorityWeights.js';
 
 /**
  * POLISCOP — Huit évaluations INDÉPENDANTES de l'importance des thèmes.
@@ -55,7 +53,10 @@ export default function ThemeImportanceRating({ language = 'fr', levels, onChang
     <div className="space-y-4">
       {THEMES_ORDER.map(theme => {
         const color = THEME_COLORS[theme];
-        const current = levels?.[theme] ?? IMPORTANCE_LEVEL.MEDIUM;
+        // ⚠ AUCUNE présélection. Afficher « Moyennement important » coché rendait indiscernable
+        // « je n'ai pas répondu » et « j'ai choisi moyen » — c'était le défaut A. Un thème non
+        // touché vaut neutre DANS LE CALCUL, mais ne doit pas se présenter comme un choix.
+        const current = levels?.[theme] ?? null;
         const groupId = `importance-${theme}`;
         return (
           <fieldset
@@ -73,6 +74,11 @@ export default function ThemeImportanceRating({ language = 'fr', levels, onChang
               {help[theme]}
             </p>
             <div role="radiogroup" aria-label={THEME_LABELS[fr ? 'fr' : 'en'][theme]} className="flex flex-wrap gap-1.5">
+              {current == null && (
+                <span className="sr-only">
+                  {fr ? 'Aucune réponse pour l’instant' : 'No answer yet'}
+                </span>
+              )}
               {IMPORTANCE_ORDER.map(level => {
                 const selected = current === level;
                 return (

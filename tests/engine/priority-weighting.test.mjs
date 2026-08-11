@@ -152,9 +152,15 @@ test('un classement précis se convertit vers le MÊME contrat de pondération',
 test('un ancien profil sans importance reste lisible et sans surprise', () => {
   // L'ordre par défaut du store est l'ordre de DÉCLARATION : personne ne l'a choisi.
   // Le convertir en « très important » pour les deux premiers thèmes serait inventer un choix.
+  // Depuis la correction du défaut A : l'ordre de déclaration n'a été choisi par personne, donc
+  // AUCUN choix n'est enregistré — ni « équivalence », ni « moyennement important ». Le
+  // multiplicateur retombe sur le neutre, ce qui donne le même calcul sans inventer de décision.
   const legacy = normalizeThemeImportance({ priorityOrder: [...THEMES_ORDER] });
-  assert.equal(legacy.source, PRIORITY_SOURCE.EQUAL);
-  for (const t of THEMES_ORDER) assert.equal(legacy.levels[t], IMPORTANCE_LEVEL.MEDIUM);
+  assert.equal(legacy.source, null);
+  for (const t of THEMES_ORDER) {
+    assert.equal(legacy.levels[t], null);
+    assert.equal(themeMultiplier(legacy, t), 1, 'un non-choix doit rester neutre dans le calcul');
+  }
 
   // Un ordre RÉELLEMENT réorganisé est bien converti.
   const reordered = normalizeThemeImportance({ priorityOrder: [...THEMES_ORDER].reverse() });
@@ -163,7 +169,7 @@ test('un ancien profil sans importance reste lisible et sans surprise', () => {
 
 test('un état vide ne casse rien', () => {
   const empty = normalizeThemeImportance({});
-  for (const t of THEMES_ORDER) assert.ok(empty.levels[t]);
+  for (const t of THEMES_ORDER) assert.ok(t in empty.levels, `${t} absent de l’état vierge`);
   assert.equal(themeMultiplier(empty, THEMES_ORDER[0]), 1);
 });
 

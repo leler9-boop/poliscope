@@ -473,6 +473,22 @@ export const useStore = create(
         });
       },
 
+      /**
+       * « Je préfère ne pas répondre » : la demande a été VUE mais aucune influence n'est
+       * déclarée. Distinct de `none` (décision explicite, multiplicateur 0) et distinct d'une
+       * question jamais marquée. `level: null` ⇒ multiplicateur neutre.
+       */
+      setVoteInfluenceDeclined: (questionId) => set({
+        voteInfluence: {
+          ...get().voteInfluence,
+          [questionId]: {
+            level: null, multiplier: null, declined: true,
+            askedAt: get().voteInfluence?.[questionId]?.askedAt ?? new Date().toISOString(),
+            answeredAt: new Date().toISOString(),
+          },
+        },
+      }),
+
       /** Importance thématique effective, anciens profils compris. */
       effectiveThemeImportance: () => normalizeThemeImportance({
         themeImportance: get().themeImportance, priorityOrder: get().priorityOrder,

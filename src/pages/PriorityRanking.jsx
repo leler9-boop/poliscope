@@ -52,9 +52,10 @@ export default function PriorityRanking() {
   // Mode d'évaluation. Le classement par glisser-déposer devient FACULTATIF : il n'est plus
   // qu'un moyen d'affiner, et il alimente exactement le même contrat de pondération.
   const [mode, setMode] = useState('rating');   // 'rating' | 'ranking'
-  const [levels, setLevels] = useState(
-    () => normalizeThemeImportance({ themeImportance: storedImportance, priorityOrder: storedPriority }).levels,
+  const [importance, setImportance] = useState(
+    () => normalizeThemeImportance({ themeImportance: storedImportance, priorityOrder: storedPriority }),
   );
+  const levels = importance.levels;
 
   const fr = language !== 'en';
 
@@ -67,7 +68,13 @@ export default function PriorityRanking() {
     startTest(testMode ?? 'medium');
   };
 
-  const handleRatingConfirm = () => startWith({ levels }, PRIORITY_SOURCE.INDEPENDENT);
+  // Si la personne n'a évalué AUCUN thème, on n'enregistre pas « évaluations indépendantes » :
+  // ce serait déclarer un travail qu'elle n'a pas fait. L'état reste neutre et non renseigné.
+  const handleRatingConfirm = () => {
+    const answeredCount = THEMES_ORDER.filter(t => importance.answered?.[t]).length;
+    if (answeredCount === 0) startWith(importance, null);
+    else startWith(importance, PRIORITY_SOURCE.INDEPENDENT);
+  };
   const handleEqual = () => startWith(equalImportance(), PRIORITY_SOURCE.EQUAL);
 
   const handleConfirm = () => {
@@ -129,7 +136,11 @@ export default function PriorityRanking() {
           <ThemeImportanceRating
             language={language}
             levels={levels}
-            onChange={(theme, level) => setLevels(prev => ({ ...prev, [theme]: level }))}
+            onChange={(theme, level) => setImportance(prev => ({
+              ...prev,
+              levels:   { ...prev.levels, [theme]: level },
+              answered: { ...prev.answered, [theme]: true },
+            }))}
           />
 
           <div className="flex flex-col gap-3 mt-8">

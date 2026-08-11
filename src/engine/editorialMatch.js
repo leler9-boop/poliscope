@@ -23,6 +23,7 @@
 import { THEMES_ORDER } from '../data/questions.js';
 import { isScorable } from './scorer.js';
 import { MATCHING_VERSION, QUESTIONNAIRE_VERSION } from './versions.js';
+import { VOTE_INFLUENCE_MULTIPLIER } from './priorityWeights.js';
 import {
   EDITORIAL_ANSWERS_VERSION, EDITORIAL_REVIEWED_AT, ANSWER_STATE,
   getEditorialAnswers,
@@ -30,6 +31,7 @@ import {
 import {
   PRIORITY_CONTRACT_VERSION, normalizeThemeImportance, themeMultiplier,
   voteInfluenceMultiplier, computeEffectiveQuestionWeight, balanceWeightsAcrossThemes,
+  capQuestionShares, answeredThemeCount, isExplicitlyAnswered,
 } from './priorityWeights.js';
 
 /** Provenance d'un résultat. Un mélange reste une estimation : jamais « vérifié ». */
@@ -325,7 +327,7 @@ export function computeElectoralPriorityMatch({
     ...extra,
   });
 
-  if (base.score == null) return withPriority({ questionsWeighted: 0 });
+  if (base.score == null) return withPriority({ questionsWeighted: 0, influenceDeclared: 0, themesAnswered: 0 });
 
   const importance = normalizeThemeImportance({ themeImportance });
   const byId = new Map(questions.map(q => [q.id, q]));
@@ -349,7 +351,11 @@ export function computeElectoralPriorityMatch({
   });
 
   // 2. Répartition : masse d'un thème = son importance, quel que soit son nombre de questions.
-  const weighted = balanceWeightsAcrossThemes(entries);
+  const balanced = balanceWeightsAcrossThemes(entries);
+
+  // 3. Plafonnement des PARTS FINALES. Sans cette étape, la redistribution par thème annulait
+  //    le plafond : une question seule dans un thème très important captait toute sa masse.
+  const weighted = capQuestionShares(balanced);
 
   const totalWeight = weighted.reduce((s, e) => s + e.weight, 0);
   const questionsWeighted = weighted.filter(e => e.weight > 0).length;
@@ -357,7 +363,10 @@ export function computeElectoralPriorityMatch({
   // Aucun poids : tous les thèmes concernés sont à « pas important », ou toutes les questions
   // comparées sont sans influence. On ne divise pas par zéro et on n'invente pas de score.
   if (!(totalWeight > 0)) {
-    return withPriority({ score: null, reason: 'no_weighted_questions', questionsWeighted: 0 });
+    return withPriority({
+      score: null, reason: 'no_weighted_questions', questionsWeighted: 0,
+      influenceDeclared: 0, themesAnswered: answeredThemeCount(importance),
+    });
   }
 
   const weightedSum = weighted.reduce(
@@ -370,10 +379,21 @@ export function computeElectoralPriorityMatch({
     .filter(e => e.weight > 0)
     .sort((a, b) => (b.weight * Math.abs(b.user - b.candidate)) - (a.weight * Math.abs(a.user - a.candidate)));
 
+  // Combien de décisions l'utilisateur a-t-il RÉELLEMENT qualifiées ? Sans ce compteur,
+  // l'interface parlerait d'« influence sur le vote » alors que tout repose sur le neutre
+  // par défaut. Voir le libellé public dans Profile.jsx.
+  const influenceDeclared = pairs.filter(p => {
+    const entry = voteInfluence?.[p.questionId];
+    const level = (entry && typeof entry === 'object') ? entry.level : entry;
+    return typeof level === 'string' && level in VOTE_INFLUENCE_MULTIPLIER;
+  }).length;
+
   return withPriority({
     score,
     reason: score == null ? 'weighting_failed' : null,
     questionsWeighted,
+    influenceDeclared,
+    themesAnswered: answeredThemeCount(importance),
     themesCovered: [...new Set(weighted.filter(e => e.weight > 0).map(e => e.theme))],
     // Les désaccords qui pèsent RÉELLEMENT dans ce classement — pas les plus grands écarts
     // dans l'absolu, ce qui induirait en erreur sur un sujet déclaré sans importance.
