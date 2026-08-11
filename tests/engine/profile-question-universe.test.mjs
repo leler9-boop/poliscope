@@ -11,16 +11,29 @@
 // décisions qui peuvent influencer votre vote », et ces décisions n'avoir strictement aucun
 // effet sur le score affiché. Le produit décrivait un calcul qu'il ne faisait pas.
 //
-// Second effet : un parcours Standard (32) ou Approfondi (64) ne comparait jamais plus de
-// 16 questions, alors que l'utilisateur en avait répondu deux à quatre fois plus.
+// Second effet, distinct : `userAnswered` est compté SUR L'UNIVERS passé au moteur. Tronquer
+// l'univers tronquait le dénominateur du contrôle de couverture, qui ne pouvait donc plus se
+// déclencher. Une personne ayant répondu à 64 questions était classée sur 16 avec un ratio
+// affiché de 1,0.
+//
+// ⚠ HISTORIQUE DE CE FICHIER. Écrit sur une branche où le corpus candidat ne contenait que
+// les 16 réponses CORE, il figeait cet état appauvri : « aucune question marquée n'a de
+// réponse candidate », « un questionnaire long est refusé ». Ces affirmations étaient vraies
+// là-bas et sont FAUSSES ici : `origin/main` apporte 128 réponses pour 11 candidats. Elles
+// ont été remplacées par les invariants réels, et non desserrées.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { rankBothWays } from '../../src/engine/candidateRanking.js';
-import { questions, coreQuestions } from '../../src/data/questions.js';
-import { getEditorialAnswers } from '../../src/data/candidateEditorialAnswers.js';
+import { questions, coreQuestions, THEMES_ORDER } from '../../src/data/questions.js';
+import {
+  getEditorialAnswers, ANSWER_STATE, ANSWER_BASIS,
+} from '../../src/data/candidateEditorialAnswers.js';
 import { elections } from '../../src/data/elections.js';
+import {
+  computeIdeologicalMatch, computeElectoralPriorityMatch, EDITORIAL_MATCH_CONFIG,
+} from '../../src/engine/editorialMatch.js';
 import {
   IMPORTANCE_LEVEL, PRIORITY_SOURCE, VOTE_INFLUENCE_LEVEL,
 } from '../../src/engine/priorityWeights.js';
@@ -35,23 +48,14 @@ const documented = new Set(
 );
 
 const allMedium = () => ({
-  levels: Object.fromEntries([...new Set(questions.map(q => q.theme))].map(t => [t, IMPORTANCE_LEVEL.MEDIUM])),
-  answered: Object.fromEntries([...new Set(questions.map(q => q.theme))].map(t => [t, true])),
+  levels: Object.fromEntries(THEMES_ORDER.map(t => [t, IMPORTANCE_LEVEL.MEDIUM])),
+  answered: Object.fromEntries(THEMES_ORDER.map(t => [t, true])),
   source: PRIORITY_SOURCE.EQUAL,
 });
 
-/** Réponses sur TOUTES les questions documentées, marquées comprises. */
-function answersOnDocumented(value = 4) {
-  return Object.fromEntries([...documented].map(id => [id, value]));
-}
-
-/**
- * Jeu de réponses de taille EXACTE contenant toutes les questions documentées.
- * Reproduit un parcours réel : la file contient les CORE plus des questions spécialisées.
- */
-function answersOfSize(n) {
-  const rest = questions.filter(q => !documented.has(q.id)).slice(0, n - documented.size);
-  return Object.fromEntries([...documented, ...rest.map(q => q.id)].map(id => [id, 4]));
+/** Jeu de réponses de taille EXACTE, pris parmi les questions documentées. */
+function answersOfSize(n, value = 4) {
+  return Object.fromEntries([...documented].slice(0, n).map(id => [id, value]));
 }
 
 const rank = (userAnswers, voteInfluence, universe) => rankBothWays({
@@ -61,7 +65,7 @@ const rank = (userAnswers, voteInfluence, universe) => rankBothWays({
 
 const signature = r => r.electoral.results.map(x => `${x.candidate.id}:${x.match.score}`).join('|');
 
-// ─── Le défaut lui-même ─────────────────────────────────────────────────────
+// ─── Le défaut lui-même : toujours vrai, et c'est pourquoi la correction compte ──
 
 test('aucune question marquée n’est CORE : les limiter aux CORE exclut toute influence', () => {
   const marked = questions.filter(q => q.voteInfluencePrompt);
@@ -73,10 +77,9 @@ test('aucune question marquée n’est CORE : les limiter aux CORE exclut toute 
 });
 
 test('avec l’univers CORE, changer une influence ne change RIEN au classement', () => {
-  // C'est la démonstration du défaut : le produit annonçait un effet inexistant.
-  const marked = questions.find(q => q.voteInfluencePrompt && documented.has(q.id))
-    ?? questions.find(q => q.voteInfluencePrompt);
-  const userAnswers = answersOnDocumented(4);
+  // Démonstration du défaut : le produit annonçait un effet inexistant.
+  const marked = questions.find(q => q.voteInfluencePrompt && documented.has(q.id));
+  const userAnswers = answersOfSize(64);
 
   const strong = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.STRONG } }, coreQuestions);
   const none = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.NONE } }, coreQuestions);
@@ -85,116 +88,73 @@ test('avec l’univers CORE, changer une influence ne change RIEN au classement'
     'ce test décrit le DÉFAUT : avec l’univers CORE, l’influence est sans effet');
 });
 
-// ─── Ce que la correction garantit MÉCANIQUEMENT ────────────────────────────
-//
-// ⚠ Constat majeur, découvert en écrivant ces tests : les réponses éditoriales générales des
-// candidats ne couvrent QUE les 16 questions CORE. Aucune des 18 questions marquées n'a de
-// réponse candidate. L'intersection ne peut donc contenir aucune influence, quel que soit
-// l'univers passé au moteur — et `questionsCompared` reste plafonné à 16 même en mode
-// Approfondi, parce que le plafond vient du corpus candidat, pas de l'univers.
-//
-// Basculer sur la banque générale reste nécessaire (le plafond artificiel disparaît, et la
-// correction devient effective dès qu'une question marquée sera documentée), mais elle ne
-// change RIEN au résultat affiché aujourd'hui. Les tests ci-dessous séparent donc :
-//   • la mécanique, prouvée sur un corpus synthétique ;
-//   • l'état réel, figé tel qu'il est — sans prétendre qu'il fait mieux.
+// ─── Ce que la correction produit sur le CORPUS RÉEL ─────────────────────────
 
-import { computeIdeologicalMatch, computeElectoralPriorityMatch } from '../../src/engine/editorialMatch.js';
-import { ANSWER_STATE, ANSWER_BASIS } from '../../src/data/candidateEditorialAnswers.js';
-
-const LOOSE = { version: 'test', minComparedQuestions: 1, minComparedRatio: 0, minThemesInIntersection: 1 };
-const THEMES = [...new Set(questions.map(q => q.theme))];
-
-/** Univers synthétique : 6 questions dont une MARQUÉE, toutes documentées côté candidat. */
-const SYNTH = [
-  { id: 'M1', theme: THEMES[0], direction: 1, weight: 2, voteInfluencePrompt: true },
-  { id: 'N1', theme: THEMES[0], direction: 1, weight: 2 },
-  { id: 'N2', theme: THEMES[1], direction: 1, weight: 2 },
-  { id: 'N3', theme: THEMES[1], direction: 1, weight: 2 },
-  { id: 'N4', theme: THEMES[2], direction: 1, weight: 2 },
-  { id: 'N5', theme: THEMES[2], direction: 1, weight: 2 },
-];
-const synthCandidate = map => Object.entries(map).map(([questionId, answerValue]) => ({
-  questionId, answerValue, answerState: ANSWER_STATE.ESTIMATED,
-  basis: ANSWER_BASIS.EDITORIAL_INFERENCE, rationale: null, sourceIds: [], questionnaireVersion: null,
-}));
-
-const synthImportance = () => ({
-  levels: Object.fromEntries(THEMES.map(t => [t, IMPORTANCE_LEVEL.MEDIUM])),
-  answered: Object.fromEntries(THEMES.map(t => [t, true])),
-  source: PRIORITY_SOURCE.EQUAL,
+test('toutes les questions marquées ont une réponse candidate documentée', () => {
+  const marked = questions.filter(q => q.voteInfluencePrompt).map(q => q.id);
+  const absentes = marked.filter(id => !documented.has(id));
+  assert.deepEqual(absentes, [],
+    'une influence portant sur une question non documentée ne peut pas peser : le libellé '
+    + '« thèmes et décisions » deviendrait mensonger');
 });
 
-// L'utilisateur est en désaccord total sur la question marquée, d'accord ailleurs.
-const SYNTH_USER = { M1: 1, N1: 5, N2: 5, N3: 5, N4: 5, N5: 5 };
-const SYNTH_CAND = synthCandidate({ M1: 5, N1: 5, N2: 5, N3: 5, N4: 5, N5: 5 });
+test('sur l’univers complet, une influence STRONG change le score électoral', () => {
+  const marked = questions.find(q => q.voteInfluencePrompt && documented.has(q.id));
+  const userAnswers = answersOfSize(64);
 
-const elec = voteInfluence => computeElectoralPriorityMatch({
-  userAnswers: SYNTH_USER, candidateAnswers: SYNTH_CAND, questions: SYNTH,
-  themeImportance: synthImportance(), voteInfluence, config: LOOSE,
-});
+  const strong = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.STRONG } }, questions);
+  const none = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.NONE } }, questions);
 
-test('une influence STRONG pèse davantage qu’une influence nulle sur le score pondéré', () => {
-  const strong = elec({ M1: { level: VOTE_INFLUENCE_LEVEL.STRONG } });
-  const none = elec({ M1: { level: VOTE_INFLUENCE_LEVEL.NONE } });
-  assert.notEqual(strong.score, none.score, 'l’influence déclarée doit produire un effet réel');
-  assert.ok(none.score > strong.score,
-    'annuler le poids d’un désaccord doit REMONTER le score, pas le baisser');
-});
-
-test('une influence nulle retire du POIDS, pas de la comparaison', () => {
-  const none = elec({ M1: { level: VOTE_INFLUENCE_LEVEL.NONE } });
-  assert.equal(none.questionsCompared, 6, 'la question doit rester comparée');
-  assert.equal(none.questionsWeighted, 5, 'elle ne doit plus peser');
+  assert.notEqual(signature(strong), signature(none),
+    'avec la banque complète, l’influence déclarée doit produire un effet réel');
 });
 
 test('le classement idéologique ne bouge pas quand seule l’influence change', () => {
-  const ideo = computeIdeologicalMatch({
-    userAnswers: SYNTH_USER, candidateAnswers: SYNTH_CAND, questions: SYNTH, config: LOOSE,
-  });
-  for (const level of [VOTE_INFLUENCE_LEVEL.STRONG, VOTE_INFLUENCE_LEVEL.NONE]) {
-    const again = computeIdeologicalMatch({
-      userAnswers: SYNTH_USER, candidateAnswers: SYNTH_CAND, questions: SYNTH, config: LOOSE,
-    });
-    assert.equal(again.score, ideo.score, `le profil idéologique a bougé avec ${level}`);
-  }
+  const marked = questions.find(q => q.voteInfluencePrompt && documented.has(q.id));
+  const userAnswers = answersOfSize(64);
+  const ideo = r => r.ideological.results.map(x => `${x.candidate.id}:${x.match.score}`).join('|');
+
+  const a = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.STRONG } }, questions);
+  const b = rank(userAnswers, { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.NONE } }, questions);
+
+  assert.equal(ideo(a), ideo(b),
+    'l’influence électorale n’a rien à faire dans la ressemblance idéologique');
 });
 
-test('les compteurs distinguent influences déclarées et influences effectivement pesantes', () => {
-  const none = elec({ M1: { level: VOTE_INFLUENCE_LEVEL.NONE } });
-  assert.equal(none.influenceDeclared, 1, 'une influence présente dans l’intersection doit être comptée');
-  assert.equal(none.questionsWeighted, 5, 'mais elle ne pèse pas');
+test('une influence nulle retire du POIDS, pas de la comparaison', () => {
+  const marked = questions.find(q => q.voteInfluencePrompt && documented.has(q.id));
+  const userAnswers = answersOfSize(64);
+  const answers = getEditorialAnswers(CANDIDATES[0].id, 'general');
+
+  const withNone = computeElectoralPriorityMatch({
+    userAnswers, candidateAnswers: answers, questions,
+    themeImportance: allMedium(), voteInfluence: { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.NONE } },
+  });
+  const withStrong = computeElectoralPriorityMatch({
+    userAnswers, candidateAnswers: answers, questions,
+    themeImportance: allMedium(), voteInfluence: { [marked.id]: { level: VOTE_INFLUENCE_LEVEL.STRONG } },
+  });
+
+  assert.equal(withNone.questionsCompared, withStrong.questionsCompared,
+    'la question reste comparée dans les deux cas');
+  assert.equal(withNone.questionsWeighted, withStrong.questionsWeighted - 1,
+    'seule sa participation au POIDS disparaît');
 });
 
 test('une influence sur une question absente de l’intersection n’est pas comptée', () => {
-  const none = elec({ QUESTION_ABSENTE: { level: VOTE_INFLUENCE_LEVEL.STRONG } });
-  assert.equal(none.influenceDeclared, 0,
+  const m = computeElectoralPriorityMatch({
+    userAnswers: answersOfSize(32),
+    candidateAnswers: getEditorialAnswers(CANDIDATES[0].id, 'general'),
+    questions, themeImportance: allMedium(),
+    voteInfluence: { QUESTION_ABSENTE: { level: VOTE_INFLUENCE_LEVEL.STRONG } },
+  });
+  assert.equal(m.influenceDeclared, 0,
     'compter une influence hors intersection ferait annoncer un effet inexistant');
 });
 
-// ─── État RÉEL du corpus, figé sans complaisance ─────────────────────────────
+// ─── Le contrôle de couverture : dénominateur vrai, refus toujours possible ───
 
-test('aujourd’hui, aucune question marquée n’a de réponse candidate', () => {
-  const marked = questions.filter(q => q.voteInfluencePrompt).map(q => q.id);
-  const covered = marked.filter(id => documented.has(id));
-  assert.deepEqual(covered, [],
-    'si une marquée devient documentée, ce test doit être mis à jour — et le libellé « thèmes '
-    + 'et décisions » deviendra alors légitime');
-});
-
-test('l’intersection réelle est plafonnée par le corpus candidat, pas par l’univers', () => {
-  // 32 réponses dont les 16 documentées : le ratio vaut 0,5, au-dessus du seuil.
-  const userAnswers = answersOfSize(32);
-  const m = rank(userAnswers, {}, questions).ideological.results[0].match;
-  assert.equal(m.questionsCompared, documented.size,
-    'seules les questions documentées côté candidats peuvent être comparées');
-  assert.equal(m.userAnswered, 32);
-});
-
-test('l’univers CORE tronquait le DÉNOMINATEUR du contrôle de couverture', () => {
-  // C'est le second volet du défaut, et le plus grave : `userAnswered` est compté sur
-  // l'univers passé au moteur. Restreindre aux CORE faisait afficher « 16 réponses » à une
-  // personne qui en avait donné 64, et rendait le contrôle de couverture INOPÉRANT.
+test('le contrôle de couverture compte les réponses RÉELLEMENT données', () => {
   const userAnswers = answersOfSize(64);
 
   const core = rank(userAnswers, {}, coreQuestions);
@@ -202,34 +162,44 @@ test('l’univers CORE tronquait le DÉNOMINATEUR du contrôle de couverture', (
     'l’univers CORE ne pouvait jamais compter plus de 16 réponses');
 
   const full = rank(userAnswers, {}, questions);
-  const seen = full.ideological.results[0]?.match ?? full.ideological.unscored[0].match;
-  assert.equal(seen.userAnswered, 64, 'l’univers complet compte les réponses réellement données');
+  assert.equal(full.ideological.results[0].match.userAnswered, 64,
+    'l’univers complet compte les réponses réellement données');
 });
 
-test('un questionnaire long est REFUSÉ plutôt que classé sur une couverture trop mince', () => {
-  // ⚠ Conséquence assumée de la correction : en mode Approfondi (64 réponses) et avec des
-  // candidats documentés sur 16 questions seulement, le ratio vaut 0,25 — sous le seuil de
-  // 0,30. Aucun candidat n'est classé, et c'est le comportement CORRECT : le contrôle de
-  // couverture existe précisément pour ce cas. Abaisser le seuil pour faire réapparaître un
-  // classement fabriquerait une confiance que les données ne portent pas.
+test('un parcours Approfondi normal n’est PAS refusé pour couverture trop mince', () => {
   const r = rank(answersOfSize(64), {}, questions);
-
-  assert.equal(r.ideological.results.length, 0, 'aucun candidat ne doit être classé');
-  assert.ok(r.ideological.unscored.length > 0, 'les candidats doivent rester VISIBLES, avec un motif');
-  assert.equal(r.ideological.unscored[0].match.reason, 'coverage_too_narrow',
-    'le motif affiché doit être la couverture, pas un échec générique');
+  assert.equal(r.ideological.results.length, CANDIDATES.length,
+    'avec 128 réponses par candidat, 64 réponses utilisateur donnent un ratio de 1,0');
+  assert.equal(r.ideological.unscored.length, 0);
 });
+
+test('le refus pour couverture trop mince reste ATTEIGNABLE sur un corpus incomplet', () => {
+  // Le garde-fou ne doit pas disparaître parce que le corpus 2027 est complet : un candidat
+  // ajouté demain avec quelques positions seulement doit continuer d'être écarté.
+  const sparse = [...documented].slice(0, 6).map(questionId => ({
+    questionId, answerValue: 4, answerState: ANSWER_STATE.ESTIMATED,
+    basis: ANSWER_BASIS.EDITORIAL_INFERENCE, rationale: null, sourceIds: [],
+    questionnaireVersion: null,
+  }));
+  const m = computeIdeologicalMatch({
+    userAnswers: answersOfSize(64), candidateAnswers: sparse, questions,
+  });
+  assert.equal(m.score, null);
+  assert.equal(m.reason, 'coverage_too_narrow');
+  assert.ok(m.questionsCompared / m.userAnswered < EDITORIAL_MATCH_CONFIG.minComparedRatio);
+});
+
+// ─── Exclusions ─────────────────────────────────────────────────────────────
 
 test('une question jamais posée reste exclue de la comparaison', () => {
-  const ids = [...documented].slice(0, 8);
-  const partial = Object.fromEntries(ids.map((id, i) => [id, (i % 5) + 1]));
+  const partial = answersOfSize(8);
   const m = rank(partial, {}, questions).ideological.results[0].match;
-  assert.equal(m.questionsCompared, ids.length,
+  assert.equal(m.questionsCompared, 8,
     'seules les questions réellement répondues doivent être comparées');
 });
 
 test('« sans opinion » reste exclu de la comparaison', () => {
-  const ids = [...documented].slice(0, 10);
+  const ids = [...documented].slice(0, 20);
   const withOpinion = Object.fromEntries(ids.map(id => [id, 4]));
   const withNoOpinion = { ...withOpinion, [ids[0]]: NO_OPINION, [ids[1]]: NO_OPINION };
   const a = rank(withOpinion, {}, questions).ideological.results[0].match.questionsCompared;
