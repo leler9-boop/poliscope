@@ -12,11 +12,16 @@
  */
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore.js';
+import { PURPOSES } from '../lib/consent.js';
+import CollectionConsentControl from './CollectionConsentControl.jsx';
 import { useAuth } from '../lib/auth.jsx';
 
 export default function DataControlsModal({ onClose }) {
   const language       = useStore(s => s.language);
   const consent        = useStore(s => s.consent);
+  const collectionConsent = useStore(s => s.collectionConsent);
+  const recordCollectionConsent = useStore(s => s.recordCollectionConsent);
+  const withdrawCollectionConsent = useStore(s => s.withdrawCollectionConsent);
   const exportProfile  = useStore(s => s.exportProfile);
   const { revokeConsent, deleteMyData } = useAuth();
   const fr = language === 'fr';
@@ -28,6 +33,14 @@ export default function DataControlsModal({ onClose }) {
   const [error, setError]                   = useState(null);
 
   const hasConsent = consent?.politicalData === true;
+
+  // ⚠ DEUX CONSENTEMENTS DISTINCTS, DEUX COMMANDES DISTINCTES.
+  //
+  // Cet écran ne montrait que `consent.politicalData` — la sauvegarde liée au COMPTE. La
+  // collecte pseudonymisée du questionnaire n'y figurait pas, alors que l'écran d'entrée
+  // promet « vous pouvez changer d'avis depuis Mes données ». La promesse était fausse, et
+  // elle l'était surtout pour les visiteurs SANS compte, qui n'avaient aucune commande.
+  const collectionDecision = collectionConsent?.[PURPOSES.POLITICAL_ANALYTICS] ?? null;
 
   async function handleRevoke() {
     setRevoking(true);
@@ -84,6 +97,14 @@ export default function DataControlsModal({ onClose }) {
                   ? 'Retirer ton accord arrête toute nouvelle sauvegarde, mais ne supprime pas ce qui est déjà enregistré — utilise « Supprimer mes données » ci-dessous pour ça.'
                   : 'Withdrawing consent stops any further save, but doesn’t delete what’s already stored — use "Delete my data" below for that.'}
               </p>
+
+              {/* ── Collecte pseudonymisée du questionnaire — sans compte requis ── */}
+              <CollectionConsentControl
+                decision={collectionDecision}
+                language={language}
+                onGrant={() => recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: true }, { language })}
+                onWithdraw={() => withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language })}
+              />
 
               <div className="border-t border-gray-100 pt-4">
                 <button

@@ -16,11 +16,12 @@ import { NO_OPINION, isScorable } from '../engine/scorer.js';
 import { QUESTIONNAIRE_VERSION } from '../engine/versions.js';
 import { activeScoringVersion } from '../engine/scoringVersion.js';
 import { attemptSession } from '../lib/attemptSession.js';
-import { PURPOSES } from '../lib/consent.js';
+import { PURPOSES, needsCollectionDecision } from '../lib/consent.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
   const recordCollectionConsent = useStore(s => s.recordCollectionConsent);
+  const collectionConsent    = useStore(s => s.collectionConsent);
   const voteInfluence        = useStore(s => s.voteInfluence);
   const setVoteInfluence     = useStore(s => s.setVoteInfluence);
   const setVoteInfluenceDeclined = useStore(s => s.setVoteInfluenceDeclined);
@@ -41,9 +42,16 @@ export default function Questionnaire() {
   const totalAnswered        = Object.keys(answers).filter(id => isScorable(answers[id])).length;
   const t = createTranslator(language);
 
-  const [introSeen, setIntroSeen] = useState(() => {
+  // Les CONSEILS d'usage sont propres à la session : les revoir ne coûte rien.
+  const [tipsSeen, setTipsSeen] = useState(() => {
     try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
   });
+
+  // ⚠ La DÉCISION de collecte, elle, est persistée et ne se redemande que si elle n'existe
+  // pas ou si le texte a changé. La brancher sur `sessionStorage` faisait redemander à chaque
+  // session et réécrivait une décision déjà prise à chaque clic.
+  const askConsent = needsCollectionDecision(collectionConsent, { language });
+  const introSeen = tipsSeen && !askConsent;
 
   // ── Question slide direction (1 = forward, -1 = backward) ──
   const directionRef = useRef(1);
@@ -99,12 +107,13 @@ export default function Questionnaire() {
    * ailleurs. L'inclure ici fabriquerait un accord à un texte jamais présenté.
    */
   const handleIntroStart = (accepted) => {
-    recordCollectionConsent(
-      { [PURPOSES.POLITICAL_ANALYTICS]: accepted === true },
-      { language },
-    );
+    // `null` = la question n'était pas posée (décision déjà en cours de validité). On
+    // n'écrit RIEN : réenregistrer effacerait la date et la provenance de la décision réelle.
+    if (accepted === true || accepted === false) {
+      recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: accepted }, { language });
+    }
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
-    setIntroSeen(true);
+    setTipsSeen(true);
   };
 
   // ── Reprise après rechargement ──
@@ -383,7 +392,7 @@ export default function Questionnaire() {
     <>
       <AnimatePresence>
         {!introSeen && !improveMode && (
-          <PreQuizModal language={language} onStart={handleIntroStart} />
+          <PreQuizModal language={language} onStart={handleIntroStart} askConsent={askConsent} />
         )}
       </AnimatePresence>
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
+import { PURPOSES, consentTextFor } from '../lib/consent.js';
+
 /**
  * POLISCOP — Écran d'entrée du questionnaire : conseils d'usage ET choix de collecte.
  *
@@ -21,7 +23,7 @@ import { motion } from 'motion/react';
  *
  * @param {(accepted: boolean) => void} onStart  décision explicite, jamais implicite
  */
-export default function PreQuizModal({ language = 'fr', onStart }) {
+export default function PreQuizModal({ language = 'fr', onStart, askConsent = true }) {
   const content = {
     fr: {
       title: 'Avant de commencer',
@@ -32,7 +34,7 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         { icon: '💡', title: 'Besoin de comprendre ?', text: 'Le bouton « Comprendre cet enjeu » donne du contexte. La rubrique « J’y connais rien » permet d’apprendre les bases à votre rythme.' },
       ],
       consentTitle: 'Nous aider à améliorer le questionnaire ?',
-      consentIntro: 'Vous pouvez nous laisser analyser ce parcours de façon anonyme. C’est un choix libre : le questionnaire et votre profil fonctionnent exactement pareil si vous refusez.',
+      consentIntro: 'C’est un choix libre : le questionnaire et votre profil fonctionnent exactement pareil si vous refusez.',
       collected: [
         'vos réponses aux questions politiques',
         'le temps passé activement sur chaque question',
@@ -40,6 +42,7 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         'l’importance que vous donnez aux thèmes et l’influence sur votre vote',
       ],
       never: 'Jamais dans ce flux : votre nom, votre adresse électronique, ni aucun identifiant de compte.',
+      start: 'C’est parti',
       accept: 'Accepter et commencer',
       decline: 'Refuser et continuer sur cet appareil',
       reversible: 'Vous pouvez changer d’avis à tout moment depuis « Mes données ». Un retrait arrête immédiatement les envois suivants.',
@@ -53,7 +56,7 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         { icon: '💡', title: 'Need some context?', text: 'Use “Understand this issue” for a quick explanation. Visit Politics 101 to learn the basics at your own pace.' },
       ],
       consentTitle: 'Help us improve the questionnaire?',
-      consentIntro: 'You can let us analyse this session anonymously. It is entirely your choice: the questionnaire and your profile work exactly the same if you decline.',
+      consentIntro: 'It is entirely your choice: the questionnaire and your profile work exactly the same if you decline.',
       collected: [
         'your answers to the political questions',
         'the time actively spent on each question',
@@ -61,6 +64,7 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         'the importance you give to themes and the influence on your vote',
       ],
       never: 'Never in this flow: your name, your email address, or any account identifier.',
+      start: 'Let’s go',
       accept: 'Accept and start',
       decline: 'Decline and continue on this device',
       reversible: 'You can change your mind at any time from “My data”. Withdrawing stops all further sending immediately.',
@@ -104,32 +108,57 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
           ))}
         </div>
 
-        {/* ── Choix de collecte : explicite, symétrique, rien de précoché ────── */}
+        {/* ── Choix de collecte : posé UNIQUEMENT si aucune décision en cours de
+            validité n'existe. Redemander à chaque session réécrirait une décision déjà
+            prise et brouillerait sa date. ─────────────────────────────────────── */}
+        {askConsent && (
         <div className="rounded-xl border border-slate-200 p-3.5 mb-4 text-left">
           <p className="text-sm font-semibold text-slate-800 mb-1">{c.consentTitle}</p>
           <p className="text-xs text-slate-500 leading-relaxed mb-2">{c.consentIntro}</p>
+          {/* ⚠ TEXTE CANONIQUE — SOURCE UNIQUE.
+              L'empreinte enregistrée par `recordCollectionConsent()` est calculée sur
+              `consentTextFor(POLITICAL_ANALYTICS, language)`. Réécrire ici une formulation
+              « équivalente » ferait enregistrer l'empreinte d'un texte jamais présenté :
+              la preuve porterait sur autre chose que ce que la personne a lu. */}
+          <p
+            data-testid="consent-canonical-text"
+            className="text-xs text-slate-700 leading-relaxed mb-2 p-2.5 rounded-lg bg-white border border-slate-200"
+          >
+            {consentTextFor(PURPOSES.POLITICAL_ANALYTICS, language)}
+          </p>
           <ul className="text-xs text-slate-600 leading-relaxed list-disc pl-4 mb-2">
             {c.collected.map(item => <li key={item}>{item}</li>)}
           </ul>
           <p className="text-[11px] text-slate-500 leading-relaxed">{c.never}</p>
         </div>
+        )}
 
         {/* Les deux issues ont le MÊME poids : un bouton refus en lien discret
             transformerait le refus en parcours du combattant. */}
-        <div className="flex flex-col gap-2">
+        {askConsent ? (
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => onStart(true)}
+              className="w-full py-3 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold transition-colors"
+            >
+              {c.accept}
+            </button>
+            <button
+              onClick={() => onStart(false)}
+              className="w-full py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-colors"
+            >
+              {c.decline}
+            </button>
+          </div>
+        ) : (
+          // Décision déjà prise et toujours valable : on démarre sans rien réécrire.
           <button
-            onClick={() => onStart(true)}
+            onClick={() => onStart(null)}
             className="w-full py-3 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold transition-colors"
           >
-            {c.accept}
+            {c.start}
           </button>
-          <button
-            onClick={() => onStart(false)}
-            className="w-full py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-colors"
-          >
-            {c.decline}
-          </button>
-        </div>
+        )}
 
         <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">{c.reversible}</p>
       </motion.div>

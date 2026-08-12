@@ -18,7 +18,7 @@
 // parce qu'un frontend se contourne.
 
 /** Version de la FORMULATION. À incrémenter dès que le texte affiché change en substance. */
-export const CONSENT_POLICY_VERSION = '2026-08';
+export const CONSENT_POLICY_VERSION = '2026-08-b';
 
 /**
  * Version de la formulation présentée par `ConsentModal.jsx` avant août 2026.
@@ -68,11 +68,16 @@ export const CONSENT_TEXTS = Object.freeze({
       'Mesurer l’audience du site : écrans consultés, étapes franchies, compteurs. '
       + 'Aucune de vos réponses, aucun thème, aucun candidat n’est transmis. '
       + 'Conservation : 13 mois.',
+    // ⚠ NE PAS ÉCRIRE « anonyme » ICI. Le flux dépose un identifiant pseudonyme persistant
+    // (`poliscop_analytics_sid`) pour relier les étapes d'une même passation. C'est de la
+    // pseudonymisation, pas de l'anonymat : le mot « anonyme » promettrait davantage que ce
+    // que le dispositif fait, et c'est précisément ce que le texte doit éviter.
     [PURPOSES.POLITICAL_ANALYTICS]:
-      'Analyser de façon anonyme vos réponses au questionnaire et le temps passé sur '
-      + 'chaque question, pour améliorer la formulation des questions et publier des '
-      + 'statistiques agrégées. Vos réponses ne sont reliées à aucun compte. '
-      + 'Conservation : 25 mois.',
+      'Analyser vos réponses au questionnaire et le temps passé sur chaque question, pour '
+      + 'améliorer la formulation des questions et publier des statistiques agrégées. Un '
+      + 'identifiant aléatoire, distinct de votre compte, sert à relier les étapes d’une même '
+      + 'passation. Vos réponses ne sont reliées à aucun compte, ni à votre nom, ni à votre '
+      + 'adresse électronique. Conservation : 25 mois.',
     [PURPOSES.CLOUD_SAVE]:
       'Enregistrer votre profil et vos réponses sur votre compte, pour les retrouver sur '
       + 'un autre appareil. Conservation : tant que votre compte existe ; supprimé avec lui.',
@@ -86,9 +91,10 @@ export const CONSENT_TEXTS = Object.freeze({
       'Measure site audience: screens viewed, steps completed, counters. '
       + 'None of your answers, themes or candidates are transmitted. Retention: 13 months.',
     [PURPOSES.POLITICAL_ANALYTICS]:
-      'Anonymously analyse your questionnaire answers and the time spent on each question, '
-      + 'to improve question wording and publish aggregate statistics. Your answers are not '
-      + 'linked to any account. Retention: 25 months.',
+      'Analyse your questionnaire answers and the time spent on each question, to improve '
+      + 'question wording and publish aggregate statistics. A random identifier, separate '
+      + 'from your account, links the steps of a single session. Your answers are not linked '
+      + 'to any account, name or email address. Retention: 25 months.',
     [PURPOSES.CLOUD_SAVE]:
       'Save your profile and answers to your account so you can find them on another '
       + 'device. Retention: as long as your account exists; deleted with it.',
@@ -307,4 +313,33 @@ export function buildConsentRecords(consentState, { anonymousSessionId, userId, 
     });
   }
   return records;
+}
+
+/**
+ * La décision enregistrée porte-t-elle sur le texte ACTUELLEMENT affiché ?
+ *
+ * Une décision reste valable tant que la formulation n'a pas changé. Si le texte évolue, la
+ * personne n'a pas consenti à la nouvelle version : il faut redemander, sans jamais reporter
+ * l'ancien accord sur le nouveau texte.
+ */
+export function decisionIsCurrent(decision, { purpose, language = 'fr' } = {}) {
+  if (!decision || typeof decision !== 'object') return false;
+  if (decision.granted !== true && decision.granted !== false) return false;
+  if (decision.policyVersion !== CONSENT_POLICY_VERSION) return false;
+  // Sans empreinte disponible (décisions migrées), on ne peut PAS affirmer que le texte lu
+  // était celui-ci : on redemande plutôt que de supposer.
+  if (decision.textHashAvailable !== true) return false;
+  return decision.textHash === textFingerprint(consentTextFor(purpose, language));
+}
+
+/**
+ * Faut-il (re)poser la question ?
+ *
+ * ⚠ Ne JAMAIS brancher cet appel sur `sessionStorage`. L'affichage dépendait d'un drapeau de
+ * session : une personne ayant accepté — ou refusé — était redemandée à chaque nouvelle
+ * session, et chaque clic réécrivait une décision déjà prise, brouillant sa provenance et sa
+ * date. Une décision actuelle se respecte jusqu'à modification volontaire.
+ */
+export function needsCollectionDecision(collectionConsent, { purpose = PURPOSES.POLITICAL_ANALYTICS, language = 'fr' } = {}) {
+  return !decisionIsCurrent(collectionConsent?.[purpose], { purpose, language });
 }
