@@ -88,7 +88,7 @@ test('chaque ligne du corpus non-CORE porte une valeur par candidat', () => {
 for (const [label, mode, taille] of [['Découverte', 'quick', 16], ['Standard', 'standard', 32], ['Approfondi', 'deep', 64]]) {
   test(`un parcours ${label} compare jusqu’à ${taille} réponses`, () => {
     for (const seed of [1, 7, 42]) {
-      const queue = getQuestionQueue(mode, THEMES_ORDER, { seed });
+      const queue = getQuestionQueue(mode, THEMES_ORDER, seed);
       assert.equal(queue.length, taille, `file ${label} de taille inattendue (graine ${seed})`);
       const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
       const r = rank(userAnswers);
@@ -103,7 +103,7 @@ for (const [label, mode, taille] of [['Découverte', 'quick', 16], ['Standard', 
 test('les questions marquées figurent réellement dans les files Standard et Approfondi', () => {
   for (const seed of [1, 7, 42]) {
     for (const mode of ['standard', 'deep']) {
-      const queue = getQuestionQueue(mode, THEMES_ORDER, { seed });
+      const queue = getQuestionQueue(mode, THEMES_ORDER, seed);
       const marked = queue.filter(q => q.voteInfluencePrompt);
       assert.ok(marked.length > 0, `aucune question marquée en ${mode} (graine ${seed})`);
 
@@ -121,7 +121,7 @@ test('les questions marquées figurent réellement dans les files Standard et Ap
 // ─── 9 à 12 : la sémantique de l'influence ─────────────────────────────────
 
 test('une influence « none » conserve la réponse dans le classement idéologique', () => {
-  const queue = getQuestionQueue('deep', THEMES_ORDER, { seed: 1 });
+  const queue = getQuestionQueue('deep', THEMES_ORDER, 1);
   const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
   const marked = queue.find(q => q.voteInfluencePrompt);
 
@@ -135,7 +135,7 @@ test('une influence « none » conserve la réponse dans le classement idéologi
 });
 
 test('une influence « none » retire la question du score électoral', () => {
-  const queue = getQuestionQueue('deep', THEMES_ORDER, { seed: 1 });
+  const queue = getQuestionQueue('deep', THEMES_ORDER, 1);
   const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
   const marked = queue.find(q => q.voteInfluencePrompt);
 
@@ -147,7 +147,7 @@ test('une influence « none » retire la question du score électoral', () => {
 });
 
 test('une influence « strong » peut modifier le classement électoral', () => {
-  const queue = getQuestionQueue('deep', THEMES_ORDER, { seed: 1 });
+  const queue = getQuestionQueue('deep', THEMES_ORDER, 1);
   const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
   const marked = queue.filter(q => q.voteInfluencePrompt);
   const sig = r => r.electoral.results.map(x => `${x.candidate.id}:${x.match.score}`).join('|');
@@ -160,7 +160,7 @@ test('une influence « strong » peut modifier le classement électoral', () => 
 });
 
 test('le classement idéologique est identique quand seule l’influence change', () => {
-  const queue = getQuestionQueue('deep', THEMES_ORDER, { seed: 1 });
+  const queue = getQuestionQueue('deep', THEMES_ORDER, 1);
   const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
   const marked = queue.filter(q => q.voteInfluencePrompt);
   const sig = r => r.ideological.results.map(x => `${x.candidate.id}:${x.match.score}`).join('|');
@@ -207,7 +207,7 @@ test('les pages candidat disposent des estimations sur les 128 questions', () =>
 });
 
 test('aucun profil legacy-manual-v1 n’entre dans un score', () => {
-  const queue = getQuestionQueue('deep', THEMES_ORDER, { seed: 1 });
+  const queue = getQuestionQueue('deep', THEMES_ORDER, 1);
   const userAnswers = Object.fromEntries(queue.map(q => [q.id, 4]));
   for (const { match } of rank(userAnswers).ideological.results) {
     assert.notEqual(match.profileSource, 'legacy-manual-v1',
