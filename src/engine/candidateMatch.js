@@ -34,6 +34,7 @@ import { getPositions, getSource } from '../data/candidateProvenance.js';
 import { deriveCandidateThemes, CANDIDATE_PROFILE_VERSION } from './candidateProfile.js';
 import { buildWeightMap } from './matcher.js';
 import { MATCHING_VERSION, CANDIDATE_DATA_RELEASE } from './versions.js';
+import { resolveElectionContract, resolveGeneralContract } from './matchContracts.js';
 
 /**
  * @typedef {Object} MatchResult
@@ -52,7 +53,7 @@ import { MATCHING_VERSION, CANDIDATE_DATA_RELEASE } from './versions.js';
  * Gère les thèmes inconnus (`null`, scoring v2) : ils sont exclus de la moyenne au lieu
  * d'être assimilés à 50, qui confondait « je ne sais pas » et « centriste ».
  */
-function globalProximity(userThemes, targetThemes, weightMap) {
+function globalProximity(userThemes, targetThemes, weightMap, contract = null) {
   let weightedDistanceSum = 0;
   let totalWeight = 0;
   let themesKnown = 0;
@@ -75,8 +76,18 @@ function globalProximity(userThemes, targetThemes, weightMap) {
   // Seuil de couverture minimale — RÉELLEMENT appliqué depuis le 2026-08-09.
   // `MATCH_CONFIG.minKnownThemesForScore` existait mais n'était consulté nulle part :
   // un score pouvait être calculé, affiché et classé à partir d'un seul thème connu.
-  if (themesKnown < MATCH_CONFIG.minKnownThemesForScore) {
-    return { score: null, themesKnown, reason: 'insufficient_coverage' };
+  //
+  // ⚠ LE SEUIL DÉPEND DÉSORMAIS DU CONTRAT. Le profil général exige quatre thèmes sur huit ;
+  // une élection exige ce que son questionnaire rend atteignable, plafonné à quatre et
+  // jamais sous trois. Appliquer le seuil général à un questionnaire qui ne couvre que trois
+  // thèmes lui imposait une condition qu'aucun corpus ne pourrait remplir — et le refus
+  // ressemblait alors à un simple manque de données. Voir `matchContracts.js`.
+  if (contract && contract.structurallyPossible === false) {
+    return { score: null, themesKnown, reason: contract.reason, contract };
+  }
+  const seuil = contract?.minKnownThemes ?? MATCH_CONFIG.minKnownThemesForScore;
+  if (themesKnown < seuil) {
+    return { score: null, themesKnown, reason: 'insufficient_coverage', contract };
   }
 
   const meanDistance = weightedDistanceSum / totalWeight;
@@ -196,7 +207,10 @@ export function computeCandidateMatch({
     };
   }
 
-  const g = globalProximity(userThemes, derived.themes, weightMap);
+  // ⚠ Le contrat est DÉDUIT du questionnaire réellement fourni : un questionnaire d'élection
+  // relève du contrat électoral, l'absence de questionnaire du contrat général.
+  const contract = questions?.length ? resolveElectionContract(questions) : resolveGeneralContract();
+  const g = globalProximity(userThemes, derived.themes, weightMap, contract);
   const { multiplier: vetoMultiplier } = computeVeto(userThemes, derived.themes, weightMap);
   const e = electionProximity(electionAnswers, questions, derived.usable);
 
@@ -212,6 +226,7 @@ export function computeCandidateMatch({
     return {
       score: null,
       reason: g.reason ?? 'insufficient_coverage',
+      contract,
       globalScore: null,
       electionScore: null,
       coverage,

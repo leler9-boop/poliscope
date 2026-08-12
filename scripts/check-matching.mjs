@@ -27,6 +27,7 @@ const { resolveCandidateId } = await import(`${base}/src/data/candidateRegistry.
 const { computeCandidateMatch } = await import(`${base}/src/engine/candidateMatch.js`);
 const { MATCH_CONFIG } = await import(`${base}/src/engine/matchConfig.js`);
 const { THEMES_ORDER } = await import(`${base}/src/data/questions.js`);
+const { resolveElectionContract, ABSOLUTE_MIN_THEMES } = await import(`${base}/src/engine/matchContracts.js`);
 
 const sourceIsVerified = id => Boolean(getSource(id)?.verifiedAt);
 const neutralProfile = Object.fromEntries(THEMES_ORDER.map(t => [t, 50]));
@@ -45,7 +46,8 @@ const warn = msg => { console.log(`  ⚠ ${msg}`); warnings++; };
 
 console.log('Matching candidats — état de publiabilité\n');
 console.log(`Seuils (matchConfig.js) : ${MATCH_CONFIG.minSourcedPositionsPerTheme} position(s) sourcée(s) par thème, `
-  + `${MATCH_CONFIG.minKnownThemesForScore} thèmes connus minimum pour publier un score.\n`);
+  + `${MATCH_CONFIG.minKnownThemesForScore} thèmes connus minimum pour le profil général ; `
+  + 'le seuil de chaque élection suit son questionnaire (contrats versionnés).\n');
 
 for (const election of elections) {
   const questions = election.specificQuestions ?? [];
@@ -59,12 +61,18 @@ for (const election of elections) {
   const reachableThemes = Object.values(questionsPerTheme)
     .filter(n => n >= MATCH_CONFIG.minSourcedPositionsPerTheme).length;
 
+  // ⚠ Le seuil vient du CONTRAT ÉLECTORAL, pas du contrat général. Comparer un
+  // questionnaire de sept questions au seuil du profil général revenait à lui reprocher de
+  // ne pas être un profil général. Voir `src/engine/matchContracts.js`.
+  const contrat = resolveElectionContract(questions);
   console.log(`── ${election.id} — ${election.candidates.length} candidats, ${questions.length} questions`);
-  console.log(`   thèmes atteignables au mieux : ${reachableThemes} / ${THEMES_ORDER.length}`);
-  if (reachableThemes < MATCH_CONFIG.minKnownThemesForScore) {
-    (STRICT ? fail : warn)(`${election.id} : même un corpus PARFAIT ne peut pas produire de score `
-      + `(${reachableThemes} thèmes atteignables < ${MATCH_CONFIG.minKnownThemesForScore} requis). `
-      + 'Le questionnaire ou le seuil doit changer.');
+  console.log(`   thèmes atteignables au mieux : ${reachableThemes} / ${THEMES_ORDER.length}`
+    + ` · seuil du contrat : ${contrat.minKnownThemes ?? '—'} (${contrat.version})`);
+  if (!contrat.structurallyPossible) {
+    (STRICT ? fail : warn)(`${election.id} : QUESTIONNAIRE STRUCTURELLEMENT INSUFFISANT — `
+      + `${reachableThemes} thèmes atteignables, plancher de ${ABSOLUTE_MIN_THEMES}. Aucun `
+      + 'corpus, même parfait, ne peut y produire un score strict. Ce n’est pas un manque de '
+      + 'données : c’est le questionnaire qu’il faut élargir.');
   }
 
   let scored = 0;
@@ -109,7 +117,8 @@ for (const election of elections) {
       themesReady, themesPotentiels, score: match.score, reason: match.reason ?? null,
       blocage: all.length === 0 ? 'aucun corpus'
         : approved.length === 0 ? 'relecture non faite'
-        : themesReady < MATCH_CONFIG.minKnownThemesForScore ? 'corpus trop étroit'
+        : !contrat.structurallyPossible ? 'questionnaire structurellement insuffisant'
+        : themesReady < contrat.minKnownThemes ? 'corpus trop étroit'
         : match.score == null ? 'CHAÎNE CASSÉE' : '—',
     });
   }
