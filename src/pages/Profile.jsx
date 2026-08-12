@@ -599,15 +599,18 @@ export default function Profile() {
               ↑ {t('profile_import')}
             </button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
-            {user && (
-              <button
-                onClick={() => setShowDataControls(true)}
-                className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
-                title={language === 'fr' ? 'Tes données en ligne' : 'Your online data'}
-              >
-                🔒 {language === 'fr' ? 'Confidentialité' : 'Privacy'}
-              </button>
-            )}
+            {/* ⚠ PAS DE `user &&` ICI. Cet écran pilote AUSSI l'analyse pseudonymisée du
+                questionnaire, qui ne suppose aucun compte — et qui concerne précisément les
+                visiteurs qui n'en ont pas. Le réserver aux personnes connectées rendait
+                fausse la phrase « vous pouvez changer d'avis à tout moment ». */}
+            <button
+              data-testid="open-data-controls-desktop"
+              onClick={() => setShowDataControls(true)}
+              className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 border border-slate-200 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+              title={language === 'fr' ? 'Mes données et confidentialité' : 'My data and privacy'}
+            >
+              🔒 {language === 'fr' ? 'Mes données' : 'My data'}
+            </button>
             <button
               onClick={() => setShowResetConfirm(true)}
               className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-red-400 border border-red-100 px-3 py-2.5 rounded-xl hover:bg-red-50 transition-colors min-h-[40px]"
@@ -669,15 +672,14 @@ export default function Profile() {
               {t('profile_import')}
             </button>
 
-            {user && (
-              <button
-                onClick={() => { setShowMobileActions(false); setShowDataControls(true); }}
-                className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
-              >
-                <span className="text-base w-5 text-center">🔒</span>
-                {language === 'fr' ? 'Confidentialité — tes données en ligne' : 'Privacy — your online data'}
-              </button>
-            )}
+            <button
+              data-testid="open-data-controls-mobile"
+              onClick={() => { setShowMobileActions(false); setShowDataControls(true); }}
+              className="w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium text-slate-700 active:bg-slate-50"
+            >
+              <span className="text-base w-5 text-center">🔒</span>
+              {language === 'fr' ? 'Mes données et confidentialité' : 'My data and privacy'}
+            </button>
 
             <div className="my-1 border-t border-slate-100" />
 

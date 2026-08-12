@@ -277,7 +277,58 @@ export function canCollectAttemptData(consentState) {
  * Une finalité laissée à `null` ne produit aucune ligne : ne pas décider n'est pas refuser,
  * et fabriquer un « refus » n'aurait pas la même valeur probatoire.
  */
-export function buildConsentRecords(consentState, { anonymousSessionId, userId, language = 'fr', clientRelease } = {}) {
+/**
+ * Quel identifiant une finalité a-t-elle le droit de porter ?
+ *
+ * ⚠ CLOISONNEMENT PAR FINALITÉ — LE CŒUR DE LA PROMESSE.
+ *
+ * Chaque enregistrement portait AUTREFOIS `anonymous_session_id` ET `user_id`, quelle que
+ * soit la finalité. Une ligne `political_analytics` contenait donc simultanément le
+ * pseudonyme politique et l'identifiant de compte : exactement la table de correspondance
+ * que le texte de consentement promet de ne pas créer. Le texte disait « vos réponses ne
+ * sont reliées à aucun compte » pendant que la ligne établissait le lien.
+ *
+ * Les identifiants sont désormais attribués finalité par finalité, et une finalité ne peut
+ * jamais en porter deux. Aucune déduction implicite : un identifiant non fourni vaut `null`,
+ * il n'est pas emprunté à une autre finalité.
+ */
+export const PURPOSE_IDENTIFIER = Object.freeze({
+  /** Opinions politiques : pseudonyme d'analyse SEUL. Jamais le compte. */
+  [PURPOSES.POLITICAL_ANALYTICS]: 'analytics_pseudonym',
+  /** Sauvegarde : compte SEUL. Jamais le pseudonyme d'analyse. */
+  [PURPOSES.CLOUD_SAVE]:          'account',
+  /** Mesure d'audience : son propre pseudonyme, distinct de celui des opinions. */
+  [PURPOSES.MEASUREMENT]:         'measurement_pseudonym',
+  /** Recherche : identifiant explicite. Rien n'est déduit de l'analyse politique. */
+  [PURPOSES.RESEARCH]:            'research_pseudonym',
+});
+
+/**
+ * Les deux colonnes d'identifiant d'un enregistrement, pour une finalité donnée.
+ * Exactement une peut être non nulle — jamais les deux.
+ */
+export function identifiersFor(purpose, { analyticsPseudonym, userId, measurementPseudonym, researchPseudonym } = {}) {
+  switch (PURPOSE_IDENTIFIER[purpose]) {
+    case 'account':
+      return { anonymous_session_id: null, user_id: userId ?? null };
+    case 'measurement_pseudonym':
+      return { anonymous_session_id: measurementPseudonym ?? null, user_id: null };
+    case 'research_pseudonym':
+      return { anonymous_session_id: researchPseudonym ?? null, user_id: null };
+    case 'analytics_pseudonym':
+    default:
+      return { anonymous_session_id: analyticsPseudonym ?? null, user_id: null };
+  }
+}
+
+export function buildConsentRecords(consentState, {
+  anonymousSessionId,          // pseudonyme d'ANALYSE POLITIQUE
+  userId,                      // identifiant de COMPTE
+  measurementId = null,        // pseudonyme de MESURE D'AUDIENCE, distinct
+  researchId = null,           // pseudonyme de RECHERCHE, explicite
+  language = 'fr',
+  clientRelease,
+} = {}) {
   const records = [];
   const now = new Date().toISOString();
 
@@ -297,8 +348,12 @@ export function buildConsentRecords(consentState, { anonymousSessionId, userId, 
         : null);
 
     records.push({
-      anonymous_session_id: anonymousSessionId ?? null,
-      user_id:              userId ?? null,
+      ...identifiersFor(purpose, {
+        analyticsPseudonym: anonymousSessionId,
+        userId,
+        measurementPseudonym: measurementId,
+        researchPseudonym: researchId,
+      }),
       purpose,
       granted:              decision.granted,
       policy_version:       policyVersion,

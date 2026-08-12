@@ -13,6 +13,9 @@
 import { createMutationQueue, attachOnlineFlush } from './mutationQueue.js';
 import { questionTimer, attachVisibilityPause } from './questionTiming.js';
 import { postEnvelope, beaconEnvelope, isIngestEnabled, CLIENT_RELEASE } from './ingestClient.js';
+import {
+  enqueueWithdrawal, replayWithdrawals, pendingWithdrawals, withdrawalState,
+} from './withdrawalQueue.js';
 import { canCollectAttemptData, buildConsentRecords, CONSENT_POLICY_VERSION } from './consent.js';
 import { canonicalMode } from '../data/questions.js';
 
@@ -89,6 +92,14 @@ export function createAttemptSession({
   transport = defaultTransport,
   timer = questionTimer,
   storage = typeof localStorage !== 'undefined' ? localStorage : null,
+  // Transport du CONSENTEMENT, injectable et distinct de celui des réponses : c'est lui
+  // qu'on doit pouvoir faire échouer dans un test pour prouver qu'un retrait survit à une
+  // panne réseau. Renvoie `true` UNIQUEMENT sur réponse 2xx.
+  consentTransport = async (record) => {
+    if (!isIngestEnabled) return false;
+    await postEnvelope('consent', record);
+    return true;
+  },
 } = {}) {
   const queue = createMutationQueue({ transport });
 
@@ -157,15 +168,27 @@ export function createAttemptSession({
       if (!isAllowed) consentGrantedAt = null;
 
       // La DÉCISION elle-même est enregistrée, accord comme refus : c'est la preuve.
-      if (isIngestEnabled && anonymousSessionId) {
-        const records = buildConsentRecords(nextConsentState, {
-          anonymousSessionId, userId, language, clientRelease: CLIENT_RELEASE,
+      // ⚠ RETRAIT DURABLE. Un envoi qui échoue n'est PAS « retenté au prochain changement » :
+      // il n'y aurait pas forcément de prochain changement, et l'identifiant nécessaire pour
+      // formuler la demande aura été effacé entre-temps. Chaque décision part en file
+      // persistante AVANT toute tentative, et n'en sort que sur confirmation du serveur.
+      const records = buildConsentRecords(nextConsentState, {
+        anonymousSessionId, userId, language, clientRelease: CLIENT_RELEASE,
+      });
+      const retraits = records.filter(r => r.granted === false);
+      for (const record of retraits) {
+        enqueueWithdrawal(storage, {
+          purpose: record.purpose,
+          anonymousSessionId: record.anonymous_session_id,
+          record,
         });
-        for (const record of records) {
-          try { await postEnvelope('consent', record); }
-          catch { /* la décision locale prime ; l'envoi sera retenté au prochain changement */ }
-        }
       }
+      // Les ACCORDS peuvent partir directement : leur perte n'efface aucune donnée et sera
+      // rejouée par la prochaine décision. Un retrait, lui, ne se rattrape pas.
+      for (const record of records.filter(r => r.granted === true)) {
+        try { await consentTransport(record); } catch { /* réémis à la prochaine décision */ }
+      }
+      await replayWithdrawals(storage, consentTransport);
 
       if (!isAllowed) {
         // Sans autorisation, aucune passation ne doit rester écrite sur le terminal — y
@@ -310,6 +333,17 @@ export function createAttemptSession({
     attach() {
       detach.push(attachVisibilityPause(timer));
       detach.push(attachOnlineFlush(queue));
+
+      // ⚠ Un retrait demandé hors ligne doit repartir SANS action de l'utilisateur : au
+      // démarrage, puis à chaque retour du réseau. Sans cela, la suppression resterait
+      // suspendue à une visite ultérieure ET à une nouvelle décision de consentement.
+      void replayWithdrawals(storage, consentTransport);
+      if (typeof window !== 'undefined') {
+        const onOnline = () => { void replayWithdrawals(storage, consentTransport); };
+        window.addEventListener('online', onOnline);
+        detach.push(() => window.removeEventListener('online', onOnline));
+      }
+
       if (typeof window !== 'undefined') {
         const onUnload = () => this.flushOnUnload();
         window.addEventListener('pagehide', onUnload);
@@ -318,7 +352,15 @@ export function createAttemptSession({
       return () => { for (const fn of detach.splice(0)) fn(); };
     },
 
-    /** « Effacer mes données » / retrait : plus rien ne subsiste localement. */
+    /** Retraits demandés mais non confirmés par le serveur. */
+    pendingWithdrawals() { return pendingWithdrawals(storage); },
+
+    /** État à AFFICHER — dérivé de la file, jamais d'un changement d'état d'interface. */
+    withdrawalState(purpose) { return withdrawalState(storage, { purpose }); },
+
+    /** Rejeu, à appeler au retour du réseau et au démarrage. */
+    async retryWithdrawals() { return replayWithdrawals(storage, consentTransport); },
+
     reset() {
       queue.clear();
       timer.reset();

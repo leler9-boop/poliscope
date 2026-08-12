@@ -5,6 +5,7 @@ import { createTranslator } from '../i18n/translations.js';
 import { trackQuestionAnswered, trackQuestionSkipped, trackConceptOpened } from '../lib/analytics.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import PreQuizModal from '../components/PreQuizModal.jsx';
+import DataControlsModal from '../components/DataControlsModal.jsx';
 import VoteInfluencePrompt from '../components/VoteInfluencePrompt.jsx';
 import { canLeaveQuestion, shouldOpenInfluencePrompt, resolveOpenPrompt } from '../engine/influenceGate.js';
 import ConceptModal from '../components/ConceptModal.jsx';
@@ -43,6 +44,7 @@ export default function Questionnaire() {
   const t = createTranslator(language);
 
   // Les CONSEILS d'usage sont propres à la session : les revoir ne coûte rien.
+  const [showDataControls, setShowDataControls] = useState(false);
   const [tipsSeen, setTipsSeen] = useState(() => {
     try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
   });
@@ -577,6 +579,22 @@ export default function Questionnaire() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* ⚠ ACCÈS AUX DONNÉES PENDANT LE QUIZ.
+            « Vous pouvez changer d'avis à tout moment » était faux tant que la commande
+            n'existait que sur la page Profil : il fallait terminer le questionnaire pour
+            pouvoir retirer son accord à la collecte de ce même questionnaire. */}
+        <div className="max-w-2xl mx-auto px-4 pb-24 text-center">
+          <button
+            type="button"
+            data-testid="open-data-controls-quiz"
+            onClick={() => setShowDataControls(true)}
+            className="text-[11px] text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
+          >
+            {language === 'fr' ? 'Mes données et confidentialité' : 'My data and privacy'}
+          </button>
+        </div>
+        {showDataControls && <DataControlsModal onClose={() => setShowDataControls(false)} />}
 
         {/* ── Navigation bas ── */}
         <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 px-4 py-2 z-30">

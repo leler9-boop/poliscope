@@ -1,19 +1,35 @@
 /**
- * DataControlsModal — RGPD self-service controls for cloud-stored political
- * data: view consent status, withdraw consent, permanently delete cloud
- * data. Reachable from Profile.jsx, logged-in users only (guests have
- * nothing stored server-side by construction — see Étape 2 of the RGPD
- * remediation, audit/rgpd-remediation-2026-07/).
+ * POLISCOP — « Mes données et confidentialité ».
  *
- * Does NOT touch local browser data (see resetProfile in useStore.js) or
- * the Supabase Auth account itself (email/login) — full account deletion
- * needs service_role access this client-side app doesn't have, so users are
- * pointed to email support instead. See auth.jsx's deleteMyData() docstring.
+ * ⚠ CET ÉCRAN N'EST PLUS RÉSERVÉ AUX PERSONNES CONNECTÉES.
+ *
+ * Le commentaire précédent affirmait « logged-in users only (guests have nothing stored
+ * server-side by construction) ». C'est devenu faux : l'analyse pseudonymisée du
+ * questionnaire ne suppose aucun compte, et elle concerne justement les visiteurs qui n'en
+ * ont pas. Les réserver de cet écran rendait mensongère la phrase « vous pouvez changer
+ * d'avis à tout moment » affichée avant le quiz.
+ *
+ * DEUX TRAITEMENTS DISTINCTS, DEUX BLOCS SÉPARÉS, JAMAIS FUSIONNÉS :
+ *   • sauvegarde liée au COMPTE — visible et actionnable seulement s'il existe un compte ;
+ *   • analyse pseudonymisée du QUESTIONNAIRE — toujours actionnable.
+ *
+ * Le bloc « compte » ne doit jamais prétendre que rien n'est transmis : il ne connaît pas
+ * l'état de l'autre finalité. Il décrit son propre état, rien de plus.
+ *
+ * Ne touche pas aux données locales du navigateur (voir `resetProfile`) ni au compte
+ * d'authentification lui-même.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore.js';
 import { PURPOSES } from '../lib/consent.js';
 import CollectionConsentControl from './CollectionConsentControl.jsx';
+import { withdrawalState as readQueueState } from '../lib/withdrawalQueue.js';
+
+/** État du retrait pour la finalité politique, lu depuis le stockage du terminal. */
+function readWithdrawalState() {
+  const storage = typeof localStorage !== 'undefined' ? localStorage : null;
+  return readQueueState(storage, { purpose: PURPOSES.POLITICAL_ANALYTICS });
+}
 import { useAuth } from '../lib/auth.jsx';
 
 export default function DataControlsModal({ onClose }) {
@@ -23,8 +39,21 @@ export default function DataControlsModal({ onClose }) {
   const recordCollectionConsent = useStore(s => s.recordCollectionConsent);
   const withdrawCollectionConsent = useStore(s => s.withdrawCollectionConsent);
   const exportProfile  = useStore(s => s.exportProfile);
-  const { revokeConsent, deleteMyData } = useAuth();
+  const { user, revokeConsent, deleteMyData } = useAuth();
   const fr = language === 'fr';
+
+  // ⚠ L'état affiché vient de la FILE PERSISTANTE, jamais du store : annoncer « supprimé »
+  // parce qu'un booléen Zustand a changé afficherait une confirmation que le serveur n'a
+  // jamais donnée.
+  const [withdrawal, setWithdrawal] = useState(() => readWithdrawalState());
+  useEffect(() => {
+    let vivant = true;
+    import('../lib/attemptSession.js')
+      .then(({ attemptSession }) => attemptSession.retryWithdrawals())
+      .then(() => { if (vivant) setWithdrawal(readWithdrawalState()); })
+      .catch(() => { /* module indisponible */ });
+    return () => { vivant = false; };
+  }, []);
 
   const [revoking, setRevoking]             = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -65,7 +94,7 @@ export default function DataControlsModal({ onClose }) {
       <div className="bg-white rounded-t-2xl sm:rounded-xl shadow-xl w-full sm:max-w-md max-h-[92vh] overflow-y-auto">
         <div className="sticky top-0 bg-white rounded-t-2xl sm:rounded-t-xl border-b border-gray-100 px-6 pt-5 pb-4 flex items-start justify-between">
           <h2 className="text-base font-bold text-gray-900">
-            {fr ? 'Tes données en ligne' : 'Your online data'}
+            {fr ? 'Mes données et confidentialité' : 'My data and privacy'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-lg leading-none">✕</button>
         </div>
@@ -73,17 +102,23 @@ export default function DataControlsModal({ onClose }) {
         <div className="px-6 py-4 space-y-4 text-sm text-gray-700 leading-relaxed">
           {!confirmingDelete && (
             <>
+              {user && (
               <div className={`rounded-lg px-3 py-2.5 text-xs font-medium ${hasConsent ? 'bg-blue-50 text-blue-700' : 'bg-gray-50 text-gray-500'}`}>
                 {hasConsent
                   ? (fr
-                      ? '☁ Sauvegarde en ligne activée — tes réponses et ton profil sont stockés sur nos serveurs, liés à ton compte.'
-                      : '☁ Cloud save enabled — your answers and profile are stored on our servers, linked to your account.')
+                      ? '☁ Sauvegarde liée au compte activée — vos réponses et votre profil sont stockés sur nos serveurs, rattachés à votre compte.'
+                      : '☁ Account-linked save enabled — your answers and profile are stored on our servers, linked to your account.')
+                  // ⚠ NE PAS ÉCRIRE « rien ne quitte cet appareil » ICI. Cette phrase était
+                  // fausse dès que l'analyse pseudonymisée du questionnaire était acceptée :
+                  // deux traitements distincts, deux états distincts. Ce bloc ne décrit QUE
+                  // la sauvegarde liée au compte.
                   : (fr
-                      ? 'Sauvegarde en ligne désactivée — tes réponses restent uniquement sur cet appareil.'
-                      : 'Cloud save disabled — your answers stay only on this device.')}
+                      ? 'Sauvegarde liée au compte désactivée — rien n’est rattaché à votre compte.'
+                      : 'Account-linked save disabled — nothing is attached to your account.')}
               </div>
+              )}
 
-              {hasConsent && (
+              {user && hasConsent && (
                 <button
                   onClick={handleRevoke}
                   disabled={revoking}
@@ -92,18 +127,31 @@ export default function DataControlsModal({ onClose }) {
                   {revoking ? (fr ? 'Retrait en cours…' : 'Withdrawing…') : (fr ? 'Retirer mon accord' : 'Withdraw consent')}
                 </button>
               )}
-              <p className="text-xs text-gray-400">
-                {fr
-                  ? 'Retirer ton accord arrête toute nouvelle sauvegarde, mais ne supprime pas ce qui est déjà enregistré — utilise « Supprimer mes données » ci-dessous pour ça.'
-                  : 'Withdrawing consent stops any further save, but doesn’t delete what’s already stored — use "Delete my data" below for that.'}
-              </p>
+              {user && (
+                <p className="text-xs text-gray-400">
+                  {fr
+                    ? 'Retirer votre accord arrête toute nouvelle sauvegarde liée au compte, mais ne supprime pas ce qui est déjà enregistré — utilisez « Supprimer mes données » ci-dessous.'
+                    : 'Withdrawing consent stops any further account-linked save, but doesn’t delete what’s already stored — use "Delete my data" below.'}
+                </p>
+              )}
 
               {/* ── Collecte pseudonymisée du questionnaire — sans compte requis ── */}
               <CollectionConsentControl
                 decision={collectionDecision}
                 language={language}
+                withdrawalState={withdrawal}
+                onRetry={() => {
+                  import('../lib/attemptSession.js')
+                    .then(({ attemptSession }) => attemptSession.retryWithdrawals())
+                    .then(() => setWithdrawal(readWithdrawalState()))
+                    .catch(() => { /* hors navigateur : rien à rejouer */ });
+                }}
                 onGrant={() => recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: true }, { language })}
-                onWithdraw={() => withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language })}
+                onWithdraw={() => {
+                  withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language });
+                  // Laisse la synchronisation asynchrone déposer la tombstone avant de lire.
+                  setTimeout(() => setWithdrawal(readWithdrawalState()), 0);
+                }}
               />
 
               <div className="border-t border-gray-100 pt-4">
@@ -116,7 +164,7 @@ export default function DataControlsModal({ onClose }) {
 
                 {deleted ? (
                   <p className="text-xs font-medium text-green-700 bg-green-50 rounded-lg px-3 py-2.5">
-                    {fr ? '✓ Tes données en ligne ont été supprimées.' : '✓ Your online data has been deleted.'}
+                    {fr ? '✓ Mes données et confidentialité ont été supprimées.' : '✓ My data and privacy has been deleted.'}
                   </p>
                 ) : (
                   <button

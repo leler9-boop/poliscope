@@ -803,4 +803,49 @@ begin
 end $$;
 
 
+-- ─── 24. Cloisonnement des identifiants par finalité ────────────────────────
+-- Une ligne de consentement politique portant un identifiant de compte créerait la
+-- correspondance entre le pseudonyme des opinions et le compte. La base doit la REFUSER,
+-- pas seulement le client : un appel direct à l'API contournerait tout garde-fou frontend.
+do $$
+declare
+  v_refuse boolean := false;
+begin
+  begin
+    insert into private.consent_records
+      (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+    values (gen_random_uuid(), gen_random_uuid(), 'political_analytics', true, 'test', 'h', now());
+  exception when check_violation then
+    v_refuse := true;
+  end;
+
+  if not v_refuse then
+    raise exception
+      'ÉCHEC 24 — une ligne political_analytics a pu porter un user_id : le pseudonyme '
+      'politique est relié au compte';
+  end if;
+  raise notice 'OK 24 — political_analytics refuse tout identifiant de compte';
+end $$;
+
+do $$
+declare
+  v_refuse boolean := false;
+begin
+  begin
+    insert into private.consent_records
+      (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+    values (gen_random_uuid(), gen_random_uuid(), 'cloud_save', true, 'test', 'h', now());
+  exception when check_violation then
+    v_refuse := true;
+  end;
+
+  if not v_refuse then
+    raise exception
+      'ÉCHEC 25 — une ligne cloud_save a pu porter un pseudonyme d''analyse : le lien est '
+      'recréé par l''autre bout';
+  end if;
+  raise notice 'OK 25 — cloud_save refuse tout pseudonyme d''analyse';
+end $$;
+
+
 select 'TOUS LES TESTS DE LA PLATEFORME DE DONNÉES SONT PASSÉS' as resultat;

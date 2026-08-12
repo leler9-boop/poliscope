@@ -22,9 +22,15 @@ export default function CollectionConsentControl({
   language = 'fr',
   onGrant,
   onWithdraw,
+  onRetry = null,
+  /** 'none' | 'pending' | 'confirmed' — voir `withdrawalQueue.js`. */
+  withdrawalState = 'none',
 }) {
   const fr = language === 'fr';
   const granted = decision?.granted === true;
+  // ⚠ « Suppression confirmée » ne s'affiche JAMAIS sur la foi d'un changement d'état
+  // d'interface : l'état vient de la file persistante, qui ne se vide que sur réponse 2xx.
+  const enAttente = withdrawalState === 'pending';
 
   return (
     <div className="border-t border-gray-100 pt-4">
@@ -66,6 +72,24 @@ export default function CollectionConsentControl({
         >
           {fr ? 'Autoriser la collecte' : 'Allow collection'}
         </button>
+      )}
+
+      {!granted && decision && (
+        <p data-testid="withdrawal-state" className={`text-[11px] leading-relaxed mt-2 ${enAttente ? 'text-amber-700' : 'text-emerald-700'}`}>
+          {enAttente
+            ? (fr
+              ? 'Collecte arrêtée — suppression serveur en cours. Elle sera réessayée automatiquement au retour du réseau.'
+              : 'Collection stopped — server deletion pending. It will be retried automatically when the network returns.')
+            : (fr ? 'Suppression confirmée par le serveur.' : 'Deletion confirmed by the server.')}
+          {enAttente && onRetry && (
+            <>
+              {' '}
+              <button type="button" data-testid="retry-withdrawal" onClick={onRetry} className="underline underline-offset-2">
+                {fr ? 'Réessayer maintenant' : 'Retry now'}
+              </button>
+            </>
+          )}
+        </p>
       )}
 
       <p className="text-[11px] text-gray-400 leading-relaxed mt-2">
