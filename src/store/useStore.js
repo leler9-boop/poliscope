@@ -11,7 +11,7 @@ import { THEMES_ORDER, getQuestionQueue, getQuestionsByIds, questions as allQues
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { setMeasurementConsent } from '../lib/anonymous.js';
-import { normalizeConsent } from '../lib/consent.js';
+import { normalizeConsent, currentDecision, PURPOSES, ALL_PURPOSES } from '../lib/consent.js';
 import {
   normalizeThemeImportance, PRIORITY_SOURCE, VOTE_INFLUENCE_MULTIPLIER,
 } from '../engine/priorityWeights.js';
@@ -152,6 +152,12 @@ export const useStore = create(
       // aucun UUID déposé. Séparé de politicalData : accepter l'analyse de ses opinions ne
       // vaut pas acceptation d'un traceur, et inversement.
       consent: { politicalData: null, measurement: null, grantedAt: null, version: null },
+
+      // ── Décisions par FINALITÉ prises sous le texte courant (2026-08) ────────
+      // `null` = aucune décision. Distinct d'un refus : on n'a pas encore demandé.
+      // Chaque décision porte sa propre preuve (version du texte + empreinte), parce
+      // qu'un consentement sans trace de CE QUI a été présenté n'est pas un consentement.
+      collectionConsent: null,
 
       // ── Profile reveal (session-only) — true once after quiz completion ──
       profileRevealPending: false,
@@ -348,6 +354,51 @@ export const useStore = create(
        *   (identifiant persistant + événements de parcours). Non renseigné ⇒ refusé :
        *   la mesure ne démarre jamais par défaut.
        */
+      /**
+       * Enregistre des décisions PAR FINALITÉ sous le texte courant.
+       *
+       * ⚠ Le chemin de lecture (`effectiveConsent`) existait déjà, mais rien n'écrivait
+       * jamais `collectionConsent` : la collecte anonyme était donc structurellement
+       * impossible à accorder. L'utilisateur n'avait pas un refus par défaut — il n'avait
+       * aucun choix. C'est ce que cette action répare.
+       *
+       * Une finalité absente de `decisions` reste INCHANGÉE : on n'infère jamais un refus
+       * global à partir d'un choix partiel, et on n'écrase jamais une décision antérieure
+       * par omission.
+       *
+       * @param {Object<string, boolean>} decisions  finalité → accordé / refusé
+       * @param {{language?: string}} [options]      langue du texte réellement affiché
+       */
+      recordCollectionConsent: (decisions = {}, options = {}) => {
+        const language = options.language ?? get().language ?? 'fr';
+        const next = { ...(get().collectionConsent ?? {}) };
+        for (const [purpose, granted] of Object.entries(decisions)) {
+          if (!ALL_PURPOSES.includes(purpose)) continue;      // finalité inconnue : ignorée
+          if (granted !== true && granted !== false) continue; // ni accord ni refus : rien
+          next[purpose] = currentDecision(granted, { purpose, language });
+        }
+        set({ collectionConsent: next });
+        // La mesure d'audience pilote un identifiant persistant : elle doit s'aligner dans
+        // le même tick, sans quoi un refus laisserait le traceur en place.
+        if (PURPOSES.MEASUREMENT in decisions) {
+          setMeasurementConsent(decisions[PURPOSES.MEASUREMENT] === true);
+        }
+        syncAttemptConsent(get().consent, get());
+      },
+
+      /**
+       * Retrait. Enregistre un REFUS daté plutôt que d'effacer la décision : effacer
+       * reviendrait à perdre la preuve qu'un accord avait été donné puis repris.
+       * Les transmissions futures s'arrêtent immédiatement via `syncAttemptConsent`.
+       */
+      withdrawCollectionConsent: (purposes = ALL_PURPOSES, options = {}) => {
+        const list = Array.isArray(purposes) ? purposes : [purposes];
+        get().recordCollectionConsent(
+          Object.fromEntries(list.filter(p => ALL_PURPOSES.includes(p)).map(p => [p, false])),
+          options,
+        );
+      },
+
       setConsent: (granted, options = {}) => {
         const measurement = options.measurement === true;
         const consent = {
@@ -878,6 +929,7 @@ export const useStore = create(
         importedFrom: state.importedFrom,
         profileLastUpdated: state.profileLastUpdated,
         consent: state.consent,
+        collectionConsent: state.collectionConsent,
         lastLearn: state.lastLearn,
         knowledge: state.knowledge,
         parcoursDone: state.parcoursDone,

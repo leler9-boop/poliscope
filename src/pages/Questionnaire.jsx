@@ -16,9 +16,11 @@ import { NO_OPINION, isScorable } from '../engine/scorer.js';
 import { QUESTIONNAIRE_VERSION } from '../engine/versions.js';
 import { activeScoringVersion } from '../engine/scoringVersion.js';
 import { attemptSession } from '../lib/attemptSession.js';
+import { PURPOSES } from '../lib/consent.js';
 
 export default function Questionnaire() {
   const language             = useStore(s => s.language);
+  const recordCollectionConsent = useStore(s => s.recordCollectionConsent);
   const voteInfluence        = useStore(s => s.voteInfluence);
   const setVoteInfluence     = useStore(s => s.setVoteInfluence);
   const setVoteInfluenceDeclined = useStore(s => s.setVoteInfluenceDeclined);
@@ -84,7 +86,23 @@ export default function Questionnaire() {
     setInfluencePromptFor(resolveOpenPrompt({ question, currentAnswer, voteInfluence }));
   }, [question?.id, currentAnswer, voteInfluence]);
 
-  const handleIntroStart = () => {
+  /**
+   * Décision de collecte prise à l'entrée du questionnaire.
+   *
+   * ⚠ `accepted` est TOUJOURS un booléen explicite : l'écran n'offre pas de sortie neutre.
+   * Enregistrer un refus est aussi important qu'enregistrer un accord — sans lui, on ne
+   * saurait pas distinguer « a refusé » de « n'a pas encore été interrogé », et l'écran
+   * réapparaîtrait indéfiniment.
+   *
+   * Seules les finalités réellement décrites par cet écran sont enregistrées.
+   * `cloud_save` en est absente : elle transporte un identifiant de compte et se demande
+   * ailleurs. L'inclure ici fabriquerait un accord à un texte jamais présenté.
+   */
+  const handleIntroStart = (accepted) => {
+    recordCollectionConsent(
+      { [PURPOSES.POLITICAL_ANALYTICS]: accepted === true },
+      { language },
+    );
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
     setIntroSeen(true);
   };

@@ -1,6 +1,26 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
+/**
+ * POLISCOP — Écran d'entrée du questionnaire : conseils d'usage ET choix de collecte.
+ *
+ * ⚠ CE QUI ÉTAIT FAUX ICI
+ * -----------------------
+ * Cet écran affirmait sans condition que les réponses ne quittaient jamais le terminal.
+ * C'était inexact dans le principe (la plateforme de collecte anonyme est écrite et prête) et,
+ * surtout, cela remplaçait un choix par une affirmation : personne n'a jamais pu ACCEPTER
+ * la collecte, faute qu'on la lui propose. Un refus par défaut non demandé n'est pas un
+ * refus — c'est une absence de question.
+ *
+ * La phrase est donc devenue conditionnelle, et le choix est réellement offert : accepter,
+ * ou refuser et continuer sur l'appareil. Rien n'est précoché, les deux boutons ont le même
+ * poids visuel, et refuser n'enlève AUCUNE fonctionnalité du produit.
+ *
+ * ⚠ Ce consentement n'est PAS celui de la sauvegarde liée à un compte (`cloud_save`), qui
+ * transporte un identifiant de compte et se demande séparément dans `ConsentModal`.
+ *
+ * @param {(accepted: boolean) => void} onStart  décision explicite, jamais implicite
+ */
 export default function PreQuizModal({ language = 'fr', onStart }) {
   const content = {
     fr: {
@@ -11,8 +31,18 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         { icon: '?', title: '« Je ne sais pas »', text: 'Si vous ne connaissez pas le sujet ou n’avez pas d’avis, passez la question. Elle ne comptera pas dans votre profil.' },
         { icon: '💡', title: 'Besoin de comprendre ?', text: 'Le bouton « Comprendre cet enjeu » donne du contexte. La rubrique « J’y connais rien » permet d’apprendre les bases à votre rythme.' },
       ],
-      button: "C'est parti",
-      privacyNote: "Tes réponses restent sur cet appareil. Si tu crées un compte et actives la sauvegarde en ligne, on te demandera ton accord séparément avant d'envoyer quoi que ce soit.",
+      consentTitle: 'Nous aider à améliorer le questionnaire ?',
+      consentIntro: 'Vous pouvez nous laisser analyser ce parcours de façon anonyme. C’est un choix libre : le questionnaire et votre profil fonctionnent exactement pareil si vous refusez.',
+      collected: [
+        'vos réponses aux questions politiques',
+        'le temps passé activement sur chaque question',
+        'le mode de quiz et la version du questionnaire',
+        'l’importance que vous donnez aux thèmes et l’influence sur votre vote',
+      ],
+      never: 'Jamais dans ce flux : votre nom, votre adresse électronique, ni aucun identifiant de compte.',
+      accept: 'Accepter et commencer',
+      decline: 'Refuser et continuer sur cet appareil',
+      reversible: 'Vous pouvez changer d’avis à tout moment depuis « Mes données ». Un retrait arrête immédiatement les envois suivants.',
     },
     en: {
       title: 'Before you start',
@@ -22,8 +52,18 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
         { icon: '?', title: '“I don’t know”', text: 'If you do not know the topic or have no opinion, skip it. It will not count toward your profile.' },
         { icon: '💡', title: 'Need some context?', text: 'Use “Understand this issue” for a quick explanation. Visit Politics 101 to learn the basics at your own pace.' },
       ],
-      button: "Let's go",
-      privacyNote: "Your answers stay on this device. If you create an account and enable cloud save, we'll ask your consent separately before sending anything.",
+      consentTitle: 'Help us improve the questionnaire?',
+      consentIntro: 'You can let us analyse this session anonymously. It is entirely your choice: the questionnaire and your profile work exactly the same if you decline.',
+      collected: [
+        'your answers to the political questions',
+        'the time actively spent on each question',
+        'the quiz mode and questionnaire version',
+        'the importance you give to themes and the influence on your vote',
+      ],
+      never: 'Never in this flow: your name, your email address, or any account identifier.',
+      accept: 'Accept and start',
+      decline: 'Decline and continue on this device',
+      reversible: 'You can change your mind at any time from “My data”. Withdrawing stops all further sending immediately.',
     },
   };
 
@@ -31,15 +71,18 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
       style={{ backgroundColor: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={c.title}
     >
       <motion.div
-        className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md"
+        className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md my-8"
         initial={{ scale: 0.92, opacity: 0, y: 16 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0 }}
@@ -60,18 +103,35 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
             </div>
           ))}
         </div>
-        <button
-          onClick={onStart}
-          className="w-full py-3 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold transition-colors"
-        >
-          {c.button}
-        </button>
-        {/* Privacy notice — informational only, NOT a consent mechanism.
-            Real RGPD consent (political-opinion data, Article 9) happens later,
-            explicitly, in ConsentModal.jsx — see audit/rgpd-remediation-2026-07/. */}
-        <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">
-          {c.privacyNote}
-        </p>
+
+        {/* ── Choix de collecte : explicite, symétrique, rien de précoché ────── */}
+        <div className="rounded-xl border border-slate-200 p-3.5 mb-4 text-left">
+          <p className="text-sm font-semibold text-slate-800 mb-1">{c.consentTitle}</p>
+          <p className="text-xs text-slate-500 leading-relaxed mb-2">{c.consentIntro}</p>
+          <ul className="text-xs text-slate-600 leading-relaxed list-disc pl-4 mb-2">
+            {c.collected.map(item => <li key={item}>{item}</li>)}
+          </ul>
+          <p className="text-[11px] text-slate-500 leading-relaxed">{c.never}</p>
+        </div>
+
+        {/* Les deux issues ont le MÊME poids : un bouton refus en lien discret
+            transformerait le refus en parcours du combattant. */}
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => onStart(true)}
+            className="w-full py-3 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold transition-colors"
+          >
+            {c.accept}
+          </button>
+          <button
+            onClick={() => onStart(false)}
+            className="w-full py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-colors"
+          >
+            {c.decline}
+          </button>
+        </div>
+
+        <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">{c.reversible}</p>
       </motion.div>
     </motion.div>
   );
