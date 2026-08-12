@@ -10,10 +10,11 @@ import { THEMES_ORDER, THEME_LABELS, THEME_COLORS, questions, TEST_MODES, MODE_Q
 // profils de référence documentés, pas des candidats à une élection en cours. Le classement
 // des candidats 2027 passe exclusivement par `rankCandidates` (positions approuvées).
 import { rankByAlignment as rankLegacyFigures, alignmentBarColor, alignmentColorClass } from '../engine/matcher.js';
-import { rankCandidatesForSurface, MATCH_MODE, rankBothWays } from '../engine/candidateRanking.js';
+import { MATCH_MODE, rankBothWays } from '../engine/candidateRanking.js';
 import { answeredThemeCount, VOTE_INFLUENCE_LEVEL } from '../engine/priorityWeights.js';
 import { EDITORIAL_MATCH_CONFIG } from '../engine/editorialMatch.js';
 import EstimateNotice from '../components/EstimateNotice.jsx';
+import CandidateRankingPanel, { RANKING_MODE } from '../components/CandidateRankingPanel.jsx';
 
 /** Pole labels for each theme axis (0 = left pole, 100 = right pole). */
 const THEME_AXES = {
@@ -199,6 +200,9 @@ export default function Profile() {
   // ── RGPD consent gate for cloud save (main button + migration banner) ─────
   const consent = useStore(s => s.consent);
   const [showConsentModal, setShowConsentModal] = useState(false);
+  // Lecture active du classement. Remontée ici pour que l'aperçu de l'en-tête et la
+  // liste ne puissent pas désigner deux personnes différentes.
+  const [rankingMode, setRankingMode] = useState(RANKING_MODE.IDEOLOGICAL);
   const [showDataControls, setShowDataControls] = useState(false);
   // Which button opened the modal, so we know what to resume on "I agree" —
   // both currently do the exact same save, kept distinct for setPendingMigration(false).
@@ -292,34 +296,7 @@ export default function Profile() {
   // 2026-08-10 v2 : le corpus couvre les 128 questions. La page ne doit donc plus limiter le
   // matching aux 16 CORE : un parcours Standard, Approfondi ou un affinage doit réellement
   // améliorer la comparaison candidat.
-  const { results: rankedCandidates, unscored: unscoredCandidates, matchMode } = useMemo(() => {
-    if (!themes || fr2027Candidates.length === 0) return { results: [], unscored: [], matchMode: null };
-    const r = rankCandidatesForSurface({
-      candidates: fr2027Candidates,
-      userThemes: themes,
-      userAnswers: answers ?? {},
-      // ⚠ Second motif, distinct de la couverture candidat : `userAnswered` est compté SUR
-      // L'UNIVERS passé au moteur (editorialMatch.js). Tronquer l'univers tronquait le
-      // dénominateur du contrôle de couverture, qui ne pouvait plus se déclencher — une
-      // personne ayant répondu à 64 questions était classée sur 16 avec un ratio de 1,0.
-      // Aucune des 18 questions `voteInfluencePrompt` n'étant CORE, les influences
-      // recueillies étaient elles aussi hors du calcul.
-      questions,
-      questionSet: 'general',
-      // Voie éditoriale demandée EXPLICITEMENT pour tous les candidats. Le passage en
-      // mode strict sera une décision produit, pas une conséquence des données disponibles.
-      mode: MATCH_MODE.EDITORIAL,
-      priorityOrder: priorityOrder ?? [],
-      themeWeights: themeWeights ?? null,
-      language,
-    });
-    // Les surfaces existantes attendent un objet candidat plat portant `alignment`.
-    return {
-      results: r.results.map(x => ({ ...x.candidate, alignment: x.match.score, match: x.match })),
-      unscored: r.unscored.map(x => ({ ...x.candidate, match: x.match })),
-      matchMode: r.mode,
-    };
-  }, [themes, answers, fr2027Candidates, priorityOrder, themeWeights, language]);
+
 
   // ── LES DEUX RÉSULTATS ────────────────────────────────────────────────────
   // Ressemblance politique (réponses seules) et proximité électorale (pondérée par les
@@ -336,6 +313,28 @@ export default function Profile() {
       voteInfluence: voteInfluence ?? {},
     });
   }, [answers, fr2027Candidates, themeImportance, voteInfluence]);
+
+  // ⚠ UNE SEULE SOURCE DE CLASSEMENT.
+  //
+  // Cette page appelait le moteur DEUX fois : un classement de surface pour la liste
+  // « Candidats 2027 » et l'aperçu de l'en-tête, `rankBothWays()` pour les deux cartes de
+  // synthèse. Deux appels, deux résultats, aucune garantie qu'ils désignent la même
+  // personne — et rien à l'écran pour dire lequel faisait foi.
+  //
+  // `rankedCandidates` dérive désormais du classement affiché, dans la lecture choisie.
+  // Les surfaces existantes attendent un objet candidat plat portant `alignment` : on
+  // conserve cette forme, mais elle est PROJETÉE depuis la source unique.
+  const { results: rankedCandidates, unscored: unscoredCandidates } = useMemo(() => {
+    const active = dualRanking?.[rankingMode];
+    if (!active) return { results: [], unscored: [] };
+    return {
+      results: active.results.map(x => ({ ...x.candidate, alignment: x.match.score, match: x.match })),
+      unscored: active.unscored.map(x => ({ ...x.candidate, match: x.match })),
+    };
+  }, [dualRanking, rankingMode]);
+
+  // La voie reste une DÉCISION produit explicite, pas une conséquence des données.
+  const matchMode = MATCH_MODE.EDITORIAL;
 
   // ── COMPTEURS D'INFLUENCE : quatre nombres DISTINCTS ──────────────────────
   //
@@ -914,7 +913,9 @@ export default function Profile() {
                   transition={{ delay: 0.58 }}
                 >
                   <span className="text-xs font-semibold text-slate-400 shrink-0">
-                    {language === 'fr' ? 'Meilleur match 2027' : 'Best 2027 match'}
+                    {rankingMode === RANKING_MODE.ELECTORAL
+                      ? (language === 'fr' ? 'En tête selon vos priorités' : 'Leading by your priorities')
+                      : (language === 'fr' ? 'En tête par ressemblance' : 'Leading by resemblance')}
                   </span>
                   {/* `sm:contents` drops this wrapper from the desktop layout (children
                       become direct flex items of the row above, unchanged from before) —
@@ -1180,86 +1181,29 @@ export default function Profile() {
       )}
 
       {/* ═══ CANDIDATS 2027 — now before axes for mobile-first hierarchy ═══ */}
-      {dualRanking?.ideological.results.length > 0 && (
-        <div className="mb-6 sm:mb-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-          <h2 className="font-bold text-slate-900 text-lg tracking-tight mb-1">
-            {language === 'fr' ? 'Deux façons de vous comparer' : 'Two ways of comparing you'}
-          </h2>
-          <p className="text-xs text-slate-500 leading-relaxed mb-4">
-            {language === 'fr'
-              ? 'Ces deux résultats peuvent être différents. Vous pouvez ressembler globalement à un candidat, mais préférer un autre candidat sur les sujets les plus importants pour vous.'
-              : 'These two results can differ. You may resemble one candidate overall, yet prefer another on the topics that matter most to you.'}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                {language === 'fr' ? 'Le candidat dont les idées vous ressemblent le plus' : 'Closest to your ideas'}
-              </p>
-              <p className="text-sm font-bold text-slate-900">{dualRanking.ideological.results[0].candidate.name}</p>
-              <p className="text-lg font-bold tabular-nums text-slate-900">
-                {dualRanking.ideological.results[0].match.score}
-                <span className="text-xs font-medium text-slate-400"> / 100</span>
-              </p>
-              <p className="text-[11px] text-slate-500 mt-1">
-                {language === 'fr'
-                  ? `${dualRanking.ideological.results[0].match.questionsCompared} réponses comparées.`
-                  : `${dualRanking.ideological.results[0].match.questionsCompared} answers compared.`}
-              </p>
-            </div>
+      {/* ═══ UN SEUL CLASSEMENT, PILOTÉ PAR UN SÉLECTEUR ═══════════════════════
+          Remplace trois verdicts concurrents : deux cartes de synthèse et une ancienne
+          liste « Candidats 2027 » calculée par un appel séparé du moteur. Trois nombres
+          pour la même question, sans que rien n'indique lequel faisait foi. */}
+      <CandidateRankingPanel
+        dualRanking={dualRanking}
+        language={language}
+        themesAnsweredCount={themesAnsweredCount}
+        mode={rankingMode}
+        onModeChange={setRankingMode}
+      />
 
-            {/* ⚠ LIBELLÉ CONDITIONNÉ AUX DONNÉES RÉELLEMENT RECUEILLIES.
-                Parler de « décisions qui peuvent influencer votre vote » alors qu'aucune
-                influence n'a été demandée décrirait une donnée qui n'existe pas : le calcul
-                reposerait entièrement sur le multiplicateur neutre par défaut. */}
-            {dualRanking.electoral.results.length > 0 ? (
-              <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  {influenceInComparison > 0
-                    ? (language === 'fr'
-                      ? 'Le candidat le plus proche sur les thèmes et les décisions qui peuvent influencer votre vote'
-                      : 'Closest on the themes and decisions that could influence your vote')
-                    : (language === 'fr'
-                      ? 'Le candidat le plus proche sur les thèmes les plus importants pour vous'
-                      : 'Closest on the themes that matter most to you')}
-                </p>
-                <p className="text-sm font-bold text-slate-900">{dualRanking.electoral.results[0].candidate.name}</p>
-                <p className="text-lg font-bold tabular-nums text-slate-900">
-                  {dualRanking.electoral.results[0].match.score}
-                  <span className="text-xs font-medium text-slate-400"> / 100</span>
-                </p>
-                {influenceInComparison === 0 && (
-                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                    {/* Deux situations DIFFÉRENTES, jamais confondues : n'avoir rien indiqué,
-                        ou avoir indiqué des influences que ce calcul ne peut pas utiliser
-                        faute de position documentée chez les candidats. */}
-                    {influenceStated === 0
-                      ? (language === 'fr'
-                        ? 'Ce résultat tient compte de l’importance donnée aux grands thèmes. Vous n’avez pas encore indiqué quelles décisions précises pourraient influencer votre vote.'
-                        : 'This result reflects the importance given to broad themes. You have not yet said which specific decisions could influence your vote.')
-                      : (language === 'fr'
-                        ? `Ce résultat tient compte de l’importance donnée aux grands thèmes, mais pas encore des ${influenceStated} décision(s) que vous avez signalées : les candidats n’ont pas de position documentée sur ces questions précises.`
-                        : `This result reflects the importance given to broad themes, but not yet the ${influenceStated} decision(s) you flagged: candidates have no documented position on those specific questions.`)}
-                  </p>
-                )}
-                <p className="text-[11px] text-slate-500 mt-1">
-                  {language === 'fr'
-                    ? `${dualRanking.electoral.results[0].match.questionsWeighted} question(s) pesant dans le calcul · ${themesAnsweredCount} thème(s) que vous avez évalué(s) · ${influenceStated} décision(s) signalée(s), dont ${influenceInComparison} utilisée(s) ici${influenceOutsideComparison > 0 ? `, ${influenceOutsideComparison} hors comparaison` : ''}${influenceNullified > 0 ? `, ${influenceNullified} déclarée(s) sans effet sur votre vote` : ''}.`
-                    : `${dualRanking.electoral.results[0].match.questionsWeighted} weighted question(s) · ${themesAnsweredCount} theme(s) you rated · ${influenceStated} decision(s) flagged, ${influenceInComparison} used here${influenceOutsideComparison > 0 ? `, ${influenceOutsideComparison} outside this comparison` : ''}${influenceNullified > 0 ? `, ${influenceNullified} stated as not affecting your vote` : ''}.`}
-                </p>
-              </div>
-            ) : (
-              <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  {language === 'fr' ? 'Classement selon vos priorités' : 'Ranking by your priorities'}
-                </p>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {language === 'fr'
-                    ? 'Votre ressemblance politique reste disponible, mais aucun classement selon vos priorités ne peut être calculé avec vos choix actuels.'
-                    : 'Your political resemblance is still available, but no ranking by your priorities can be computed with your current choices.'}
-                </p>
-              </div>
-            )}
-          </div>
+      {dualRanking?.ideological.results.length > 0 && (
+        <div className="mb-6 sm:mb-8">
+          {matchMode === MATCH_MODE.EDITORIAL && (
+            <EstimateNotice
+              language={language}
+              questionsCompared={dualRanking.ideological.results[0].match.questionsCompared}
+              questionsDocumented={dualRanking.ideological.results[0].match.questionsAvailable}
+              userAnswered={dualRanking.ideological.results[0].match.userAnswered}
+              updatedAt={dualRanking.ideological.results[0].match.updatedAt}
+            />
+          )}
           <button
             type="button"
             onClick={openPriorityEditor}
@@ -1270,119 +1214,13 @@ export default function Profile() {
           {dualRanking.sameWinner && dualRanking.electoral.results.length > 0 && (
             <p className="text-xs text-slate-500 mt-3">
               {language === 'fr'
-                ? 'Ici, les deux méthodes désignent la même personne. Elles restent calculées séparément.'
-                : 'Here, both methods point to the same person. They are still computed separately.'}
+                ? 'Ici, les deux lectures désignent la même personne. Elles restent calculées séparément.'
+                : 'Here, both readings point to the same person. They are still computed separately.'}
             </p>
           )}
         </div>
       )}
 
-      {rankedCandidates.length > 0 && (
-        <motion.div
-          className="mb-6 sm:mb-8"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {matchMode === MATCH_MODE.EDITORIAL && (
-            <EstimateNotice
-              language={language}
-              questionsCompared={rankedCandidates[0]?.match?.questionsCompared ?? null}
-              questionsDocumented={rankedCandidates[0]?.match?.questionsAvailable ?? null}
-              userAnswered={rankedCandidates[0]?.match?.userAnswered ?? null}
-              updatedAt={rankedCandidates[0]?.match?.updatedAt ?? null}
-            />
-          )}
-          <div className="flex items-baseline justify-between mb-4 gap-3">
-            <div>
-              <h2 className="font-bold text-slate-900 text-lg tracking-tight">
-                {language === 'fr' ? 'Candidats 2027' : '2027 Candidates'}
-              </h2>
-              <p className="text-sm text-slate-500 mt-1">
-                {language === 'fr' ? 'Votre proximité avec les candidats déclarés' : 'Your proximity to declared candidates'}
-              </p>
-              {/* Explicitation du nombre affiché : il ressemblait à un pourcentage sans en
-                  être un. Une phrase, au plus près du chiffre — pas une note de bas de page. */}
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed max-w-md">
-                {language === 'fr'
-                  ? <>Indice de proximité sur 100 — pas un pourcentage d’accord, pas une prédiction, pas une recommandation de vote. Calculé sur {answeredTotal} réponse{answeredTotal > 1 ? 's' : ''}, pondéré par vos priorités.</>
-                  : <>Proximity index out of 100 — not a percentage of agreement, not a prediction, not a voting recommendation. Computed from {answeredTotal} answer{answeredTotal > 1 ? 's' : ''}, weighted by your priorities.</>}
-              </p>
-            </div>
-            {!isSharedView && (
-              <button
-                onClick={() => navigate('elections')}
-                className="flex-shrink-0 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-              >
-                {language === 'fr' ? 'Voir tout →' : 'See all →'}
-              </button>
-            )}
-          </div>
-
-          <div className="space-y-2.5">
-            {rankedCandidates.slice(0, 5).map((candidate, idx) => {
-              const barColor = alignmentBarColor(candidate.alignment);
-              return (
-                <motion.div
-                  key={candidate.id}
-                  className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5"
-                  style={idx === 0 ? { borderLeftWidth: 4, borderLeftColor: candidate.color } : {}}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: candidate.color }} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-2 mb-0.5">
-                        <div className="flex items-center gap-2 min-w-0">
-                          {idx === 0 && (
-                            <span
-                              className="text-xs font-semibold px-1.5 py-0.5 rounded-full text-white flex-shrink-0"
-                              style={{ backgroundColor: candidate.color }}
-                            >
-                              {language === 'fr' ? '✓ 1er' : '✓ #1'}
-                            </span>
-                          )}
-                          <span className="font-semibold text-slate-900 text-sm truncate">{candidate.name}</span>
-                        </div>
-                        <motion.span
-                          className="text-xs font-bold tabular-nums flex-shrink-0"
-                          style={{ color: barColor }}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.45 + idx * 0.07 }}
-                        >
-                          {formatProximity(candidate.alignment)}
-                        </motion.span>
-                      </div>
-                      <p className="text-xs text-slate-400 truncate">{candidate.party[language]}</p>
-                    </div>
-                  </div>
-                  <div className="mt-2.5 h-1 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: barColor }}
-                      initial={{ width: '0%' }}
-                      animate={{ width: scoreToCssPercent(candidate.alignment) }}
-                      transition={{ duration: 0.75, delay: 0.42 + idx * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {!isSharedView && (
-            <button
-              onClick={() => navigate('elections')}
-              className="mt-4 w-full flex items-center justify-center gap-2 text-sm font-semibold text-slate-600 border border-slate-200 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 px-4 py-3 rounded-2xl transition-colors"
-            >
-              🗳️ {language === 'fr' ? 'Comparer avec tous les candidats' : 'Compare with all candidates'}
-            </button>
-          )}
-        </motion.div>
-      )}
 
       {/* Ideological axes */}
       <motion.div
