@@ -17,11 +17,13 @@ import {
   SECOND_READING, REVIEW_VERDICT, secondReadingFor, stillNeedingReview,
 } from '../../src/data/candidateReviewLog.js';
 
-const CODEES = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
+const CODEES = CANDIDATE_POSITIONS.filter(p => p.codedBy);
 
 // ─── Couverture de la passe ─────────────────────────────────────────────────
 
 test('les 23 positions codées ont toutes une entrée de seconde lecture', () => {
+  // ⚠ Après réconciliation, `pending_review` ne contient plus les 23 : douze sont approuvées.
+  // On repart donc du CODAGE, qui est le fait stable, et non du statut, qui en découle.
   assert.equal(CODEES.length, 23);
   const manquantes = CODEES
     .filter(p => !secondReadingFor(p.candidateId, p.questionId))
@@ -83,15 +85,32 @@ test('aucune position `pending_review` n’entre dans la voie stricte', () => {
   }
 });
 
-test('la seconde lecture ne suffit PAS à publier : le statut reste à décider', () => {
-  // Le journal enregistre un constat documentaire ; il ne bascule pas `reviewStatus` de
-  // lui-même. Une relecture par un modèle n'est pas une validation éditoriale indépendante.
+test('une position approuvée dit TOUJOURS que sa relecture est celle d’un modèle', () => {
+  // ⚠ Ce test exigeait auparavant que la passe ne promeuve RIEN. La réconciliation demandée
+  // applique les douze constats concluants — mais la garantie de fond est déplacée, pas
+  // supprimée : une relecture par un modèle ne doit jamais pouvoir passer pour une
+  // validation éditoriale humaine. C'est `reviewerType` qui porte cette vérité, et il est
+  // désormais obligatoire sur chaque position publiable.
   const approuveesParLaPasse = SECOND_READING.filter(r => r.verdict === REVIEW_VERDICT.APPROVED);
-  assert.ok(approuveesParLaPasse.length > 0);
+  assert.equal(approuveesParLaPasse.length, 12);
   for (const r of approuveesParLaPasse) {
     const position = CANDIDATE_POSITIONS.find(p => p.candidateId === r.candidateId && p.questionId === r.questionId);
-    assert.equal(position.reviewStatus, REVIEW_STATUS.PENDING_REVIEW,
-      `${r.questionId} : la passe de relecture a promu une position, ce qu'elle n'a pas autorité à faire`);
+    assert.equal(position.reviewStatus, REVIEW_STATUS.APPROVED);
+    assert.equal(position.reviewerType, 'model',
+      `${r.questionId} : une relecture par modèle est présentée comme humaine`);
+    assert.equal(position.reviewedBy, r.reviewedBy);
+    assert.ok(position.reviewLogRef, 'le lien déterministe vers le journal est obligatoire');
+    assert.notEqual(position.codedBy, position.reviewedBy,
+      'le codeur et le relecteur ne peuvent pas être la même personne');
+  }
+});
+
+test('les positions recodées par le relecteur restent EN ATTENTE', () => {
+  const recodees = CANDIDATE_POSITIONS.filter(p => p.codedBy?.startsWith('claude-opus-5'));
+  assert.equal(recodees.length, 3, 'q6 et q16 corrigées, q8 recodée sur une autre source');
+  for (const p of recodees) {
+    assert.equal(p.reviewStatus, REVIEW_STATUS.PENDING_REVIEW);
+    assert.equal(p.reviewedBy, null, 'le relecteur se relirait lui-même');
   }
 });
 

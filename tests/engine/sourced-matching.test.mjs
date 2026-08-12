@@ -30,7 +30,7 @@ const allAnswers = Object.fromEntries(fr2027.specificQuestions.map(q => [q.id, 3
 
 test('constat : zéro position approuvée dans le dépôt', () => {
   const approved = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
-  assert.equal(approved.length, 0,
+  assert.equal(approved.length, 12,
     'si ce test échoue, des positions ont été approuvées : mettre à jour le rapport et la doc');
 });
 
@@ -47,7 +47,12 @@ test('aucun candidat 2027 n’obtient de score public sans position approuvée',
     });
     assert.equal(m.score, null,
       `${c.id} obtient ${m.score}/100 alors qu'aucune de ses positions n'est sourcée et relue`);
-    assert.equal(m.reason, 'no_sourced_positions', `${c.id} : motif inattendu « ${m.reason} »`);
+    // ⚠ Le motif dépend désormais de l'état du corpus : sans position approuvée c'est
+    // `no_sourced_positions`, avec quelques-unes mais trop peu de thèmes c'est
+    // `no_weighted_theme` ou `insufficient_coverage`. Les trois disent la même chose de
+    // fond — rien de publiable — et figer le premier reviendrait à figer un état du corpus.
+    assert.ok(['no_sourced_positions', 'no_weighted_theme', 'insufficient_coverage'].includes(m.reason),
+      `${c.id} : motif inattendu « ${m.reason} »`);
   }
 });
 
@@ -225,7 +230,10 @@ test('le corpus Lisnard devient calculable après — et seulement après — un
   // qu'une vraie relecture ne débouchera pas sur un candidat toujours inclassable.
   const independentlyApproved = CANDIDATE_POSITIONS
     .filter(position => position.candidateId === 'david-lisnard'
-      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+      // On simule « toutes les positions CODÉES relues indépendamment ». Filtrer sur
+      // `pending_review` ferait rétrécir la simulation à mesure que de vraies approbations
+      // arrivent — le test mesurerait alors de moins en moins de chose.
+      && position.codedBy)
     .map(position => ({
       ...position,
       reviewStatus: REVIEW_STATUS.APPROVED,
@@ -251,7 +259,10 @@ test('le corpus Lisnard devient calculable après — et seulement après — un
 test('le corpus Attal reste honnêtement insuffisant même après une future relecture', () => {
   const independentlyApproved = CANDIDATE_POSITIONS
     .filter(position => position.candidateId === 'gabriel-attal'
-      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+      // On simule « toutes les positions CODÉES relues indépendamment ». Filtrer sur
+      // `pending_review` ferait rétrécir la simulation à mesure que de vraies approbations
+      // arrivent — le test mesurerait alors de moins en moins de chose.
+      && position.codedBy)
     .map(position => ({
       ...position,
       reviewStatus: REVIEW_STATUS.APPROVED,
@@ -276,7 +287,10 @@ test('le corpus Attal reste honnêtement insuffisant même après une future rel
 test('l’étiquette communiste de Roussel n’invente pas un score sans couverture factuelle suffisante', () => {
   const independentlyApproved = CANDIDATE_POSITIONS
     .filter(position => position.candidateId === 'fabien-roussel'
-      && position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW)
+      // On simule « toutes les positions CODÉES relues indépendamment ». Filtrer sur
+      // `pending_review` ferait rétrécir la simulation à mesure que de vraies approbations
+      // arrivent — le test mesurerait alors de moins en moins de chose.
+      && position.codedBy)
     .map(position => ({
       ...position,
       reviewStatus: REVIEW_STATUS.APPROVED,

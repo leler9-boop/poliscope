@@ -17,6 +17,69 @@
 // pas une donnée. Aucune position n'est publiée sans `sourceIds` non vide et `reviewedBy`.
 
 /** Niveau de source, par ordre de préséance décroissante (cf. prompts/election-watch-2027.md). */
+import { secondReadingFor, REVIEW_VERDICT, REVIEW_PASS_VERSION } from './candidateReviewLog.js';
+
+/**
+ * Applique le verdict de SECONDE LECTURE à une position codée.
+ *
+ * ⚠ LIEN DÉTERMINISTE, PAS RECOPIE. Le statut publiable DÉCOULE du journal ; il n'est pas
+ * saisi ici. Deux sources de vérité divergent au premier oubli — et c'est exactement ce qui
+ * s'était produit : le journal portait douze constats concluants pendant que `check-matching`
+ * annonçait zéro position approuvée.
+ *
+ * ⚠ `approved` NE VEUT PAS DIRE « validé par un humain ». `reviewerType: 'model'` voyage avec
+ * chaque position : la voie stricte s'appuie ici sur un contrôle documentaire, pas sur une
+ * validation éditoriale indépendante. Ne jamais présenter ces positions autrement.
+ */
+function applySecondReading(base) {
+  const review = base.codedBy ? secondReadingFor(base.candidateId, base.questionId) : null;
+  if (!review) return base;
+
+  const trace = {
+    reviewLogRef: `${REVIEW_PASS_VERSION}:${base.candidateId}:${base.questionId}`,
+    reviewedBy: review.reviewedBy,
+    reviewerType: review.reviewerType,
+    reviewVersion: review.reviewerVersion,
+    reviewedAt: review.reviewedAt,
+    reviewVerdict: review.verdict,
+  };
+
+  // Une position CODÉE PAR LE RELECTEUR ne peut jamais être approuvée par lui, quel que soit
+  // le verdict porté sur le codage précédent : il se relirait lui-même.
+  if (base.codedBy.startsWith(review.reviewedBy)) {
+    return {
+      ...base,
+      reviewLogRef: trace.reviewLogRef,
+      reviewerType: review.reviewerType,
+      reviewedBy: null,
+      reviewStatus: REVIEW_STATUS.PENDING_REVIEW,
+      reviewVerdict: 'recoded_by_reviewer',
+    };
+  }
+
+  if (review.verdict === REVIEW_VERDICT.APPROVED) {
+    return { ...base, ...trace, reviewStatus: REVIEW_STATUS.APPROVED };
+  }
+  if (review.verdict === REVIEW_VERDICT.CORRECTED) {
+    return {
+      ...base, ...trace,
+      stance: review.suggestedStance,
+      codedBy: `${review.reviewedBy}-recode-${review.reviewedAt}`,
+      // ⚠ PAS de `supersedesId` ici. La correction ne crée pas une SECONDE ligne : elle
+      // amende celle-ci. Pointer vers une position qui n'existe pas comme entrée distincte
+      // fabriquerait une référence morte. La trace du codage antérieur vit dans le journal
+      // de relecture (`reviewLogRef`, avec `codedStance` et `suggestedStance`).
+      reviewedBy: null,
+      reviewStatus: REVIEW_STATUS.PENDING_REVIEW,
+    };
+  }
+  if (review.verdict === REVIEW_VERDICT.REJECTED) {
+    return { ...base, ...trace, reviewStatus: REVIEW_STATUS.REJECTED };
+  }
+  // `unverified` : rien n'est conclu, la position reste où elle était.
+  return { ...base, ...trace, reviewStatus: REVIEW_STATUS.PENDING_REVIEW, reviewedBy: null };
+}
+
 export const SOURCE_LEVEL = {
   /** Site officiel de campagne, programme PDF, discours intégral. */
   PRIMARY_OFFICIAL: 'primary_official',
@@ -766,12 +829,17 @@ export const CANDIDATE_POSITIONS = [
         reasoning: 'Le projet accroît explicitement les outils, pouvoirs et moyens des forces de sécurité et de la justice.',
         evidenceType: 'programme', confidence: 0.98, validFrom: '2026-08-10',
       },
+      // ⚠ RECODÉE APRÈS SECONDE LECTURE. Le codage d'origine s'appuyait sur une page ne
+      // traitant que des impôts de PRODUCTION (C3S, CVAE) — un autre prélèvement, un autre
+      // débat. La question porte sur l'impôt sur les SOCIÉTÉS. Source remplacée par la page
+      // fiscale, qui l'énonce. Codée par le relecteur : elle attend la lecture d'un tiers.
       fr_2027_q8: {
         stance: 2,
-        sourceIds: ['src-lisnard-programme-ambition-2027'],
-        excerpt: 'La baisse de la fiscalité de production doit être intensifiée.',
-        reasoning: 'Le programme chiffre une diminution de moitié des impôts de production et la suppression de contributions.',
-        evidenceType: 'programme', confidence: 0.99, validFrom: '2026-08-10',
+        codedBy: 'claude-opus-5-recode-2026-08-12',
+        sourceIds: ['src-lisnard-fiscalite-2027'],
+        excerpt: 'L’IS serait ramené à 20 % au niveau national, avec une liberté de taux local (entre 0 et 5%)',
+        reasoning: 'Le taux national de l’impôt sur les sociétés est explicitement ramené à 20 %, dans un ensemble visant 100 milliards de baisse nette des prélèvements. La mesure porte bien sur l’IS, distinct des impôts de production traités séparément dans la même page.',
+        evidenceType: 'programme', confidence: 0.95, validFrom: '2026-08-12',
       },
       fr_2027_q9: {
         stance: 1,
@@ -803,7 +871,7 @@ export const CANDIDATE_POSITIONS = [
       },
     }[questionId];
 
-    return {
+    return applySecondReading({
       candidateId: 'david-lisnard',
       questionId,
       stance: coded?.stance ?? null,
@@ -813,11 +881,11 @@ export const CANDIDATE_POSITIONS = [
       evidenceType: coded?.evidenceType ?? 'programme',
       confidence: coded?.confidence ?? null,
       reviewStatus: coded ? REVIEW_STATUS.PENDING_REVIEW : REVIEW_STATUS.TO_REVIEW,
-      codedBy: coded ? 'codex-source-pass-2026-08-10' : null,
+      codedBy: coded ? (coded.codedBy ?? 'codex-source-pass-2026-08-10') : null,
       reviewedBy: null,
       validFrom: coded?.validFrom ?? null,
       supersedesId: null,
-    };
+    });
   }),
   ...FR2027_QUESTION_IDS.map(questionId => {
     const coded = {
@@ -865,7 +933,7 @@ export const CANDIDATE_POSITIONS = [
       },
     }[questionId];
 
-    return {
+    return applySecondReading({
       candidateId: 'gabriel-attal',
       questionId,
       stance: coded?.stance ?? null,
@@ -875,11 +943,11 @@ export const CANDIDATE_POSITIONS = [
       evidenceType: coded?.evidenceType ?? 'programme',
       confidence: coded?.confidence ?? null,
       reviewStatus: coded ? REVIEW_STATUS.PENDING_REVIEW : REVIEW_STATUS.TO_REVIEW,
-      codedBy: coded ? 'codex-source-pass-2026-08-10' : null,
+      codedBy: coded ? (coded.codedBy ?? 'codex-source-pass-2026-08-10') : null,
       reviewedBy: null,
       validFrom: coded?.validFrom ?? null,
       supersedesId: null,
-    };
+    });
   }),
   ...FR2027_QUESTION_IDS.map(questionId => {
     const coded = {
@@ -927,7 +995,7 @@ export const CANDIDATE_POSITIONS = [
       },
     }[questionId];
 
-    return {
+    return applySecondReading({
       candidateId: 'fabien-roussel',
       questionId,
       stance: coded?.stance ?? null,
@@ -937,11 +1005,11 @@ export const CANDIDATE_POSITIONS = [
       evidenceType: coded?.evidenceType ?? 'programme',
       confidence: coded?.confidence ?? null,
       reviewStatus: coded ? REVIEW_STATUS.PENDING_REVIEW : REVIEW_STATUS.TO_REVIEW,
-      codedBy: coded ? 'codex-source-pass-2026-08-10' : null,
+      codedBy: coded ? (coded.codedBy ?? 'codex-source-pass-2026-08-10') : null,
       reviewedBy: null,
       validFrom: coded?.validFrom ?? null,
       supersedesId: null,
-    };
+    });
   }),
 ];
 

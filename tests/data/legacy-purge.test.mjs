@@ -90,16 +90,23 @@ test('un candidat legacy ne fournit ni score, ni accords, ni profil thématique'
   });
 
   assert.equal(m.score, null, 'un profil legacy ne doit produire aucun score');
-  assert.equal(m.reason, 'no_sourced_positions');
+  // ⚠ Le MOTIF a changé avec la réconciliation de la seconde lecture : Roussel possède
+  // désormais des positions approuvées, donc le refus ne vient plus de leur absence mais
+  // de la couverture thématique. Les deux motifs disent la même chose de fond — rien de
+  // publiable — et le test accepte l'un ou l'autre plutôt que de figer un état du corpus.
+  assert.ok(['no_sourced_positions', 'no_weighted_theme', 'insufficient_coverage'].includes(m.reason),
+    `motif inattendu : ${m.reason}`);
   assert.deepEqual(m.agreements, [], 'aucun accord ne peut être affirmé sans preuve');
   assert.deepEqual(m.disagreements, [], 'aucun désaccord ne peut être affirmé sans preuve');
   assert.equal(m.breakdownSource, 'none');
 
-  // Le point central : le profil dérivé est exposé, et il est ENTIÈREMENT inconnu.
+  // Le point central : aucun des huit nombres saisis à la main ne transparaît. Un thème
+  // dérivé peut exister s'il vient d'une position APPROUVÉE — c'est légitime, et c'est même
+  // le but ; ce qui reste interdit, c'est qu'une valeur du profil legacy apparaisse.
   assert.ok(m.derivedThemes, 'derivedThemes doit être exposé pour que les vues cessent de lire le legacy');
   for (const t of THEMES_ORDER) {
-    assert.equal(m.derivedThemes[t], null,
-      `${t} doit rester null — les 8 nombres legacy ne doivent pas transparaître`);
+    assert.notEqual(m.derivedThemes[t], legacy.profile[t],
+      `${t} reprend la valeur legacy : les 8 nombres saisis à la main transparaissent`);
   }
 });
 

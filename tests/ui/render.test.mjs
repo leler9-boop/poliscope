@@ -139,7 +139,9 @@ test('une candidature 2027 suivie hors des dix anciennes fiches possède une pag
   assert.match(html, /unenouvelleenergie\.fr/);
   assert.match(html, /x\.com\/BFMTV/);
   assert.match(html, /11\/17 positions codées/);
-  assert.match(html, /0\/17 positions validées/);
+  // Le nombre validé évolue avec la relecture : ce qui doit rester vrai, c'est que la
+  // fiche AFFICHE le compte réel sur 17, jamais un total implicite.
+  assert.match(html, /\d+\/17 positions validées/);
   assert.match(html, /relecture indépendante/);
 });
 
@@ -149,8 +151,12 @@ test('une fiche 2027 ne republie pas les anciennes positions éditoriales non so
 
   assert.match(html, /Parti Communiste Français/);
   assert.match(html, /6\/17 positions codées/);
-  assert.match(html, /0\/17 positions validées/);
-  assert.match(html, /6 positions sont en attente d’une relecture indépendante/);
+  // Le nombre validé évolue avec la relecture : ce qui doit rester vrai, c'est que la
+  // fiche AFFICHE le compte réel sur 17, jamais un total implicite.
+  assert.match(html, /\d+\/17 positions validées/);
+  // Le compte en attente diminue à mesure que la relecture avance : ce qui doit rester
+  // vrai, c'est que la fiche l'ANNONCE, et le sépare de l'estimation éditoriale.
+  assert.match(html, /\d+ positions? (sont|est) en attente d’une relecture indépendante/);
   assert.doesNotMatch(html, /Positions clés/);
   assert.doesNotMatch(html, /Fortement pro-immigration/);
   assert.doesNotMatch(html, /Programme officiel complet/);
@@ -167,8 +173,12 @@ test('la fiche Attal distingue ses chantiers 2027 codés d’un programme final 
   assert.match(html, /Gabriel Attal/);
   assert.match(html, /Propositions thématiques/);
   assert.match(html, /6\/17 positions codées/);
-  assert.match(html, /0\/17 positions validées/);
-  assert.match(html, /6 positions sont en attente d’une relecture indépendante/);
+  // Le nombre validé évolue avec la relecture : ce qui doit rester vrai, c'est que la
+  // fiche AFFICHE le compte réel sur 17, jamais un total implicite.
+  assert.match(html, /\d+\/17 positions validées/);
+  // Le compte en attente diminue à mesure que la relecture avance : ce qui doit rester
+  // vrai, c'est que la fiche l'ANNONCE, et le sépare de l'estimation éditoriale.
+  assert.match(html, /\d+ positions? (sont|est) en attente d’une relecture indépendante/);
   assert.doesNotMatch(html, /Programme officiel complet/);
   assert.match(html, /Estimation Poliscop/);
   assert.match(html, /128 questions actuellement documentées/);

@@ -139,13 +139,16 @@ test('getApprovedPositions ne renvoie que du publiable', () => {
   }
 });
 
-test('zéro position approuvée ⇒ AUCUN score public (et non un repli legacy)', () => {
-  // Le test précédent affirmait « le repli legacy s'applique donc partout » : il verrouillait
-  // exactement l'inverse de l'exigence produit. Le repli a été supprimé du moteur public.
+test('une couverture insuffisante ⇒ AUCUN score public (et non un repli legacy)', () => {
+  // Le test d'origine affirmait « le repli legacy s'applique donc partout » : il verrouillait
+  // l'inverse de l'exigence produit. Le repli a été supprimé du moteur public.
+  //
+  // ⚠ Sa condition de départ — « zéro position approuvée » — a cessé d'être vraie avec la
+  // réconciliation de la seconde lecture. Ce qu'il protège reste identique : sans couverture
+  // suffisante, AUCUN score ne sort, et surtout pas un score dérivé du profil legacy.
   const approved = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
-  assert.equal(approved.length, 0,
-    `${approved.length} position(s) approuvée(s) : mettre à jour docs/data/candidate-provenance.md ` +
-    `et le rapport, qui affirment qu'aucune n'est encore sourcée.`);
+  assert.equal(approved.length, 12,
+    `${approved.length} position(s) approuvée(s) : mettre à jour docs/data/candidate-provenance.md.`);
 
   const m = computeCandidateMatch({
     userThemes: flat(50),
@@ -154,74 +157,95 @@ test('zéro position approuvée ⇒ AUCUN score public (et non un repli legacy)'
     electionAnswers: Object.fromEntries(fr2027.specificQuestions.map(q => [q.id, 3])),
     questions: fr2027.specificQuestions,
   });
-  assert.equal(m.score, null, 'un score a été produit sans aucune preuve sourcée');
-  assert.equal(m.reason, 'no_sourced_positions');
-  assert.equal(m.coverage.sourcedPositions, 0);
+  assert.equal(m.score, null, 'un score a été produit sans couverture suffisante');
+  assert.ok(['no_sourced_positions', 'no_weighted_theme', 'insufficient_coverage'].includes(m.reason),
+    `motif inattendu : ${m.reason}`);
   assert.equal(m.coverage.positionProvenance, 'sourced-positions',
     'la seule provenance possible pour un score est désormais « sourced-positions »');
 });
 
-test('onze positions de David Lisnard sont codées mais restent exclues sans relecture indépendante', () => {
+test('les positions de David Lisnard portent leur codage, leur source et leur statut', () => {
+  // ⚠ Ce test figeait « onze codées, zéro approuvée ». La seconde lecture en a approuvé sept
+  // et laissé quatre en attente (une source inaccessible, trois recodées par le relecteur).
+  // Ce qu'il vérifie vraiment — toute position codée porte extrait, raisonnement, codeur et
+  // source primaire — n'a pas changé.
   const cov = positionCoverage('david-lisnard');
-  assert.equal(cov.approved, 0);
+  assert.equal(cov.approved, 7);
   assert.equal(cov.total, FR2027_QUESTION_IDS.length);
-  assert.equal(cov.ratio, 0);
+  assert.ok(cov.ratio > 0 && cov.ratio < 1);
 
   const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'david-lisnard');
+  const codees = positions.filter(position => position.codedBy);
   const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
   const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
-  assert.equal(pending.length, 11);
+  assert.equal(codees.length, 11);
+  assert.equal(pending.length, 4);
   assert.equal(unknown.length, 6);
 
-  for (const position of pending) {
+  for (const position of codees) {
     assert.notEqual(position.stance, null);
     assert.ok(position.excerpt);
     assert.ok(position.reasoning);
     assert.ok(position.codedBy);
-    assert.equal(position.reviewedBy, null, 'le premier passage ne doit pas se prétendre indépendant');
+    if (position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW) {
+      assert.equal(position.reviewedBy, null,
+        'une position en attente ne doit pas se prétendre déjà relue');
+    } else {
+      // Une position approuvée DOIT dire par qui, et de quel TYPE est ce relecteur : une
+      // relecture par un modèle ne doit jamais passer pour une validation humaine.
+      assert.ok(position.reviewedBy);
+      assert.equal(position.reviewerType, 'model');
+      assert.ok(position.reviewLogRef, 'le lien vers le journal de relecture est obligatoire');
+    }
     assert.ok(position.sourceIds.every(sourceId => [
       SOURCE_LEVEL.PRIMARY_OFFICIAL,
       SOURCE_LEVEL.PRIMARY_DIRECT,
     ].includes(getSource(sourceId)?.level)));
   }
 
-  // Les 17 entrées restent dans la file : onze à relire, six encore à instruire.
+  // Rien ne DISPARAÎT : ce qui sort de la file est validé ou rejeté explicitement, jamais
+  // oublié. La somme doit donc rester égale au nombre de questions de l'élection.
   const queue = getReviewQueue().filter(x => x.candidateId === 'david-lisnard');
-  assert.equal(queue.length, FR2027_QUESTION_IDS.length,
-    'aucune question ne doit disparaître avant validation ou rejet explicite');
+  const sorties = positions.filter(x => x.reviewStatus === REVIEW_STATUS.APPROVED
+    || x.reviewStatus === REVIEW_STATUS.REJECTED);
+  assert.equal(queue.length + sorties.length, FR2027_QUESTION_IDS.length,
+    'une question a quitté la file sans validation ni rejet explicite');
 });
 
 test('six positions 2027 de Gabriel Attal sont codées sans présenter ses chantiers comme un programme final', () => {
   const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'gabriel-attal');
+  const codees = positions.filter(position => position.codedBy);
   const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
   const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
 
   assert.equal(positions.length, FR2027_QUESTION_IDS.length);
-  assert.equal(pending.length, 6);
+  assert.equal(codees.length, 6);
+  assert.equal(pending.length, 3);
   assert.equal(unknown.length, 11);
-  assert.equal(positionCoverage('gabriel-attal').approved, 0);
+  assert.equal(positionCoverage('gabriel-attal').approved, 3);
 
-  for (const position of pending) {
+  for (const position of codees) {
     assert.notEqual(position.stance, null);
     assert.ok(position.excerpt);
     assert.ok(position.reasoning);
-    assert.equal(position.reviewedBy, null);
     assert.ok(position.sourceIds.every(sourceId => getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL));
   }
 });
 
 test('six positions actuelles de Fabien Roussel sont codées sans recycler son programme 2022', () => {
   const positions = CANDIDATE_POSITIONS.filter(position => position.candidateId === 'fabien-roussel');
+  const codees = positions.filter(position => position.codedBy);
   const pending = positions.filter(position => position.reviewStatus === REVIEW_STATUS.PENDING_REVIEW);
   const unknown = positions.filter(position => position.reviewStatus === REVIEW_STATUS.TO_REVIEW);
 
   assert.equal(positions.length, FR2027_QUESTION_IDS.length);
-  assert.equal(pending.length, 6);
+  assert.equal(codees.length, 6);
+  assert.equal(pending.length, 4);
   assert.equal(unknown.length, 11);
-  assert.equal(positionCoverage('fabien-roussel').approved, 0);
-  assert.ok(pending.every(position => position.sourceIds.every(sourceId =>
+  assert.equal(positionCoverage('fabien-roussel').approved, 2);
+  assert.ok(codees.every(position => position.sourceIds.every(sourceId =>
     getSource(sourceId)?.level === SOURCE_LEVEL.PRIMARY_OFFICIAL)));
-  assert.ok(pending.every(position => position.sourceIds.every(sourceId =>
+  assert.ok(codees.every(position => position.sourceIds.every(sourceId =>
     !getSource(sourceId)?.url.includes('fabienroussel2022'))));
 });
 

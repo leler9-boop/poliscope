@@ -98,7 +98,10 @@ export const SECOND_READING = Object.freeze([
     notes: '⚠ La déclaration ne répond pas à la question posée. La question porte sur l’impôt sur '
       + 'les SOCIÉTÉS ; la source ne traite que des impôts de PRODUCTION (C3S, CVAE, 2 % → 1 % du '
       + 'PIB) et ne propose pas de baisse de l’IS. Deux prélèvements distincts, deux débats '
-      + 'distincts. À recoder sur une source traitant de l’IS, ou à laisser inconnue.',
+      + 'distincts. À recoder sur une source traitant de l’IS, ou à laisser inconnue. '
+      + 'SUITE : `src-lisnard-fiscalite-2027` a été ouverte et énonce « L’IS serait ramené à '
+      + '20 % au niveau national ». La position a été RECODÉE sur cette source par le '
+      + 'relecteur, et attend donc une lecture par quelqu’un d’autre.',
   },
   {
     candidateId: 'david-lisnard', questionId: 'fr_2027_q9', verdict: REVIEW_VERDICT.APPROVED,

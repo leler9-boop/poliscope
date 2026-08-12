@@ -78,14 +78,25 @@ for (const election of elections) {
     const coded = all.filter(p => p.stance != null);
     const approved = all.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
 
-    // Thèmes qui atteindraient le seuil SI toutes les positions codées étaient approuvées.
-    const perTheme = {};
-    for (const p of coded) {
-      const theme = byId.get(p.questionId)?.theme;
-      if (theme) perTheme[theme] = (perTheme[theme] ?? 0) + 1;
-    }
-    const themesReady = Object.values(perTheme)
-      .filter(n => n >= MATCH_CONFIG.minSourcedPositionsPerTheme).length;
+    // ⚠ DEUX COMPTES DISTINCTS, LONGTEMPS CONFONDUS.
+    //
+    // `themesPotentiels` répond à « où en serions-nous si tout le codage était relu ? ».
+    // `themesApprouves` répond à « où en sommes-nous ». Le rapport a besoin des deux, mais
+    // le contrôle de rupture ne peut utiliser QUE le second : comparer un potentiel au
+    // score réel fabrique une fausse alerte dès qu'une relecture avance. Tant qu'aucune
+    // position n'était approuvée, le court-circuit « relecture non faite » masquait la
+    // confusion — elle est apparue au premier lot d'approbations.
+    const compter = (liste) => {
+      const perTheme = {};
+      for (const p of liste) {
+        const theme = byId.get(p.questionId)?.theme;
+        if (theme) perTheme[theme] = (perTheme[theme] ?? 0) + 1;
+      }
+      return Object.values(perTheme)
+        .filter(n => n >= MATCH_CONFIG.minSourcedPositionsPerTheme).length;
+    };
+    const themesPotentiels = compter(coded);
+    const themesReady = compter(approved);
 
     const match = computeCandidateMatch({
       userThemes: neutralProfile, candidate, questions, sourceIsVerified,
@@ -95,7 +106,7 @@ for (const election of elections) {
     rows.push({
       id: candidate.id, canonical,
       positions: all.length, coded: coded.length, approved: approved.length,
-      themesReady, score: match.score, reason: match.reason ?? null,
+      themesReady, themesPotentiels, score: match.score, reason: match.reason ?? null,
       blocage: all.length === 0 ? 'aucun corpus'
         : approved.length === 0 ? 'relecture non faite'
         : themesReady < MATCH_CONFIG.minKnownThemesForScore ? 'corpus trop étroit'
@@ -106,7 +117,8 @@ for (const election of elections) {
   for (const r of rows) {
     console.log(`   ${String(r.id).padEnd(16)} pos ${String(r.positions).padStart(2)} `
       + `· codées ${String(r.coded).padStart(2)} · approuvées ${String(r.approved).padStart(2)} `
-      + `· thèmes prêts ${r.themesReady} · score ${r.score ?? '—'}  ${r.blocage}`);
+      + `· thèmes prêts ${r.themesReady} (potentiel ${r.themesPotentiels}) `
+      + `· score ${r.score ?? '—'}  ${r.blocage}`);
   }
   console.log(`   → ${scored}/${election.candidates.length} candidats scorés\n`);
 
