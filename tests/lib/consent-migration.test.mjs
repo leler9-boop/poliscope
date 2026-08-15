@@ -98,7 +98,12 @@ test('aucune décision migrée ne porte l’empreinte d’un texte de 2026-08', 
   const hashes2026_08 = new Set(
     Object.values(PURPOSES).map(p => textFingerprint(consentTextFor(p, 'fr'))),
   );
-  const records = buildConsentRecords(migrated, { anonymousSessionId: 'sid' });
+  // Chaque finalité reçoit SON sujet : depuis P0-2, une ligne sans sujet n'est pas construite,
+  // et un test qui n'en fournirait aucun boucherait sur un tableau vide sans rien prouver.
+  const records = buildConsentRecords(migrated, {
+    anonymousSessionId: 'sid', userId: 'compte-1', measurementId: 'sid-mesure',
+  });
+  assert.ok(records.length > 0, 'sans ligne construite, ce test ne vérifierait rien');
   for (const r of records) {
     assert.ok(
       !hashes2026_08.has(r.text_hash),
@@ -114,7 +119,10 @@ test('une décision migrée est marquée comme non vérifiable par empreinte', (
   const migrated = normalizeConsent({ politicalData: true });
   const d = decisionOf(migrated, PURPOSES.CLOUD_SAVE);
   assert.equal(d.textHash, null, 'une empreinte a été fabriquée après coup');
-  const [record] = buildConsentRecords(migrated, { anonymousSessionId: 'sid' });
+  // `cloud_save` a pour sujet le COMPTE, jamais le pseudonyme : sans `userId`, la ligne
+  // n'existe pas (P0-2).
+  const [record] = buildConsentRecords(migrated, { userId: 'compte-1' });
+  assert.equal(record.purpose, PURPOSES.CLOUD_SAVE);
   assert.equal(record.text_hash, null);
   assert.equal(record.text_hash_available, false,
     'la décision doit dire explicitement que son empreinte est indisponible');

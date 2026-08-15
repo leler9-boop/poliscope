@@ -10,7 +10,7 @@ import { currentVersions, EXPORT_FORMAT_VERSION, QUESTIONNAIRE_VERSION, QUEUE_AL
 import { THEMES_ORDER, getQuestionQueue, getQuestionsByIds, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
-import { setMeasurementConsent } from '../lib/anonymous.js';
+import { setMeasurementConsent, getOrCreateAnonymousId } from '../lib/anonymous.js';
 import { normalizeConsent, currentDecision, PURPOSES, ALL_PURPOSES } from '../lib/consent.js';
 import {
   normalizeThemeImportance, PRIORITY_SOURCE, VOTE_INFLUENCE_MULTIPLIER,
@@ -43,15 +43,49 @@ export const CONSENT_VERSION = '2026-07';
  * ESM natif de Node ne fournit pas. Les tests d'intégration du store doivent pouvoir
  * l'importer sans navigateur.
  */
-function syncAttemptConsent(consent, state) {
-  import('../lib/attemptSession.js')
-    .then(({ attemptSession }) => {
-      attemptSession.setConsent(effectiveConsent(consent, state?.collectionConsent), {
+/**
+ * Dernière synchronisation de consentement lancée sans appelant pour l'attendre
+ * (réhydratation). Sans cette référence, l'import dynamique restait une promesse flottante :
+ * le runner de tests sortait en `Promise resolution is still pending but the event loop has
+ * already resolved` et annulait le fichier entier.
+ */
+let dernierSyncConsentement = Promise.resolve(null);
+const trackConsentSync = (promesse) => { dernierSyncConsentement = promesse; return promesse; };
+
+/** À attendre dans les tests avant de conclure qu'aucune synchronisation n'est en vol. */
+export function consentSyncSettled() { return dernierSyncConsentement; }
+
+/**
+ * Import MÉMOÏSÉ du module de passation.
+ *
+ * ⚠ Un `import()` par appel laissait autant de promesses flottantes que de décisions de
+ * consentement. Sous le runner de tests, une promesse encore en vol quand la boucle
+ * d'événements se vide produit
+ * `Promise resolution is still pending but the event loop has already resolved`, et le
+ * fichier entier est ANNULÉ — c'est ce qui rendait `npm run verify` non terminant. Une seule
+ * promesse, réutilisée, supprime la classe de problème au lieu d'en masquer un cas.
+ */
+let moduleSession = null;
+const chargerSession = () => (moduleSession ??= import('../lib/attemptSession.js'));
+
+function syncAttemptConsent(consent, state, { changedPurposes = [], measurementId = null } = {}) {
+  return chargerSession()
+    .then(({ attemptSession }) => attemptSession.setConsent(
+      effectiveConsent(consent, state?.collectionConsent),
+      {
         userId: state?.userId ?? null,
         language: state?.language ?? 'fr',
-      });
-    })
-    .catch(() => { /* module indisponible (test unitaire) : l'état local reste la référence */ });
+        // ⚠ SEULES les finalités réellement modifiées sont transmises. Tout renvoyer à chaque
+        // changement réémettait des décisions anciennes — parfois sans le sujet technique
+        // correspondant, puisqu'il avait pu être effacé entre-temps.
+        changedPurposes,
+        measurementId,
+      },
+    ))
+    .catch(() => (
+      /* module indisponible (test unitaire) : l'état local reste la référence */
+      { withdrawals: [], emitted: [], skipped: [], storageWritable: false, unavailable: true }
+    ));
 }
 
 /**
@@ -369,31 +403,49 @@ export const useStore = create(
        * @param {Object<string, boolean>} decisions  finalité → accordé / refusé
        * @param {{language?: string}} [options]      langue du texte réellement affiché
        */
+      /**
+       * @returns {Promise<Object>} résultat EXPLICITE de la synchronisation — retraits mis en
+       *   file, confirmations obtenues, décisions écartées, disponibilité du stockage.
+       *   ⚠ L'interface DOIT attendre cette promesse. La version précédente ne retournait
+       *   rien et `DataControlsModal` relisait la file après `setTimeout(…, 0)` : une course
+       *   avec l'import dynamique et l'écriture de la tombstone, gagnée ou perdue au hasard.
+       */
       recordCollectionConsent: (decisions = {}, options = {}) => {
         const language = options.language ?? get().language ?? 'fr';
         const next = { ...(get().collectionConsent ?? {}) };
+        const changedPurposes = [];
         for (const [purpose, granted] of Object.entries(decisions)) {
           if (!ALL_PURPOSES.includes(purpose)) continue;      // finalité inconnue : ignorée
           if (granted !== true && granted !== false) continue; // ni accord ni refus : rien
           next[purpose] = currentDecision(granted, { purpose, language });
+          changedPurposes.push(purpose);
         }
         set({ collectionConsent: next });
+
+        // ⚠ LIRE LE PSEUDONYME DE MESURE AVANT DE LE PURGER. `setMeasurementConsent(false)`
+        // efface `poliscop_anon_id` : appelé d'abord, il privait la décision de son sujet, et
+        // la preuve de refus partait vers un serveur incapable de l'attribuer.
+        const measurementId = PURPOSES.MEASUREMENT in decisions
+          ? getOrCreateAnonymousId()
+          : null;
         // La mesure d'audience pilote un identifiant persistant : elle doit s'aligner dans
         // le même tick, sans quoi un refus laisserait le traceur en place.
         if (PURPOSES.MEASUREMENT in decisions) {
           setMeasurementConsent(decisions[PURPOSES.MEASUREMENT] === true);
         }
-        syncAttemptConsent(get().consent, get());
+        return syncAttemptConsent(get().consent, get(), { changedPurposes, measurementId });
       },
 
       /**
        * Retrait. Enregistre un REFUS daté plutôt que d'effacer la décision : effacer
        * reviendrait à perdre la preuve qu'un accord avait été donné puis repris.
        * Les transmissions futures s'arrêtent immédiatement via `syncAttemptConsent`.
+       *
+       * @returns {Promise<Object>} même résultat explicite que `recordCollectionConsent`.
        */
       withdrawCollectionConsent: (purposes = ALL_PURPOSES, options = {}) => {
         const list = Array.isArray(purposes) ? purposes : [purposes];
-        get().recordCollectionConsent(
+        return get().recordCollectionConsent(
           Object.fromEntries(list.filter(p => ALL_PURPOSES.includes(p)).map(p => [p, false])),
           options,
         );
@@ -412,8 +464,15 @@ export const useStore = create(
           version: CONSENT_VERSION,
         };
         set({ consent });
+        // Le pseudonyme de mesure est lu AVANT toute purge : sans lui, la décision partirait
+        // sans sujet et la base la refuserait.
+        const measurementId = getOrCreateAnonymousId();
         setMeasurementConsent(measurement);
-        syncAttemptConsent(consent, get());
+        // Finalités réellement décidées par ce geste — `research` seulement si elle a été
+        // explicitement tranchée ; ne pas la mentionner n'est pas la refuser.
+        const changedPurposes = [PURPOSES.CLOUD_SAVE, PURPOSES.MEASUREMENT];
+        if (options.research === true || options.research === false) changedPurposes.push(PURPOSES.RESEARCH);
+        return syncAttemptConsent(consent, get(), { changedPurposes, measurementId });
       },
 
       /**
@@ -434,12 +493,18 @@ export const useStore = create(
           version: CONSENT_VERSION,
         };
         set({ consent });
+        // Sujet de la demande, lu AVANT la purge (voir `recordCollectionConsent`).
+        const measurementId = getOrCreateAnonymousId();
         // Le retrait doit AGIR : file d'envoi vidée, identifiant pseudonyme effacé, et
         // décision transmise pour que le serveur supprime ce qu'il détient déjà.
-        syncAttemptConsent(consent, get());
+        const sync = syncAttemptConsent(consent, get(), {
+          changedPurposes: [PURPOSES.CLOUD_SAVE, PURPOSES.MEASUREMENT, PURPOSES.RESEARCH],
+          measurementId,
+        });
         // Purge immédiate de l'identifiant local si la mesure est refusée : un retrait doit
         // arrêter la collecte ET effacer le traceur déjà déposé, pas seulement cesser d'émettre.
         setMeasurementConsent(keepMeasurement);
+        return sync;
       },
 
       /**
@@ -941,7 +1006,13 @@ export const useStore = create(
         setMeasurementConsent(state?.consent?.measurement === true);
         // Même logique fail-closed pour la collecte de passation : tant que l'état persisté
         // n'est pas relu, `attemptSession` n'a aucun consentement et n'émet rien.
-        if (state?.consent) syncAttemptConsent(state.consent, state);
+        //
+        // ⚠ AUCUNE finalité n'est déclarée « modifiée » ici : une réhydratation N'EST PAS une
+        // décision. La version précédente réémettait toutes les décisions connues à chaque
+        // démarrage — une preuve de consentement redatée sans que personne n'ait cliqué.
+        // La promesse est conservée pour que les tests (et un futur appelant) puissent
+        // l'attendre au lieu de laisser flotter un import dynamique jamais observé.
+        if (state?.consent) trackConsentSync(syncAttemptConsent(state.consent, state));
         // Reconstruit la file du questionnaire depuis les IDs persistés. Sans cela, un
         // rechargement direct sur /quiz affichait « Aucune question disponible ».
         try { state?.resumeQuestionnaire?.(); } catch { /* file inutilisable — écran de reprise */ }

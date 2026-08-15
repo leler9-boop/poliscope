@@ -305,7 +305,7 @@ export const PURPOSE_IDENTIFIER = Object.freeze({
 
 /**
  * Les deux colonnes d'identifiant d'un enregistrement, pour une finalité donnée.
- * Exactement une peut être non nulle — jamais les deux.
+ * Exactement une peut être non nulle — jamais les deux, et jamais aucune.
  */
 export function identifiersFor(purpose, { analyticsPseudonym, userId, measurementPseudonym, researchPseudonym } = {}) {
   switch (PURPOSE_IDENTIFIER[purpose]) {
@@ -321,20 +321,94 @@ export function identifiersFor(purpose, { analyticsPseudonym, userId, measuremen
   }
 }
 
-export function buildConsentRecords(consentState, {
+/**
+ * Finalités pour lesquelles une PREUVE SERVEUR est transmise aujourd'hui.
+ *
+ * ⚠ DÉCISION PRODUIT EXPLICITE (P0-2, 2026-08-14). L'option paresseuse — émettre quand même
+ * une ligne, avec un sujet nul — a été écartée : elle produit une ligne que la base refuse
+ * (contrainte `consent_records_purpose_identifier_form`) ou, pire, une TOMBSTONE que le
+ * serveur ne peut pas exécuter, présentée à l'utilisateur comme « suppression en cours ».
+ *
+ *   • `political_analytics` — le pseudonyme d'analyse existe et est géré
+ *     (`attemptSession.analyticsSessionId`). Preuve transmise.
+ *   • `cloud_save`          — le compte existe. Preuve transmise.
+ *   • `measurement`         — le pseudonyme de mesure existe et est géré
+ *     (`anonymous.js`, `poliscop_anon_id`), DISTINCT de celui des opinions. Preuve transmise
+ *     quand il est fourni ; sinon la décision reste locale.
+ *   • `research`            — AUCUN flux de recherche n'existe en production : ni pseudonyme
+ *     dédié, ni table, ni destinataire. Créer un identifiant persistant pour un traitement
+ *     qui n'existe pas serait déposer un traceur sans usage. Aucune preuve serveur n'est donc
+ *     transmise ; la décision est conservée localement, datée et empreinte, et sera
+ *     transmise le jour où le traitement existera. Ne JAMAIS emprunter le pseudonyme
+ *     politique pour la combler.
+ */
+export const SERVER_PROOF_PURPOSES = Object.freeze([
+  PURPOSES.POLITICAL_ANALYTICS,
+  PURPOSES.CLOUD_SAVE,
+  PURPOSES.MEASUREMENT,
+]);
+
+/** Motifs pour lesquels une décision reste locale. Affichés tels quels dans les diagnostics. */
+export const SKIP_REASON = Object.freeze({
+  /** Aucun sujet technique : le serveur ne saurait ni à qui rattacher, ni quoi supprimer. */
+  NO_SUBJECT: 'no_subject',
+  /** Finalité sans flux serveur à ce jour (voir `SERVER_PROOF_PURPOSES`). */
+  NO_SERVER_FLOW: 'no_server_flow',
+});
+
+/**
+ * Construit les enregistrements de décision à transmettre.
+ *
+ * ⚠ DEUX CORRECTIFS STRUCTURELS (P0-2, 2026-08-14).
+ *
+ * 1. `purposes` RESTREINT l'émission aux finalités RÉELLEMENT MODIFIÉES. La version
+ *    précédente reconstruisait toutes les décisions connues à chaque changement : cocher la
+ *    mesure d'audience réémettait la décision politique prise trois semaines plus tôt, avec
+ *    une nouvelle tentative d'envoi — et, si le pseudonyme correspondant avait été effacé
+ *    entre-temps, une ligne sans sujet.
+ *
+ * 2. Une ligne SANS SUJET n'est jamais produite. Elle est écartée et rendue dans `skipped`,
+ *    avec son motif, pour que l'appelant puisse le dire plutôt que de le taire.
+ *
+ * @returns {{records: Array, skipped: Array<{purpose: string, granted: boolean, reason: string}>}}
+ */
+export function buildConsentDecisions(consentState, {
   anonymousSessionId,          // pseudonyme d'ANALYSE POLITIQUE
   userId,                      // identifiant de COMPTE
   measurementId = null,        // pseudonyme de MESURE D'AUDIENCE, distinct
   researchId = null,           // pseudonyme de RECHERCHE, explicite
+  purposes = ALL_PURPOSES,     // finalités à transmettre — les MODIFIÉES, pas toutes
   language = 'fr',
   clientRelease,
 } = {}) {
   const records = [];
+  const skipped = [];
   const now = new Date().toISOString();
+  const demandees = new Set(Array.isArray(purposes) ? purposes : [purposes]);
 
   for (const purpose of ALL_PURPOSES) {
+    if (!demandees.has(purpose)) continue;
     const decision = decisionOf(consentState, purpose);
     if (decision.granted !== true && decision.granted !== false) continue;
+
+    if (!SERVER_PROOF_PURPOSES.includes(purpose)) {
+      skipped.push({ purpose, granted: decision.granted, reason: SKIP_REASON.NO_SERVER_FLOW });
+      continue;
+    }
+
+    const identifiers = identifiersFor(purpose, {
+      analyticsPseudonym: anonymousSessionId,
+      userId,
+      measurementPseudonym: measurementId,
+      researchPseudonym: researchId,
+    });
+
+    // ⚠ LE point de contrôle. Sans sujet, une ligne de consentement ne prouve rien et une
+    // ligne de retrait ne supprime rien : les deux sont refusées ici, jamais mises en file.
+    if (identifiers.anonymous_session_id == null && identifiers.user_id == null) {
+      skipped.push({ purpose, granted: decision.granted, reason: SKIP_REASON.NO_SUBJECT });
+      continue;
+    }
 
     // ⚠ La provenance vient de la DÉCISION, jamais des constantes du module. Estampiller
     // toute ligne avec CONSENT_POLICY_VERSION revenait à déclarer qu'une personne avait
@@ -348,12 +422,7 @@ export function buildConsentRecords(consentState, {
         : null);
 
     records.push({
-      ...identifiersFor(purpose, {
-        analyticsPseudonym: anonymousSessionId,
-        userId,
-        measurementPseudonym: measurementId,
-        researchPseudonym: researchId,
-      }),
+      ...identifiers,
       purpose,
       granted:              decision.granted,
       policy_version:       policyVersion,
@@ -367,7 +436,12 @@ export function buildConsentRecords(consentState, {
       language,
     });
   }
-  return records;
+  return { records, skipped };
+}
+
+/** Les seuls enregistrements TRANSMISSIBLES. Voir `buildConsentDecisions` pour les écartés. */
+export function buildConsentRecords(consentState, options = {}) {
+  return buildConsentDecisions(consentState, options).records;
 }
 
 /**

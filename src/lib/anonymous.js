@@ -33,12 +33,20 @@ export function purgeAnonymousId() {
  */
 export function getOrCreateAnonymousId() {
   if (!_measurementConsent) return null;
-  let id = localStorage.getItem(ANON_ID_KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(ANON_ID_KEY, id);
+  // Safari en navigation privée lève sur tout accès, et Node n'expose pas `localStorage` :
+  // sans cette garde, lire l'identifiant pour l'attacher à une preuve de consentement
+  // faisait échouer l'enregistrement de la décision elle-même.
+  try {
+    if (typeof localStorage === 'undefined') return null;
+    let id = localStorage.getItem(ANON_ID_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(ANON_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return null;
   }
-  return id;
 }
 
 export async function initAnonymousSession() {

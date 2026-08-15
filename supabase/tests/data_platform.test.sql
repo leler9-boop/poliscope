@@ -848,4 +848,110 @@ begin
 end $$;
 
 
+-- ═══ 26. Aucune décision sans SUJET, quelle que soit la finalité ════════════
+--
+-- La contrainte précédente n'exigeait un sujet que pour `cloud_save`. Une ligne
+-- `political_analytics` avec `null / null` passait : une décision de consentement qui
+-- n'établit le consentement de personne, et pour un retrait une demande de suppression que
+-- le serveur ne peut rattacher à aucune donnée — pendant que le client affiche
+-- « suppression en cours ».
+
+do $$
+declare
+  v_purpose private.consent_purpose;
+  v_refuse  boolean;
+begin
+  foreach v_purpose in array array['measurement', 'political_analytics', 'cloud_save', 'research']::private.consent_purpose[]
+  loop
+    v_refuse := false;
+    begin
+      insert into private.consent_records
+        (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+      values (null, null, v_purpose, false, 'test', 'h', now());
+    exception when check_violation then
+      v_refuse := true;
+    end;
+    if not v_refuse then
+      raise exception 'ÉCHEC 26 — % a pu être écrite sans aucun sujet technique', v_purpose;
+    end if;
+  end loop;
+  raise notice 'OK 26 — aucune finalité n''accepte une décision sans sujet';
+end $$;
+
+
+-- ═══ 27. Aucune décision avec les DEUX identifiants ═════════════════════════
+
+do $$
+declare
+  v_purpose private.consent_purpose;
+  v_refuse  boolean;
+begin
+  foreach v_purpose in array array['measurement', 'political_analytics', 'cloud_save', 'research']::private.consent_purpose[]
+  loop
+    v_refuse := false;
+    begin
+      insert into private.consent_records
+        (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+      values (gen_random_uuid(), 'a0000000-0000-0000-0000-000000000004', v_purpose, true, 'test', 'h', now());
+    exception when check_violation then
+      v_refuse := true;
+    end;
+    if not v_refuse then
+      raise exception 'ÉCHEC 27 — % a pu porter à la fois un pseudonyme et un compte', v_purpose;
+    end if;
+  end loop;
+  raise notice 'OK 27 — aucune finalité n''accepte deux identifiants';
+end $$;
+
+
+-- ═══ 28. Les QUATRE formes valides sont acceptées ═══════════════════════════
+--
+-- Une contrainte qui refuserait aussi les formes correctes bloquerait le produit. On prouve
+-- donc les deux sens : ce qui doit passer passe.
+
+do $$
+declare
+  v_purpose private.consent_purpose;
+  v_n       bigint;
+begin
+  -- Trois finalités pseudonymisées : pseudonyme seul.
+  foreach v_purpose in array array['measurement', 'political_analytics', 'research']::private.consent_purpose[]
+  loop
+    insert into private.consent_records
+      (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+    values (gen_random_uuid(), null, v_purpose, true, 'forme-valide', 'h', now());
+  end loop;
+
+  -- Sauvegarde : compte seul.
+  insert into private.consent_records
+    (anonymous_session_id, user_id, purpose, granted, policy_version, text_hash, decided_at)
+  values (null, 'a0000000-0000-0000-0000-000000000004', 'cloud_save', true, 'forme-valide', 'h', now());
+
+  select count(*) into v_n
+    from private.consent_records where policy_version = 'forme-valide';
+  if v_n <> 4 then
+    raise exception 'ÉCHEC 28 — % forme(s) valide(s) acceptée(s) sur 4', v_n;
+  end if;
+  raise notice 'OK 28 — les quatre formes valides sont acceptées';
+end $$;
+
+
+-- ═══ 29. La quarantaine existe et ne peut pas produire de consentement ══════
+
+do $$
+begin
+  if to_regclass('private.consent_records_quarantine') is null then
+    raise exception 'ÉCHEC 29 — la table de quarantaine des lignes sans sujet est absente';
+  end if;
+  -- Elle ne doit alimenter AUCUNE autorisation : `has_consent()` ne lit que le journal.
+  if pg_get_functiondef('private.has_consent(uuid, uuid, private.consent_purpose)'::regprocedure)
+     like '%consent_records_quarantine%' then
+    raise exception
+      'ÉCHEC 29b — la quarantaine est consultée pour autoriser une collecte : une décision '
+      'sans sujet redeviendrait un consentement';
+  end if;
+  raise notice 'OK 29 — quarantaine présente, et hors de tout chemin d''autorisation';
+end $$;
+
+
 select 'TOUS LES TESTS DE LA PLATEFORME DE DONNÉES SONT PASSÉS' as resultat;

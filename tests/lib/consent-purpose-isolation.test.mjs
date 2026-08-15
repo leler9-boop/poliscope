@@ -16,7 +16,8 @@ import assert from 'node:assert/strict';
 
 import {
   PURPOSES, ALL_PURPOSES, emptyConsentState, currentDecision,
-  buildConsentRecords, identifiersFor, PURPOSE_IDENTIFIER,
+  buildConsentRecords, buildConsentDecisions, identifiersFor, PURPOSE_IDENTIFIER,
+  SERVER_PROOF_PURPOSES,
 } from '../../src/lib/consent.js';
 
 const IDS = {
@@ -85,16 +86,59 @@ test('la mesure d’audience utilise son PROPRE pseudonyme', () => {
   assert.equal(r.user_id, null);
 });
 
-test('la recherche exige un identifiant EXPLICITE, rien n’est déduit', () => {
-  const avec = ligne(emis({ [PURPOSES.RESEARCH]: true }), PURPOSES.RESEARCH);
-  assert.equal(avec.anonymous_session_id, 'sid-recherche');
+test('la recherche ne produit AUCUNE preuve serveur tant que son flux n’existe pas', () => {
+  // ⚠ DÉCISION PRODUIT (P0-2, 2026-08-14). Il n'existe en production ni pseudonyme de
+  // recherche, ni table, ni destinataire. Émettre quand même une ligne aurait laissé deux
+  // issues, toutes deux mauvaises : un sujet nul que la base refuse, ou un emprunt du
+  // pseudonyme politique — c'est-à-dire faire entrer les opinions dans un autre traitement.
+  // La décision reste locale, datée et empreinte, jusqu'à ce que le traitement existe.
+  assert.equal(SERVER_PROOF_PURPOSES.includes(PURPOSES.RESEARCH), false);
 
-  const sans = ligne(
-    buildConsentRecords(etat({ [PURPOSES.RESEARCH]: true }), { ...IDS, researchId: null }),
-    PURPOSES.RESEARCH,
+  const { records, skipped } = buildConsentDecisions(etat({ [PURPOSES.RESEARCH]: true }), IDS);
+  assert.equal(ligne(records, PURPOSES.RESEARCH), undefined,
+    'une ligne de recherche a été émise alors qu’aucun flux ne peut la recevoir');
+  assert.deepEqual(
+    skipped.filter(s => s.purpose === PURPOSES.RESEARCH).map(s => s.reason),
+    ['no_server_flow'],
+    'la mise à l’écart doit être EXPLICITE et motivée, pas un oubli silencieux');
+});
+
+test('le pseudonyme politique n’est jamais emprunté par une autre finalité', () => {
+  for (const purpose of ALL_PURPOSES) {
+    if (purpose === PURPOSES.POLITICAL_ANALYTICS) continue;
+    const { anonymous_session_id: a } = identifiersFor(purpose, IDS);
+    assert.notEqual(a, IDS.anonymousSessionId,
+      `${purpose} emprunte le pseudonyme des opinions : deux finalités deviendraient une seule`);
+  }
+});
+
+test('une finalité pseudonymisée sans pseudonyme est ÉCARTÉE, jamais émise sans sujet', () => {
+  const { records, skipped } = buildConsentDecisions(
+    etat({ [PURPOSES.MEASUREMENT]: true }),
+    { ...IDS, measurementId: null },
   );
-  assert.equal(sans.anonymous_session_id, null,
-    'emprunter le pseudonyme d’analyse ferait entrer les opinions dans un autre traitement');
+  assert.equal(records.length, 0);
+  assert.deepEqual(skipped.map(s => s.reason), ['no_subject']);
+});
+
+test('cloud_save sans compte est ÉCARTÉE : sa preuve n’a aucun sujet', () => {
+  const { records, skipped } = buildConsentDecisions(
+    etat({ [PURPOSES.CLOUD_SAVE]: true }),
+    { ...IDS, userId: null },
+  );
+  assert.equal(records.length, 0);
+  assert.deepEqual(skipped.map(s => s.reason), ['no_subject']);
+});
+
+test('seules les finalités DEMANDÉES sont construites', () => {
+  const complet = etat({
+    [PURPOSES.POLITICAL_ANALYTICS]: true,
+    [PURPOSES.CLOUD_SAVE]: true,
+    [PURPOSES.MEASUREMENT]: true,
+  });
+  const { records } = buildConsentDecisions(complet, { ...IDS, purposes: [PURPOSES.MEASUREMENT] });
+  assert.deepEqual(records.map(r => r.purpose), [PURPOSES.MEASUREMENT],
+    'reconstruire toutes les décisions connues réémet des choix sans rapport avec le geste courant');
 });
 
 test('chaque finalité déclare explicitement quel identifiant elle porte', () => {

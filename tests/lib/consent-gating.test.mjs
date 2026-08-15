@@ -95,6 +95,9 @@ test('accepter l’analyse politique n’autorise pas le traceur d’audience', 
 test('chaque décision est datée, versionnée et porte l’empreinte du texte accepté', () => {
   const records = buildConsentRecords(grantAll(), {
     anonymousSessionId: '11111111-1111-1111-1111-111111111111',
+    // ⚠ La mesure d'audience a son PROPRE sujet. Sans lui, la ligne serait écartée : depuis
+    // P0-2, une décision sans sujet technique n'est jamais construite.
+    measurementId: '22222222-2222-2222-2222-222222222222',
     language: 'fr',
   });
 

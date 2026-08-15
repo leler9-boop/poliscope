@@ -80,10 +80,19 @@ test('le banc d’essai découvre les migrations au lieu de les énumérer à la
   assert.match(harness, /find\s+"\$ROOT\/supabase\/migrations"[\s\S]{0,60}\|\s*sort/,
     'le banc doit découvrir les migrations par `find … | sort`, pas les énumérer');
 
-  // Aucune migration ne doit être appliquée par un chemin écrit en dur.
+  // Aucune migration ne doit être appliquée par un chemin écrit en dur DANS LA BOUCLE
+  // d'application. Une seconde application explicite reste permise pour les migrations qui
+  // font l'objet d'un test d'idempotence ou de rollback — et cette permission est bornée par
+  // l'existence RÉELLE du rollback correspondant, pas par une liste d'exceptions à rallonge.
+  const avecRollback = new Set(
+    readdirSync(join(ROOT, 'supabase/rollbacks'))
+      .filter(f => f.endsWith('.sql'))
+      .map(f => f.replace(/_rollback\.sql$/, '')),
+  );
   const hardcoded = files.filter(f => new RegExp(`-f\\s+"?\\$\\{?ROOT[^\n]*${f.replace(/[.]/g, '\\.')}`).test(harness));
-  assert.deepEqual(hardcoded.filter(f => !f.includes('admin_authorization')), [],
-    `migration appliquée par chemin codé en dur : ${hardcoded.join(', ')} — ` +
+  const sansJustification = hardcoded.filter(f => !avecRollback.has(f.replace(/\.sql$/, '')));
+  assert.deepEqual(sansJustification, [],
+    `migration appliquée par chemin codé en dur sans rollback associé : ${sansJustification.join(', ')} — ` +
     `l'ordre cesserait de suivre la CLI dès l'ajout d'un fichier`);
 
   // Et l'ordre effectivement appliqué doit être comparé à l'ordre attendu, avec échec.

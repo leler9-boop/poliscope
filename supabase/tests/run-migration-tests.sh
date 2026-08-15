@@ -111,6 +111,38 @@ echo "▶ Tests d'autorisation…"
 echo "▶ Tests de la plateforme de données…"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/data_platform.test.sql"
 
+echo "▶ Migration + rollback de la forme du sujet de consentement…"
+# Idempotence : réappliquer la migration ne doit ni échouer ni dupliquer la contrainte.
+"${PSQL[@]}" -f "$ROOT/supabase/migrations/20260814100000_consent_subject_form.sql" >/dev/null
+FORM_COUNT="$("${PSQL[@]}" -t -A -c "
+  select count(*) from pg_constraint
+  where conname = 'consent_records_purpose_identifier_form';")"
+if [ "$FORM_COUNT" -ne 1 ]; then
+  echo "  ⚠ contrainte de forme absente ou dupliquée après réapplication ($FORM_COUNT)" >&2
+  exit 1
+fi
+echo "  → migration idempotente, une seule contrainte de forme"
+
+"${PSQL[@]}" -f "$ROOT/supabase/rollbacks/20260814100000_consent_subject_form_rollback.sql" >/dev/null
+AFTER_ROLLBACK="$("${PSQL[@]}" -t -A -c "
+  select
+    (select count(*) from pg_constraint where conname = 'consent_records_purpose_identifier_form')
+    || '/' ||
+    (select count(*) from pg_constraint where conname = 'consent_records_purpose_identifier_isolation');")"
+if [ "$AFTER_ROLLBACK" != "0/1" ]; then
+  echo "  ⚠ rollback incorrect : forme/isolation = $AFTER_ROLLBACK (attendu 0/1)" >&2
+  exit 1
+fi
+# La quarantaine SURVIT au rollback : l'absence de sujet est un fait, pas un effet de la contrainte.
+if [ "$("${PSQL[@]}" -t -A -c "select to_regclass('private.consent_records_quarantine') is not null;")" != "t" ]; then
+  echo "  ⚠ le rollback a supprimé la quarantaine : la preuve du défaut est perdue" >&2
+  exit 1
+fi
+echo "  → rollback conforme, quarantaine préservée"
+
+# On remet la contrainte stricte : les étapes suivantes doivent voir l'état cible.
+"${PSQL[@]}" -f "$ROOT/supabase/migrations/20260814100000_consent_subject_form.sql" >/dev/null
+
 echo "▶ Rollback…"
 "${PSQL[@]}" -f "$ROOT/supabase/rollbacks/20260809120000_admin_authorization_rollback.sql" >/dev/null
 RESTORED="$("${PSQL[@]}" -t -A -c "
