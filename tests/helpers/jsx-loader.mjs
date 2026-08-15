@@ -36,7 +36,30 @@ export async function resolve(specifier, context, nextResolve) {
 export async function load(url, context, nextLoad) {
   if (!url.endsWith('.jsx')) return nextLoad(url, context);
 
-  const source = await readFile(fileURLToPath(url), 'utf8');
+  const chemin = fileURLToPath(url);
+  const source = await readFile(chemin, 'utf8');
+
+  // ⚠ UN MODULE VIDE EST UN ÉCHEC, PAS UN MODULE.
+  //
+  // Sur ce poste, plusieurs fichiers SUIVIS PAR GIT se lisent à zéro octet depuis Node alors
+  // que `ls` annonce leur taille et que `git show HEAD:…` rend leur contenu complet : le
+  // dossier est synchronisé dans le nuage et le contenu peut être évincé (fichier
+  // « dataless »). Un `cat` le rematérialise. Constaté le 2026-08-14 sur trois migrations.
+  //
+  // Laissé passer, un module vide n'exporte rien : le `default` importé vaut `undefined`, le
+  // rendu échoue en aval — ou l'import reste suspendu, et le runner annule le fichier entier
+  // avec `Promise resolution is still pending but the event loop has already resolved`. C'est
+  // le symptôme exact qui rendait `npm run verify` non terminant. Mieux vaut une erreur qui
+  // nomme la cause qu'un fichier de test annulé sans explication.
+  if (source.length === 0) {
+    throw new Error(
+      `[poliscop/tests] Module lu VIDE : ${chemin}\n`
+      + 'Le fichier existe mais son contenu n’est pas matérialisé sur ce poste (synchronisation '
+      + 'dans le nuage). Rematérialiser avant de relancer :\n'
+      + '  find src scripts supabase tests -type f -exec cat {} + > /dev/null',
+    );
+  }
+
   const { code } = transformSync(source, {
     loader: 'jsx',
     format: 'esm',

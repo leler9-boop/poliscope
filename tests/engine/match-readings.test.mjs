@@ -72,6 +72,43 @@ test('aucune preuve n’est comptée deux fois : chaque lecture a son propre dé
   assert.ok(!('themesKnown' in m.election.coverage));
 });
 
+test('aucune surface visible ne promet encore un score « 65 % global + 35 % local »', async () => {
+  // ⚠ Le calcul avait été supprimé du moteur, mais la note « Comment ce score est calculé ? »
+  // de la page Élection l'annonçait toujours à l'utilisateur. Un moteur corrigé derrière un
+  // texte faux reste un mensonge affiché — c'est la même faute que « aucun corpus approuvé à
+  // ce jour », dans un autre fichier.
+  const { readdirSync, statSync, readFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
+  const racine = fileURLToPath(new URL('../../src', import.meta.url));
+
+  const fichiers = [];
+  (function walk(dir) {
+    for (const nom of readdirSync(dir)) {
+      const p = join(dir, nom);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (/\.jsx?$/.test(nom)) fichiers.push(p);
+    }
+  })(racine);
+
+  // ⚠ Les COMMENTAIRES doivent pouvoir citer l'ancien calcul — c'est même la seule façon
+  // d'expliquer pourquoi il a disparu. On les retire donc AVANT de chercher, blocs compris :
+  // un filtre ligne à ligne laissait passer les lignes de continuation d'un `{/* … */}`.
+  const sansCommentaires = src => src
+    .replace(/\{?\/\*[\s\S]*?\*\/\}?/g, ' ')
+    .split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
+
+  const coupables = [];
+  for (const f of fichiers) {
+    const texte = sansCommentaires(readFileSync(f, 'utf8'));
+    if (/65\s*%[^\n]{0,80}35\s*%|profil global \(65|global profile \(65/.test(texte)) {
+      coupables.push(f.replace(racine, 'src'));
+    }
+  }
+  assert.deepEqual(coupables, [],
+    `un texte visible annonce encore le mélange 65/35 supprimé : ${coupables.join(', ')}`);
+});
+
 test('aucune pondération entre les deux lectures ne subsiste dans la configuration', async () => {
   const { MATCH_CONFIG } = await import('../../src/engine/matchConfig.js');
   assert.equal('blend' in MATCH_CONFIG, false,

@@ -27,10 +27,20 @@ const { resolveCandidateId } = await import(`${base}/src/data/candidateRegistry.
 const { computeCandidateMatch } = await import(`${base}/src/engine/candidateMatch.js`);
 const { MATCH_CONFIG } = await import(`${base}/src/engine/matchConfig.js`);
 const { THEMES_ORDER } = await import(`${base}/src/data/questions.js`);
-const { resolveElectionContract, ABSOLUTE_MIN_THEMES } = await import(`${base}/src/engine/matchContracts.js`);
+const { resolveElectionContract, ABSOLUTE_MIN_THEMES, ELECTION_DIRECT_CONTRACT } =
+  await import(`${base}/src/engine/matchContracts.js`);
+const { MATCH_READING } = await import(`${base}/src/engine/candidateMatch.js`);
 
 const sourceIsVerified = id => Boolean(getSource(id)?.verifiedAt);
 const neutralProfile = Object.fromEntries(THEMES_ORDER.map(t => [t, 50]));
+
+/** Compteurs GLOBAUX, calculés — jamais écrits en dur dans un message de fin. */
+const totalApprouvees = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED).length;
+const totalCodees     = CANDIDATE_POSITIONS.filter(p => p.stance != null).length;
+const totalEnAttente  = CANDIDATE_POSITIONS.filter(
+  p => p.stance != null && p.reviewStatus !== REVIEW_STATUS.APPROVED).length;
+let scorablesGeneral  = 0;
+let scorablesElection = 0;
 
 // Deux niveaux, parce que deux natures de problème :
 //   • RÉGRESSION TECHNIQUE — la chaîne est cassée. Toujours bloquant.
@@ -41,8 +51,18 @@ const neutralProfile = Object.fromEntries(THEMES_ORDER.map(t => [t, 50]));
 const STRICT = process.argv.includes('--strict');
 let broken = 0;
 let warnings = 0;
+let strictBlocked = 0;
 const fail = msg => { console.log(`  ✖ ${msg}`); broken++; };
 const warn = msg => { console.log(`  ⚠ ${msg}`); warnings++; };
+/**
+ * Limite structurelle CONNUE. En mode strict elle bloque, mais elle ne doit jamais être
+ * comptée ni annoncée comme une « régression technique » : un questionnaire trop étroit n'est
+ * pas une chaîne cassée, et confondre les deux dans le message de fin est exactement le genre
+ * de libellé faux que ce lot supprime ailleurs.
+ */
+const limite = msg => {
+  if (STRICT) { console.log(`  ✖ ${msg}`); strictBlocked++; } else warn(msg);
+};
 
 console.log('Matching candidats — état de publiabilité\n');
 console.log(`Seuils (matchConfig.js) : ${MATCH_CONFIG.minSourcedPositionsPerTheme} position(s) sourcée(s) par thème, `
@@ -67,15 +87,28 @@ for (const election of elections) {
   const contrat = resolveElectionContract(questions);
   console.log(`── ${election.id} — ${election.candidates.length} candidats, ${questions.length} questions`);
   console.log(`   thèmes atteignables au mieux : ${reachableThemes} / ${THEMES_ORDER.length}`
-    + ` · seuil du contrat : ${contrat.minKnownThemes ?? '—'} (${contrat.version})`);
+    + ` · seuil thématique : ${contrat.minKnownThemes ?? '—'} (${contrat.version})`);
   if (!contrat.structurallyPossible) {
-    (STRICT ? fail : warn)(`${election.id} : QUESTIONNAIRE STRUCTURELLEMENT INSUFFISANT — `
-      + `${reachableThemes} thèmes atteignables, plancher de ${ABSOLUTE_MIN_THEMES}. Aucun `
-      + 'corpus, même parfait, ne peut y produire un score strict. Ce n’est pas un manque de '
-      + 'données : c’est le questionnaire qu’il faut élargir.');
+    // ⚠ CE QUE CET AVERTISSEMENT DIT — ET NE DIT PLUS. Il portait sur « un score strict » en
+    // général, à l'époque où la lecture électorale passait par un profil thématique. Depuis
+    // la séparation des deux lectures (P0-3), la lecture ÉLECTORALE DIRECTE reste possible
+    // sur ces questionnaires : elle compare des positions, pas des thèmes agrégés. Seule la
+    // lecture GÉNÉRALE y est structurellement hors d'atteinte.
+    limite(`${election.id} : questionnaire trop étroit pour une lecture `
+      + `THÉMATIQUE — ${reachableThemes} thèmes atteignables, plancher de ${ABSOLUTE_MIN_THEMES}. `
+      + 'Aucun corpus, même parfait, n’y produira de profil général. La lecture électorale '
+      + 'directe, elle, reste possible : c’est le questionnaire qu’il faut élargir, pas le corpus.');
   }
 
+  // ⚠ La lecture ÉLECTORALE DIRECTE se calcule sur l'intersection des réponses de
+  // l'utilisateur et des positions du candidat. Ne fournir aucune réponse la rendrait
+  // structurellement vide, et le rapport conclurait « aucun candidat comparable » à partir
+  // d'un profil vide plutôt que de l'état du corpus. On simule donc un questionnaire
+  // intégralement répondu — c'est le MEILLEUR CAS, et il est annoncé comme tel.
+  const reponsesCompletes = Object.fromEntries(questions.map(q => [q.id, 3]));
+
   let scored = 0;
+  let scoredElection = 0;
   const rows = [];
   for (const candidate of election.candidates) {
     const canonical = resolveCandidateId(candidate.id);
@@ -106,37 +139,61 @@ for (const election of elections) {
     const themesPotentiels = compter(coded);
     const themesReady = compter(approved);
 
+    // Les DEUX lectures, calculées indépendamment. Un seul appel les produit toutes les deux.
     const match = computeCandidateMatch({
       userThemes: neutralProfile, candidate, questions, sourceIsVerified,
+      electionAnswers: reponsesCompletes, reading: MATCH_READING.GENERAL,
     });
-    if (match.score != null) scored++;
+    if (match.general.score != null) { scored++; scorablesGeneral++; }
+    if (match.election.score != null) { scoredElection++; scorablesElection++; }
 
+    const cov = match.election.coverage;
     rows.push({
       id: candidate.id, canonical,
       positions: all.length, coded: coded.length, approved: approved.length,
-      themesReady, themesPotentiels, score: match.score, reason: match.reason ?? null,
-      blocage: all.length === 0 ? 'aucun corpus'
+      themesReady, themesPotentiels,
+      scoreGeneral: match.general.score, reasonGeneral: match.general.reason ?? null,
+      scoreElection: match.election.score, reasonElection: match.election.reason ?? null,
+      compared: cov.positionsCompared, available: cov.positionsAvailable,
+      themesRepresented: cov.themesRepresented,
+      blocageGeneral: all.length === 0 ? 'aucun corpus'
         : approved.length === 0 ? 'relecture non faite'
-        : !contrat.structurallyPossible ? 'questionnaire structurellement insuffisant'
-        : themesReady < contrat.minKnownThemes ? 'corpus trop étroit'
-        : match.score == null ? 'CHAÎNE CASSÉE' : '—',
+        : themesReady < 4 ? 'corpus trop étroit pour un profil général'
+        : match.general.score == null ? 'CHAÎNE CASSÉE' : '—',
+      blocageElection: approved.length === 0 ? 'relecture non faite'
+        : match.election.score != null ? '—'
+        : cov.positionsCompared >= ELECTION_DIRECT_CONTRACT.minComparedPositions
+          && cov.positionsCompared / questions.length >= ELECTION_DIRECT_CONTRACT.minQuestionnaireShare
+          && cov.themesRepresented >= ELECTION_DIRECT_CONTRACT.minThemesRepresented
+          ? 'CHAÎNE CASSÉE'
+          : 'intersection sous le contrat direct',
     });
   }
 
   for (const r of rows) {
     console.log(`   ${String(r.id).padEnd(16)} pos ${String(r.positions).padStart(2)} `
-      + `· codées ${String(r.coded).padStart(2)} · approuvées ${String(r.approved).padStart(2)} `
-      + `· thèmes prêts ${r.themesReady} (potentiel ${r.themesPotentiels}) `
-      + `· score ${r.score ?? '—'}  ${r.blocage}`);
+      + `· codées ${String(r.coded).padStart(2)} · approuvées ${String(r.approved).padStart(2)}`);
+    console.log(`   ${' '.repeat(16)}   général  : thèmes prêts ${r.themesReady} (potentiel ${r.themesPotentiels})`
+      + ` · score ${r.scoreGeneral ?? '—'}  ${r.blocageGeneral}`);
+    console.log(`   ${' '.repeat(16)}   élection : ${r.compared}/${r.available} positions comparées`
+      + ` (questionnaire ${questions.length}, ${r.themesRepresented} thème(s))`
+      + ` · score ${r.scoreElection ?? '—'}  ${r.blocageElection}`);
   }
-  console.log(`   → ${scored}/${election.candidates.length} candidats scorés\n`);
+  console.log(`   → ${scored}/${election.candidates.length} comparables en lecture GÉNÉRALE`
+    + ` · ${scoredElection}/${election.candidates.length} en lecture ÉLECTORALE DIRECTE`
+    + ' (questionnaire supposé intégralement répondu)\n');
 
   // LE contrôle : une position approuvée et suffisante DOIT produire un score. Si ce n'est
   // pas le cas, le défaut est dans le moteur ou le mapping, pas dans le corpus.
   for (const r of rows) {
-    if (r.blocage === 'CHAÎNE CASSÉE') {
+    if (r.blocageGeneral === 'CHAÎNE CASSÉE') {
       fail(`${r.id} : ${r.approved} positions approuvées couvrant ${r.themesReady} thèmes, `
-        + `et pourtant aucun score (« ${r.reason} »). Moteur ou mapping en cause.`);
+        + `et pourtant aucune lecture générale (« ${r.reasonGeneral} »). Moteur ou mapping en cause.`);
+    }
+    if (r.blocageElection === 'CHAÎNE CASSÉE') {
+      fail(`${r.id} : ${r.compared} positions comparées sur ${r.themesRepresented} thèmes — `
+        + `le contrat direct est rempli, et pourtant aucune lecture électorale `
+        + `(« ${r.reasonElection} »). Moteur ou mapping en cause.`);
     }
   }
 }
@@ -183,11 +240,32 @@ if (broken) {
   console.log('Un corpus incomplet n’échoue pas ici ; une chaîne cassée, oui.');
   process.exit(1);
 }
-console.log('OK — la chaîne de matching est intacte.');
+console.log('OK — la chaîne de matching est intacte : aucune régression technique.');
+if (strictBlocked) {
+  // ⚠ Sortie non nulle VOULUE en mode strict, et libellée pour ce qu'elle est. Annoncer
+  // « 3 régressions techniques » pour trois questionnaires trop étroits enverrait chercher un
+  // défaut de code là où il faut élargir des questionnaires.
+  console.log(`STRICT — ${strictBlocked} limite(s) structurelle(s) connue(s) rendue(s) bloquante(s).`);
+  console.log('Ce ne sont PAS des régressions : ces questionnaires ne peuvent pas porter de');
+  console.log('lecture thématique, quel que soit le corpus. La lecture électorale directe, elle,');
+  console.log('reste possible. Sans `--strict`, ce sont des avertissements.');
+  process.exit(1);
+}
 if (warnings) {
   console.log(`${warnings} limite(s) structurelle(s) connue(s) signalée(s) en avertissement.`);
   console.log('Ce sont des questionnaires d’élection trop étroits pour le seuil strict, pas des');
   console.log('régressions. `node scripts/check-matching.mjs --strict` les rend bloquantes.');
 }
-console.log('Voie stricte : aucun corpus approuvé à ce jour — aucun candidat n’y est scorable.');
+// ⚠ TOUT DÉCOMPTE AFFICHÉ ICI EST CALCULÉ. La version précédente affirmait, en dur,
+// « aucun corpus approuvé à ce jour — aucun candidat n'y est scorable » : la phrase est
+// restée en place pendant que douze positions étaient approuvées et relues. Un contrôle qui
+// récite un état figé est pire qu'aucun contrôle — il donne l'assurance sans la vérification.
+console.log(`Voie stricte : ${totalApprouvees} position(s) approuvée(s) sur ${totalCodees} codée(s) `
+  + `(${totalEnAttente} en attente de relecture).`);
+console.log(`  → ${scorablesGeneral} candidature(s) comparables en lecture GÉNÉRALE, `
+  + `${scorablesElection} en lecture ÉLECTORALE DIRECTE `
+  + `(contrat ${ELECTION_DIRECT_CONTRACT.id} ${ELECTION_DIRECT_CONTRACT.version} : `
+  + `${ELECTION_DIRECT_CONTRACT.minComparedPositions} positions comparées, `
+  + `${Math.round(ELECTION_DIRECT_CONTRACT.minQuestionnaireShare * 100)} % du questionnaire, `
+  + `${ELECTION_DIRECT_CONTRACT.minThemesRepresented} thèmes).`);
 console.log(`Voie éditoriale ${EDITORIAL_ANSWERS_VERSION} : opérationnelle, résultats étiquetés « estimation ».`);

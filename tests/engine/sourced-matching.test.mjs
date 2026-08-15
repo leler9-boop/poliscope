@@ -28,15 +28,21 @@ const allAnswers = Object.fromEntries(fr2027.specificQuestions.map(q => [q.id, 3
 
 // ─── État actuel des données ────────────────────────────────────────────────
 
-test('constat : zéro position approuvée dans le dépôt', () => {
+test('état du corpus : douze positions approuvées, onze encore en attente de relecture', () => {
+  // ⚠ Ce test s'appelait « constat : zéro position approuvée dans le dépôt » alors que son
+  // assertion attendait déjà 12. Un titre qui contredit son assertion égare le lecteur autant
+  // qu'un message affiché faux — c'est le même défaut, dans le même lot (2026-08-14).
   const approved = CANDIDATE_POSITIONS.filter(p => p.reviewStatus === REVIEW_STATUS.APPROVED);
+  const coded    = CANDIDATE_POSITIONS.filter(p => p.stance != null);
   assert.equal(approved.length, 12,
-    'si ce test échoue, des positions ont été approuvées : mettre à jour le rapport et la doc');
+    'si ce test échoue, l’état du corpus a changé : mettre à jour le rapport et la doc');
+  assert.equal(coded.length - approved.length, 11,
+    'onze positions codées attendent encore une relecture indépendante');
 });
 
 // ─── Le cœur du P0 ──────────────────────────────────────────────────────────
 
-test('aucun candidat 2027 n’obtient de score public sans position approuvée', () => {
+test('aucun candidat 2027 n’obtient de lecture GÉNÉRALE sans corpus thématique suffisant', () => {
   for (const c of fr2027.candidates) {
     const m = computeCandidateMatch({
       userThemes: flat(50),
@@ -45,18 +51,33 @@ test('aucun candidat 2027 n’obtient de score public sans position approuvée',
       electionAnswers: allAnswers,
       questions: fr2027.specificQuestions,
     });
-    assert.equal(m.score, null,
-      `${c.id} obtient ${m.score}/100 alors qu'aucune de ses positions n'est sourcée et relue`);
-    // ⚠ Le motif dépend désormais de l'état du corpus : sans position approuvée c'est
+    assert.equal(m.general.score, null,
+      `${c.id} obtient ${m.general.score}/100 en lecture générale alors que son corpus relu ne `
+      + 'couvre pas assez de thèmes');
+    // ⚠ Le motif dépend de l'état du corpus : sans position approuvée c'est
     // `no_sourced_positions`, avec quelques-unes mais trop peu de thèmes c'est
     // `no_weighted_theme` ou `insufficient_coverage`. Les trois disent la même chose de
     // fond — rien de publiable — et figer le premier reviendrait à figer un état du corpus.
-    assert.ok(['no_sourced_positions', 'no_weighted_theme', 'insufficient_coverage'].includes(m.reason),
-      `${c.id} : motif inattendu « ${m.reason} »`);
+    assert.ok(['no_sourced_positions', 'no_weighted_theme', 'insufficient_coverage'].includes(m.general.reason),
+      `${c.id} : motif inattendu « ${m.general.reason} »`);
   }
 });
 
-test('le classement public est VIDE tant qu’aucun candidat n’est comparable', () => {
+test('la lecture ÉLECTORALE est jugée sur SON contrat, indépendamment de la générale', () => {
+  // ⚠ C'est le défaut P0-3 en une assertion : David Lisnard a sept positions approuvées et
+  // relues sur les dix-sept questions du scrutin, et n'obtenait aucun résultat parce que son
+  // profil THÉMATIQUE n'atteignait pas quatre thèmes. Les deux lectures étaient liées.
+  const lisnard = fr2027.candidates.find(c => c.id === 'lisnard');
+  const m = computeCandidateMatch({
+    userThemes: flat(50), candidate: lisnard, priorityOrder: [...THEMES_ORDER],
+    electionAnswers: allAnswers, questions: fr2027.specificQuestions,
+  });
+  assert.equal(m.general.score, null, 'sa lecture générale reste hors d’atteinte');
+  assert.notEqual(m.election.score, null, 'sa lecture électorale directe, elle, est possible');
+  assert.equal(m.election.coverage.positionsCompared, 7);
+});
+
+test('le classement GÉNÉRAL est VIDE tant qu’aucun corpus thématique n’est suffisant', () => {
   const { results, unscored } = rankCandidates(
     {
       userThemes: flat(50),
@@ -66,7 +87,7 @@ test('le classement public est VIDE tant qu’aucun candidat n’est comparable'
     },
     fr2027.candidates,
   );
-  assert.equal(results.length, 0, 'des candidats sont classés sans preuve sourcée');
+  assert.equal(results.length, 0, 'des candidats sont classés sans preuve sourcée suffisante');
   assert.equal(unscored.length, fr2027.candidates.length,
     'les candidats non comparables doivent rester visibles, avec leur motif');
 });

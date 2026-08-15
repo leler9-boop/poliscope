@@ -1024,9 +1024,14 @@ function ResultsStep({ election, language, t, globalProfile, electionAnswers, pr
         </button>
         {methodOpen && (
           <p className="text-xs text-gray-400 leading-relaxed mt-2 pl-3 border-l border-gray-200">
+            {/* ⚠ CE TEXTE DÉCRIVAIT UN CALCUL QUI N'EXISTE PLUS (corrigé 2026-08-14). Il
+                annonçait « 65 % profil global + 35 % questions locales ». Ce mélange est
+                supprimé : il comptait deux fois les mêmes positions. Il était d'ailleurs déjà
+                faux pour cette page, qui classe par la voie éditoriale — une comparaison
+                directe, question par question, sans aucune composante globale. */}
             {language === 'fr'
-              ? 'Votre profil politique général est ajusté avec les questions spécifiques à cette élection, car les enjeux varient d\'un pays et d\'une élection à l\'autre. Le score final combine votre profil global (65 %) et vos réponses aux questions locales (35 %).'
-              : 'Your general political profile is adjusted with election-specific questions, because the issues that matter vary from one country and election to another. The final score combines your global profile (65%) and your answers to local questions (35%).'}
+              ? 'Ce classement compare vos réponses aux questions de cette élection avec celles attribuées à chaque candidat, question par question. Il ne mélange pas votre profil général : celui-ci fait l’objet d’une lecture séparée, avec sa propre couverture. Le nombre de questions réellement comparées est affiché avec chaque résultat.'
+              : 'This ranking compares your answers to this election’s questions with those attributed to each candidate, question by question. It does not blend in your general profile: that is a separate reading, with its own coverage. The number of questions actually compared is shown with each result.'}
           </p>
         )}
       </div>

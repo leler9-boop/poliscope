@@ -18,13 +18,17 @@ npm run build
 npm run preview
 
 # Tests (node:test — aucune dépendance externe)
-npm test                  # tous les tests (117)
+npm test                  # tous les tests (713 au 2026-08-14)
+                          # ⚠ délai maximal de 120 s par test : un blocage ÉCHOUE au lieu de
+                          # suspendre la suite. Aucun appel réseau réel n'est autorisé —
+                          # `tests/helpers/no-network.mjs` lève sur fetch/XHR/sendBeacon.
 npm run test:unit         # moteurs (scorer, matcher, queue)
 npm run test:data         # intégrité des données + terminologie affichée — BLOQUANT
 npm run test:integration  # parcours de session : reprise, import, consentements, cloud
 npm run test:lib          # moteurs client de collecte (chronométrage, file, consentement, protocole)
 npm run test:migrations   # migrations Supabase sur un Postgres jetable (nécessite psql)
-                          # exécute aussi supabase/tests/data_platform.test.sql (23 tests)
+                          # exécute aussi supabase/tests/data_platform.test.sql (29 tests),
+                          # plus la migration ET le rollback de la forme du sujet de consentement
 
 # Contrôles
 npm run lint          # conventions de profils + marque + contenu Learn
@@ -83,7 +87,21 @@ Poliscop is a React + Vite SPA with no router — navigation is managed entirely
 ### Matching engine
 
 Point d'entrée unique : **`src/engine/candidateMatch.js` → `computeCandidateMatch()`**.
-Configuration versionnée dans `src/engine/matchConfig.js` (veto, exposants, mélange, seuils).
+Configuration versionnée dans `src/engine/matchConfig.js` (veto, exposants, seuils).
+
+⚠️ **DEUX LECTURES INDÉPENDANTES, JAMAIS FUSIONNÉES** (2026-08-14). `computeCandidateMatch()`
+rend `match.general` ET `match.election`, calculées séparément :
+
+- **générale** — profil utilisateur 8 thèmes ↔ corpus du candidat ; contrat : 4 thèmes connus,
+  2 positions relues par thème ; veto appliqué ;
+- **électorale directe** — réponses de l'utilisateur ↔ positions du candidat, question par
+  question ; contrat : 5 positions comparées, 25 % du questionnaire, 3 thèmes ; **pas de veto**.
+
+Le mélange `0,65 × global + 0,35 × spécifique` a été **supprimé** : il comptait deux fois les
+mêmes positions et interdisait tout score électoral à un candidat dont le profil thématique
+n'atteignait pas quatre thèmes. `MATCH_CONFIG.blend` n'existe plus — ne pas le réintroduire.
+Le paramètre `reading` choisit la lecture reflétée au premier niveau (`score`, `coverage`) ;
+`rankCandidates` classe sur cette lecture. Voir `docs/methodology/matching.md`.
 
 - `calculateAlignment()` (`matcher.js`) reste utilisé pour figures et archétypes ; il consomme
   la même configuration de veto.
@@ -132,6 +150,11 @@ Schéma `private` **non exposé par PostgREST** (`supabase/config.toml` — ne j
   refuse la suppression d'un `no_opinion` hors purge.
 - `private.consent_records` — journal **append-only**, 4 finalités distinctes
   (`measurement`, `political_analytics`, `cloud_save`, `research`), jamais précochées.
+  ⚠ **Une décision sans SUJET est refusée** par `consent_records_purpose_identifier_form`
+  (migration `20260814100000`) : `cloud_save` porte le compte seul, les trois autres leur
+  pseudonyme seul. Côté client, `buildConsentDecisions()` n'en construit jamais et ne
+  transmet **que les finalités modifiées**. `research` n'émet aucune preuve serveur tant que
+  son flux n'existe pas — décision documentée dans `docs/data-platform/14-consent-subjects.md`.
 - `private.question_reports` — les signalements sont **réellement stockés**. `QuestionCard`
   n'affiche « reçu » qu'après réponse serveur positive ; hors ligne, il annonce la mise en file.
 - Client : `src/lib/questionTiming.js` (temps actif, horloge monotone),
@@ -140,7 +163,16 @@ Schéma `private` **non exposé par PostgREST** (`supabase/config.toml` — ne j
 ⚠ **Deux identifiants pseudonymes DISTINCTS** : `poliscop_anon_id` (mesure d'audience) et
 `poliscop_analytics_sid` (analyse politique). Les fusionner relierait le parcours de navigation
 aux opinions — donnée de l'article 9. Chacun n'est créé qu'à l'acceptation de SA finalité et
-effacé à son retrait.
+effacé à son retrait. **Lire avant d'effacer** : `readAnalyticsSessionId()` lit sans créer ni
+supprimer ; `analyticsSessionId(false, …)` EFFACE — l'appeler avant de construire une demande
+de suppression la prive de son sujet.
+
+⚠ **« Suppression confirmée » exige un REÇU, jamais une déduction.**
+`withdrawalQueue.withdrawalState()` rend un objet à cinq états — `none`, `requested`,
+`pending`, `confirmed`, `unpersisted` — et `confirmed` n'est produit que par un reçu portant
+l'identifiant de la demande, obtenu sur réponse 2xx. Une file vide **ne prouve rien** : c'est
+en la lisant comme une preuve que l'interface annonçait une suppression à qui avait
+simplement refusé la collecte. Un refus initial ne crée aucune tombstone.
 
 ⚠ **La production réelle est `gpvqsftyrninbwzhkaed`** (celle du `.env`, vivante), PAS
 `xjpzqaqzoygcwtcpumfo` (« Poliscope v1 » — nom exact du projet Supabase ; brand-check:allow),
