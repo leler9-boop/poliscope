@@ -23,12 +23,32 @@ import React, { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore.js';
 import { PURPOSES } from '../lib/consent.js';
 import CollectionConsentControl from './CollectionConsentControl.jsx';
-import { withdrawalState as readQueueState } from '../lib/withdrawalQueue.js';
+import { withdrawalState as readQueueState, WITHDRAWAL_STATE } from '../lib/withdrawalQueue.js';
 
 /** État du retrait pour la finalité politique, lu depuis le stockage du terminal. */
 function readWithdrawalState() {
   const storage = typeof localStorage !== 'undefined' ? localStorage : null;
   return readQueueState(storage, { purpose: PURPOSES.POLITICAL_ANALYTICS });
+}
+
+/**
+ * Fusionne l'issue IMMÉDIATE d'une action et l'état DURABLE de la file.
+ *
+ * ⚠ Les deux sont nécessaires et aucun ne remplace l'autre. La file dit ce qui survivra à un
+ * rechargement ; l'issue de l'action dit ce qui vient de se passer — notamment le seul cas
+ * que la file ne peut pas raconter : une demande qu'elle n'a PAS pu enregistrer. Sans
+ * stockage, la file relit `none`, c'est-à-dire « rien à supprimer » — exactement le message
+ * à ne pas afficher à quelqu'un dont la demande vient d'échouer.
+ */
+function mergeWithdrawal(fileState, issue) {
+  const mien = issue?.withdrawals?.find(w => w.purpose === PURPOSES.POLITICAL_ANALYTICS);
+  if (!mien) return fileState;
+  if (mien.state === WITHDRAWAL_STATE.UNPERSISTED) {
+    return { ...fileState, state: WITHDRAWAL_STATE.UNPERSISTED, requestId: mien.requestId ?? null };
+  }
+  // La file fait foi dès qu'elle a pu enregistrer quelque chose : elle porte le nombre de
+  // tentatives et le reçu.
+  return fileState;
 }
 import { useAuth } from '../lib/auth.jsx';
 
@@ -48,10 +68,13 @@ export default function DataControlsModal({ onClose }) {
   const [withdrawal, setWithdrawal] = useState(() => readWithdrawalState());
   useEffect(() => {
     let vivant = true;
-    import('../lib/attemptSession.js')
-      .then(({ attemptSession }) => attemptSession.retryWithdrawals())
-      .then(() => { if (vivant) setWithdrawal(readWithdrawalState()); })
-      .catch(() => { /* module indisponible */ });
+    (async () => {
+      try {
+        const { attemptSession } = await import('../lib/attemptSession.js');
+        await attemptSession.retryWithdrawals();
+      } catch { /* module indisponible */ }
+      if (vivant) setWithdrawal(readWithdrawalState());
+    })();
     return () => { vivant = false; };
   }, []);
 
@@ -139,18 +162,27 @@ export default function DataControlsModal({ onClose }) {
               <CollectionConsentControl
                 decision={collectionDecision}
                 language={language}
-                withdrawalState={withdrawal}
-                onRetry={() => {
-                  import('../lib/attemptSession.js')
-                    .then(({ attemptSession }) => attemptSession.retryWithdrawals())
-                    .then(() => setWithdrawal(readWithdrawalState()))
-                    .catch(() => { /* hors navigateur : rien à rejouer */ });
+                withdrawal={withdrawal}
+                onRetry={async () => {
+                  try {
+                    const { attemptSession } = await import('../lib/attemptSession.js');
+                    await attemptSession.retryWithdrawals();
+                  } catch { /* hors navigateur : rien à rejouer */ }
+                  setWithdrawal(readWithdrawalState());
                 }}
-                onGrant={() => recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: true }, { language })}
-                onWithdraw={() => {
-                  withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language });
-                  // Laisse la synchronisation asynchrone déposer la tombstone avant de lire.
-                  setTimeout(() => setWithdrawal(readWithdrawalState()), 0);
+                onGrant={async () => {
+                  await recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: true }, { language });
+                  setWithdrawal(readWithdrawalState());
+                }}
+                onWithdraw={async () => {
+                  // ⚠ ON ATTEND LE RÉSULTAT. La version précédente relisait la file après un
+                  // délai de zéro milliseconde : une course avec l'import dynamique de
+                  // `attemptSession` et l'écriture de la tombstone. Gagnée, l'interface
+                  // affichait « suppression en cours » ; perdue, elle affichait
+                  // « suppression confirmée par le serveur » — sans qu'aucun serveur n'ait
+                  // répondu quoi que ce soit.
+                  const issue = await withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language });
+                  setWithdrawal(mergeWithdrawal(readWithdrawalState(), issue));
                 }}
               />
 

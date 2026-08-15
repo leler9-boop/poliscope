@@ -15,8 +15,12 @@ import { questionTimer, attachVisibilityPause } from './questionTiming.js';
 import { postEnvelope, beaconEnvelope, isIngestEnabled, CLIENT_RELEASE } from './ingestClient.js';
 import {
   enqueueWithdrawal, replayWithdrawals, pendingWithdrawals, withdrawalState,
+  WITHDRAWAL_STATE, storageIsWritable,
 } from './withdrawalQueue.js';
-import { canCollectAttemptData, buildConsentRecords, CONSENT_POLICY_VERSION } from './consent.js';
+import {
+  canCollectAttemptData, buildConsentDecisions, CONSENT_POLICY_VERSION,
+  isGranted, ALL_PURPOSES,
+} from './consent.js';
 import { canonicalMode } from '../data/questions.js';
 
 const ATTEMPT_KEY = 'poliscop_attempt';
@@ -76,6 +80,19 @@ export function analyticsSessionId(granted, storage = typeof localStorage !== 'u
   } catch {
     return null;   // stockage indisponible : la passation reste purement locale
   }
+}
+
+/**
+ * Lit le pseudonyme d'analyse SANS le créer ni l'effacer.
+ *
+ * ⚠ Indispensable au retrait. `analyticsSessionId(false, …)` EFFACE l'identifiant et rend
+ * `null` : appelée avant de construire la tombstone, elle supprimait le seul élément qui
+ * permet au serveur de savoir quoi supprimer. Après un rechargement — donc sans copie en
+ * mémoire — la demande de suppression partait sans sujet, et l'interface annonçait quand
+ * même « suppression en cours ».
+ */
+export function readAnalyticsSessionId(storage = typeof localStorage !== 'undefined' ? localStorage : null) {
+  try { return storage?.getItem(ANALYTICS_SID_KEY) ?? null; } catch { return null; }
 }
 
 /** Transport par défaut : un lot de réponses vers l'Edge Function. */
@@ -157,9 +174,33 @@ export function createAttemptSession({
      * Le consentement change (accord initial, retrait, réhydratation). Point d'entrée
      * UNIQUE : c'est ici que la collecte démarre ou s'arrête réellement.
      */
-    async setConsent(nextConsentState, { anonymousSessionId: anonId, userId, language } = {}) {
+    /**
+     * @param {Object} nextConsentState
+     * @param {Object} [options]
+     * @param {string[]} [options.changedPurposes] finalités RÉELLEMENT modifiées par ce geste.
+     *   ⚠ Par défaut : AUCUNE. Une réhydratation, une reprise de session ou un simple
+     *   rafraîchissement d'état ne doivent RIEN réémettre — la version précédente
+     *   reconstruisait toutes les décisions connues à chaque appel, ce qui rejouait une
+     *   décision ancienne sans rapport avec l'action courante. Les appelants qui prennent
+     *   une décision passent la liste explicitement.
+     * @returns {Promise<{withdrawals: Array, emitted: Array, skipped: Array,
+     *                    storageWritable: boolean}>} résultat EXPLICITE : l'interface s'en
+     *   sert pour dire ce qui s'est réellement passé, au lieu de le deviner après un délai.
+     */
+    async setConsent(nextConsentState, {
+      anonymousSessionId: anonId, userId, language,
+      changedPurposes = [],
+      measurementId = null,
+    } = {}) {
+      const previousState = consentState;
       const wasAllowed = canCollectAttemptData(consentState);
       const isAllowed  = canCollectAttemptData(nextConsentState);
+
+      // ⚠ LIRE AVANT D'EFFACER. Le pseudonyme est le sujet de la demande de suppression :
+      // le lire après `analyticsSessionId(false, …)` reviendrait à demander au serveur
+      // d'effacer « rien ».
+      const pseudonymeAvant = anonId ?? readAnalyticsSessionId(storage) ?? anonymousSessionId;
+
       consentState = nextConsentState;
       // L'identifiant est créé à l'acceptation et EFFACÉ au retrait, dans le même geste.
       anonymousSessionId = anonId ?? analyticsSessionId(isAllowed, storage) ?? anonymousSessionId;
@@ -167,28 +208,75 @@ export function createAttemptSession({
       if (!wasAllowed && isAllowed) consentGrantedAt = Date.now();
       if (!isAllowed) consentGrantedAt = null;
 
+      const changed = (Array.isArray(changedPurposes) ? changedPurposes : [changedPurposes])
+        .filter(p => ALL_PURPOSES.includes(p));
+
       // La DÉCISION elle-même est enregistrée, accord comme refus : c'est la preuve.
       // ⚠ RETRAIT DURABLE. Un envoi qui échoue n'est PAS « retenté au prochain changement » :
       // il n'y aurait pas forcément de prochain changement, et l'identifiant nécessaire pour
-      // formuler la demande aura été effacé entre-temps. Chaque décision part en file
+      // formuler la demande aura été effacé entre-temps. Chaque retrait part en file
       // persistante AVANT toute tentative, et n'en sort que sur confirmation du serveur.
-      const records = buildConsentRecords(nextConsentState, {
-        anonymousSessionId, userId, language, clientRelease: CLIENT_RELEASE,
+      const { records, skipped } = buildConsentDecisions(nextConsentState, {
+        // Le retrait doit porter le pseudonyme d'AVANT l'effacement, sinon il n'a pas de sujet.
+        anonymousSessionId: pseudonymeAvant,
+        userId,
+        measurementId,
+        purposes: changed,
+        language,
+        clientRelease: CLIENT_RELEASE,
       });
-      const retraits = records.filter(r => r.granted === false);
-      for (const record of retraits) {
-        enqueueWithdrawal(storage, {
+
+      const withdrawals = [];
+      for (const record of records.filter(r => r.granted === false)) {
+        // ⚠ UN REFUS N'EST PAS UN RETRAIT. Une finalité jamais accordée n'a rien produit
+        // côté serveur : en faire une demande de suppression fabriquerait une « suppression
+        // en cours » portant sur un corpus inexistant, puis une « suppression confirmée »
+        // qui ne prouverait rien. La décision est transmise, sans tombstone.
+        if (!isGranted(previousState, record.purpose)) {
+          try { await consentTransport(record); } catch { /* réémis à la prochaine décision */ }
+          withdrawals.push({
+            purpose: record.purpose,
+            requestId: null,
+            state: WITHDRAWAL_STATE.NONE,
+            persisted: true,
+            reason: 'declined_without_prior_grant',
+          });
+          continue;
+        }
+        const issue = enqueueWithdrawal(storage, { purpose: record.purpose, record });
+        withdrawals.push({
           purpose: record.purpose,
-          anonymousSessionId: record.anonymous_session_id,
-          record,
+          requestId: issue.requestId,
+          state: issue.state,
+          persisted: issue.persisted,
+          reason: issue.reason,
         });
       }
+
+      // Une finalité retirée SANS sujet transmissible : rien à demander au serveur, et
+      // surtout rien à annoncer comme supprimé. On le remonte tel quel.
+      for (const s of skipped.filter(x => x.granted === false)) {
+        withdrawals.push({
+          purpose: s.purpose,
+          requestId: null,
+          state: WITHDRAWAL_STATE.NONE,
+          persisted: true,
+          reason: s.reason,
+        });
+      }
+
       // Les ACCORDS peuvent partir directement : leur perte n'efface aucune donnée et sera
       // rejouée par la prochaine décision. Un retrait, lui, ne se rattrape pas.
+      const emitted = [];
       for (const record of records.filter(r => r.granted === true)) {
-        try { await consentTransport(record); } catch { /* réémis à la prochaine décision */ }
+        try {
+          await consentTransport(record);
+          emitted.push({ purpose: record.purpose, ok: true });
+        } catch {
+          emitted.push({ purpose: record.purpose, ok: false });
+        }
       }
-      await replayWithdrawals(storage, consentTransport);
+      const replay = await replayWithdrawals(storage, consentTransport);
 
       if (!isAllowed) {
         // Sans autorisation, aucune passation ne doit rester écrite sur le terminal — y
@@ -217,6 +305,23 @@ export function createAttemptSession({
         persistAttempt();
         await this.declareAttempt(meta);
       }
+
+      // Résultat EXPLICITE. L'interface n'a plus à deviner l'issue après un délai : elle
+      // attend cette valeur, puis relit la file pour l'état durable.
+      return {
+        withdrawals: withdrawals.map(w => ({
+          ...w,
+          // Le rejeu vient de se produire : une demande confirmée à l'instant l'est bien
+          // POUR CETTE demande, identifiée par son `requestId`.
+          state: replay.receipts.some(r => r.requestId && r.requestId === w.requestId)
+            ? WITHDRAWAL_STATE.CONFIRMED
+            : w.state,
+          confirmedAt: replay.receipts.find(r => r.requestId && r.requestId === w.requestId)?.confirmedAt ?? null,
+        })),
+        emitted,
+        skipped,
+        storageWritable: storageIsWritable(storage),
+      };
     },
 
     /**

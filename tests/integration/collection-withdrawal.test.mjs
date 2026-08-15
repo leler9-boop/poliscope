@@ -192,3 +192,99 @@ test('le modal branche réellement la commande sur les actions du store', async 
   assert.match(src, /withdrawCollectionConsent\(\[PURPOSES\.POLITICAL_ANALYTICS\]/);
   assert.match(src, /recordCollectionConsent\(\{ \[PURPOSES\.POLITICAL_ANALYTICS\]: true \}/);
 });
+
+// ─── P0-1 : cinq états, cinq phrases, aucune déduction ──────────────────────
+//
+// ⚠ CE QUE CES TESTS ATTRAPENT. `CollectionConsentControl` affichait « Suppression confirmée
+// par le serveur » dès que l'état n'était pas `pending` — c'est-à-dire aussi bien pour un
+// refus initial que pour une tombstone jamais écrite. La confirmation était produite par
+// ÉLIMINATION. Elle doit désormais exiger un reçu portant l'identifiant de la demande.
+
+const sansTags = html => html.replace(/<[^>]+>/g, ' ');
+
+test('refus initial : aucune mention de suppression, confirmée ou non', () => {
+  const texte = sansTags(rendreControle({
+    decision: decision(false),
+    withdrawal: { state: 'none', purpose: PURPOSES.POLITICAL_ANALYTICS, requestId: null, confirmedAt: null },
+  }));
+  assert.ok(texte.includes('Collecte refusée. Aucune nouvelle donnée ne sera envoyée.'),
+    'un refus initial doit dire ce qu’il est : un refus, pas une suppression');
+  assert.ok(!/[Ss]uppression confirmée/.test(texte),
+    'rien n’avait été collecté : annoncer une suppression confirmée est un mensonge');
+  assert.ok(!/suppression serveur/i.test(texte));
+});
+
+test('sans information sur le retrait, le composant ne confirme RIEN', () => {
+  // Cas de la lecture trop précoce : la propriété n'est pas encore arrivée.
+  const texte = sansTags(rendreControle({ decision: decision(false) }));
+  assert.ok(!/confirmée/.test(texte),
+    'l’absence d’information n’est pas une preuve de suppression');
+});
+
+for (const etat of ['requested', 'pending']) {
+  test(`retrait ${etat} : l’attente est annoncée, jamais la confirmation`, () => {
+    const html = rendreControle({
+      decision: decision(false),
+      withdrawal: { state: etat, purpose: PURPOSES.POLITICAL_ANALYTICS, requestId: 'req-1', confirmedAt: null },
+      onRetry: () => {},
+    });
+    const texte = sansTags(html);
+    assert.ok(/pas encore confirmée/.test(texte));
+    assert.ok(!/confirmée par le serveur/.test(texte));
+    assert.ok(html.includes('retry-withdrawal'), 'la personne doit pouvoir relancer elle-même');
+  });
+}
+
+test('retrait confirmé : la preuve est affichée — demande, finalité, date', () => {
+  const texte = sansTags(rendreControle({
+    decision: decision(false),
+    withdrawal: {
+      state: 'confirmed', purpose: PURPOSES.POLITICAL_ANALYTICS,
+      requestId: 'ab12cd34-0000-4000-8000-000000000000',
+      confirmedAt: '2026-08-14T09:30:00.000Z',
+    },
+  }));
+  assert.ok(/Suppression confirmée par le serveur le 2026-08-14/.test(texte));
+  assert.ok(texte.includes('ab12cd34'), 'la confirmation doit être rattachée à UNE demande');
+  assert.ok(texte.includes('political_analytics'), 'et à UNE finalité');
+});
+
+test('stockage indisponible : on ne promet AUCUN rejeu automatique', () => {
+  const texte = sansTags(rendreControle({
+    decision: decision(false),
+    withdrawal: { state: 'unpersisted', purpose: PURPOSES.POLITICAL_ANALYTICS, requestId: 'req-2', confirmedAt: null },
+  }));
+  assert.ok(/n’a pas pu y être enregistrée/.test(texte));
+  assert.ok(!/réessayée automatiquement/.test(texte),
+    'sans stockage, la demande ne survit pas à la fermeture de l’onglet');
+  assert.ok(!/confirmée/.test(texte));
+});
+
+test('aucun setTimeout ne sert à deviner la fin d’un retrait', async () => {
+  const { readFile } = await import('node:fs/promises');
+  for (const fichier of ['DataControlsModal.jsx', 'CollectionConsentControl.jsx']) {
+    const src = await readFile(new URL(`../../src/components/${fichier}`, import.meta.url), 'utf8');
+    assert.ok(!/setTimeout/.test(src),
+      `${fichier} utilise setTimeout : deviner la fin d’une opération asynchrone par un délai `
+      + 'affichait « suppression confirmée » quand la course était perdue');
+  }
+});
+
+test('le modal ATTEND le résultat du store avant de relire l’état', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const src = await readFile(new URL('../../src/components/DataControlsModal.jsx', import.meta.url), 'utf8');
+  assert.match(src, /await withdrawCollectionConsent\(/,
+    'sans attendre, la lecture de la file précède l’écriture de la tombstone');
+});
+
+// ─── P0-1 : le store rend un résultat explicite, pas rien ───────────────────
+
+test('withdrawCollectionConsent rend une promesse et un résultat exploitable', async () => {
+  useStore.setState({ collectionConsent: {}, language: 'fr' });
+  const issue = await useStore.getState().withdrawCollectionConsent(
+    [PURPOSES.POLITICAL_ANALYTICS], { language: 'fr' },
+  );
+  assert.ok(issue && typeof issue === 'object',
+    'l’interface ne peut pas attendre un résultat qui n’existe pas');
+  assert.ok(Array.isArray(issue.withdrawals));
+});
