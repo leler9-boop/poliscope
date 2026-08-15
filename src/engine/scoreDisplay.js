@@ -63,11 +63,15 @@ export function noScoreReason(reason, lang = 'fr') {
   const fr = {
     insufficient_coverage: 'Trop peu de thèmes renseignés pour calculer un indice fiable.',
     no_weighted_theme:     'Tous les thèmes comparables ont un poids nul dans vos priorités.',
+    // ⚠ Distinct du précédent : « vous n'avez pas encore répondu » et « vous avez tout mis à
+    // zéro » se réparent par des gestes opposés.
+    no_user_profile:       'Faites le test pour obtenir cette comparaison.',
     no_comparable_data:    'Aucune donnée comparable pour ce candidat.',
   };
   const en = {
     insufficient_coverage: 'Too few themes answered to compute a meaningful index.',
     no_weighted_theme:     'Every comparable theme has zero weight in your priorities.',
+    no_user_profile:       'Take the test to get this comparison.',
     no_comparable_data:    'No comparable data for this candidate.',
   };
   const dict = lang === 'fr' ? fr : en;

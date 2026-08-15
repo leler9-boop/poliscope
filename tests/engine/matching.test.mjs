@@ -254,8 +254,11 @@ test('couverture : candidat entièrement sourcé mais utilisateur trop peu couve
       ...withPositions(flat(50)),
     });
     assert.equal(m.score, null, `${n} thème(s) utilisateur : un score a été produit`);
+    // `no_user_profile` couvre le cas n = 0 : depuis 2026-08-14, « aucun thème renseigné » et
+    // « tous les thèmes mis à zéro » portent deux motifs distincts, parce qu'ils se réparent
+    // par des gestes opposés.
     assert.ok(
-      ['insufficient_coverage', 'no_weighted_theme'].includes(m.reason),
+      ['insufficient_coverage', 'no_weighted_theme', 'no_user_profile'].includes(m.reason),
       `${n} thème(s) : motif inattendu « ${m.reason} »`,
     );
   }

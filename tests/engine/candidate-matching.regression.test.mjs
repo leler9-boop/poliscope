@@ -240,7 +240,13 @@ test('l’état de publiabilité réel est explicite et suivi', () => {
     const motifs = new Set(FR2027.candidates.map(c => computeCandidateMatch({
       userThemes, candidate: c, questions: QUESTIONS, sourceIsVerified,
     }).reason));
-    const attendus = new Set(['insufficient_coverage', 'no_weighted_theme', 'no_sourced_positions']);
+    // `no_user_profile` : le profil de test de ce cas est volontairement vide. Il est distinct
+    // de `no_weighted_theme` (thèmes explicitement mis à zéro) depuis 2026-08-14 — les deux se
+    // réparent par des gestes opposés, et les confondre affichait « tous vos thèmes ont un
+    // poids nul » à quelqu'un qui n'avait simplement pas encore fait le test.
+    const attendus = new Set([
+      'insufficient_coverage', 'no_weighted_theme', 'no_user_profile', 'no_sourced_positions',
+    ]);
     const inattendus = [...motifs].filter(r => !attendus.has(r));
     assert.deepEqual(inattendus, [],
       `${approved} positions approuvées, 0 candidat scoré, motif non prévu : ${inattendus.join(', ')}`);

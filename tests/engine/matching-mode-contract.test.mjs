@@ -161,24 +161,30 @@ test('un mode absent ou inconnu échoue fermé au lieu de publier une estimation
 
 // ─── 3. Les réponses électorales atteignent le moteur strict ───────────────
 
-test('les réponses spécifiques 2027 modifient réellement le résultat strict', () => {
+test('les réponses spécifiques 2027 modifient la lecture ÉLECTORALE, pas la générale', () => {
+  // ⚠ CE TEST A CHANGÉ DE SENS (P0-3, 2026-08-14). Il exigeait auparavant que les réponses
+  // électorales fassent bouger LE score — parce que ce score était un mélange 65/35 des deux
+  // lectures. C'était la formulation en test du défaut : les mêmes positions comptaient deux
+  // fois, et la lecture générale se déplaçait quand seules les réponses au scrutin bougeaient.
   const candidate = FR2027.candidates.find(c => c.id === 'attal');
   const common = {
     userThemes, candidate, questions: FR2027.specificQuestions,
     approvedPositions: fullStrictCorpus, sourceIsVerified: () => true,
   };
-  const sansReponses = computeCandidateMatch({ ...common, electionAnswers: {} });
-  // Réponses volontairement opposées aux positions du corpus (stance 1 → likert haut).
+  const neutres  = Object.fromEntries(FR2027.specificQuestions.map(q => [q.id, 3]));
   const opposees = Object.fromEntries(FR2027.specificQuestions.map(q => [q.id, 1]));
-  const avecReponses = computeCandidateMatch({ ...common, electionAnswers: opposees });
 
-  assert.notEqual(sansReponses.score, null, 'le fixture strict doit produire un score');
-  assert.notEqual(avecReponses.score, null);
-  assert.notEqual(
-    sansReponses.score, avecReponses.score,
-    'les réponses électorales sont ignorées par le moteur strict',
-  );
-  assert.ok(avecReponses.coverage.answeredSpecific > 0);
+  const a = computeCandidateMatch({ ...common, electionAnswers: neutres });
+  const b = computeCandidateMatch({ ...common, electionAnswers: opposees });
+
+  assert.notEqual(a.general.score, null, 'le fixture strict doit produire une lecture générale');
+  assert.equal(a.general.score, b.general.score,
+    'changer les réponses au scrutin a déplacé la proximité GÉNÉRALE : les deux lectures sont liées');
+
+  assert.notEqual(a.election.score, null, 'le fixture strict doit produire une lecture électorale');
+  assert.notEqual(a.election.score, b.election.score,
+    'les réponses au scrutin n’atteignent pas la lecture électorale');
+  assert.ok(b.coverage.answeredSpecific > 0);
 });
 
 test('rankCandidatesForSurface transmet electionAnswers en mode strict', () => {
@@ -187,8 +193,12 @@ test('rankCandidatesForSurface transmet electionAnswers en mode strict', () => {
     mode: MATCH_MODE.STRICT, userThemes,
     questions: FR2027.specificQuestions, questionSet: 'fr_2027',
     approvedPositions: fullStrictCorpus, sourceIsVerified: () => true,
+    // Le classement porte explicitement sur la lecture électorale : c'est elle que la page
+    // Élection affiche.
+    reading: 'election',
   };
-  const sans = rankCandidatesForSurface({ ...base, electionAnswers: {} });
+  const neutres = Object.fromEntries(FR2027.specificQuestions.map(q => [q.id, 3]));
+  const sans = rankCandidatesForSurface({ ...base, electionAnswers: neutres });
   const avec = rankCandidatesForSurface({
     ...base,
     electionAnswers: Object.fromEntries(FR2027.specificQuestions.map(q => [q.id, 1])),
@@ -198,4 +208,5 @@ test('rankCandidatesForSurface transmet electionAnswers en mode strict', () => {
   assert.notEqual(scoreSans, null, 'le fixture strict doit produire un score');
   assert.notEqual(scoreSans, scoreAvec,
     'electionAnswers n’atteint pas le moteur strict à travers rankCandidatesForSurface');
+  assert.equal(sans.reading, 'election', 'la lecture classée doit être annoncée');
 });

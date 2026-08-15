@@ -145,6 +145,29 @@ test('une candidature 2027 suivie hors des dix anciennes fiches possède une pag
   assert.match(html, /relecture indépendante/);
 });
 
+test('la fiche affiche les DEUX lectures de proximité, chacune avec son dénominateur', () => {
+  // ⚠ CE QUE CE TEST ATTRAPE (P0-3). La page ne montrait qu'un nombre, produit par un mélange
+  // 65/35 des deux lectures calculées sur les mêmes positions. On ne pouvait ni savoir
+  // combien de positions avaient réellement été comparées, ni distinguer « pas assez de
+  // thèmes connus » de « pas assez de positions comparées ».
+  const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/candidates/david-lisnard'] },
+    h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));
+
+  assert.ok(html.includes('reading-general'), 'la lecture générale doit être affichée séparément');
+  assert.ok(html.includes('reading-election'), 'la lecture électorale doit être affichée séparément');
+
+  const texte = html.replace(/<[^>]+>/g, ' ');
+  assert.match(texte, /Proximité générale/);
+  assert.match(texte, /Proximité sur cette élection/);
+  // Dénominateurs VISIBLES, des deux côtés.
+  assert.match(texte, /\d+\/8 thèmes connus/);
+  assert.match(texte, /\d+\/\d+ positions comparées/);
+  assert.match(texte, /questionnaire de 17 questions/);
+  assert.match(texte, /\d+ thème\(s\) représenté\(s\)/);
+  // Et la séparation estimation / position vérifiée reste explicite.
+  assert.match(texte, /jamais une estimation éditoriale/);
+});
+
 test('une fiche 2027 ne republie pas les anciennes positions éditoriales non sourcées', () => {
   const html = renderToStaticMarkup(h(MemoryRouter, { initialEntries: ['/candidates/roussel_2027'] },
     h(Routes, null, h(Route, { path: '/candidates/:id', element: h(CandidateProfile) }))));

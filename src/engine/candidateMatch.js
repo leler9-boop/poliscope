@@ -34,7 +34,26 @@ import { getPositions, getSource } from '../data/candidateProvenance.js';
 import { deriveCandidateThemes, CANDIDATE_PROFILE_VERSION } from './candidateProfile.js';
 import { buildWeightMap } from './matcher.js';
 import { MATCHING_VERSION, CANDIDATE_DATA_RELEASE } from './versions.js';
-import { resolveElectionContract, resolveGeneralContract } from './matchContracts.js';
+import { resolveGeneralContract, resolveDirectElectionContract } from './matchContracts.js';
+
+/**
+ * Les DEUX lectures du produit. Elles répondent à deux questions différentes et peuvent
+ * désigner deux candidats différents : c'est une information, pas une incohérence.
+ *
+ *   `general`  — « De manière générale, quel candidat possède les idées les plus proches
+ *                 des miennes ? » Profil utilisateur contre corpus du candidat, huit thèmes.
+ *   `election` — « Sur les questions propres à cette élection auxquelles j'ai répondu, de
+ *                 quel candidat suis-je le plus proche ? » Comparaison directe, question par
+ *                 question, sur l'intersection réelle.
+ *
+ * ⚠ IL N'Y A PAS DE TROISIÈME INDICE COMBINÉ. Le mélange 65/35 comptait deux fois les mêmes
+ * positions : elles servaient d'abord à dériver un profil thématique, puis à produire le
+ * score direct. Voir `docs/methodology/matching.md`.
+ */
+export const MATCH_READING = Object.freeze({
+  GENERAL:  'general',
+  ELECTION: 'election',
+});
 
 /**
  * @typedef {Object} MatchResult
@@ -70,7 +89,12 @@ function globalProximity(userThemes, targetThemes, weightMap, contract = null) {
   }
 
   if (totalWeight === 0) {
-    return { score: null, themesKnown, reason: 'no_weighted_theme' };
+    // ⚠ DEUX CAUSES TRÈS DIFFÉRENTES, longtemps confondues sous un seul motif. « Vous n'avez
+    // pas encore fait le test » et « vous avez mis à zéro tous les thèmes comparables » se
+    // réparent par des gestes opposés ; afficher le second à qui n'a jamais répondu est
+    // incompréhensible.
+    const profilVide = THEMES_ORDER.every(t => userThemes?.[t] == null);
+    return { score: null, themesKnown, reason: profilVide ? 'no_user_profile' : 'no_weighted_theme' };
   }
 
   // Seuil de couverture minimale — RÉELLEMENT appliqué depuis le 2026-08-09.
@@ -102,32 +126,83 @@ function globalProximity(userThemes, targetThemes, weightMap, contract = null) {
 }
 
 /**
- * Score de proximité sur les questions propres à une élection (les 17 de fr_2027, etc.).
- * Ne compte QUE les questions à la fois répondues par l'utilisateur et documentées pour le
- * candidat : c'est ce compte qui doit être affiché (« 12 positions comparables sur 17 »).
+ * Correspondance ÉLECTORALE DIRECTE — « sur les questions de cette élection auxquelles j'ai
+ * répondu, de quel candidat suis-je le plus proche ? »
+ *
+ * ⚠ CE QU'ELLE NE FAIT PLUS (P0-3, 2026-08-14).
+ *
+ * Elle ne dépend d'AUCUNE dérivation thématique. Auparavant, les mêmes positions servaient
+ * deux fois : une première pour construire un profil en huit thèmes, une seconde pour ce
+ * score direct — puis les deux étaient mélangés 65/35. Les mêmes preuves étaient donc
+ * comptées deux fois, et un candidat dont le profil thématique n'atteignait pas quatre
+ * thèmes ne pouvait obtenir AUCUN score électoral, même avec sept positions approuvées et
+ * relues sur le questionnaire du scrutin.
+ *
+ * Elle n'applique pas non plus le veto : celui-ci compare deux profils THÉMATIQUES. L'y
+ * appliquer faisait varier le score électoral quand le profil général de l'utilisateur
+ * changeait, alors que ses réponses à l'élection n'avaient pas bougé.
+ *
+ * SEULES les positions approuvées comptent. Le repli `q.positions[candidateId]` — des valeurs
+ * éditoriales non sourcées — reste supprimé.
+ *
+ * @param {Object} electionAnswers  { [questionId]: 1–5 }
+ * @param {Array}  questions        questionnaire du scrutin
+ * @param {Array}  usablePositions  positions approuvées et recevables du candidat
+ * @param {Object} [electoralWeights] importance déclarée par question ({ [id]: number > 0 })
  */
-function electionProximity(electionAnswers, questions, usablePositions) {
-  // SEULES les positions approuvées comptent. Le repli `q.positions[candidateId]` — des
-  // valeurs éditoriales non sourcées — a été supprimé : c'est lui qui produisait un score
-  // pour les dix candidats 2027 alors qu'aucune position n'avait été relue.
+function electionProximity(electionAnswers, questions, usablePositions, electoralWeights = null) {
   const byQuestion = new Map(usablePositions.map(p => [p.questionId, p]));
+  // Positions DISPONIBLES : celles du candidat qui portent sur ce questionnaire, répondues
+  // ou non. C'est le dénominateur honnête de « positions comparées / disponibles ».
+  const available = questions.filter(q => byQuestion.has(q.id));
+  const usable = available.filter(q => electionAnswers?.[q.id] != null);
+  const themesRepresented = [...new Set(usable.map(q => q.theme).filter(Boolean))];
 
-  const usable = questions.filter(
-    q => electionAnswers?.[q.id] != null && byQuestion.has(q.id),
-  );
-  if (usable.length === 0) return { score: null, positionsUsed: 0, usable: [], byQuestion };
+  const contract = resolveDirectElectionContract({
+    compared: usable.length,
+    available: available.length,
+    questionnaireSize: questions.length,
+    themes: themesRepresented.length,
+  });
+
+  const coverage = {
+    positionsCompared:  usable.length,
+    positionsAvailable: available.length,
+    questionnaireSize:  questions.length,
+    answeredByUser:     questions.filter(q => electionAnswers?.[q.id] != null).length,
+    themesRepresented:  themesRepresented.length,
+    themes:             themesRepresented,
+  };
+
+  if (!contract.satisfied) {
+    return { score: null, reason: contract.reason, coverage, contract, usable: [], byQuestion };
+  }
 
   // stance -2…+2 → échelle Likert 1–5, la même que les réponses de l'utilisateur.
   const likert = p => p.stance + 3;
+  // L'importance électorale déclarée pondère les questions, sans jamais en écarter une :
+  // un poids absent vaut 1. Une pondération qui pourrait annuler une question ferait varier
+  // le dénominateur affiché sans que rien ne le montre.
+  const poids = q => {
+    const w = electoralWeights?.[q.id];
+    return Number.isFinite(w) && w > 0 ? w : 1;
+  };
 
-  const meanDist = usable.reduce(
-    (sum, q) => sum + Math.abs(electionAnswers[q.id] - likert(byQuestion.get(q.id))) / 4, 0,
-  ) / usable.length;
+  let sommePonderee = 0;
+  let sommePoids = 0;
+  for (const q of usable) {
+    const w = poids(q);
+    sommePonderee += w * (Math.abs(electionAnswers[q.id] - likert(byQuestion.get(q.id))) / 4);
+    sommePoids += w;
+  }
+  const meanDist = sommePonderee / sommePoids;
 
   const raw = Math.pow(1 - meanDist, MATCH_CONFIG.electionDistanceExponent) * 100;
   return {
     score: Math.max(0, Math.min(100, Math.round(raw))),
-    positionsUsed: usable.length,
+    reason: null,
+    coverage,
+    contract,
     usable,
     byQuestion,
   };
@@ -160,6 +235,18 @@ export function computeCandidateMatch({
   sourceIsVerified = null,
   asOf = null,
   language = 'fr',
+  /**
+   * LECTURE demandée — `'general'` ou `'election'`. Les DEUX sont toujours calculées et
+   * rendues sous `general` et `election` ; ce paramètre ne choisit que celle qui est reflétée
+   * au premier niveau (`score`, `reason`, `coverage`, `contract`), pour le classement.
+   *
+   * ⚠ IL N'Y A PLUS DE SCORE MÉLANGÉ. Le champ `score` valait auparavant
+   * `0,65 × général + 0,35 × électoral`, calculés sur les mêmes positions : les mêmes preuves
+   * comptaient deux fois. Aucun troisième indice combiné n'a été conservé.
+   */
+  reading = MATCH_READING.GENERAL,
+  /** Importance déclarée par question, propre au scrutin. Ne concerne QUE la lecture électorale. */
+  electoralWeights = null,
 }) {
   const weightMap = buildWeightMap(priorityOrder, themeWeights);
 
@@ -190,68 +277,88 @@ export function computeCandidateMatch({
     positionProvenance: 'sourced-positions',
   };
 
-  // Aucune preuve recevable : le candidat n'est pas comparable. On le dit, on ne le note pas.
-  if (derived.usable.length === 0) {
-    return {
-      score: null,
-      reason: 'no_sourced_positions',
-      globalScore: null,
-      electionScore: null,
-      coverage: { ...baseCoverage, positionsUsed: 0, specificIgnored: answeredSpecific > 0 },
-      vetoTriggered: [],
-      agreements: [],
-      disagreements: [],
-      breakdownSource: 'none',
-      derivedThemes: derived.themes,
-      versions,
-    };
-  }
+  // ── LECTURE 1 : proximité GÉNÉRALE ────────────────────────────────────────
+  // « De manière générale, quel candidat possède les idées les plus proches des miennes ? »
+  // Compare deux profils sur les huit thèmes. Son contrat est le contrat GÉNÉRAL, toujours :
+  // le rabaisser parce que le seul corpus disponible est un questionnaire de scrutin
+  // reviendrait à faire passer une lecture étroite pour une ressemblance d'ensemble.
+  // ⚠ Elle ne lit JAMAIS `electionAnswers`.
+  const generalContract = resolveGeneralContract();
+  const g = derived.usable.length === 0
+    ? { score: null, reason: 'no_sourced_positions', themesKnown: 0 }
+    : globalProximity(userThemes, derived.themes, weightMap, generalContract);
 
-  // ⚠ Le contrat est DÉDUIT du questionnaire réellement fourni : un questionnaire d'élection
-  // relève du contrat électoral, l'absence de questionnaire du contrat général.
-  const contract = questions?.length ? resolveElectionContract(questions) : resolveGeneralContract();
-  const g = globalProximity(userThemes, derived.themes, weightMap, contract);
-  const { multiplier: vetoMultiplier } = computeVeto(userThemes, derived.themes, weightMap);
-  const e = electionProximity(electionAnswers, questions, derived.usable);
-
-  const coverage = {
-    ...baseCoverage,
-    positionsUsed: e.positionsUsed,
-    specificIgnored: answeredSpecific > 0 && e.positionsUsed === 0,
+  const general = {
+    score: g.score ?? null,
+    reason: g.score == null ? (g.reason ?? 'insufficient_coverage') : null,
+    contract: generalContract,
+    vetoTriggered: g.vetoTriggered ?? [],
+    coverage: {
+      themesKnown: derived.coverage.themesKnown,
+      themesTotal: derived.coverage.themesTotal,
+      sourcedPositions: derived.coverage.sourcedPositions,
+      perTheme: derived.coverage.perTheme,
+      positionProvenance: 'sourced-positions',
+    },
   };
 
-  // Une couverture thématique insuffisante invalide le résultat entier : on ne se rabat pas
-  // sur les seules réponses spécifiques, qui ne seraient pas comparables aux autres scores.
-  if (g.score == null) {
-    return {
-      score: null,
-      reason: g.reason ?? 'insufficient_coverage',
-      contract,
-      globalScore: null,
-      electionScore: null,
-      coverage,
-      vetoTriggered: g.vetoTriggered ?? [],
-      agreements: [],
-      disagreements: [],
-      breakdownSource: 'none',
-      derivedThemes: derived.themes,
-      versions,
+  // ── LECTURE 2 : proximité ÉLECTORALE DIRECTE ──────────────────────────────
+  // « Sur les questions propres à cette élection auxquelles j'ai répondu, de quel candidat
+  // suis-je le plus proche ? » Comparaison question par question, sur l'intersection réelle.
+  // ⚠ Elle ne lit ni `userThemes`, ni le veto, ni le contrat général : un candidat peut être
+  // comparable ici sans l'être là, et c'est le résultat attendu, pas une anomalie.
+  const e = questions.length
+    ? electionProximity(electionAnswers, questions, derived.usable, electoralWeights)
+    : {
+      score: null, reason: 'no_election_questionnaire', usable: [], byQuestion: new Map(),
+      contract: null,
+      coverage: {
+        positionsCompared: 0, positionsAvailable: 0, questionnaireSize: 0,
+        answeredByUser: 0, themesRepresented: 0, themes: [],
+      },
     };
-  }
 
-  const electionScore = e.score == null ? null : Math.round(e.score * vetoMultiplier);
-  const score = electionScore == null
-    ? g.score
-    : Math.round(g.score * MATCH_CONFIG.blend.global + electionScore * MATCH_CONFIG.blend.election);
+  const election = {
+    score: e.score,
+    reason: e.reason ?? null,
+    contract: e.contract,
+    coverage: { ...e.coverage, positionProvenance: 'sourced-positions' },
+  };
+
+  // ── La lecture reflétée au premier niveau ─────────────────────────────────
+  const choisie = reading === MATCH_READING.ELECTION ? election : general;
+
+  // `coverage` de premier niveau : conservé pour les surfaces existantes, complété par les
+  // deux couvertures détaillées. Aucun champ n'est retiré, aucun n'est deviné.
+  const coverage = {
+    ...baseCoverage,
+    positionsUsed: election.coverage.positionsCompared,
+    positionsAvailable: election.coverage.positionsAvailable,
+    themesRepresented: election.coverage.themesRepresented,
+    specificIgnored: answeredSpecific > 0 && election.coverage.positionsCompared === 0,
+  };
 
   return {
-    score: Math.max(0, Math.min(100, score)),
-    reason: null,
-    globalScore: g.score,
-    electionScore,
+    // Deux résultats INDÉPENDANTS, jamais mélangés.
+    general,
+    election,
+    reading,
+
+    score: choisie.score,
+    reason: choisie.score == null ? (choisie.reason ?? 'insufficient_coverage') : null,
+    contract: choisie.contract,
     coverage,
-    vetoTriggered: g.vetoTriggered ?? [],
-    ...breakdown(e.usable, electionAnswers, e.byQuestion, derived.themes, userThemes, language),
+    vetoTriggered: general.vetoTriggered,
+
+    // ⚠ `globalScore` / `electionScore` restent exposés à l'identique pour les surfaces
+    // existantes, mais ne sont plus mélangés nulle part.
+    globalScore: general.score,
+    electionScore: election.score,
+
+    ...(e.usable.length
+      ? breakdown(e.usable, electionAnswers, e.byQuestion, derived.themes, userThemes, language)
+      : { agreements: [], disagreements: [], breakdownSource: 'none' }),
+
     // Profil thématique DÉRIVÉ des seules positions approuvées. Exposé pour que les surfaces
     // d'affichage (ventilation par thème) cessent de lire `candidate.profile`, qui est
     // `legacy-manual-v1` : huit nombres saisis à la main, sans preuve par position.
@@ -267,6 +374,8 @@ export function computeCandidateMatch({
  * Ne présente pas un ordre catégorique quand l'écart est sous le seuil versionné.
  */
 export function rankCandidates(params, candidates) {
+  // ⚠ Le classement porte sur UNE lecture, choisie par l'appelant. Classer sur un mélange
+  // des deux revenait à ordonner selon un nombre qu'aucune question ne définit.
   const all = candidates.map(candidate => ({
     candidate,
     match: computeCandidateMatch({ ...params, candidate }),

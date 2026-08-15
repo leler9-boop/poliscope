@@ -22,7 +22,7 @@
 // Aucun mélange, aucune sélection automatique. Passer en mode strict sera une décision
 // produit explicite, prise quand le corpus vérifié sera suffisant — pas un effet de bord.
 
-import { rankCandidates } from './candidateMatch.js';
+import { rankCandidates, MATCH_READING } from './candidateMatch.js';
 import {
   rankEditorialMatches, SCORE_PROVENANCE,
   computeIdeologicalMatch, computeElectoralPriorityMatch,
@@ -75,6 +75,15 @@ export function rankCandidatesForSurface({
   // corpus : sans ces deux paramètres, la voie stricte ne voyait que les données globales.
   approvedPositions = null,
   sourceIsVerified = null,
+  /**
+   * Lecture stricte demandée — `'general'` ou `'election'`. Le moteur calcule TOUJOURS les
+   * deux ; ce paramètre choisit celle sur laquelle le classement est ordonné.
+   * ⚠ Une surface qui affiche « Proximité sur cette élection » doit demander `'election'` :
+   * classer sur la lecture générale puis afficher l'autre score produirait un ordre qui ne
+   * correspond à aucun des deux nombres affichés.
+   */
+  reading = MATCH_READING.GENERAL,
+  electoralWeights = null,
 } = {}) {
   if (!Object.values(MATCH_MODE).includes(mode)) {
     throw new TypeError(
@@ -92,6 +101,8 @@ export function rankCandidatesForSurface({
           // ⚠ Sans ceci, les réponses spécifiques de l'utilisateur n'atteignaient jamais le
           // moteur strict : la page Élection aurait classé exactement comme la page Profil.
           electionAnswers,
+          reading,
+          electoralWeights,
           ...(approvedPositions ? { approvedPositions } : {}),
           ...(sourceIsVerified ? { sourceIsVerified } : {}),
         },
@@ -102,6 +113,7 @@ export function rankCandidatesForSurface({
     return {
       ...strict,
       mode: MATCH_MODE.STRICT,
+      reading,
       provenance: strict.results.length ? SCORE_PROVENANCE.VERIFIED : null,
       dataSource: MODE_PROVENANCE[MATCH_MODE.STRICT],
       contractVersion: RANKING_CONTRACT_VERSION,

@@ -32,10 +32,21 @@ export const VETO_THEMES = Object.freeze({
 export const MATCH_CONFIG = Object.freeze({
   /** Exposant appliqué à (1 − distance). Plus il est élevé, plus les écarts sont amplifiés. */
   distanceExponent: 2.4,
-  /** Idem pour la composante propre à une élection (17 questions 2027, etc.). */
+  /** Idem pour la lecture ÉLECTORALE DIRECTE (17 questions 2027, etc.). */
   electionDistanceExponent: 2.2,
-  /** Répartition du score final entre profil global et réponses spécifiques à l'élection. */
-  blend: { global: 0.65, election: 0.35 },
+  //
+  // ⚠ `blend: { global: 0.65, election: 0.35 }` A ÉTÉ SUPPRIMÉ (P0-3, 2026-08-14).
+  //
+  // Ce mélange produisait un nombre unique à partir de deux lectures calculées sur LES MÊMES
+  // positions : elles servaient d'abord à dériver un profil thématique, puis à produire le
+  // score direct. Les mêmes preuves comptaient donc deux fois, et la lecture électorale était
+  // interdite dès que le profil thématique n'atteignait pas quatre thèmes.
+  //
+  // Les deux lectures sont désormais rendues séparément (`match.general`, `match.election`),
+  // et l'appelant choisit laquelle il classe et affiche. NE PAS RÉINTRODUIRE de pondération
+  // ici : un troisième indice devrait avoir son propre nom, sa propre version et son propre
+  // dénominateur, et ne pas recompter les mêmes positions.
+  //
   /**
    * Un thème dont le poids utilisateur est nul ne doit PAS pouvoir déclencher un veto :
    * sinon un thème explicitement écarté redevient dominant par une porte dérobée.

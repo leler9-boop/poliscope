@@ -19,7 +19,7 @@
 // l'élection est déclarée structurellement insuffisante — un constat affiché, pas contourné.
 
 /** Version des contrats. À incrémenter dès qu'un seuil ou sa justification change. */
-export const MATCH_CONTRACTS_VERSION = 'contracts-2026-08-12';
+export const MATCH_CONTRACTS_VERSION = 'contracts-2026-08-14';
 
 /**
  * Plancher absolu, commun aux deux contrats.
@@ -114,6 +114,89 @@ export function resolveElectionContract(questions = []) {
     structurallyPossible: true,
     reason: null,
   };
+}
+
+/**
+ * Contrat de la correspondance ÉLECTORALE DIRECTE.
+ *
+ * POURQUOI IL A FALLU L'ÉCRIRE (P0-3, 2026-08-14)
+ * ----------------------------------------------
+ * `ELECTION_MATCH_CONTRACT` ci-dessus décrit ce qu'un questionnaire de scrutin permet
+ * d'atteindre EN THÈMES. Il servait à autoriser — ou non — un score qui, en réalité, était
+ * un mélange 65/35 entre un profil thématique dérivé des positions et un score direct calculé
+ * sur les MÊMES positions. Les mêmes preuves étaient donc comptées deux fois, et le score
+ * direct était interdit dès que le profil thématique n'atteignait pas quatre thèmes — alors
+ * qu'il ne dépend pas du tout de cette dérivation.
+ *
+ * La correspondance électorale répond à une question précise : « sur les questions de cette
+ * élection auxquelles j'ai répondu, de quel candidat suis-je le plus proche ? ». Son contrat
+ * porte donc sur l'INTERSECTION RÉELLE — combien de positions ont pu être comparées, sur
+ * combien de disponibles, couvrant combien de thèmes —, jamais sur la richesse d'un profil
+ * général que cette lecture n'utilise pas.
+ *
+ * JUSTIFICATION DES SEUILS
+ *   • `minComparedPositions: 5` — en dessous, une seule réponse pèse plus de 20 % du
+ *     résultat : le nombre décrit alors une question, pas une proximité.
+ *   • `minQuestionnaireShare: 0.25` — comparer trois questions sur dix-sept, ce n'est pas se
+ *     prononcer sur l'élection. Le dénominateur est le questionnaire, pas ce qu'on a trouvé.
+ *   • `minThemesRepresented: 3` — même plancher que `ABSOLUTE_MIN_THEMES`, et pour la même
+ *     raison : deux thèmes ne décrivent pas une proximité politique. Il n'y a en revanche
+ *     AUCUN seuil « deux positions par thème » ici — la comparaison est faite question par
+ *     question, pas par agrégation thématique : exiger deux observations par thème serait
+ *     importer une contrainte qui n'a de sens que pour un profil.
+ */
+export const ELECTION_DIRECT_CONTRACT = Object.freeze({
+  id: 'election-direct',
+  version: MATCH_CONTRACTS_VERSION,
+  minComparedPositions: 5,
+  minQuestionnaireShare: 0.25,
+  minThemesRepresented: ABSOLUTE_MIN_THEMES,
+  rationale: 'Correspondance électorale directe : au moins cinq positions comparées, couvrant '
+    + 'un quart du questionnaire et trois thèmes distincts. Aucune agrégation thématique, donc '
+    + 'aucun seuil de positions par thème.',
+});
+
+/**
+ * Le contrat direct est-il rempli par une intersection donnée ?
+ *
+ * @param {{compared: number, available: number, questionnaireSize: number, themes: number}} x
+ * @returns {{contract: string, version: string, satisfied: boolean, reason: string|null,
+ *            minComparedPositions: number, minQuestionnaireShare: number,
+ *            minThemesRepresented: number, share: number}}
+ */
+export function resolveDirectElectionContract({
+  compared = 0, available = 0, questionnaireSize = 0, themes = 0,
+} = {}) {
+  const c = ELECTION_DIRECT_CONTRACT;
+  const share = questionnaireSize > 0 ? compared / questionnaireSize : 0;
+  const base = {
+    contract: c.id,
+    version: MATCH_CONTRACTS_VERSION,
+    minComparedPositions: c.minComparedPositions,
+    minQuestionnaireShare: c.minQuestionnaireShare,
+    minThemesRepresented: c.minThemesRepresented,
+    compared,
+    available,
+    questionnaireSize,
+    themes,
+    share,
+  };
+
+  // ⚠ Les motifs sont DISTINCTS : « le candidat n'a pas assez de positions codées » et
+  // « vous n'avez pas répondu à assez de questions » se réparent par des gestes opposés.
+  if (compared === 0) {
+    return { ...base, satisfied: false, reason: available === 0 ? 'no_election_positions' : 'no_common_answers' };
+  }
+  if (compared < c.minComparedPositions) {
+    return { ...base, satisfied: false, reason: 'too_few_compared_positions' };
+  }
+  if (share < c.minQuestionnaireShare) {
+    return { ...base, satisfied: false, reason: 'questionnaire_share_too_small' };
+  }
+  if (themes < c.minThemesRepresented) {
+    return { ...base, satisfied: false, reason: 'too_few_themes_represented' };
+  }
+  return { ...base, satisfied: true, reason: null };
 }
 
 /** Contrat du profil général — indépendant de tout scrutin. */

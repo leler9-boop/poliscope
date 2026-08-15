@@ -18,6 +18,46 @@ import { computeCandidateMatch } from '../engine/candidateMatch.js';
 import { deriveEditorialCandidateThemes } from '../engine/editorialMatch.js';
 
 
+/**
+ * Motifs d'indisponibilité, en clair. Un code technique affiché tel quel (« insufficient_
+ * coverage ») ne dit à personne ce qui manque ni ce qui le réparerait.
+ */
+const READING_REASONS = {
+  no_sourced_positions:          { fr: 'Aucune position sourcée et relue.', en: 'No sourced, reviewed position.' },
+  insufficient_coverage:         { fr: 'Trop peu de thèmes connus pour conclure.', en: 'Too few known themes to conclude.' },
+  no_weighted_theme:             { fr: 'Tous les thèmes comparables ont un poids nul.', en: 'All comparable themes carry zero weight.' },
+  no_user_profile:               { fr: 'Faites le test pour obtenir cette comparaison.', en: 'Take the test to get this comparison.' },
+  no_election_positions:         { fr: 'Aucune position relue sur ce questionnaire.', en: 'No reviewed position on this question set.' },
+  no_common_answers:             { fr: 'Vous n’avez pas encore répondu aux questions concernées.', en: 'You have not answered the relevant questions yet.' },
+  too_few_compared_positions:    { fr: 'Trop peu de positions comparées pour conclure.', en: 'Too few compared positions to conclude.' },
+  questionnaire_share_too_small: { fr: 'Part du questionnaire trop faible pour conclure.', en: 'Too small a share of the question set.' },
+  too_few_themes_represented:    { fr: 'Trop peu de thèmes représentés.', en: 'Too few themes represented.' },
+  no_election_questionnaire:     { fr: 'Ce scrutin n’a pas de questionnaire propre.', en: 'This election has no specific question set.' },
+};
+
+/** Une lecture de proximité, avec son dénominateur TOUJOURS visible. */
+function ProximityReading({ testId, language, title, question, score, reason, denominator }) {
+  const fr = language === 'fr';
+  const motif = READING_REASONS[reason]?.[fr ? 'fr' : 'en'];
+  return (
+    <div data-testid={testId} className="rounded-xl border border-gray-200 bg-white px-4 py-3">
+      <p className="text-xs font-semibold text-gray-800">{title}</p>
+      <p className="text-[11px] text-gray-400 leading-snug mt-0.5">{question}</p>
+      {score == null ? (
+        // ⚠ Jamais « 0/100 » : un score de zéro est une affirmation, l'absence de score en est
+        // une autre. Les confondre a déjà fait afficher des classements sans preuve.
+        <p className="text-sm font-semibold text-gray-500 mt-2">
+          {fr ? 'Non comparable' : 'Not comparable'}
+          {motif && <span className="block text-[11px] font-normal text-gray-400 mt-0.5">{motif}</span>}
+        </p>
+      ) : (
+        <p className="text-xl font-bold text-gray-900 mt-2">{score}<span className="text-sm font-semibold text-gray-400">/100</span></p>
+      )}
+      <p className="text-[11px] text-gray-400 mt-1.5">{denominator}</p>
+    </div>
+  );
+}
+
 function findCandidate(id) {
   for (const election of elections) {
     const c = election.candidates.find(c => c.id === id);
@@ -106,6 +146,7 @@ export default function CandidateProfile() {
   const startCompare        = useStore(s => s.startCompare);
   const profile             = useStore(s => s.profile);
   const profileAdjustments  = useStore(s => s.profileAdjustments);
+  const electionAnswers     = useStore(s => s.electionAnswers);
   // Support direct URL access (/candidates/:id)
   const { id: paramId } = useParams();
   const candidateId = paramId ?? selectedCandidateId;
@@ -167,15 +208,21 @@ export default function CandidateProfile() {
 
   // Voie stricte : conservée séparément pour le jour où un corpus approuvé couvrira assez de
   // thèmes. Elle ne lit jamais les estimations éditoriales.
-  const strictThemes = React.useMemo(() => {
+  //
+  // ⚠ Un seul appel produit les DEUX lectures (`match.general`, `match.election`). Elles sont
+  // affichées séparément : les mélanger recomptait les mêmes positions, et interdisait toute
+  // proximité électorale à un candidat dont le profil général n'atteignait pas quatre thèmes.
+  const strictMatch = React.useMemo(() => {
     if (!candidate || !election) return null;
     return computeCandidateMatch({
       userThemes: userThemes ?? {},
       candidate,
       questions: election?.specificQuestions ?? [],
+      electionAnswers: electionAnswers?.[election.id] ?? {},
       language,
-    }).derivedThemes ?? null;
-  }, [candidate, election, userThemes, language]);
+    });
+  }, [candidate, election, userThemes, electionAnswers, language]);
+  const strictThemes = strictMatch?.derivedThemes ?? null;
 
   // Voie éditoriale : les onze candidats du matching 2027 disposent désormais de 128 réponses
   // explicites. C'est cette voie, clairement étiquetée, qui rend la comparaison par sujet
@@ -378,6 +425,63 @@ export default function CandidateProfile() {
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* Deux lectures de proximité — jamais fusionnées en un seul nombre */}
+      {strictMatch && (
+        <section className="mb-8" data-testid="proximity-readings">
+          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
+            {language === 'fr' ? 'Proximité — deux lectures distinctes' : 'Proximity — two distinct readings'}
+          </h2>
+          <p className="text-[11px] text-gray-400 leading-relaxed mb-3">
+            {language === 'fr'
+              ? 'Deux questions différentes, deux calculs indépendants. Ils peuvent ne pas désigner le même candidat : c’est une information, pas une incohérence. Aucun score combiné n’est produit.'
+              : 'Two different questions, two independent computations. They may not point to the same candidate: that is information, not an inconsistency. No combined score is produced.'}
+          </p>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <ProximityReading
+              testId="reading-general"
+              language={language}
+              title={language === 'fr' ? 'Proximité générale' : 'General proximity'}
+              question={language === 'fr'
+                ? 'De manière générale, quelles idées ressemblent le plus aux miennes ?'
+                : 'Generally, whose ideas are closest to mine?'}
+              score={strictMatch.general.score}
+              reason={strictMatch.general.reason}
+              denominator={language === 'fr'
+                ? `${strictMatch.general.coverage.themesKnown}/${strictMatch.general.coverage.themesTotal} thèmes connus `
+                  + `· ${strictMatch.general.coverage.sourcedPositions} position(s) relue(s) `
+                  + `· seuil ${strictMatch.general.contract.minKnownThemes} thèmes`
+                : `${strictMatch.general.coverage.themesKnown}/${strictMatch.general.coverage.themesTotal} known themes `
+                  + `· ${strictMatch.general.coverage.sourcedPositions} reviewed position(s) `
+                  + `· threshold ${strictMatch.general.contract.minKnownThemes} themes`}
+            />
+            <ProximityReading
+              testId="reading-election"
+              language={language}
+              title={language === 'fr' ? 'Proximité sur cette élection' : 'Proximity on this election'}
+              question={language === 'fr'
+                ? 'Sur les questions de ce scrutin auxquelles j’ai répondu, de qui suis-je le plus proche ?'
+                : 'On the questions of this election I answered, who am I closest to?'}
+              score={strictMatch.election.score}
+              reason={strictMatch.election.reason}
+              denominator={language === 'fr'
+                ? `${strictMatch.election.coverage.positionsCompared}/${strictMatch.election.coverage.positionsAvailable} positions comparées `
+                  + `· questionnaire de ${strictMatch.election.coverage.questionnaireSize} questions `
+                  + `· ${strictMatch.election.coverage.themesRepresented} thème(s) représenté(s)`
+                : `${strictMatch.election.coverage.positionsCompared}/${strictMatch.election.coverage.positionsAvailable} positions compared `
+                  + `· ${strictMatch.election.coverage.questionnaireSize}-question set `
+                  + `· ${strictMatch.election.coverage.themesRepresented} theme(s) represented`}
+            />
+          </div>
+
+          <p className="text-[11px] text-gray-400 leading-relaxed mt-2">
+            {language === 'fr'
+              ? 'Ces deux lectures n’utilisent QUE des positions sourcées, relues et datées — jamais une estimation éditoriale. Les estimations sont présentées à part, et toujours étiquetées comme telles.'
+              : 'Both readings use ONLY sourced, reviewed and dated positions — never an editorial estimate. Estimates are shown separately and always labelled as such.'}
+          </p>
         </section>
       )}
 
