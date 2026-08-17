@@ -121,8 +121,79 @@ function writeList(storage, key, entries) {
   }
 }
 
-const readAll      = storage => readList(storage, TOMBSTONE_KEY);
-const readReceipts = storage => readList(storage, RECEIPT_KEY);
+const readAll = storage => readList(storage, TOMBSTONE_KEY);
+
+/**
+ * Durée de vie LOCALE d'un reçu. Bornée et documentée à dessein.
+ *
+ * Ce reçu n'est PAS la preuve opposable — celle-ci vit dans le journal append-only du
+ * serveur, `private.consent_records`. Il n'existe que pour pouvoir répondre honnêtement à
+ * l'écran, plus tard, à « ma suppression a-t-elle abouti ? ». Passé ce délai, l'interface
+ * revient à `none` : elle ne prétend plus rien, plutôt que d'afficher une confirmation dont
+ * elle ne peut plus dire à quoi elle se rapportait.
+ */
+export const RECEIPT_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000;   // 90 jours
+
+/**
+ * Reçu MINIMAL. Rien de plus n'est conservé, et c'est le cœur du correctif P0-4.
+ *
+ * ⚠ CE QUI EN A ÉTÉ RETIRÉ : `subject` et `record`. Le reçu survit précisément à
+ * l'effacement du pseudonyme — c'est sa raison d'être. Y garder ce pseudonyme, ou
+ * l'enregistrement complet de la décision, laissait sur le terminal un identifiant rattachable
+ * aux opinions, alors que la même interface affirme dans la phrase d'à côté que « les
+ * identifiants déposés sur cet appareil sont effacés ». La promesse et le stockage se
+ * contredisaient.
+ *
+ * `requestId` suffit à rattacher la confirmation à SA demande : c'est un identifiant de
+ * demande, tiré au hasard, qui ne désigne ni une personne ni un terminal.
+ */
+function recuMinimal(entry, confirmedAt) {
+  return {
+    requestId:   entry.requestId ?? null,
+    purpose:     entry.purpose,
+    requestedAt: entry.requestedAt ?? null,
+    confirmedAt,
+    attempts:    (entry.attempts ?? 0) + 1,
+  };
+}
+
+/**
+ * Relit les reçus en les NETTOYANT : les reçus écrits par la version précédente portaient un
+ * `subject` (et parfois le record complet). Les lire sans les purger laisserait le pseudonyme
+ * sur le terminal indéfiniment — la correction ne servirait qu'aux nouveaux reçus.
+ *
+ * Applique aussi les deux bornes : un seul reçu par finalité, et pas au-delà de l'âge maximal.
+ */
+function readReceipts(storage, { now = Date.now() } = {}) {
+  const bruts = readList(storage, RECEIPT_KEY);
+  const parFinalite = new Map();
+  let doitReecrire = false;
+
+  for (const r of bruts) {
+    if (!r?.purpose) { doitReecrire = true; continue; }
+    if ('subject' in r || 'record' in r || 'anonymousSessionId' in r) doitReecrire = true;
+    const age = r.confirmedAt ? now - Date.parse(r.confirmedAt) : Number.NaN;
+    if (Number.isFinite(age) && age > RECEIPT_MAX_AGE_MS) { doitReecrire = true; continue; }
+
+    const propre = {
+      requestId:   r.requestId ?? null,
+      purpose:     r.purpose,
+      requestedAt: r.requestedAt ?? null,
+      confirmedAt: r.confirmedAt ?? null,
+      attempts:    r.attempts ?? 0,
+    };
+    // Un seul reçu par finalité : le plus récent gagne.
+    const existant = parFinalite.get(r.purpose);
+    if (existant) doitReecrire = true;
+    if (!existant || String(propre.confirmedAt ?? '') >= String(existant.confirmedAt ?? '')) {
+      parFinalite.set(r.purpose, propre);
+    }
+  }
+
+  const propres = [...parFinalite.values()];
+  if (doitReecrire) writeList(storage, RECEIPT_KEY, propres);
+  return propres;
+}
 
 /**
  * Le sujet technique porté par un enregistrement de décision.
@@ -241,7 +312,8 @@ export function withdrawalState(storage, { purpose } = {}) {
       requestedAt: r.requestedAt ?? null,
       confirmedAt: r.confirmedAt ?? null,
       attempts: r.attempts ?? 0,
-      subject: r.subject ?? null,
+      // Le reçu ne porte AUCUN sujet : il survit à l'effacement du pseudonyme.
+      subject: null,
       storageAvailable,
     };
   }
@@ -288,14 +360,10 @@ export async function replayWithdrawals(storage, transport, { now = () => new Da
       ok = false;
     }
     if (ok) {
-      nouveauxRecus.push({
-        requestId: entry.requestId ?? null,
-        purpose: entry.purpose,
-        subject: entry.subject ?? subjectOf(entry.record),
-        requestedAt: entry.requestedAt ?? null,
-        confirmedAt: now(),
-        attempts: (entry.attempts ?? 0) + 1,
-      });
+      // ⚠ Reçu MINIMAL : ni pseudonyme, ni compte, ni enregistrement complet. Voir
+      // `recuMinimal()` — le reçu survit à l'effacement du pseudonyme, donc il ne doit pas
+      // le contenir.
+      nouveauxRecus.push(recuMinimal(entry, now()));
     } else {
       restantes.push({ ...entry, attempts: (entry.attempts ?? 0) + 1 });
     }
@@ -311,6 +379,18 @@ export async function replayWithdrawals(storage, transport, { now = () => new Da
   }
 
   return { confirmed: nouveauxRecus.length, remaining: restantes.length, receipts: nouveauxRecus };
+}
+
+/**
+ * Invalide le reçu d'une finalité — à appeler dès qu'une NOUVELLE décision est prise sur elle.
+ *
+ * Sans cela, quelqu'un qui retire, obtient sa confirmation, puis réautorise la collecte,
+ * garderait à l'écran « Suppression confirmée le … » à côté d'un consentement en cours : la
+ * confirmation porterait sur un état révolu.
+ */
+export function dropReceipt(storage, purpose) {
+  const restants = readReceipts(storage).filter(r => r.purpose !== purpose);
+  return writeList(storage, RECEIPT_KEY, restants);
 }
 
 /** Vide la file ET les reçus — réservé aux tests et à une purge locale explicite. */

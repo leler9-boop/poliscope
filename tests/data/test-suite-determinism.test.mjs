@@ -79,7 +79,9 @@ test('aucun fichier suivi ne se lit à zéro octet', () => {
   // ne suspend pas seulement un test : il fait annuler le FICHIER entier avec
   // `Promise resolution is still pending…` — le symptôme même qui rendait `npm run verify`
   // non terminant. Ce test transforme une panne de poste en diagnostic explicite.
-  const dossiers = ['src', 'scripts', 'supabase/migrations', 'tests'];
+  // `docs/questions` EST inclus : deux tests de données y lisent des JSON, et c'est
+  // précisément par là que la panne est repassée après le premier correctif.
+  const dossiers = ['src', 'scripts', 'supabase/migrations', 'tests', 'docs/questions'];
   const vides = [];
   const parcourir = (dir) => {
     for (const nom of readdirSync(dir)) {

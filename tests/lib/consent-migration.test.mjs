@@ -41,6 +41,12 @@ function memoryStorage() {
   };
 }
 
+/**
+ * Depuis la séparation des trois états (P0-2 du contre-audit du 2026-08-14), une décision
+ * doit déclarer la finalité qu'elle modifie, et la transmission exige une preuve CONFIRMÉE.
+ */
+const DECIDE = { changedPurposes: [PURPOSES.POLITICAL_ANALYTICS] };
+
 const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
 // ─── P0-3 — migration des anciens consentements ─────────────────────────────
@@ -181,7 +187,7 @@ test('l’identifiant persistant n’apparaît qu’APRÈS l’accord explicite'
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
 
   assert.equal(storage.getItem('poliscop_analytics_sid'), null);
-  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true });
+  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true }, DECIDE);
   assert.match(String(storage.getItem('poliscop_analytics_sid')), UUID_RE,
     'aucun identifiant après un accord explicite');
 });
@@ -192,7 +198,7 @@ test('les réponses données AVANT l’accord ne sont jamais transmises', async 
   const sent = [];
   const storage = memoryStorage();
   const session = createAttemptSession({
-    storage, transport: async (batch) => { sent.push(batch); },
+    storage, transport: async (batch) => { sent.push(batch); }, consentTransport: async () => true,
   });
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
 
@@ -201,7 +207,7 @@ test('les réponses données AVANT l’accord ne sont jamais transmises', async 
   session.showQuestion('SOC_3', 1);
   session.recordAnswer('SOC_3', 'no_opinion', null); // AVANT
 
-  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true });
+  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true }, DECIDE);
   await session.queue.flush();
 
   const transmis = sent.flatMap(b => b.items.map(i => i.question_id));
@@ -213,13 +219,13 @@ test('seules les réponses postérieures à l’accord partent', async () => {
   const sent = [];
   const storage = memoryStorage();
   const session = createAttemptSession({
-    storage, transport: async (batch) => { sent.push(batch); },
+    storage, transport: async (batch) => { sent.push(batch); }, consentTransport: async () => true,
   });
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 4);      // AVANT
 
-  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true });
+  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true }, DECIDE);
 
   session.showQuestion('IMM_1', 1);
   session.recordAnswer('IMM_1', 'answered', 2);      // APRÈS
@@ -236,12 +242,13 @@ test('changer une réponse APRÈS l’accord la rend transmissible', async () =>
   const sent = [];
   const session = createAttemptSession({
     storage: memoryStorage(), transport: async (batch) => { sent.push(batch); },
+    consentTransport: async () => true,
   });
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 4);
 
-  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true });
+  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: true }, DECIDE);
 
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 2);   // l'utilisateur change d'avis, après l'accord
@@ -256,9 +263,10 @@ test('un refus explicite ne déclenche aucune requête', async () => {
   const sent = [];
   const session = createAttemptSession({
     storage: memoryStorage(), transport: async (batch) => { sent.push(batch); },
+    consentTransport: async () => true,
   });
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
-  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: false });
+  await session.setConsent({ ...emptyConsentState(), [PURPOSES.POLITICAL_ANALYTICS]: false }, DECIDE);
 
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 4);

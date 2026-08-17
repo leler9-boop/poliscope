@@ -81,6 +81,26 @@ comment on table private.consent_records_quarantine is
   'conservées telles quelles. Ne JAMAIS les réinjecter ni leur attribuer un sujet : elles '
   'n''établissent le consentement de personne.';
 
+-- ⚠ RLS ET PRIVILÈGES — DEUX PROTECTIONS DISTINCTES, LES DEUX SONT NÉCESSAIRES.
+--
+-- Cette table est créée APRÈS la migration qui active la RLS sur les tables du schéma
+-- `private` : elle n'en hérite donc pas. Sans ces lignes, elle serait la seule table de
+-- consentement sans RLS — et elle contient précisément les décisions les plus douteuses.
+--
+-- `enable` ne suffit pas : le propriétaire de la table contourne la RLS. `force` l'applique
+-- aussi à lui. Et la RLS ne remplace pas les privilèges : une table sans politique mais avec
+-- un `grant` reste lisible via un chemin `security definer`. On révoque donc explicitement.
+alter table private.consent_records_quarantine enable row level security;
+alter table private.consent_records_quarantine force row level security;
+
+revoke all on private.consent_records_quarantine from public;
+revoke all on private.consent_records_quarantine from anon;
+revoke all on private.consent_records_quarantine from authenticated;
+
+-- AUCUNE politique n'est créée : avec la RLS active et aucune politique, personne ne lit
+-- rien. L'accès se fait exclusivement par une intervention d'exploitation authentifiée
+-- au niveau du propriétaire, jamais par l'API.
+
 do $$
 declare
   v_n bigint := 0;

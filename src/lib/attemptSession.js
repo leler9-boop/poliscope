@@ -15,11 +15,15 @@ import { questionTimer, attachVisibilityPause } from './questionTiming.js';
 import { postEnvelope, beaconEnvelope, isIngestEnabled, CLIENT_RELEASE } from './ingestClient.js';
 import {
   enqueueWithdrawal, replayWithdrawals, pendingWithdrawals, withdrawalState,
-  WITHDRAWAL_STATE, storageIsWritable,
+  WITHDRAWAL_STATE, storageIsWritable, dropReceipt,
 } from './withdrawalQueue.js';
 import {
+  enqueueProof, replayProofs, proofConfirmedFor, revokeConfirmation, pendingProofs, clearProofs,
+  dropPendingProof,
+} from './consentProofQueue.js';
+import {
   canCollectAttemptData, buildConsentDecisions, CONSENT_POLICY_VERSION,
-  isGranted, ALL_PURPOSES,
+  isGranted, ALL_PURPOSES, PURPOSES,
 } from './consent.js';
 import { canonicalMode } from '../data/questions.js';
 
@@ -137,6 +141,49 @@ export function createAttemptSession({
   let consentGrantedAt = null;
 
   /**
+   * Retraits que le stockage a REFUSÉ d'enregistrer, gardés le temps de vie de l'onglet.
+   *
+   * ⚠ DÉFAUT CORRIGÉ (P0-3 du contre-audit). `enqueueWithdrawal()` rendait bien l'entrée
+   * quand l'écriture échouait, mais personne ne la gardait : le bouton « Réessayer
+   * maintenant » appelait `retryWithdrawals()`, qui relisait une file vide et ne réessayait
+   * donc RIEN. Le bouton était décoratif exactement dans le cas où il était le seul recours.
+   *
+   * Ce repli ne promet rien au-delà de l'onglet — l'interface le dit — mais il rend le
+   * bouton réel, avec le MÊME `requestId`, et sans jamais reconstruire un sujet depuis un
+   * identifiant déjà effacé : l'enregistrement complet est conservé tel quel.
+   * @type {Map<string, Object>}
+   */
+  const retraitsEnMemoire = new Map();
+  /** Reçus obtenus alors que le stockage était indisponible. Même durée de vie. */
+  const recusEnMemoire = new Map();
+  /** Preuves de consentement non persistables, même repli, même limite. */
+  const preuvesEnMemoire = [];
+  /** Confirmations obtenues sans stockage : l'autorisation vaut pour cet onglet seulement. */
+  const confirmationsEnMemoire = new Map();
+
+  /**
+   * La preuve de `political_analytics` est-elle CONFIRMÉE par le serveur, pour le pseudonyme
+   * courant ?
+   *
+   * ⚠ C'est le troisième état, distinct des deux autres : le choix local dit ce que la
+   * personne veut, la confirmation dit ce que le serveur peut prouver, et seule leur
+   * conjonction autorise à transmettre une opinion. Émettre sur le seul choix local envoyait
+   * des réponses que `private.has_consent()` ne peut pas justifier.
+   */
+  function preuveConfirmee() {
+    if (!anonymousSessionId) return null;
+    return proofConfirmedFor(storage, PURPOSES.POLITICAL_ANALYTICS, anonymousSessionId)
+      ?? (confirmationsEnMemoire.get(PURPOSES.POLITICAL_ANALYTICS)?.subject === anonymousSessionId
+        ? confirmationsEnMemoire.get(PURPOSES.POLITICAL_ANALYTICS)
+        : null);
+  }
+
+  /** LA porte. Aucune donnée politique ne la franchit sans les trois conditions réunies. */
+  function peutTransmettre() {
+    return canCollectAttemptData(consentState) && preuveConfirmee() != null;
+  }
+
+  /**
    * Écrit la passation sur le terminal.
    *
    * ⚠ CORRECTION P0-5 (2026-08-10). `begin()` appelait ceci sans condition, et le blob
@@ -211,20 +258,56 @@ export function createAttemptSession({
       const changed = (Array.isArray(changedPurposes) ? changedPurposes : [changedPurposes])
         .filter(p => ALL_PURPOSES.includes(p));
 
-      // La DÉCISION elle-même est enregistrée, accord comme refus : c'est la preuve.
-      // ⚠ RETRAIT DURABLE. Un envoi qui échoue n'est PAS « retenté au prochain changement » :
-      // il n'y aurait pas forcément de prochain changement, et l'identifiant nécessaire pour
-      // formuler la demande aura été effacé entre-temps. Chaque retrait part en file
-      // persistante AVANT toute tentative, et n'en sort que sur confirmation du serveur.
-      const { records, skipped } = buildConsentDecisions(nextConsentState, {
-        // Le retrait doit porter le pseudonyme d'AVANT l'effacement, sinon il n'a pas de sujet.
-        anonymousSessionId: pseudonymeAvant,
+      // ⚠ DEUX SUJETS DISTINCTS, ET C'EST TOUT LE DÉFAUT P0-1.
+      //
+      // Un seul sujet était calculé — celui lu AVANT création — et servait aux deux cas. Au
+      // tout premier accord depuis un stockage vide, il valait donc `null` : la preuve
+      // d'accord était écartée en `no_subject`, et le tout premier consentement anonyme du
+      // produit ne partait jamais. Le retrait, lui, avait besoin de ce sujet-là.
+      //
+      //   • ACCORD  → le pseudonyme qui vient d'être CRÉÉ (`anonymousSessionId`) ;
+      //   • RETRAIT → le pseudonyme lu AVANT son effacement (`pseudonymeAvant`).
+      const construire = (sujet) => buildConsentDecisions(nextConsentState, {
+        anonymousSessionId: sujet,
         userId,
         measurementId,
         purposes: changed,
         language,
         clientRelease: CLIENT_RELEASE,
       });
+      const pourAccord  = construire(anonymousSessionId);
+      const pourRetrait = construire(pseudonymeAvant);
+
+      const records = [
+        ...pourAccord.records.filter(r => r.granted === true),
+        ...pourRetrait.records.filter(r => r.granted === false),
+      ];
+      const skipped = [
+        ...pourAccord.skipped.filter(s => s.granted === true),
+        ...pourRetrait.skipped.filter(s => s.granted === false),
+      ];
+
+      // ⚠ COUPER L'ÉMISSION TOUT DE SUITE, sans attendre le serveur. Un refus doit arrêter la
+      // collecte au moment du clic ; sa PREUVE, elle, peut attendre le réseau. L'inverse —
+      // continuer à émettre jusqu'à confirmation du refus — transmettrait des opinions
+      // pendant toute une panne.
+      for (const purpose of changed) {
+        if (isGranted(nextConsentState, purpose)) continue;
+        revokeConfirmation(storage, purpose);
+        confirmationsEnMemoire.delete(purpose);
+        // ⚠ ET l'accord resté EN ATTENTE est retiré. Il vit dans la file des preuves, le
+        // retrait dans celle des suppressions : sans ce geste explicite, le rejeu enverrait
+        // l'accord après le refus et rouvrirait la collecte.
+        dropPendingProof(storage, purpose);
+        for (let i = preuvesEnMemoire.length - 1; i >= 0; i--) {
+          if (preuvesEnMemoire[i].purpose === purpose) preuvesEnMemoire.splice(i, 1);
+        }
+      }
+      // Toute nouvelle décision invalide le reçu de suppression de sa finalité : il porterait
+      // sur un état révolu.
+      for (const purpose of changed) {
+        if (isGranted(nextConsentState, purpose)) { dropReceipt(storage, purpose); recusEnMemoire.delete(purpose); }
+      }
 
       const withdrawals = [];
       for (const record of records.filter(r => r.granted === false)) {
@@ -244,6 +327,17 @@ export function createAttemptSession({
           continue;
         }
         const issue = enqueueWithdrawal(storage, { purpose: record.purpose, record });
+        // Stockage indisponible : on garde la demande en mémoire pour que « Réessayer
+        // maintenant » réessaie RÉELLEMENT cette demande-là, avec son `requestId`.
+        if (issue.ok && !issue.persisted && issue.requestId) {
+          retraitsEnMemoire.set(issue.requestId, {
+            requestId: issue.requestId,
+            purpose: record.purpose,
+            record,
+            requestedAt: new Date().toISOString(),
+            attempts: 0,
+          });
+        }
         withdrawals.push({
           purpose: record.purpose,
           requestId: issue.requestId,
@@ -265,16 +359,23 @@ export function createAttemptSession({
         });
       }
 
-      // Les ACCORDS peuvent partir directement : leur perte n'efface aucune donnée et sera
-      // rejouée par la prochaine décision. Un retrait, lui, ne se rattrape pas.
+      // ⚠ LES ACCORDS AUSSI PASSENT PAR UNE FILE DURABLE (P0-2 du contre-audit).
+      //
+      // Ils partaient auparavant « au fil de l'eau », l'échec avalé, sous la promesse d'être
+      // « rejoués par la prochaine décision ». Cette promesse est devenue fausse le jour où
+      // l'on a cessé de réémettre les finalités inchangées : il n'y a plus de prochaine
+      // décision qui rattrape quoi que ce soit. Un accord donné hors ligne était perdu, et la
+      // personne se retrouvait avec un choix local « oui » sans aucune preuve côté serveur.
       const emitted = [];
       for (const record of records.filter(r => r.granted === true)) {
-        try {
-          await consentTransport(record);
-          emitted.push({ purpose: record.purpose, ok: true });
-        } catch {
-          emitted.push({ purpose: record.purpose, ok: false });
-        }
+        const mise = enqueueProof(storage, { purpose: record.purpose, granted: true, record });
+        if (mise.ok && !mise.persisted && mise.entry) preuvesEnMemoire.push(mise.entry);
+        emitted.push({ purpose: record.purpose, queued: mise.ok, persisted: mise.persisted, reason: mise.reason });
+      }
+
+      const preuves = await this.replayConsentProofs();
+      for (const e of emitted) {
+        e.ok = preuves.confirmed.some(c => c.purpose === e.purpose && c.granted === true);
       }
       const replay = await replayWithdrawals(storage, consentTransport);
 
@@ -302,6 +403,9 @@ export function createAttemptSession({
         // répond à dix questions puis accepte voyait partir ses dix réponses, alors qu'elle
         // n'a autorisé la collecte qu'à cet instant. Consentir pour la suite n'est pas
         // consentir pour ce qui précède.
+        //
+        // `declareAttempt()` ne fait rien tant que la preuve n'est pas confirmée : hors ligne,
+        // la passation reste purement locale, et sera déclarée au rejeu.
         persistAttempt();
         await this.declareAttempt(meta);
       }
@@ -309,6 +413,21 @@ export function createAttemptSession({
       // Résultat EXPLICITE. L'interface n'a plus à deviner l'issue après un délai : elle
       // attend cette valeur, puis relit la file pour l'état durable.
       return {
+        /**
+         * État de la PREUVE, distinct du choix local et de la couverture affichée :
+         *   `confirmed` — le serveur a accusé réception ; la collecte peut commencer ;
+         *   `pending`   — la preuve est en file durable ; le questionnaire reste utilisable,
+         *                 les réponses restent locales ;
+         *   `unpersisted` — même chose, mais sans survie au-delà de l'onglet ;
+         *   `none`      — aucune preuve à transmettre pour ce geste.
+         */
+        proof: (() => {
+          const pol = emitted.find(e => e.purpose === PURPOSES.POLITICAL_ANALYTICS);
+          if (!pol) return { state: 'none', purpose: PURPOSES.POLITICAL_ANALYTICS };
+          if (pol.ok) return { state: 'confirmed', purpose: PURPOSES.POLITICAL_ANALYTICS };
+          return { state: pol.persisted ? 'pending' : 'unpersisted', purpose: PURPOSES.POLITICAL_ANALYTICS };
+        })(),
+        transmissionAllowed: peutTransmettre(),
         withdrawals: withdrawals.map(w => ({
           ...w,
           // Le rejeu vient de se produire : une demande confirmée à l'instant l'est bien
@@ -359,9 +478,15 @@ export function createAttemptSession({
       return attemptId;
     },
 
-    /** Déclare la passation au serveur. Sans consentement : ne fait rien, sans erreur. */
+    /**
+     * Déclare la passation au serveur.
+     *
+     * ⚠ Exige la preuve CONFIRMÉE, pas seulement le choix local : déclarer une passation que
+     * le serveur ne peut rattacher à aucun consentement recevable, c'est produire un lot que
+     * `private.has_consent()` refusera — ou pire, une écriture sans preuve.
+     */
     async declareAttempt(extra = {}) {
-      if (!attemptId || !canCollectAttemptData(consentState) || !isIngestEnabled) return false;
+      if (!attemptId || !peutTransmettre() || !isIngestEnabled) return false;
 
       const payload = {
         attempt_id: attemptId,
@@ -404,7 +529,11 @@ export function createAttemptSession({
      */
     recordAnswer(questionId, responseState, answerValue = null) {
       timer.recordAnswer(questionId, responseState, answerValue);
-      if (!attemptId || !canCollectAttemptData(consentState)) return;
+      // ⚠ Tant que la preuve n'est pas confirmée, la réponse reste LOCALE. Elle n'est pas
+      // mise en file « en attendant » : une file rejouée après confirmation enverrait
+      // rétroactivement des réponses données avant que le serveur ne puisse justifier de
+      // quoi que ce soit. Seules les interactions postérieures à la confirmation partent.
+      if (!attemptId || !peutTransmettre()) return;
 
       if (!started) { this.declareAttempt(); }
       const snapshot = timer.snapshot(questionId);
@@ -414,7 +543,7 @@ export function createAttemptSession({
     /** Fin de passation : envoi de l'état terminal et vidage de la file. */
     async complete({ answeredCount, shownCount } = {}) {
       timer.hide();
-      if (!attemptId || !canCollectAttemptData(consentState)) return;
+      if (!attemptId || !peutTransmettre()) return;
 
       await this.declareAttempt({
         completed_at: new Date().toISOString(),
@@ -442,9 +571,15 @@ export function createAttemptSession({
       // ⚠ Un retrait demandé hors ligne doit repartir SANS action de l'utilisateur : au
       // démarrage, puis à chaque retour du réseau. Sans cela, la suppression resterait
       // suspendue à une visite ultérieure ET à une nouvelle décision de consentement.
-      void replayWithdrawals(storage, consentTransport);
+      // Les PREUVES sont rejouées avec les retraits : un accord donné hors ligne doit lui
+      // aussi repartir seul, sinon le consentement reste sans preuve côté serveur.
+      const rejouer = () => Promise.all([
+        this.retryWithdrawals(),
+        this.replayConsentProofs(),
+      ]).catch(() => {});
+      void rejouer();
       if (typeof window !== 'undefined') {
-        const onOnline = () => { void replayWithdrawals(storage, consentTransport); };
+        const onOnline = () => { void rejouer(); };
         window.addEventListener('online', onOnline);
         detach.push(() => window.removeEventListener('online', onOnline));
       }
@@ -457,14 +592,110 @@ export function createAttemptSession({
       return () => { for (const fn of detach.splice(0)) fn(); };
     },
 
-    /** Retraits demandés mais non confirmés par le serveur. */
-    pendingWithdrawals() { return pendingWithdrawals(storage); },
+    /** Retraits demandés mais non confirmés par le serveur — persistés ET en mémoire. */
+    pendingWithdrawals() { return [...pendingWithdrawals(storage), ...retraitsEnMemoire.values()]; },
 
-    /** État à AFFICHER — dérivé de la file, jamais d'un changement d'état d'interface. */
-    withdrawalState(purpose) { return withdrawalState(storage, { purpose }); },
+    /** Preuves de consentement en attente de confirmation serveur. */
+    pendingConsentProofs() { return [...pendingProofs(storage), ...preuvesEnMemoire]; },
 
-    /** Rejeu, à appeler au retour du réseau et au démarrage. */
-    async retryWithdrawals() { return replayWithdrawals(storage, consentTransport); },
+    /** La transmission de données politiques est-elle réellement autorisée, ici et maintenant ? */
+    canTransmit() { return peutTransmettre(); },
+
+    /**
+     * État à AFFICHER — dérivé de PREUVES, jamais d'un changement d'état d'interface.
+     *
+     * Tient compte du repli en mémoire : sans lui, une demande que le stockage a refusée
+     * d'enregistrer se relisait en `none`, c'est-à-dire « rien à supprimer » — le message
+     * exactement inverse de ce qui venait de se passer.
+     */
+    withdrawalState(purpose) {
+      const durable = withdrawalState(storage, { purpose });
+      if (durable.state !== WITHDRAWAL_STATE.NONE) return durable;
+
+      const enAttente = [...retraitsEnMemoire.values()].filter(e => !purpose || e.purpose === purpose);
+      if (enAttente.length > 0) {
+        const e = enAttente[enAttente.length - 1];
+        return {
+          ...durable,
+          state: WITHDRAWAL_STATE.UNPERSISTED,
+          purpose: e.purpose,
+          requestId: e.requestId,
+          requestedAt: e.requestedAt,
+          attempts: e.attempts ?? 0,
+        };
+      }
+
+      const recu = purpose ? recusEnMemoire.get(purpose) : [...recusEnMemoire.values()].pop();
+      if (recu) return { ...durable, ...recu, state: WITHDRAWAL_STATE.CONFIRMED, subject: null };
+      return durable;
+    },
+
+    /**
+     * Rejeu des retraits, à appeler au retour du réseau et au démarrage.
+     *
+     * ⚠ Rejoue AUSSI les demandes gardées en mémoire faute de stockage. Sans cela, le bouton
+     * « Réessayer maintenant » relisait une file vide et ne réessayait rien — précisément
+     * dans le seul cas où il constitue l'unique recours.
+     */
+    async retryWithdrawals() {
+      const durable = await replayWithdrawals(storage, consentTransport);
+
+      let confirmedMemoire = 0;
+      for (const [requestId, entree] of [...retraitsEnMemoire.entries()]) {
+        let ok = false;
+        try { ok = (await consentTransport(entree.record)) === true; } catch { ok = false; }
+        entree.attempts = (entree.attempts ?? 0) + 1;
+        if (!ok) continue;
+        retraitsEnMemoire.delete(requestId);
+        // Reçu MINIMAL, exactement comme celui du chemin persistant : aucun sujet.
+        recusEnMemoire.set(entree.purpose, {
+          requestId, purpose: entree.purpose,
+          requestedAt: entree.requestedAt, confirmedAt: new Date().toISOString(),
+          attempts: entree.attempts,
+        });
+        confirmedMemoire++;
+      }
+
+      return {
+        ...durable,
+        confirmed: durable.confirmed + confirmedMemoire,
+        remaining: durable.remaining + retraitsEnMemoire.size,
+        memoryConfirmed: confirmedMemoire,
+      };
+    },
+
+    /**
+     * Rejeu des PREUVES de consentement, dans l'ordre des décisions. À appeler au démarrage
+     * et au retour du réseau, comme les retraits.
+     */
+    async replayConsentProofs() {
+      const durable = await replayProofs(storage, consentTransport);
+
+      // Repli en mémoire : même contrat strict, même arrêt au premier échec pour préserver
+      // l'ordre des décisions.
+      const confirmedMemoire = [];
+      while (preuvesEnMemoire.length > 0) {
+        const entry = preuvesEnMemoire[0];
+        let ok = false;
+        try { ok = (await consentTransport(entry.record)) === true; } catch { ok = false; }
+        if (!ok) break;
+        preuvesEnMemoire.shift();
+        const subject = entry.record?.anonymous_session_id ?? entry.record?.user_id ?? null;
+        if (entry.granted) confirmationsEnMemoire.set(entry.purpose, { subject, proofId: entry.proofId, confirmedAt: new Date().toISOString() });
+        else confirmationsEnMemoire.delete(entry.purpose);
+        confirmedMemoire.push({ proofId: entry.proofId, purpose: entry.purpose, granted: entry.granted, subject });
+      }
+
+      const confirmed = [...durable.confirmed, ...confirmedMemoire];
+      // Une preuve politique qui vient d'être confirmée ouvre la collecte : la passation en
+      // cours doit alors être déclarée, sinon ses réponses échoueraient sur la clé étrangère.
+      if (attemptId && confirmed.some(c => c.purpose === PURPOSES.POLITICAL_ANALYTICS && c.granted)) {
+        consentGrantedAt = Date.now();
+        persistAttempt();
+        await this.declareAttempt(meta);
+      }
+      return { ...durable, confirmed, remaining: durable.remaining + preuvesEnMemoire.length };
+    },
 
     reset() {
       queue.clear();
@@ -472,11 +703,16 @@ export function createAttemptSession({
       attemptId = null;
       started = false;
       anonymousSessionId = null;
+      confirmationsEnMemoire.clear();
+      preuvesEnMemoire.length = 0;
       try {
         storage?.removeItem(ATTEMPT_KEY);
         // L'identifiant pseudonyme part avec le reste : « effacer mes données » qui laisse
         // le traceur en place n'efface rien de ce qui compte.
         storage?.removeItem(ANALYTICS_SID_KEY);
+        // Le registre des confirmations est indexé par pseudonyme : le laisser en place
+        // autoriserait une collecte au nom d'un identifiant qui n'existe plus.
+        clearProofs(storage);
       } catch { /* stockage indisponible */ }
     },
   };

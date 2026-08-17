@@ -167,6 +167,26 @@ effacé à son retrait. **Lire avant d'effacer** : `readAnalyticsSessionId()` li
 supprimer ; `analyticsSessionId(false, …)` EFFACE — l'appeler avant de construire une demande
 de suppression la prive de son sujet.
 
+⚠ **TROIS ÉTATS DISTINCTS, jamais confondus** (`src/lib/consentProofQueue.js`) :
+1. le **choix local** (store, `collectionConsent`) ; 2. la **preuve confirmée** par le serveur
+(2xx) ; 3. l'**autorisation d'émettre**, qui exige les deux ET que la confirmation porte sur le
+pseudonyme COURANT. `declareAttempt()`, `recordAnswer()` et `complete()` passent tous par
+`peutTransmettre()`. Hors ligne, le questionnaire fonctionne, les réponses restent locales, et
+**rien n'est rejoué rétroactivement** à la confirmation — seules les interactions postérieures
+partent. Les accords vivent dans `poliscop_consent_proofs`, file durable et ordonnée, distincte
+de celle des réponses et de celle des suppressions ; un retrait plus récent supprime un accord
+resté en attente (`dropPendingProof`).
+
+⚠ **Deux sujets distincts dans `setConsent()`** : un ACCORD porte le pseudonyme **qui vient
+d'être créé**, un RETRAIT celui **lu avant effacement**. Les confondre — l'état d'avant
+`7b3f668` — faisait écarter en `no_subject` le tout premier accord anonyme depuis un terminal
+neuf, c'est-à-dire le cas le plus fréquent.
+
+⚠ **Un reçu de suppression ne contient AUCUN identifiant** : `requestId`, `purpose`,
+`requestedAt`, `confirmedAt`, `attempts`, et rien d'autre. Il survit à l'effacement du
+pseudonyme — y garder ce pseudonyme contredisait la phrase affichée juste à côté. Les anciens
+reçus sont purgés à la lecture ; un seul reçu par finalité ; durée locale bornée à 90 jours.
+
 ⚠ **« Suppression confirmée » exige un REÇU, jamais une déduction.**
 `withdrawalQueue.withdrawalState()` rend un objet à cinq états — `none`, `requested`,
 `pending`, `confirmed`, `unpersisted` — et `confirmed` n'est produit que par un reçu portant

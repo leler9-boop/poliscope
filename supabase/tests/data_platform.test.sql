@@ -954,4 +954,79 @@ begin
 end $$;
 
 
+-- ═══ 30. La quarantaine est protégée comme le reste du schéma privé ═════════
+--
+-- Elle est créée APRÈS la migration qui active la RLS sur les tables privées : elle n'en
+-- hérite pas. Sans durcissement explicite, la seule table de consentement sans RLS serait
+-- justement celle qui contient les décisions les plus douteuses.
+--
+-- RLS et privilèges sont DEUX protections distinctes : on vérifie les deux.
+
+do $$
+declare
+  v_rls    boolean;
+  v_force  boolean;
+  v_grants text;
+begin
+  select relrowsecurity, relforcerowsecurity into v_rls, v_force
+    from pg_class where oid = 'private.consent_records_quarantine'::regclass;
+
+  if not v_rls then
+    raise exception 'ÉCHEC 30 — RLS non activée sur la quarantaine';
+  end if;
+  if not v_force then
+    raise exception
+      'ÉCHEC 30b — RLS non FORCÉE : le propriétaire de la table la contourne, et c''est '
+      'sous ce rôle que tournent les fonctions security definer';
+  end if;
+
+  select string_agg(distinct grantee || ':' || privilege_type, ', ')
+    into v_grants
+    from information_schema.role_table_grants
+   where table_schema = 'private'
+     and table_name = 'consent_records_quarantine'
+     and grantee in ('anon', 'authenticated', 'PUBLIC');
+  if v_grants is not null then
+    raise exception
+      'ÉCHEC 30c — privilèges résiduels sur la quarantaine : %. La RLS ne remplace pas la '
+      'révocation : un chemin security definer lirait la table.', v_grants;
+  end if;
+
+  if exists (select 1 from pg_policies
+              where schemaname = 'private' and tablename = 'consent_records_quarantine') then
+    raise exception
+      'ÉCHEC 30d — une politique client existe sur la quarantaine : elle ne doit être '
+      'atteignable par aucun rôle applicatif';
+  end if;
+
+  raise notice 'OK 30 — quarantaine : RLS activée et forcée, aucun privilège client, aucune politique';
+end $$;
+
+
+-- ═══ 31. La quarantaine n'est exposée par aucune fonction publique ══════════
+
+do $$
+declare
+  v_fn text;
+begin
+  select string_agg(n.nspname || '.' || p.proname, ', ')
+    into v_fn
+    from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname in ('public', 'private')
+     -- `pg_get_functiondef()` lève sur les agrégats et les fonctions de fenêtrage : on ne
+     -- garde que les fonctions ordinaires, les seules susceptibles d'exposer une table.
+     and p.prokind = 'f'
+     and pg_get_functiondef(p.oid) like '%consent_records_quarantine%'
+     -- La fonction de purge peut légitimement la nettoyer ; elle n'expose rien.
+     and p.proname not in ('purge_expired_data');
+  if v_fn is not null then
+    raise exception
+      'ÉCHEC 31 — la quarantaine est lue par : %. Une décision sans sujet ne doit jamais '
+      'ressortir par une API.', v_fn;
+  end if;
+  raise notice 'OK 31 — aucune fonction n''expose la quarantaine';
+end $$;
+
+
 select 'TOUS LES TESTS DE LA PLATEFORME DE DONNÉES SONT PASSÉS' as resultat;

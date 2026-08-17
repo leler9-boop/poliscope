@@ -55,6 +55,21 @@ export default function Questionnaire() {
   const askConsent = needsCollectionDecision(collectionConsent, { language });
   const introSeen = tipsSeen && !askConsent;
 
+  /**
+   * État de la PREUVE de consentement — distinct du choix local et de l'autorisation d'émettre.
+   *
+   *   `idle`        — aucune décision prise dans cette session ;
+   *   `sending`     — la preuve part, on attend la réponse ;
+   *   `confirmed`   — le serveur a accusé réception ; la collecte peut commencer ;
+   *   `pending`     — hors ligne : la preuve est en file durable, elle repartira seule ;
+   *   `unpersisted` — hors ligne ET stockage indisponible : elle ne survivra pas à l'onglet ;
+   *   `none`        — rien à transmettre (refus sans corpus, ou finalité sans flux serveur).
+   *
+   * ⚠ Dans TOUS ces cas le questionnaire fonctionne. C'est la transmission qui attend, jamais
+   * le produit — et l'écran le dit, au lieu de laisser croire que tout est parti.
+   */
+  const [proofState, setProofState] = useState('idle');
+
   // ── Question slide direction (1 = forward, -1 = backward) ──
   const directionRef = useRef(1);
 
@@ -108,14 +123,27 @@ export default function Questionnaire() {
    * `cloud_save` en est absente : elle transporte un identifiant de compte et se demande
    * ailleurs. L'inclure ici fabriquerait un accord à un texte jamais présenté.
    */
-  const handleIntroStart = (accepted) => {
-    // `null` = la question n'était pas posée (décision déjà en cours de validité). On
-    // n'écrit RIEN : réenregistrer effacerait la date et la provenance de la décision réelle.
-    if (accepted === true || accepted === false) {
-      recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: accepted }, { language });
-    }
+  const handleIntroStart = async (accepted) => {
+    // Le questionnaire démarre TOUT DE SUITE : la preuve de consentement se règle en
+    // arrière-plan, elle ne doit jamais faire attendre la personne.
     try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
     setTipsSeen(true);
+
+    // `null` = la question n'était pas posée (décision déjà en cours de validité). On
+    // n'écrit RIEN : réenregistrer effacerait la date et la provenance de la décision réelle.
+    if (accepted !== true && accepted !== false) return;
+
+    // ⚠ LA PROMESSE EST ATTENDUE, ET SON ÉTAT EST TENU (P0-2 du contre-audit du 2026-08-14).
+    // Elle était auparavant lancée et abandonnée : personne ne savait si la preuve était
+    // partie, et l'interface se comportait comme si oui.
+    setProofState(accepted ? 'sending' : 'none');
+    try {
+      const issue = await recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: accepted }, { language });
+      setProofState(accepted ? (issue?.proof?.state ?? 'pending') : 'none');
+    } catch {
+      // Le questionnaire reste utilisable ; seule la TRANSMISSION est suspendue.
+      setProofState(accepted ? 'pending' : 'none');
+    }
   };
 
   // ── Reprise après rechargement ──
@@ -461,6 +489,26 @@ export default function Questionnaire() {
                   {progressPct}%
                 </span>
               </div>
+            )}
+
+            {/* ── État de la PREUVE de consentement ──────────────────────────
+                ⚠ Ni « envoyé », ni silence. Tant que le serveur n'a pas accusé réception,
+                les réponses restent sur l'appareil — et on le dit, plutôt que de laisser
+                croire que la collecte a commencé. */}
+            {(proofState === 'pending' || proofState === 'unpersisted') && (
+              <p
+                data-testid="consent-proof-state"
+                data-proof-state={proofState}
+                className="text-[11px] leading-snug text-amber-700 mt-1.5"
+              >
+                {proofState === 'pending'
+                  ? (language === 'fr'
+                    ? 'Votre accord n’a pas encore pu être enregistré sur nos serveurs. Vos réponses restent sur cet appareil ; l’envoi reprendra seul au retour du réseau.'
+                    : 'Your consent could not be recorded on our servers yet. Your answers stay on this device; sending resumes on its own when the network returns.')
+                  : (language === 'fr'
+                    ? 'Votre accord n’a pas pu être enregistré, et cet appareil ne peut pas le conserver : il ne survivra pas à la fermeture de l’onglet. Vos réponses restent locales.'
+                    : 'Your consent could not be recorded, and this device cannot store it: it will not survive closing this tab. Your answers stay local.')}
+              </p>
             )}
           </div>
         </div>

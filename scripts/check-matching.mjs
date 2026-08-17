@@ -30,6 +30,7 @@ const { THEMES_ORDER } = await import(`${base}/src/data/questions.js`);
 const { resolveElectionContract, ABSOLUTE_MIN_THEMES, ELECTION_DIRECT_CONTRACT } =
   await import(`${base}/src/engine/matchContracts.js`);
 const { MATCH_READING } = await import(`${base}/src/engine/candidateMatch.js`);
+const { diagnoseGeneral, diagnoseElection } = await import('./lib/matching-diagnostics.mjs');
 
 const sourceIsVerified = id => Boolean(getSource(id)?.verifiedAt);
 const neutralProfile = Object.fromEntries(THEMES_ORDER.map(t => [t, 50]));
@@ -156,17 +157,19 @@ for (const election of elections) {
       scoreElection: match.election.score, reasonElection: match.election.reason ?? null,
       compared: cov.positionsCompared, available: cov.positionsAvailable,
       themesRepresented: cov.themesRepresented,
-      blocageGeneral: all.length === 0 ? 'aucun corpus'
-        : approved.length === 0 ? 'relecture non faite'
-        : themesReady < 4 ? 'corpus trop étroit pour un profil général'
-        : match.general.score == null ? 'CHAÎNE CASSÉE' : '—',
-      blocageElection: approved.length === 0 ? 'relecture non faite'
-        : match.election.score != null ? '—'
-        : cov.positionsCompared >= ELECTION_DIRECT_CONTRACT.minComparedPositions
-          && cov.positionsCompared / questions.length >= ELECTION_DIRECT_CONTRACT.minQuestionnaireShare
-          && cov.themesRepresented >= ELECTION_DIRECT_CONTRACT.minThemesRepresented
-          ? 'CHAÎNE CASSÉE'
-          : 'intersection sous le contrat direct',
+      // ⚠ Les deux diagnostics vivent dans `scripts/lib/matching-diagnostics.mjs` et sont
+      // testés unitairement : « aucun corpus » et « relecture non faite » se réparent par des
+      // gestes opposés, et la colonne « élection » les confondait.
+      blocageGeneral: diagnoseGeneral({
+        positions: all.length, approved: approved.length, themesReady,
+        minKnownThemes: MATCH_CONFIG.minKnownThemesForScore, score: match.general.score,
+      }),
+      blocageElection: diagnoseElection({
+        positions: all.length, approved: approved.length,
+        compared: cov.positionsCompared, questionnaireSize: questions.length,
+        themesRepresented: cov.themesRepresented,
+        contract: ELECTION_DIRECT_CONTRACT, score: match.election.score,
+      }),
     });
   }
 

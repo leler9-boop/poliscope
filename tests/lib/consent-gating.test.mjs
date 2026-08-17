@@ -23,15 +23,27 @@ function memoryStorage() {
   };
 }
 
-/** Session instrumentée : on capture tout ce qui serait envoyé. */
+/**
+ * Session instrumentée : on capture tout ce qui serait envoyé.
+ *
+ * ⚠ `consentTransport` CONFIRME. Depuis la séparation des trois états (P0-2 du contre-audit
+ * du 2026-08-14), le choix local ne suffit plus à autoriser la transmission : il faut que le
+ * serveur ait accusé réception de la preuve. Sans cette confirmation, ces tests ne
+ * vérifieraient plus la règle qu'ils décrivent — ils constateraient seulement que rien ne
+ * part faute de preuve.
+ */
 function spySession() {
   const sent = [];
   const session = createAttemptSession({
     storage: memoryStorage(),
     transport: async (batch) => { sent.push({ type: 'responses', batch }); },
+    consentTransport: async () => true,
   });
   return { session, sent };
 }
+
+/** Toute décision doit désormais déclarer la finalité qu'elle modifie. */
+const DECIDE = { changedPurposes: [PURPOSES.POLITICAL_ANALYTICS, PURPOSES.MEASUREMENT] };
 
 const grantAll = () => ({
   ...emptyConsentState(),
@@ -182,7 +194,7 @@ test('APRÈS consentement : la collecte démarre, mais SANS rattraper le passé'
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 4);      // avant l'accord
 
-  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111' });
+  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111', ...DECIDE });
 
   session.showQuestion('SOC_3', 1);
   session.recordAnswer('SOC_3', 'answered', 2);      // après l'accord
@@ -196,7 +208,7 @@ test('APRÈS consentement : la collecte démarre, mais SANS rattraper le passé'
 test('« sans opinion » est transmis comme un ÉTAT, jamais supprimé ni converti', async () => {
   const { session, sent } = spySession();
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
-  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111' });
+  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111', ...DECIDE });
 
   session.showQuestion('SOC_1', 0);
   session.recordAnswer('SOC_1', 'no_opinion', null);
@@ -211,7 +223,7 @@ test('« sans opinion » est transmis comme un ÉTAT, jamais supprimé ni conver
 test('« jamais posée » et « sans opinion » restent distincts dans ce qui est envoyé', async () => {
   const { session, sent } = spySession();
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
-  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111' });
+  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111', ...DECIDE });
 
   session.showQuestion('SOC_1', 0);
   session.recordAnswer('SOC_1', 'no_opinion', null);
@@ -226,7 +238,7 @@ test('« jamais posée » et « sans opinion » restent distincts dans ce qui es
 test('RETRAIT : la collecte s’arrête et la file en attente est vidée', async () => {
   const { session, sent } = spySession();
   session.begin({ mode: 'discovery', questionnaireVersion: 'q', scoringVersion: 'v1' });
-  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111' });
+  await session.setConsent(grantAll(), { anonymousSessionId: '11111111-1111-1111-1111-111111111111', ...DECIDE });
 
   session.showQuestion('ECO_1', 0);
   session.recordAnswer('ECO_1', 'answered', 4);

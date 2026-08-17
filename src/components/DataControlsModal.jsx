@@ -25,8 +25,26 @@ import { PURPOSES } from '../lib/consent.js';
 import CollectionConsentControl from './CollectionConsentControl.jsx';
 import { withdrawalState as readQueueState, WITHDRAWAL_STATE } from '../lib/withdrawalQueue.js';
 
-/** État du retrait pour la finalité politique, lu depuis le stockage du terminal. */
-function readWithdrawalState() {
+/**
+ * État du retrait pour la finalité politique.
+ *
+ * ⚠ On interroge la SESSION en priorité, pas le stockage : elle seule connaît les demandes
+ * gardées en mémoire quand le stockage refuse d'écrire. Lire le stockage directement rendait
+ * `none` — « rien à supprimer » — pour une demande qui venait précisément d'échouer à s'y
+ * inscrire, c'est-à-dire le message exactement inverse de la réalité.
+ */
+async function readWithdrawalState() {
+  try {
+    const { attemptSession } = await import('../lib/attemptSession.js');
+    return attemptSession.withdrawalState(PURPOSES.POLITICAL_ANALYTICS);
+  } catch {
+    const storage = typeof localStorage !== 'undefined' ? localStorage : null;
+    return readQueueState(storage, { purpose: PURPOSES.POLITICAL_ANALYTICS });
+  }
+}
+
+/** Lecture synchrone, pour l'état initial du composant. */
+function readWithdrawalStateSync() {
   const storage = typeof localStorage !== 'undefined' ? localStorage : null;
   return readQueueState(storage, { purpose: PURPOSES.POLITICAL_ANALYTICS });
 }
@@ -65,7 +83,7 @@ export default function DataControlsModal({ onClose }) {
   // ⚠ L'état affiché vient de la FILE PERSISTANTE, jamais du store : annoncer « supprimé »
   // parce qu'un booléen Zustand a changé afficherait une confirmation que le serveur n'a
   // jamais donnée.
-  const [withdrawal, setWithdrawal] = useState(() => readWithdrawalState());
+  const [withdrawal, setWithdrawal] = useState(() => readWithdrawalStateSync());
   useEffect(() => {
     let vivant = true;
     (async () => {
@@ -73,7 +91,7 @@ export default function DataControlsModal({ onClose }) {
         const { attemptSession } = await import('../lib/attemptSession.js');
         await attemptSession.retryWithdrawals();
       } catch { /* module indisponible */ }
-      if (vivant) setWithdrawal(readWithdrawalState());
+      if (vivant) setWithdrawal(await readWithdrawalState());
     })();
     return () => { vivant = false; };
   }, []);
@@ -168,11 +186,11 @@ export default function DataControlsModal({ onClose }) {
                     const { attemptSession } = await import('../lib/attemptSession.js');
                     await attemptSession.retryWithdrawals();
                   } catch { /* hors navigateur : rien à rejouer */ }
-                  setWithdrawal(readWithdrawalState());
+                  setWithdrawal(await readWithdrawalState());
                 }}
                 onGrant={async () => {
                   await recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: true }, { language });
-                  setWithdrawal(readWithdrawalState());
+                  setWithdrawal(await readWithdrawalState());
                 }}
                 onWithdraw={async () => {
                   // ⚠ ON ATTEND LE RÉSULTAT. La version précédente relisait la file après un
@@ -182,7 +200,7 @@ export default function DataControlsModal({ onClose }) {
                   // « suppression confirmée par le serveur » — sans qu'aucun serveur n'ait
                   // répondu quoi que ce soit.
                   const issue = await withdrawCollectionConsent([PURPOSES.POLITICAL_ANALYTICS], { language });
-                  setWithdrawal(mergeWithdrawal(readWithdrawalState(), issue));
+                  setWithdrawal(mergeWithdrawal(await readWithdrawalState(), issue));
                 }}
               />
 
