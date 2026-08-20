@@ -19,7 +19,7 @@ import {
 } from './withdrawalQueue.js';
 import {
   enqueueProof, replayProofs, proofConfirmedFor, revokeConfirmation, pendingProofs, clearProofs,
-  dropPendingProof,
+  dropPendingProof, confirmedProofs,
 } from './consentProofQueue.js';
 import {
   canCollectAttemptData, buildConsentDecisions, CONSENT_POLICY_VERSION,
@@ -181,6 +181,90 @@ export function createAttemptSession({
   /** LA porte. Aucune donnée politique ne la franchit sans les trois conditions réunies. */
   function peutTransmettre() {
     return canCollectAttemptData(consentState) && preuveConfirmee() != null;
+  }
+
+  /**
+   * ÉTAT DE LA PREUVE, source de vérité unique et OBSERVABLE.
+   *
+   * ⚠ DÉFAUT CORRIGÉ (2026-08-19). `Questionnaire.jsx` gardait cet état dans un `useState`
+   * local, alimenté une seule fois — au clic de l'écran d'entrée. Or `attach()` rejoue les
+   * preuves tout seul, au démarrage et au retour du réseau, sans prévenir personne. Deux
+   * mensonges en découlaient :
+   *
+   *   • accord donné hors ligne puis réseau retrouvé : la preuve était confirmée, la collecte
+   *     rouverte, et l'écran continuait d'affirmer que les réponses restaient locales ;
+   *   • rechargement avec une preuve encore en attente : `handleIntroStart(null)` sortait sans
+   *     rien initialiser, l'état restait `idle`, et AUCUN avertissement n'était affiché alors
+   *     que rien ne pouvait partir.
+   *
+   * L'état est désormais DÉRIVÉ à la demande des files persistantes, des replis en mémoire et
+   * du registre de confirmations. Il n'est jamais recopié ailleurs.
+   *
+   * @param {string} [purpose]
+   * @returns {{purpose: string, state: 'none'|'pending'|'unpersisted'|'confirmed',
+   *            confirmedAt: string|null, canTransmit: boolean}}
+   */
+  function consentProofState(purpose = PURPOSES.POLITICAL_ANALYTICS) {
+    const enAttenteDurable = pendingProofs(storage).some(e => e.purpose === purpose);
+    const enAttenteMemoire = preuvesEnMemoire.some(e => e.purpose === purpose);
+
+    if (enAttenteDurable || enAttenteMemoire) {
+      // Une preuve qui n'a pas pu être écrite ne survivra pas à l'onglet : le dire.
+      const state = enAttenteDurable ? 'pending' : 'unpersisted';
+      return { purpose, state, confirmedAt: null, canTransmit: false };
+    }
+
+    // ⚠ La confirmation de l'analyse politique est RATTACHÉE au pseudonyme courant : une
+    // preuve obtenue pour un identifiant effacé puis recréé n'autorise rien. Les autres
+    // finalités portent un sujet que cette session ne détient pas (compte, pseudonyme de
+    // mesure) : leur confirmation est lue telle quelle dans le registre.
+    const confirmation = purpose === PURPOSES.POLITICAL_ANALYTICS
+      ? preuveConfirmee()
+      : (proofConfirmedFor(storage, purpose, confirmedProofs(storage)[purpose]?.subject)
+        ?? confirmationsEnMemoire.get(purpose)
+        ?? null);
+
+    if (confirmation) {
+      return {
+        purpose,
+        state: 'confirmed',
+        confirmedAt: confirmation.confirmedAt ?? null,
+        canTransmit: purpose === PURPOSES.POLITICAL_ANALYTICS ? peutTransmettre() : false,
+      };
+    }
+    return { purpose, state: 'none', confirmedAt: null, canTransmit: false };
+  }
+
+  /** Abonnés à l'état de la preuve politique. */
+  const abonnesPreuve = new Set();
+  /** Dernier état DIFFUSÉ, pour ne notifier que sur changement réel. */
+  let dernierEtatPreuve = null;
+
+  /**
+   * Diffuse l'état courant s'il a changé. Appelé après chaque geste susceptible de le
+   * modifier : décision, rejeu automatique, retrait, purge, remplacement du pseudonyme.
+   */
+  function notifierPreuve() {
+    const etat = consentProofState(PURPOSES.POLITICAL_ANALYTICS);
+    const empreinte = `${etat.state}|${etat.confirmedAt ?? ''}|${etat.canTransmit}`;
+    if (empreinte === dernierEtatPreuve) return etat;
+    dernierEtatPreuve = empreinte;
+    for (const l of abonnesPreuve) {
+      try { l(etat); } catch { /* un abonné fautif ne doit pas casser la chaîne */ }
+    }
+    return etat;
+  }
+
+  /**
+   * S'abonne à l'état de la preuve. L'état COURANT est émis immédiatement — sans quoi un
+   * composant monté après un rejeu resterait sur une valeur initiale périmée.
+   * @returns {() => void} désabonnement
+   */
+  function subscribeConsentProofState(listener) {
+    if (typeof listener !== 'function') return () => {};
+    abonnesPreuve.add(listener);
+    try { listener(consentProofState(PURPOSES.POLITICAL_ANALYTICS)); } catch { /* idem */ }
+    return () => { abonnesPreuve.delete(listener); };
   }
 
   /**
@@ -410,6 +494,10 @@ export function createAttemptSession({
         await this.declareAttempt(meta);
       }
 
+      // L'état de la preuve a pu changer : les abonnés en sont informés AVANT que l'appelant
+      // ne reçoive son résultat, pour qu'aucun écran ne reste sur une valeur périmée.
+      notifierPreuve();
+
       // Résultat EXPLICITE. L'interface n'a plus à deviner l'issue après un délai : elle
       // attend cette valeur, puis relit la file pour l'état durable.
       return {
@@ -601,6 +689,16 @@ export function createAttemptSession({
     /** La transmission de données politiques est-elle réellement autorisée, ici et maintenant ? */
     canTransmit() { return peutTransmettre(); },
 
+    /** État de la preuve — DÉRIVÉ, jamais recopié. Voir `consentProofState()`. */
+    consentProofState(purpose) { return consentProofState(purpose); },
+
+    /**
+     * S'abonne à l'état de la preuve politique. Émet l'état COURANT immédiatement, puis à
+     * chaque changement — décision, rejeu automatique, retrait, purge du pseudonyme.
+     * @returns {() => void} désabonnement
+     */
+    subscribeConsentProofState(listener) { return subscribeConsentProofState(listener); },
+
     /**
      * État à AFFICHER — dérivé de PREUVES, jamais d'un changement d'état d'interface.
      *
@@ -656,6 +754,7 @@ export function createAttemptSession({
         confirmedMemoire++;
       }
 
+      notifierPreuve();
       return {
         ...durable,
         confirmed: durable.confirmed + confirmedMemoire,
@@ -694,6 +793,10 @@ export function createAttemptSession({
         persistAttempt();
         await this.declareAttempt(meta);
       }
+      // ⚠ LE point qui manquait. `attach()` rejoue les preuves au démarrage et au retour du
+      // réseau : sans cette notification, l'écran continuait d'annoncer que les réponses
+      // restaient locales alors que la collecte venait de s'ouvrir.
+      notifierPreuve();
       return { ...durable, confirmed, remaining: durable.remaining + preuvesEnMemoire.length };
     },
 
@@ -714,6 +817,9 @@ export function createAttemptSession({
         // autoriserait une collecte au nom d'un identifiant qui n'existe plus.
         clearProofs(storage);
       } catch { /* stockage indisponible */ }
+      // Le pseudonyme vient d'être remplacé ou purgé : toute confirmation antérieure cesse
+      // de valoir, et l'écran doit le refléter immédiatement.
+      notifierPreuve();
     },
   };
 }

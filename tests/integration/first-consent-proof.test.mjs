@@ -224,20 +224,22 @@ test('la preuve confirmée est liée au pseudonyme : un autre sujet n’autorise
     'une confirmation obtenue pour un autre sujet n’autorise pas la collecte du sujet courant');
 });
 
-// ─── L'entrée du quiz tient l'état de la preuve ─────────────────────────────
+// ─── L'entrée du quiz lit la source de vérité, sans en garder de copie ─────
 
-test('le chemin d’entrée du quiz ATTEND la promesse et en tient l’état', async () => {
+test('le chemin d’entrée du quiz ATTEND la promesse et n’a AUCUNE copie de l’état', async () => {
+  // ⚠ Ce test cherchait auparavant `setProofState` par expression régulière. Il aurait
+  // continué de passer avec un état figé pour toujours — ce qui était précisément le défaut.
+  // Le COMPORTEMENT est désormais vérifié dans `consent-proof-state.test.mjs` ; il ne reste
+  // ici que ce qu'une observation d'exécution ne peut pas voir : l'absence de copie locale.
   const { readFile } = await import('node:fs/promises');
   const src = await readFile(new URL('../../src/pages/Questionnaire.jsx', import.meta.url), 'utf8');
 
   assert.match(src, /await recordCollectionConsent\(/,
     'la promesse était lancée puis abandonnée : personne ne savait si la preuve était partie');
-  assert.match(src, /setProofState\(/, 'l’état de la preuve doit être tenu, pas supposé');
-  assert.match(src, /data-testid="consent-proof-state"/,
-    'les états « en attente » et « non persisté » doivent être VISIBLES : sans cela, '
-    + 'l’écran laisse croire que la collecte a commencé');
-  // Et l'écran ne doit jamais annoncer un envoi réussi par défaut.
-  assert.ok(!/proofState === 'idle'[^\n]*envoy/i.test(src));
+  assert.match(src, /subscribeConsentProofState\(/,
+    'l’écran doit s’abonner à la source de vérité, pas tenir sa propre version');
+  assert.ok(!/setProofState/.test(src),
+    'une copie locale de l’état redevient périmée dès le premier rejeu automatique');
 });
 
 test('les trois files restent distinctes : preuves, réponses, suppressions', async () => {

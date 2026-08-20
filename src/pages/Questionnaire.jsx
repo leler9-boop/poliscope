@@ -56,19 +56,25 @@ export default function Questionnaire() {
   const introSeen = tipsSeen && !askConsent;
 
   /**
-   * État de la PREUVE de consentement — distinct du choix local et de l'autorisation d'émettre.
+   * État de la PREUVE de consentement — LU depuis `attemptSession`, jamais recopié.
    *
-   *   `idle`        — aucune décision prise dans cette session ;
-   *   `sending`     — la preuve part, on attend la réponse ;
-   *   `confirmed`   — le serveur a accusé réception ; la collecte peut commencer ;
-   *   `pending`     — hors ligne : la preuve est en file durable, elle repartira seule ;
-   *   `unpersisted` — hors ligne ET stockage indisponible : elle ne survivra pas à l'onglet ;
-   *   `none`        — rien à transmettre (refus sans corpus, ou finalité sans flux serveur).
+   *   `none`        — rien à transmettre (aucune décision, ou refus) ;
+   *   `pending`     — la preuve est en file durable ; elle repartira seule ;
+   *   `unpersisted` — même chose, mais elle ne survivra pas à la fermeture de l'onglet ;
+   *   `confirmed`   — le serveur a accusé réception ; la collecte peut commencer.
    *
-   * ⚠ Dans TOUS ces cas le questionnaire fonctionne. C'est la transmission qui attend, jamais
+   * ⚠ DÉFAUT CORRIGÉ (2026-08-19). Cet état était un `useState` local, alimenté UNE SEULE
+   * FOIS, au clic de l'écran d'entrée. Or `attemptSession.attach()` rejoue les preuves de
+   * lui-même — au démarrage et au retour du réseau — sans prévenir ce composant. Deux
+   * affirmations fausses en découlaient : après un retour du réseau, l'écran continuait de
+   * dire que les réponses restaient locales alors que la collecte était rouverte ; et après
+   * un rechargement avec une preuve encore en attente, il n'affichait AUCUN avertissement.
+   *
+   * Dans tous les cas le questionnaire fonctionne. C'est la transmission qui attend, jamais
    * le produit — et l'écran le dit, au lieu de laisser croire que tout est parti.
    */
-  const [proofState, setProofState] = useState('idle');
+  const [proof, setProof] = useState(() => ({ state: 'none' }));
+  useEffect(() => attemptSession.subscribeConsentProofState(setProof), []);
 
   // ── Question slide direction (1 = forward, -1 = backward) ──
   const directionRef = useRef(1);
@@ -133,17 +139,12 @@ export default function Questionnaire() {
     // n'écrit RIEN : réenregistrer effacerait la date et la provenance de la décision réelle.
     if (accepted !== true && accepted !== false) return;
 
-    // ⚠ LA PROMESSE EST ATTENDUE, ET SON ÉTAT EST TENU (P0-2 du contre-audit du 2026-08-14).
-    // Elle était auparavant lancée et abandonnée : personne ne savait si la preuve était
-    // partie, et l'interface se comportait comme si oui.
-    setProofState(accepted ? 'sending' : 'none');
+    // ⚠ LA PROMESSE EST ATTENDUE — elle était auparavant lancée et abandonnée. L'état
+    // affiché, lui, ne vient PAS d'ici : `attemptSession` en est la seule source, et il
+    // notifie aussi les rejeux automatiques que ce gestionnaire ne peut pas connaître.
     try {
-      const issue = await recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: accepted }, { language });
-      setProofState(accepted ? (issue?.proof?.state ?? 'pending') : 'none');
-    } catch {
-      // Le questionnaire reste utilisable ; seule la TRANSMISSION est suspendue.
-      setProofState(accepted ? 'pending' : 'none');
-    }
+      await recordCollectionConsent({ [PURPOSES.POLITICAL_ANALYTICS]: accepted }, { language });
+    } catch { /* le questionnaire reste utilisable ; seule la TRANSMISSION est suspendue */ }
   };
 
   // ── Reprise après rechargement ──
@@ -495,19 +496,19 @@ export default function Questionnaire() {
                 ⚠ Ni « envoyé », ni silence. Tant que le serveur n'a pas accusé réception,
                 les réponses restent sur l'appareil — et on le dit, plutôt que de laisser
                 croire que la collecte a commencé. */}
-            {(proofState === 'pending' || proofState === 'unpersisted') && (
+            {(proof.state === 'pending' || proof.state === 'unpersisted') && (
               <p
                 data-testid="consent-proof-state"
-                data-proof-state={proofState}
+                data-proof-state={proof.state}
                 className="text-[11px] leading-snug text-amber-700 mt-1.5"
               >
-                {proofState === 'pending'
+                {proof.state === 'pending'
                   ? (language === 'fr'
-                    ? 'Votre accord n’a pas encore pu être enregistré sur nos serveurs. Vos réponses restent sur cet appareil ; l’envoi reprendra seul au retour du réseau.'
-                    : 'Your consent could not be recorded on our servers yet. Your answers stay on this device; sending resumes on its own when the network returns.')
+                    ? 'Votre accord n’a pas encore pu être enregistré sur nos serveurs. Vos réponses restent sur cet appareil. Une fois l’accord confirmé, seules vos réponses SUIVANTES pourront être transmises : celles déjà données resteront locales.'
+                    : 'Your consent could not be recorded on our servers yet. Your answers stay on this device. Once the consent is confirmed, only your SUBSEQUENT answers can be transmitted: those already given stay local.')
                   : (language === 'fr'
-                    ? 'Votre accord n’a pas pu être enregistré, et cet appareil ne peut pas le conserver : il ne survivra pas à la fermeture de l’onglet. Vos réponses restent locales.'
-                    : 'Your consent could not be recorded, and this device cannot store it: it will not survive closing this tab. Your answers stay local.')}
+                    ? 'Votre accord n’a pas pu être enregistré, et cet appareil ne peut pas le conserver : il ne survivra pas à la fermeture de l’onglet. Vos réponses restent locales, et celles déjà données le resteront même après confirmation.'
+                    : 'Your consent could not be recorded, and this device cannot store it: it will not survive closing this tab. Your answers stay local, and those already given will stay local even after confirmation.')}
               </p>
             )}
           </div>
