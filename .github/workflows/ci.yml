@@ -20,7 +20,16 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      # `fetch-depth: 0` : historique COMPLET, pas seulement le commit de tête.
+      # `tests/data/questions.id-semantics.test.mjs` fait `git show 74503c0:…` pour
+      # comparer la banque de questions à son état avant la révision éditoriale d'août
+      # 2026. Avec le clone superficiel par défaut (profondeur 1), ce commit n'existe pas
+      # dans le checkout : le test échoue avec `fatal: bad object`, sans rapport avec le
+      # code vérifié. Ce n'est pas un test à neutraliser — c'est le checkout qu'il fallait
+      # corriger.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
