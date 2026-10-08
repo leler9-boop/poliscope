@@ -28,23 +28,26 @@ test('les 16 candidatures officialisées par LCP au 10 juillet sont présentes e
   }
 });
 
-test('le registre compte 17 candidatures déclarées ou investies après l’annonce de Bernard Cazeneuve', () => {
+test('le registre compte 20 candidatures déclarées ou investies au 8 octobre 2026', () => {
   const confirmedStatuses = new Set([
     CANDIDACY_STATUS.OFFICIALLY_VALIDATED,
     CANDIDACY_STATUS.INVESTED,
     CANDIDACY_STATUS.DECLARED,
   ]);
   const confirmed = tracked2027.filter(person => confirmedStatuses.has(person.status));
-  assert.equal(confirmed.length, 17);
+  assert.equal(confirmed.length, 20);
   assert.ok(confirmed.some(person => person.id === 'bernard-cazeneuve'));
+  assert.ok(confirmed.some(person => person.id === 'fabien-roussel'));
+  assert.ok(confirmed.some(person => person.id === 'marine-tondelier'));
+  assert.ok(confirmed.some(person => person.id === 'francois-ruffin'));
 });
 
-test('l’annuaire distingue explicitement les principaux cas non déclarés', () => {
+test('l’annuaire distingue les candidatures confirmées, les primaires et les principaux cas non déclarés', () => {
   const expectedStatuses = {
-    'raphael-glucksmann': CANDIDACY_STATUS.POTENTIAL,
-    'fabien-roussel': CANDIDACY_STATUS.CONDITIONAL,
-    'marine-tondelier': CANDIDACY_STATUS.CONDITIONAL,
-    'francois-ruffin': CANDIDACY_STATUS.CONDITIONAL,
+    'raphael-glucksmann': CANDIDACY_STATUS.PRIMARY_CANDIDATE,
+    'fabien-roussel': CANDIDACY_STATUS.INVESTED,
+    'marine-tondelier': CANDIDACY_STATUS.DECLARED,
+    'francois-ruffin': CANDIDACY_STATUS.DECLARED,
     'jordan-bardella': CANDIDACY_STATUS.CONTINGENCY,
     'benjamin-lucas': CANDIDACY_STATUS.WITHDRAWN,
     'sarah-knafo': CANDIDACY_STATUS.WITHDRAWN,
@@ -54,7 +57,7 @@ test('l’annuaire distingue explicitement les principaux cas non déclarés', (
     assert.equal(
       tracked2027.find(candidate => candidate.id === id)?.status,
       status,
-      `${id} ne doit pas être présenté comme candidat déclaré`,
+      `${id} doit refléter son statut vérifié au 8 octobre 2026`,
     );
   }
 });
