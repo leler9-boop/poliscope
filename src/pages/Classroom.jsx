@@ -15,7 +15,7 @@ export default function Classroom() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-300 mb-4">
             {fr ? 'Poliscop Classe · version pilote' : 'Poliscop Classroom · pilot version'}
           </p>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-5">
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-5 text-white">
             {fr ? 'Comprendre ses idées, sans consigne de vote.' : 'Understand your views, without voting advice.'}
           </h1>
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-8">
