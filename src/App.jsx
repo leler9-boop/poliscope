@@ -36,6 +36,8 @@ const LearnQuiz        = lazy(() => import('./pages/LearnQuiz.jsx'));
 const Privacy          = lazy(() => import('./pages/Privacy.jsx'));
 const Terms            = lazy(() => import('./pages/Terms.jsx'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard.jsx'));
+const Classroom        = lazy(() => import('./pages/Classroom.jsx'));
+const ClassroomResults = lazy(() => import('./pages/ClassroomResults.jsx'));
 
 function PageLoader() {
   return (
@@ -62,7 +64,8 @@ function ScrollToTop() {
 /** Guard: redirect to /test if the quiz queue is empty (e.g. direct URL access). */
 function QuizGuard({ children }) {
   const questionsQueue = useStore(s => s.questionsQueue);
-  if (questionsQueue.length === 0) return <Navigate to="/test" replace />;
+  const classroomMode = useStore(s => s.classroomMode);
+  if (questionsQueue.length === 0) return <Navigate to={classroomMode ? '/classe' : '/test'} replace />;
   return children;
 }
 
@@ -73,6 +76,13 @@ function ProfileGuard({ children }) {
   return children;
 }
 
+function ClassroomResultGuard({ children }) {
+  const profile = useStore(s => s.profile);
+  const classroomMode = useStore(s => s.classroomMode);
+  if (!profile || !classroomMode) return <Navigate to="/classe" replace />;
+  return children;
+}
+
 function AppInner() {
   const language        = useStore(s => s.language);
   const answers         = useStore(s => s.answers);
@@ -80,6 +90,7 @@ function AppInner() {
   const needsOnboarding = useStore(s => s.needsOnboarding);
   const syncConflict    = useStore(s => s.syncConflict);
   const hasConsent      = useStore(s => s.consent?.politicalData === true);
+  const classroomMode   = useStore(s => s.classroomMode);
   const t = createTranslator(language);
 
   const { saveUserProfile, isAuthenticated } = useAuth();
@@ -94,7 +105,7 @@ function AppInner() {
   // expected behavior, not an error. Re-runs on hasConsent so granting
   // consent triggers an immediate first sync of the already-computed profile.
   useEffect(() => {
-    if (!isAuthenticated || !profile || !hasConsent) return;
+    if (classroomMode || !isAuthenticated || !profile || !hasConsent) return;
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
       const { error } = await saveUserProfile(profile);
@@ -105,7 +116,7 @@ function AppInner() {
       }
     }, 3000);
     return () => clearTimeout(saveTimer.current);
-  }, [answers, hasConsent]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [answers, hasConsent, classroomMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-[#f7f7f5] flex flex-col">
@@ -123,6 +134,8 @@ function AppInner() {
             <Route path="/priorities"   element={<PriorityRanking />} />
             <Route path="/quiz"         element={<QuizGuard><Questionnaire /></QuizGuard>} />
             <Route path="/profile"      element={<ProfileGuard><Profile /></ProfileGuard>} />
+            <Route path="/classe"       element={<Classroom />} />
+            <Route path="/classe/resultats" element={<ClassroomResultGuard><ClassroomResults /></ClassroomResultGuard>} />
             <Route path="/elections"    element={<Elections />} />
             <Route path="/elections/:id" element={<ElectionDetail />} />
             <Route path="/candidates/:id" element={<CandidateProfile />} />

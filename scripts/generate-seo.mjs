@@ -254,6 +254,21 @@ urls.push({
   }), lastmod: '2026-07-12', priority: 0.8,
 });
 
+urls.push({
+  url: renderPage({
+    path: '/classe',
+    title: `Poliscop Classe : test politique pédagogique, sans candidat ni collecte`,
+    description: `Un parcours pédagogique gratuit pour explorer huit axes politiques en classe, sans recommandation de vote, sans compte et sans conservation des réponses.`,
+    ogType: 'website',
+    bodyHtml: wrap(`<h1>Poliscop Classe</h1>
+<p>Un parcours pédagogique pour comprendre ses idées sans consigne de vote. Le questionnaire explore huit grands axes du débat politique sans afficher de candidat, de parti ou de classement électoral.</p>
+<h2>Une session éphémère</h2>
+<p>Les réponses ne sont ni envoyées en ligne ni conservées sur l'appareil. Elles disparaissent lorsque l'élève quitte le mode Classe ou recharge la page.</p>
+<h2>Un support de discussion</h2>
+<p>Le résultat présente des axes et des courants à explorer. Il sert à comparer des arguments et à lancer un débat en EMC, HGGSP ou SES, jamais à recommander un vote.</p>`),
+  }), lastmod: '2026-10-09', priority: 0.8,
+});
+
 /* ── sitemap ─────────────────────────────────────────────────────────────── */
 
 const staticUrls = [

@@ -27,12 +27,13 @@ export default function Questionnaire() {
   const nextImproveQuestion  = useStore(s => s.nextImproveQuestion);
   const resumeQuestionnaire  = useStore(s => s.resumeQuestionnaire);
   const discardQueue         = useStore(s => s.discardQueue);
+  const classroomMode        = useStore(s => s.classroomMode);
   // Ne compte que les réponses exploitables : un « sans opinion » ne doit pas gonfler la progression affichée.
   const totalAnswered        = Object.keys(answers).filter(id => isScorable(answers[id])).length;
   const t = createTranslator(language);
 
   const [introSeen, setIntroSeen] = useState(() => {
-    try { return sessionStorage.getItem('prequiz_seen') === '1'; } catch { return false; }
+    try { return sessionStorage.getItem(classroomMode ? 'prequiz_seen_classroom' : 'prequiz_seen') === '1'; } catch { return false; }
   });
 
   // ── Question slide direction (1 = forward, -1 = backward) ──
@@ -49,7 +50,7 @@ export default function Questionnaire() {
   const [themeIntro, setThemeIntro] = useState(null); // { theme, icon, text }
 
   const handleIntroStart = () => {
-    try { sessionStorage.setItem('prequiz_seen', '1'); } catch {}
+    try { sessionStorage.setItem(classroomMode ? 'prequiz_seen_classroom' : 'prequiz_seen', '1'); } catch {}
     setIntroSeen(true);
   };
 
@@ -168,14 +169,16 @@ export default function Questionnaire() {
     if (themeIntro && !wasAnswered) setThemeIntro(null);
     // Auto-advance 600ms after first answer — don't fire if already answered (re-selection)
     if (!wasAnswered) {
-      trackQuestionAnswered({
-        questionId:    question.id,
-        theme:         question.theme,
-        value:         val,
-        questionIndex: currentIndex,
-        mode:          testMode,
-        isImprove:     improveMode,
-      });
+      if (!classroomMode) {
+        trackQuestionAnswered({
+          questionId:    question.id,
+          theme:         question.theme,
+          value:         val,
+          questionIndex: currentIndex,
+          mode:          testMode,
+          isImprove:     improveMode,
+        });
+      }
       clearTimeout(autoAdvanceTimer.current);
       autoAdvanceTimer.current = setTimeout(() => {
         directionRef.current = 1;
@@ -211,12 +214,14 @@ export default function Questionnaire() {
       // Un seul état d'inconnu est conservé — « passer » et « sans opinion » ne sont pas
       // distingués, par minimisation des données.
       answerQuestion(question.id, NO_OPINION);
-      trackQuestionSkipped({
-        questionId:    question.id,
-        theme:         question.theme,
-        questionIndex: currentIndex,
-        mode:          testMode,
-      });
+      if (!classroomMode) {
+        trackQuestionSkipped({
+          questionId:    question.id,
+          theme:         question.theme,
+          questionIndex: currentIndex,
+          mode:          testMode,
+        });
+      }
     }
     if (isLast) finishQuestionnaire();
     else nextQuestion();
@@ -232,7 +237,7 @@ export default function Questionnaire() {
     <>
       <AnimatePresence>
         {!introSeen && !improveMode && (
-          <PreQuizModal language={language} onStart={handleIntroStart} />
+          <PreQuizModal language={language} onStart={handleIntroStart} classroomMode={classroomMode} />
         )}
       </AnimatePresence>
 
@@ -393,7 +398,7 @@ export default function Questionnaire() {
                   // could appear both inline and as a separate card underneath, duplicated.
                   concepts={QUESTION_EXPLANATIONS[question.id] ? [] : (QUESTION_CONCEPTS[question.id] ?? [])}
                   onConceptClick={(key) => {
-                    trackConceptOpened({ conceptKey: key, questionIndex: currentIndex });
+                    if (!classroomMode) trackConceptOpened({ conceptKey: key, questionIndex: currentIndex });
                     setActiveConceptKey(key);
                   }}
                 />

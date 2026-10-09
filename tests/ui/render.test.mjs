@@ -24,7 +24,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 let h, renderToStaticMarkup, MemoryRouter, Routes, Route, MatchCard, ProfileReveal, CandidateProfile, ElectionDetail,
-  formatProximity, scoreToCssPercent;
+  Classroom, ClassroomResults, formatProximity, scoreToCssPercent;
 
 before(async () => {
   ({ createElement: h } = await import('react'));
@@ -34,6 +34,8 @@ before(async () => {
   ProfileReveal = (await import('../../src/components/ProfileReveal.jsx')).default;
   CandidateProfile = (await import('../../src/pages/CandidateProfile.jsx')).default;
   ElectionDetail = (await import('../../src/pages/ElectionDetail.jsx')).default;
+  Classroom = (await import('../../src/pages/Classroom.jsx')).default;
+  ClassroomResults = (await import('../../src/pages/ClassroomResults.jsx')).default;
   ({ formatProximity, scoreToCssPercent } = await import('../../src/engine/scoreDisplay.js'));
 });
 
@@ -124,6 +126,30 @@ test('ProfileReveal sans candidat ne promet aucun « meilleur match »', () => {
   assert.ok(!/meilleur match/i.test(html),
     'la modale promet un meilleur match alors qu’aucun candidat n’est comparable');
   assert.ok(!/best .{0,6}match/i.test(html));
+});
+
+test('Poliscop Classe annonce explicitement une session sans candidats ni conservation', () => {
+  const html = renderToStaticMarkup(h(Classroom));
+  assert.match(html, /Poliscop Classe/);
+  assert.match(html, /Aucune donnée conservée/);
+  assert.match(html, /Aucun candidat/);
+  assert.match(html, /32 questions/);
+});
+
+test('le résultat Classe reste pédagogique et ne contient aucun nom de candidat', () => {
+  const html = renderToStaticMarkup(h(ClassroomResults, {
+    languageOverride: 'fr',
+    profileOverride: {
+      themes: {
+        ECONOMY: 35, SOCIAL: 70, IMMIGRATION: 30, SECURITY: 45,
+        ENVIRONMENT: 75, DEMOCRACY: 68, GLOBAL: 60, PUBLIC_SERVICES: 80,
+      },
+    },
+  }));
+  assert.match(html, /Résultat pédagogique/);
+  assert.match(html, /Courants à explorer/);
+  assert.match(html, /Question pour le débat/);
+  assert.doesNotMatch(html, /Marine Le Pen|Jean-Luc Mélenchon|Gabriel Attal|Édouard Philippe/);
 });
 
 // ─── Fiches 2027 : le registre sourcé doit être la source de vérité ─────────

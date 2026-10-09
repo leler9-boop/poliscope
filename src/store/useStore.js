@@ -7,7 +7,7 @@ import { calculateActiveProfile, profileAnsweredCount } from '../engine/scoringV
 import { generateSeed } from '../engine/rng.js';
 import { parseImport } from '../engine/importSchema.js';
 import { currentVersions, EXPORT_FORMAT_VERSION, QUESTIONNAIRE_VERSION, QUEUE_ALGORITHM_VERSION } from '../engine/versions.js';
-import { THEMES_ORDER, getQuestionQueue, getQuestionsByIds, questions as allQuestions } from '../data/questions.js';
+import { THEMES_ORDER, TEST_MODES, getQuestionQueue, getQuestionsByIds, questions as allQuestions } from '../data/questions.js';
 import { createTranslator } from '../i18n/translations.js';
 import { supabase, isSupabaseEnabled } from '../lib/supabase.js';
 import { setMeasurementConsent } from '../lib/anonymous.js';
@@ -67,6 +67,12 @@ export const useStore = create(
       // ── App state ──
       language: detectLanguage(),
       currentPage: 'landing',
+
+      // ── Mode Classe (session-only) ──
+      // Jamais persisté. Tant qu'il est actif, aucune réponse ni aucun profil ne peut être
+      // envoyé à Supabase, même si ce navigateur est déjà connecté et consentant.
+      classroomMode: false,
+      classroomReturnState: null,
 
       // ── Test state ──
       testMode: null,
@@ -212,6 +218,73 @@ export const useStore = create(
         });
         routerNavigate('/quiz');
         trackTestStart({ mode, lang: language });
+      },
+
+      startClassroomTest: (mode = TEST_MODES.STANDARD) => {
+        const current = get();
+        const { priorityOrder } = current;
+        const queueSeed = generateSeed();
+        const queue = getQuestionQueue(mode, priorityOrder, queueSeed);
+        // Le mode classe est sans compte, sans traceur et sans reprise persistante.
+        setMeasurementConsent(false);
+        set({
+          classroomMode: true,
+          classroomReturnState: current.classroomMode ? current.classroomReturnState : {
+            answers: current.answers,
+            profile: current.profile,
+            profileAdjustments: current.profileAdjustments,
+            themeWeights: current.themeWeights,
+            testMode: current.testMode,
+            queueSeed: current.queueSeed,
+            queueQuestionIds: current.queueQuestionIds,
+            queueMeta: current.queueMeta,
+            currentQuestionIndex: current.currentQuestionIndex,
+            profileLastUpdated: current.profileLastUpdated,
+          },
+          answers: {},
+          profile: null,
+          profileAdjustments: {},
+          themeWeights: null,
+          testMode: mode,
+          queueSeed,
+          questionsQueue: queue,
+          queueQuestionIds: queue.map(q => q.id),
+          queueMeta: {
+            mode,
+            seed: queueSeed,
+            questionnaireVersion: QUESTIONNAIRE_VERSION,
+            queueAlgorithmVersion: QUEUE_ALGORITHM_VERSION,
+          },
+          currentQuestionIndex: 0,
+          profileRevealPending: false,
+          currentPage: 'questionnaire',
+        });
+        routerNavigate('/quiz');
+      },
+
+      exitClassroom: () => {
+        const current = get();
+        const measurement = current.consent?.measurement === true;
+        const previous = current.classroomReturnState ?? {};
+        set({
+          classroomMode: false,
+          classroomReturnState: null,
+          answers: previous.answers ?? {},
+          profile: previous.profile ?? null,
+          profileAdjustments: previous.profileAdjustments ?? {},
+          themeWeights: previous.themeWeights ?? null,
+          testMode: previous.testMode ?? null,
+          questionsQueue: [],
+          queueQuestionIds: previous.queueQuestionIds ?? [],
+          queueMeta: previous.queueMeta ?? null,
+          queueSeed: previous.queueSeed ?? null,
+          currentQuestionIndex: previous.currentQuestionIndex ?? 0,
+          profileLastUpdated: previous.profileLastUpdated ?? null,
+          profileRevealPending: false,
+          currentPage: 'classroom',
+        });
+        setMeasurementConsent(measurement);
+        routerNavigate('/classe');
       },
 
       startRefinement: (extraCount) => {
@@ -405,9 +478,9 @@ export const useStore = create(
         // so there is nothing to gain from also mirroring it to anonymous_answers
         // pre-consent. If they later sign up and consent, saveAnswers()/
         // saveUserProfile() (auth.jsx) push this same local state to their account.
-        const { userId, consent } = get();
+        const { userId, consent, classroomMode } = get();
         const hasConsent = consent?.politicalData === true;
-        if (isSupabaseEnabled && supabase && userId && hasConsent) {
+        if (!classroomMode && isSupabaseEnabled && supabase && userId && hasConsent) {
           // `answer_value` est un smallint : « sans opinion » ne peut pas y être écrit.
           // Passage obligatoire par src/lib/cloudAnswers.js — ne jamais reconstruire la
           // ligne à la main ici, c'est ce qui avait produit l'erreur d'écriture.
@@ -518,14 +591,17 @@ export const useStore = create(
         } else {
           const { answers, testMode, language, queueQuestionIds } = get();
           const profile = calculateActiveProfile(answers, { askedQuestionIds: queueQuestionIds });
-          set({ profile, currentPage: 'profile' });
-          routerNavigate('/profile');
-          trackTestComplete({
-            mode: testMode,
-            answeredCount: profileAnsweredCount(profile),
-            totalCount: queueQuestionIds?.length ?? null,
-            lang: language,
-          });
+          const classroomMode = get().classroomMode;
+          set({ profile, currentPage: classroomMode ? 'classroomResults' : 'profile' });
+          routerNavigate(classroomMode ? '/classe/resultats' : '/profile');
+          if (!classroomMode) {
+            trackTestComplete({
+              mode: testMode,
+              answeredCount: profileAnsweredCount(profile),
+              totalCount: queueQuestionIds?.length ?? null,
+              lang: language,
+            });
+          }
         }
       },
 
@@ -543,14 +619,21 @@ export const useStore = create(
         // ce qui rendait le drapeau VITE_SCORING_VERSION trompeur — le profil affiché après
         // la dernière question écrasait celui calculé en v2 par answerQuestion().
         const profile = calculateActiveProfile(answers, { askedQuestionIds: queueQuestionIds });
-        set({ profile, currentPage: 'profile', profileRevealPending: true });
-        routerNavigate('/profile');
-        trackTestComplete({
-          mode: testMode,
-          answeredCount: Object.keys(answers).length,
-          totalCount: profile.totalQuestions,
-          lang: language,
+        const classroomMode = get().classroomMode;
+        set({
+          profile,
+          currentPage: classroomMode ? 'classroomResults' : 'profile',
+          profileRevealPending: !classroomMode,
         });
+        routerNavigate(classroomMode ? '/classe/resultats' : '/profile');
+        if (!classroomMode) {
+          trackTestComplete({
+            mode: testMode,
+            answeredCount: Object.keys(answers).length,
+            totalCount: profile.totalQuestions,
+            lang: language,
+          });
+        }
       },
 
       clearRevealPending: () => set({ profileRevealPending: false }),
@@ -676,21 +759,23 @@ export const useStore = create(
       name: STORAGE_KEY,
       partialize: (state) => ({
         language: state.language,
-        answers: state.answers,
-        profile: state.profile,
+        // Une session Classe disparaît au rechargement : aucune opinion d'élève n'est
+        // conservée dans localStorage, même temporairement.
+        answers: state.classroomMode ? (state.classroomReturnState?.answers ?? {}) : state.answers,
+        profile: state.classroomMode ? (state.classroomReturnState?.profile ?? null) : state.profile,
         priorityOrder: state.priorityOrder,
         electionAnswers: state.electionAnswers,
-        profileAdjustments: state.profileAdjustments,
-        themeWeights: state.themeWeights,
-        queueSeed: state.queueSeed,
-        testMode: state.testMode,
+        profileAdjustments: state.classroomMode ? (state.classroomReturnState?.profileAdjustments ?? {}) : state.profileAdjustments,
+        themeWeights: state.classroomMode ? (state.classroomReturnState?.themeWeights ?? null) : state.themeWeights,
+        queueSeed: state.classroomMode ? (state.classroomReturnState?.queueSeed ?? null) : state.queueSeed,
+        testMode: state.classroomMode ? (state.classroomReturnState?.testMode ?? null) : state.testMode,
         // Reprise du questionnaire après rechargement : IDs + position + métadonnées de
         // validité. La file complète reste hors localStorage (poids, texte figé).
-        queueQuestionIds: state.queueQuestionIds,
-        queueMeta: state.queueMeta,
-        currentQuestionIndex: state.currentQuestionIndex,
+        queueQuestionIds: state.classroomMode ? (state.classroomReturnState?.queueQuestionIds ?? []) : state.queueQuestionIds,
+        queueMeta: state.classroomMode ? (state.classroomReturnState?.queueMeta ?? null) : state.queueMeta,
+        currentQuestionIndex: state.classroomMode ? (state.classroomReturnState?.currentQuestionIndex ?? 0) : state.currentQuestionIndex,
         importedFrom: state.importedFrom,
-        profileLastUpdated: state.profileLastUpdated,
+        profileLastUpdated: state.classroomMode ? (state.classroomReturnState?.profileLastUpdated ?? null) : state.profileLastUpdated,
         consent: state.consent,
         lastLearn: state.lastLearn,
         knowledge: state.knowledge,

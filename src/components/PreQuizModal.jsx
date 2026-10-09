@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-export default function PreQuizModal({ language = 'fr', onStart }) {
+export default function PreQuizModal({ language = 'fr', onStart, classroomMode = false }) {
   const content = {
     fr: {
       title: 'Avant de commencer',
@@ -28,6 +28,11 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
   };
 
   const c = content[language] ?? content.fr;
+  const privacyNote = classroomMode
+    ? (language === 'fr'
+      ? 'Mode Classe : aucune réponse n’est enregistrée sur cet appareil ou envoyée en ligne. La session disparaît en quittant ce mode ou en rechargeant la page.'
+      : 'Classroom mode: no answer is stored on this device or sent online. The session disappears when you leave this mode or reload the page.')
+    : c.privacyNote;
 
   return (
     <motion.div
@@ -70,7 +75,7 @@ export default function PreQuizModal({ language = 'fr', onStart }) {
             Real RGPD consent (political-opinion data, Article 9) happens later,
             explicitly, in ConsentModal.jsx — see audit/rgpd-remediation-2026-07/. */}
         <p className="mt-4 text-[11px] text-gray-400 leading-relaxed">
-          {c.privacyNote}
+          {privacyNote}
         </p>
       </motion.div>
     </motion.div>
