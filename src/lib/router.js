@@ -27,6 +27,8 @@ export const PAGE_TO_PATH = {
   transparency: '/transparency',
   beginner:     '/learn',
   frenchFigures: '/france',
+  classroom:     '/classe',
+  classroomResults: '/classe/resultats',
   // Dynamic — resolved at call time with IDs from store
   electionDetail:   null,
   candidateProfile: null,
@@ -47,4 +49,6 @@ export const PATH_TO_PAGE = {
   '/transparency': 'transparency',
   '/learn':        'beginner',
   '/france':       'frenchFigures',
+  '/classe':        'classroom',
+  '/classe/resultats': 'classroomResults',
 };

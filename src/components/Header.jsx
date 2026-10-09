@@ -20,6 +20,8 @@ export default function Header() {
   const profile     = useStore(s => s.profile);
   const userId      = useStore(s => s.userId);
   const userEmail   = useStore(s => s.userEmail);
+  const classroomMode = useStore(s => s.classroomMode);
+  const exitClassroom = useStore(s => s.exitClassroom);
   const t = createTranslator(language);
 
   const { signOut } = useAuth();
@@ -47,6 +49,7 @@ export default function Header() {
     { key: 'elections',     label: t('nav_elections'),     page: 'elections',    path: '/elections' },
     { key: 'figures',       label: t('nav_figures'),       page: 'figures',      path: '/figures' },
     { key: 'french_figures',label: t('nav_french_figures'),page: 'frenchFigures',path: '/france' },
+    { key: 'classroom',     label: language === 'fr' ? 'Classe' : 'Classroom', page: 'classroom', path: '/classe' },
   ];
 
   const infoItems = [
@@ -60,7 +63,7 @@ export default function Header() {
     return pathname.startsWith(path);
   };
 
-  const hideNav = pathname === '/quiz';
+  const hideNav = pathname === '/quiz' || classroomMode;
 
   const handleSignOut = async () => {
     setAccountOpen(false);
@@ -77,7 +80,7 @@ export default function Header() {
 
           {/* ── Logo ── */}
           <button
-            onClick={() => navigate('landing')}
+            onClick={() => classroomMode ? exitClassroom() : navigate('landing')}
             className="flex items-center gap-2 hover:opacity-70 transition-opacity shrink-0"
           >
             <svg width="24" height="29" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +91,7 @@ export default function Header() {
               <circle cx="56" cy="44" r="13" fill="#5270A0"/>
             </svg>
             <span className="font-bold text-[15px] tracking-tight" style={{ color: '#1A2845' }}>
-              Poliscop
+              Poliscop{classroomMode ? ' Classe' : ''}
             </span>
           </button>
 
@@ -152,7 +155,11 @@ export default function Header() {
             </button>
 
             {/* ── Account area ── */}
-            {isLoggedIn ? (
+            {classroomMode ? (
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
+                {language === 'fr' ? 'Session éphémère' : 'Ephemeral session'}
+              </span>
+            ) : isLoggedIn ? (
               <div className="relative" ref={accountRef}>
                 {/* Avatar button */}
                 <button
