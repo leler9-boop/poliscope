@@ -5,7 +5,8 @@
 // implements. Run: node scripts/check-freshness.mjs [--json]
 import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
-const ROOT = '/Users/arnaudlery/Desktop/poliscope copy';
+import { fileURLToPath } from 'node:url';
+const ROOT = fileURLToPath(new URL('..', import.meta.url)).replace(/\/$/, '');
 register(pathToFileURL(`${ROOT}/audit/poliscop-full-audit/proposed-tests/_json-import-loader.mjs`), import.meta.url);
 
 const { questions } = await import(`${ROOT}/src/data/questions.js`);

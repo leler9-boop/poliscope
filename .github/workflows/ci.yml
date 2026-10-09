@@ -20,7 +20,11 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      # Un test d'intégrité compare la banque courante à une révision historique.
+      # L'historique complet est donc requis (checkout est superficiel par défaut).
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:

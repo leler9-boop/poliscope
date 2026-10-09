@@ -180,7 +180,7 @@ test('la page 2027 expose l’annuaire complet sans le présenter comme une list
 
   assert.match(html, /Annuaire présidentiel 2027/);
   assert.match(html, /37 profils suivis/);
-  assert.match(html, /17 déclarés ou investis/);
+  assert.match(html, /20 déclarés ou investis/);
   assert.match(html, /n’est pas la liste officielle du premier tour/);
   assert.match(html, /Candidatures déclarées ou investies/);
   assert.match(html, /Parti Communiste Français/);
